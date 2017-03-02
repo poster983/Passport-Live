@@ -4,12 +4,23 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var forever = require('forever-monitor');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+//Forever
+  var foreverChild = new (forever.Monitor)('app.js', {
+    max: 3,
+    silent: true,
+    args: []
+  });
 
+  foreverChild.on('exit', function () {
+    console.log('app.js has exited after 3 restarts');
+  });
+
+  foreverChild.start();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,6 +40,7 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/index', index)
 app.use('/users', users);
 
 // catch 404 and forward to error handler
