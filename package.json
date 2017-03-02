@@ -10,7 +10,7 @@
     "student",
     "express"
   ],
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "nodemon ./bin/www"
   },
