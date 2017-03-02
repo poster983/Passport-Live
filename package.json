@@ -1,7 +1,7 @@
 {
   "name": "passport-live",
   "version": "0.0.0",
-  "description": "Passport Live is a modern web app for schools that helps them manage passes",
+  "description": "Passport Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
     "passport",
