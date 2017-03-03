@@ -5,11 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var forever = require('forever-monitor');
+
+
+/*Routes*/
+var studentView = require('./routes/student');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-//Forever
+//Forever - MEMORY LEAK
+/*
   var foreverChild = new (forever.Monitor)('app.js', {
     max: 3,
     silent: true,
@@ -21,6 +26,7 @@ var app = express();
   });
 
   foreverChild.start();
+  */
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -33,13 +39,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('node-sass-middleware')({
   src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true,
+  dest: path.join(__dirname, 'public/stylesheets/css'),
+  indentedSyntax: false,
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use('/', studentView);
 app.use('/index', index)
 app.use('/users', users);
 
