@@ -1,0 +1,319 @@
+@charset "UTF-8";
+/*
+
+The MIT License (MIT)
+
+Copyright (c) Sat Feb 05 2017 Joseph Hassell josephh2018@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORTOR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*For Global Styles*/
+.nav-right {
+  float: right !important;
+  padding-right: 20px !important; }
+
+.nav-left {
+  float: left !important;
+  padding-left: 20px !important; }
+
+.nav-sandwich {
+  padding-left: 10px; }
+/*Icons*/
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+/*PassportLoader*/
+/* USAGE:
+
+section#fullAjaxLoadingScreen.loadingScreen.loading
+  .vCenter
+    .passportLoader.box
+      .dark-half
+      img.logo(alt='Passport Is Loading', src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA4Ny42IDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgODcuNiAxMDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRUQyMTI0O30KPC9zdHlsZT4KPGc+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiw0OS42bDAsMTkuNWMwLDAuOSwwLDkuNS0xMS45LDMuNWMtMTEuOS02LTUuMi0xMi44LTQuNC0xM2MtNy0yLjItMTMuNC04LjItMTguNS0xNC4zCgkJYy01LDExLDQsMjIuNyw0LjQsMjQuNGMxLjEtMS4yLDIuNy0xLDMuNy0wLjhjMTIuMSwxOC41LDI4LDE2LjMsMzIuMywyMS41YzQuMy01LjIsMjAuMi0zLDMyLjMtMjEuNWMxLTAuMiwyLjYtMC4zLDMuNywwLjgKCQljMC40LTEuNyw5LjQtMTMuNCw0LjQtMjQuNGMtNS4xLDYuMi0xMS41LDEyLjItMTguNSwxNC4zYzAuOCwwLjIsNy41LDctNC40LDEzYy0xMS45LDYtMTAuOS0yLjctMTAuOS0zLjVsMC0xOS41Ii8+Cgk8Zz4KCQk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiwxMC44YzMuNC0wLjUsOC4yLTEsMTUuMi0xYzYuNywwLDExLjUsMS4yLDE0LjcsMy43YzMuMiwyLjMsNS4zLDYuNCw1LjMsMTEuMWMwLDQuNy0xLjYsOC43LTQuNSwxMS40CgkJCWMtMy43LDMuMy05LjEsNC44LTE1LjQsNC44Yy0xLjIsMC0yLjMtMC4xLTMtMC4xdjE1LjZIMzguMlYxMC44eiBNNTAuNCwzMS4yYzAuNywwLjEsMS41LDAuMSwyLjgsMC4xYzQuOCwwLDcuOC0yLjUsNy44LTYuNAoJCQljMC0zLjQtMi4zLTUuOC03LTUuOGMtMS44LDAtMywwLjEtMy42LDAuM1YzMS4yeiIvPgoJPC9nPgo8L2c+Cjwvc3ZnPgo=')
+    h5.center.white-text Loading
+    .hCenter
+      .preloader-wrapper.big.active
+        .spinner-layer.spinner-blue
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-red
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-yellow
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+        .spinner-layer.spinner-green
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+
+*/
+.loadingScreen.loading {
+  display: block;
+  height: 100%;
+  width: 100%;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background-color: #212121;
+  opacity: 1; }
+
+.loadingScreen {
+  z-index: -1;
+  opacity: 0;
+  height: 0;
+  -webkit-transition: all .3s ease .15s;
+  transition: all .3s ease .15s;
+  overflow: hidden; }
+
+.passportLoader.box {
+  position: relative;
+  width: 171px;
+  height: 235px;
+  background-color: #00b8d4;
+  border-radius: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%); }
+
+/*
+See if you can make it all the "P" via an ::after
+.passportLoader.box::after{
+  content: "<div>";
+  position: relative;
+  background-color: black;
+  width: 100%;
+  height: 50%;
+
+}
+*/
+.passportLoader.box > .dark-half {
+  position: relative;
+  width: 171px;
+  height: 50%;
+  background-color: #00ACC1;
+  border-radius: 25px 25px 0px 0px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  z-index: 1; }
+
+.passportLoader.box > .logo {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  width: 171px;
+  color: #F5F5F5;
+  fill: currentcolor;
+  -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
+  z-index: 2;
+  -webkit-animation-name: passport-logo-loading;
+  animation-name: passport-logo-loading;
+  -webkit-animation-duration: 4s;
+  animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; }
+
+@-webkit-keyframes passport-logo-loading {
+  0% {
+    -webkit-transform: rotate(0deg) translate(-50%, -50%);
+    transform: rotate(0deg) translate(-50%, -50%); }
+  20% {
+    -webkit-transform: rotate(10deg) translate(-50%, -50%);
+    transform: rotate(10deg) translate(-50%, -50%); }
+  60% {
+    -webkit-transform: rotate(-10deg) translate(-50%, -80%);
+    transform: rotate(-10deg) translate(-50%, -80%); } }
+
+@keyframes passport-logo-loading {
+  0% {
+    -webkit-transform: rotate(0deg) translate(-50%, -50%);
+    transform: rotate(0deg) translate(-50%, -50%); }
+  20% {
+    -webkit-transform: rotate(10deg) translate(-50%, -50%);
+    transform: rotate(10deg) translate(-50%, -50%); }
+  60% {
+    -webkit-transform: rotate(-10deg) translate(-50%, -80%);
+    transform: rotate(-10deg) translate(-50%, -80%); } }
+
+.vCenter {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%); }
+
+.hCenter {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%); }
+
+.collection-item:hover > i {
+  background-color: #00b8d4 !important;
+  -webkit-transition: background-color .3s ease .15s;
+  transition: background-color .3s ease .15s; }
+
+/* target: hsl(188°, 100%, 42%)
+base: hsl(38, 24.5%, 60%)
+
+Conversion:
+H: 188-38=150
+S: 100+(24.5-100) =  -75.5 (relative to base 100%: 24.5)
+L: 100+ (42 - 60) =  82 (relative to base 100%: 18)
+
+*/
+.collection-item > div.submitAnimationEnabled > img.hover-color {
+  -webkit-filter: brightness(100%) sepia(1) hue-rotate(140deg) saturate(300%) brightness(100%);
+  /*      ------ base color ------  -------  new target -------------------------------*/
+  filter: brightness(100%) sepia(1) hue-rotate(140deg) saturate(300%) brightness(100%);
+  cursor: pointer; }
+
+.collection-item > div.submitAnimationEnabled > .avatar-icon {
+  position: absolute;
+  overflow: hidden;
+  left: 26px;
+  top: 18px;
+  display: none;
+  vertical-align: middle;
+  z-index: 20;
+  cursor: pointer;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transform-origin: center center;
+  transform-origin: center center; }
+
+/*icon entrence*/
+.collection-item > div.submitAnimationEnabled > .avatar-icon.animate {
+  display: inline-block;
+  -webkit-animation: collectionAvatarIcon 1s;
+  animation: collectionAvatarIcon 1s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out; }
+
+@-webkit-keyframes collectionAvatarIcon {
+  0% {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); } }
+
+@keyframes collectionAvatarIcon {
+  0% {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); } }
+
+/* submit pt1 */
+.collection-item > div.submitAnimationEnabled > .avatar-icon > i.animateSubmit {
+  -webkit-animation: collectionAvatarIconAnimateSubmit 1s;
+  animation: collectionAvatarIconAnimateSubmit 1s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out; }
+
+@-webkit-keyframes collectionAvatarIconAnimateSubmit {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    opacity: 1; }
+  100% {
+    -webkit-transform: rotate(170deg);
+    transform: rotate(170deg);
+    opacity: 0; } }
+
+@keyframes collectionAvatarIconAnimateSubmit {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    opacity: 1; }
+  100% {
+    -webkit-transform: rotate(170deg);
+    transform: rotate(170deg);
+    opacity: 0; } }
+
+/*Submit pt 2*/
+.collection-item > div.submitAnimationEnabled > .returnIcon {
+  position: absolute;
+  overflow: hidden;
+  left: 23px;
+  top: 17px;
+  display: none;
+  vertical-align: middle;
+  z-index: 20;
+  cursor: pointer;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transform-origin: center center;
+  transform-origin: center center; }
+
+.collection-item > div.submitAnimationEnabled > .returnIcon.animate {
+  display: inline-block;
+  -webkit-animation: collectionAvatarIconAnimateSubmitReturnIcon 1s;
+  animation: collectionAvatarIconAnimateSubmitReturnIcon 1s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out; }
+
+@-webkit-keyframes collectionAvatarIconAnimateSubmitReturnIcon {
+  0% {
+    -webkit-transform: rotate(-170deg);
+    transform: rotate(-170deg);
+    opacity: 0; }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    opacity: 1; } }
+
+@keyframes collectionAvatarIconAnimateSubmitReturnIcon {
+  0% {
+    -webkit-transform: rotate(-170deg);
+    transform: rotate(-170deg);
+    opacity: 0; }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    opacity: 1; } }

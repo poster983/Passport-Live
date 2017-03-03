@@ -72,7 +72,7 @@ block content
         li
           .userView
             .background
-              img(alt='Side-Nav Background', src='/passport/image/stunav.jpg')
+              img(alt='Side-Nav Background', src='images/stunav.jpg')
             a(href='#!user')
               i.material-icons.md-48.md-light account_circle
             a(href='#!name')
@@ -91,30 +91,25 @@ block content
             | Logout
             i.material-icons.right lock_outline
       a.nav-sandwich.button-collapse.left-allign.show-on-large(href='#', data-activates='slide-out')
-        i.material-icons menu
+        i.material-icons.waves-effect.waves-light menu
       a.brand-logo.center(href='#') Passport
       span.nav-right CURRENT VERSION OF PASSPORT HERE
-  #confirmOver.overlay-full
-    .overlay-content
-      #checkmarkAnimationfull
-      h1#ConfirmOverlayWords.center.white-text Pass Requested
-      a.closebtn-overlay(href='javascript:void(0)', onclick="closeFullOverlay('confirmOver', 0)") ×
   // FEEDBACK FAB
   .fixed-action-btn(style='bottom: 45px; right: 24px;')
-    a.btn-floating.btn-large.tooltipped(data-position='left', data-delay='50', data-tooltip='Feedback')
+    a.btn-floating.btn-large.tooltipped.waves-effect.waves-light(data-position='left', data-delay='50', data-tooltip='Feedback')
       i.large.material-icons assignment
     ul
       li
-        a.btn-floating.red.modal-trigger.tooltipped(data-position='left', data-delay='50', data-tooltip='Bug Report', href='#bugmodal')
+        a.btn-floating.red.modal-trigger.tooltipped.waves-effect.waves-light(data-position='left', data-delay='50', data-tooltip='Bug Report', href='#bugmodal')
           i.material-icons report_problem
       li
-        a.btn-floating.yellow.darken-1.modal-trigger.tooltipped(data-position='left', data-delay='50', data-tooltip='Leave A Review', href='#reviewmodaldis')
+        a.btn-floating.yellow.darken-1.modal-trigger.tooltipped.waves-effect.waves-light(data-position='left', data-delay='50', data-tooltip='Leave A Review', href='#reviewmodaldis')
           i.material-icons thumbs_up_down
       li
-        a.btn-floating.green.tooltipped(data-position='left', data-delay='50', data-tooltip='Wiki', href='https://poster983.gitbooks.io/passport-help/content/')
+        a.btn-floating.green.tooltipped.waves-effect.waves-light(data-position='left', data-delay='50', data-tooltip='Wiki', href='https://poster983.gitbooks.io/passport-help/content/')
           i.material-icons live_help
       li
-        a.btn-floating.blue.tooltipped(data-position='left', data-delay='50', data-tooltip='Github', href='https://github.com/poster983/passport/')
+        a.btn-floating.blue.tooltipped.waves-effect.waves-light(data-position='left', data-delay='50', data-tooltip='Github', href='https://github.com/poster983/passport/')
           i.material-icons code
   // Bug Modal
   #bugmodal.modal.bottom-sheet
@@ -173,8 +168,8 @@ block content
               span.card-title Get A Pass
               form#passForm(method='post')
                 #depDiv.input-field.col.s12
-                  select#department.white-text.validate(name='department', required='', onchange="depToReasonAJAX(this.value, '<?php echo $_SESSION['period'] ?>');")
-                    option(value='', disabled='', selected='') Choose A Department
+                  select#department.white-text.validate(name='department', required='', onchange="console.log('Nothing Here yet')")
+                    option(value='', disabled, selected) Choose A Department
                     option(value='LEC') Executive Functioning (LEC)
                     option(value='Math') Math Tutoring
                     option(value='Library') Library
@@ -222,17 +217,17 @@ block content
     }
   script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
   // Compiled and minified JavaScript
-  script(src='js/materialize.js')
-  script(src='js/passport.js')
+  script(src='javascripts/materialize.js')
+  script(src='javascripts/passport.js')
   // <script src="js/PICS.js"></script>
   script.
     $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal-trigger').leanModal();
+    $('.modal-trigger').modal();
     $(".button-collapse").sideNav();
     $('.tooltipped').tooltip({delay: 50});
     $('select').material_select();
-    $.when(AllStudentmessageAjaxAfterPageLoad(), checkDebugModeCookies(), getMyPasses()).done(function(a1, a2, a3){
+    $.when(checkDebugModeCookies(), checkForWeirdKid()).done(function(a1, a2){
     $('#fullAjaxLoadingScreen').removeClass("loading");
     });
     });
