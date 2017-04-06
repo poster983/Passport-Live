@@ -8,3 +8,5 @@ public/stylesheets/style\.css\.map
 public/stylesheets/css/
 
 rethinkdb_data/
+
+config/secrets\.json
