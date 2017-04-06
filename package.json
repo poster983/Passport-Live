@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Passport Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -28,11 +28,12 @@
     "express": "~4.14.1",
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.9.8",
-    "pug": "~2.0.0-beta10",
     "serve-favicon": "~2.3.2",
     "forever-monitor": "latest",
     "config": "latest",
-    "nodemon": "latest"
+    "nodemon": "latest",
+    "mustache-express": "1.2.4",
+    "passport": "0.3.2"
   },
   "license": "AGPL-3.0"
 }

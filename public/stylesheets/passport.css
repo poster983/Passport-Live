@@ -33,59 +33,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 .nav-sandwich {
   padding-left: 10px; }
-/*Icons*/
-/* Rules for sizing the icon. */
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
 
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
-
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 /*PassportLoader*/
 /* USAGE:
 
-section#fullAjaxLoadingScreen.loadingScreen.loading
-  .vCenter
-    .passportLoader.box
-      .dark-half
-      img.logo(alt='Passport Is Loading', src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA4Ny42IDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgODcuNiAxMDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRUQyMTI0O30KPC9zdHlsZT4KPGc+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiw0OS42bDAsMTkuNWMwLDAuOSwwLDkuNS0xMS45LDMuNWMtMTEuOS02LTUuMi0xMi44LTQuNC0xM2MtNy0yLjItMTMuNC04LjItMTguNS0xNC4zCgkJYy01LDExLDQsMjIuNyw0LjQsMjQuNGMxLjEtMS4yLDIuNy0xLDMuNy0wLjhjMTIuMSwxOC41LDI4LDE2LjMsMzIuMywyMS41YzQuMy01LjIsMjAuMi0zLDMyLjMtMjEuNWMxLTAuMiwyLjYtMC4zLDMuNywwLjgKCQljMC40LTEuNyw5LjQtMTMuNCw0LjQtMjQuNGMtNS4xLDYuMi0xMS41LDEyLjItMTguNSwxNC4zYzAuOCwwLjIsNy41LDctNC40LDEzYy0xMS45LDYtMTAuOS0yLjctMTAuOS0zLjVsMC0xOS41Ii8+Cgk8Zz4KCQk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiwxMC44YzMuNC0wLjUsOC4yLTEsMTUuMi0xYzYuNywwLDExLjUsMS4yLDE0LjcsMy43YzMuMiwyLjMsNS4zLDYuNCw1LjMsMTEuMWMwLDQuNy0xLjYsOC43LTQuNSwxMS40CgkJCWMtMy43LDMuMy05LjEsNC44LTE1LjQsNC44Yy0xLjIsMC0yLjMtMC4xLTMtMC4xdjE1LjZIMzguMlYxMC44eiBNNTAuNCwzMS4yYzAuNywwLjEsMS41LDAuMSwyLjgsMC4xYzQuOCwwLDcuOC0yLjUsNy44LTYuNAoJCQljMC0zLjQtMi4zLTUuOC03LTUuOGMtMS44LDAtMywwLjEtMy42LDAuM1YzMS4yeiIvPgoJPC9nPgo8L2c+Cjwvc3ZnPgo=')
-    h5.center.white-text Loading
-    .hCenter
-      .preloader-wrapper.big.active
-        .spinner-layer.spinner-blue
-          .circle-clipper.left
-            .circle
-          .gap-patch
-            .circle
-          .circle-clipper.right
-            .circle
-        .spinner-layer.spinner-red
-          .circle-clipper.left
-            .circle
-          .gap-patch
-            .circle
-          .circle-clipper.right
-            .circle
-        .spinner-layer.spinner-yellow
-          .circle-clipper.left
-            .circle
-          .gap-patch
-            .circle
-          .circle-clipper.right
-            .circle
-        .spinner-layer.spinner-green
-          .circle-clipper.left
-            .circle
-          .gap-patch
-            .circle
-          .circle-clipper.right
-            .circle
+<div class="passportLoader box">
+  <div class="dark-half"></div>
+ <img class="logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA4Ny42IDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgODcuNiAxMDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojRUQyMTI0O30KPC9zdHlsZT4KPGc+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiw0OS42bDAsMTkuNWMwLDAuOSwwLDkuNS0xMS45LDMuNWMtMTEuOS02LTUuMi0xMi44LTQuNC0xM2MtNy0yLjItMTMuNC04LjItMTguNS0xNC4zCgkJYy01LDExLDQsMjIuNyw0LjQsMjQuNGMxLjEtMS4yLDIuNy0xLDMuNy0wLjhjMTIuMSwxOC41LDI4LDE2LjMsMzIuMywyMS41YzQuMy01LjIsMjAuMi0zLDMyLjMtMjEuNWMxLTAuMiwyLjYtMC4zLDMuNywwLjgKCQljMC40LTEuNyw5LjQtMTMuNCw0LjQtMjQuNGMtNS4xLDYuMi0xMS41LDEyLjItMTguNSwxNC4zYzAuOCwwLjIsNy41LDctNC40LDEzYy0xMS45LDYtMTAuOS0yLjctMTAuOS0zLjVsMC0xOS41Ii8+Cgk8Zz4KCQk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMzguMiwxMC44YzMuNC0wLjUsOC4yLTEsMTUuMi0xYzYuNywwLDExLjUsMS4yLDE0LjcsMy43YzMuMiwyLjMsNS4zLDYuNCw1LjMsMTEuMWMwLDQuNy0xLjYsOC43LTQuNSwxMS40CgkJCWMtMy43LDMuMy05LjEsNC44LTE1LjQsNC44Yy0xLjIsMC0yLjMtMC4xLTMtMC4xdjE1LjZIMzguMlYxMC44eiBNNTAuNCwzMS4yYzAuNywwLjEsMS41LDAuMSwyLjgsMC4xYzQuOCwwLDcuOC0yLjUsNy44LTYuNAoJCQljMC0zLjQtMi4zLTUuOC03LTUuOGMtMS44LDAtMywwLjEtMy42LDAuM1YzMS4yeiIvPgoJPC9nPgo8L2c+Cjwvc3ZnPgo=">
+</div>
+<h5 class="center white-text">Loading</h5>
 
 */
 .loadingScreen.loading {

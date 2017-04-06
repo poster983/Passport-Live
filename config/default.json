@@ -1,0 +1,23 @@
+{
+	"passGroups": {
+		"teacher": {  
+			"viewName": "Teacher", //what it will look like to students
+			"canAcceptPassess": true,
+			"viewType": "<select>", // how to display the people
+			"hasRespectiveAccount": true, //will the pass go to someone's account
+			"fillSourse": "db",
+			"defaults": { // how each account setting will 
+				"notifyOnNewPass": true, //on default will they recieve a notification on a new pass
+
+			}
+		}
+	},
+	"permissionGroups": { //set in DB
+		"default": null, //todo
+		"teacher": {
+			"panel": {//what areas are they allowed to access
+				"teacher": true
+			}
+		}
+	}
+}

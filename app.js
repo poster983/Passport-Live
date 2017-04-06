@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var forever = require('forever-monitor');
+var mustacheExpress = require('mustache-express');
 
 
 /*Routes*/
@@ -28,8 +29,9 @@ var app = express();
   foreverChild.start();
   */
 // view engine setup
+app.engine('mustache', mustacheExpress());
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'mustache');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -46,7 +48,6 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', studentView);
-app.use('/index', index)
 app.use('/users', users);
 
 // catch 404 and forward to error handler
