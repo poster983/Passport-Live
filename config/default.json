@@ -19,5 +19,10 @@
 				"teacher": true
 			}
 		}
+	},
+	"dashboards": {
+		"student": {
+			//todo: 
+		}
 	}
 }
