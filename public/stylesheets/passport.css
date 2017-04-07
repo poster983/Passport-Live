@@ -147,6 +147,7 @@ See if you can make it all the "P" via an ::after
   background-color: #00b8d4 !important;
   -webkit-transition: background-color .3s ease .15s;
   transition: background-color .3s ease .15s; }
+
 /* target: hsl(188°, 100%, 42%)
 base: hsl(38, 24.5%, 60%)
 
@@ -156,23 +157,20 @@ S: 100+(24.5-100) =  -75.5 (relative to base 100%: 24.5)
 L: 100+ (42 - 60) =  82 (relative to base 100%: 18)
 
 */
-.filter-color-blue{
-  -webkit-filter: brightness(100%) sepia(1)  hue-rotate(140deg) saturate(300%) brightness(100%);
+.filter-color-blue {
+  -webkit-filter: brightness(100%) sepia(1) hue-rotate(140deg) saturate(300%) brightness(100%);
   /*      ------ base color ------  -------  new target -------------------------------*/
-filter: brightness(100%) sepia(1)  hue-rotate(140deg) saturate(300%) brightness(100%);
+  filter: brightness(100%) sepia(1) hue-rotate(140deg) saturate(300%) brightness(100%); }
 
-}
-.filter-color-red{
-  -webkit-filter: brightness(100%) sepia(1)  hue-rotate(140deg) saturate(300%) brightness(100%);
+.filter-color-red {
+  -webkit-filter: brightness(100%) sepia(1) hue-rotate(140deg) saturate(300%) brightness(100%);
   /*      ------ base color ------  -------  new target -------------------------------*/
-filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(100%);
+  filter: brightness(100%) sepia(1) hue-rotate(330deg) saturate(350%) brightness(100%); }
 
-}
 .cursor-point {
-  cursor: pointer;
-}
+  cursor: pointer; }
 
-.collection-item > div.submitAnimationEnabled > .avatar-icon{
+.collection-item > div.submitAnimationEnabled > .avatar-icon {
   position: absolute;
   overflow: hidden;
   left: 26px;
@@ -182,80 +180,60 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
   z-index: 20;
   cursor: pointer;
   -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
+  transform: rotate(0deg);
   -webkit-transform-origin: center center;
-          transform-origin: center center;
-}
+  transform-origin: center center; }
 
 /*icon entrence*/
-.collection-item > div.submitAnimationEnabled > .avatar-icon.animate{
-
+.collection-item > div.submitAnimationEnabled > .avatar-icon.animate {
   display: inline-block;
   -webkit-animation: collectionAvatarIcon 1s;
-          animation: collectionAvatarIcon 1s;
+  animation: collectionAvatarIcon 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-}
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIcon {
   0% {
     -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-  }
+    transform: rotate(-45deg); }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-}
+    transform: rotate(0deg); } }
 
 @keyframes collectionAvatarIcon {
   0% {
     -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-  }
+    transform: rotate(-45deg); }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-}
+    transform: rotate(0deg); } }
 
 /* submit pt1 */
-.collection-item > div.submitAnimationEnabled > .avatar-icon > i.animateSubmit{
+.collection-item > div.submitAnimationEnabled > .avatar-icon > i.animateSubmit {
   -webkit-animation: collectionAvatarIconAnimateSubmit 1s;
-          animation: collectionAvatarIconAnimateSubmit 1s;
+  animation: collectionAvatarIconAnimateSubmit 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-
-}
-
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIconAnimateSubmit {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-    opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-    opacity: 0;
-  }
-}
-
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 @keyframes collectionAvatarIconAnimateSubmit {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-    opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-    opacity: 0;
-  }
-}
-
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 /*Submit pt 2*/
 .collection-item > div.submitAnimationEnabled > .returnIcon {
@@ -268,81 +246,63 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
   z-index: 20;
   cursor: pointer;
   -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
+  transform: rotate(0deg);
   -webkit-transform-origin: center center;
-          transform-origin: center center;
-}
-.collection-item > div.submitAnimationEnabled > .returnIcon.animate{
+  transform-origin: center center; }
+
+.collection-item > div.submitAnimationEnabled > .returnIcon.animate {
   display: inline-block;
   -webkit-animation: collectionAvatarIconAnimateSubmitReturnIcon 1s;
-          animation: collectionAvatarIconAnimateSubmitReturnIcon 1s;
+  animation: collectionAvatarIconAnimateSubmitReturnIcon 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-}
-
-
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIconAnimateSubmitReturnIcon {
   0% {
     -webkit-transform: rotate(-170deg);
-            transform: rotate(-170deg);
-            opacity: 0;
-  }
+    transform: rotate(-170deg);
+    opacity: 0; }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
-}
-
-
+    transform: rotate(0deg);
+    opacity: 1; } }
 
 @keyframes collectionAvatarIconAnimateSubmitReturnIcon {
   0% {
     -webkit-transform: rotate(-170deg);
-            transform: rotate(-170deg);
-            opacity: 0;
-  }
+    transform: rotate(-170deg);
+    opacity: 0; }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
-}
+    transform: rotate(0deg);
+    opacity: 1; } }
 
-.collection-item > div.submitAnimationEnabled > .returnIcon.animateOut{
+.collection-item > div.submitAnimationEnabled > .returnIcon.animateOut {
   display: inline-block;
   -webkit-animation: collectionAvatarIconAnimateSubmitReturnIconOut 1s;
-          animation: collectionAvatarIconAnimateSubmitReturnIconOut 1s;
+  animation: collectionAvatarIconAnimateSubmitReturnIconOut 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-}
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIconAnimateSubmitReturnIconOut {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-            opacity: 0;
-  }
-}
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 @keyframes collectionAvatarIconAnimateSubmitReturnIconOut {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-            opacity: 0;
-  }
-}
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 .collection-item > div.submitAnimationEnabled > .undoIcon {
   position: absolute;
@@ -354,84 +314,63 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
   z-index: 20;
   cursor: pointer;
   -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
+  transform: rotate(0deg);
   -webkit-transform-origin: center center;
-          transform-origin: center center;
-}
-.collection-item > div.submitAnimationEnabled > .undoIcon.animate{
+  transform-origin: center center; }
+
+.collection-item > div.submitAnimationEnabled > .undoIcon.animate {
   display: inline-block;
   -webkit-animation: collectionAvatarIconAnimateSubmitReturnIconUndo 1s;
-          animation: collectionAvatarIconAnimateSubmitReturnIconUndo 1s;
+  animation: collectionAvatarIconAnimateSubmitReturnIconUndo 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-}
-
-
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIconAnimateSubmitReturnIconUndo {
   0% {
     -webkit-transform: rotate(-170deg);
-            transform: rotate(-170deg);
-            opacity: 0;
-  }
+    transform: rotate(-170deg);
+    opacity: 0; }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
-}
-
-
+    transform: rotate(0deg);
+    opacity: 1; } }
 
 @keyframes collectionAvatarIconAnimateSubmitReturnIconUndo {
   0% {
     -webkit-transform: rotate(-170deg);
-            transform: rotate(-170deg);
-            opacity: 0;
-  }
+    transform: rotate(-170deg);
+    opacity: 0; }
   100% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
-}
+    transform: rotate(0deg);
+    opacity: 1; } }
 
-
-.collection-item > div.submitAnimationEnabled > .undoIcon.animateOut{
+.collection-item > div.submitAnimationEnabled > .undoIcon.animateOut {
   display: inline-block;
   -webkit-animation: collectionAvatarIconAnimateSubmitReturnIconUndoOut 1s;
-          animation: collectionAvatarIconAnimateSubmitReturnIconUndoOut 1s;
+  animation: collectionAvatarIconAnimateSubmitReturnIconUndoOut 1s;
   -webkit-animation-timing-function: ease-in-out;
-          animation-timing-function: ease-in-out;
-}
-
+  animation-timing-function: ease-in-out; }
 
 @-webkit-keyframes collectionAvatarIconAnimateSubmitReturnIconUndoOut {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-            opacity: 0;
-  }
-}
-
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 @keyframes collectionAvatarIconAnimateSubmitReturnIconUndoOut {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-            opacity: 1;
-  }
+    transform: rotate(0deg);
+    opacity: 1; }
   100% {
     -webkit-transform: rotate(170deg);
-            transform: rotate(170deg);
-            opacity: 0;
-  }
-}
+    transform: rotate(170deg);
+    opacity: 0; } }
 
 .Xleft {
   position: absolute;

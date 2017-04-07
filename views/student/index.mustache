@@ -219,8 +219,6 @@ email: hi@josephhassell.com
 
 
 
-
-
     <!-- System Message-->
         <div id="ajaxAllStudentMess"></div>
         <!--login Message-->
@@ -243,10 +241,18 @@ email: hi@josephhassell.com
                     <span class="card-title">Get A Pass</span>
 
                       <form id="passForm" method="post">
-
-                          <div id="depDiv" class="input-field col s12">
+                          <div id="groDiv" class="input-field col s12">
+                            <select id="passGroup" name="passGroup" required class="white-text validate">
+                              <option value="" disabled selected>Choose A Group</option>
+                              {{#passGroups}}
+                                <option value="{{value}}">{{viewName}}</option>
+                              {{/passGroups}}
+                            </select>
+                            <label>Group</label>
+                          </div>
+                          <div id="locDiv" class="input-field col s12">
                             <select id="department" name="department" required class="white-text validate" onchange="depToReasonAJAX(this.value, '<?php echo $_SESSION['period'] ?>');">
-                              <option value="" disabled selected>Choose A Department</option>
+                              <option value="" disabled selected>Choose A Location</option>
                               <option value="LEC">Executive Functioning (LEC)</option>
                               <option value="Math">Math Tutoring</option>
                               <option value="Library">Library</option>
@@ -255,7 +261,7 @@ email: hi@josephhassell.com
                               <option value="Foreign Language">Foreign Language Tutoring</option>
                               <!-- NO LONGER USED <option value="Athletic Mentor">Athletic Mentor</option>-->
                             </select>
-                            <label>Department</label>
+                            <label>Location</label>
 
                           </div>
                           <div id="ReasonAJAX"></div>

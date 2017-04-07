@@ -1,24 +1,63 @@
+//NEEDS DOCUMENTATION https://www.gitbook.com/book/poster983/passport-developer
 {
 	"passGroups": {
+		"enabledPassGroups": ["teacher", "LC", "counselors"], // enables each pass group defined 
 		"teacher": {  
 			"viewName": "Teacher", //what it will look like to students
-			"canAcceptPassess": true,
-			"viewType": "<select>", // how to display the people
-			"hasRespectiveAccount": true, //will the pass go to someone's account
+			"viewType": "search", // how to display the people in the passgroup
+			"hasRespectiveAccountGroup": "teacher", //will the pass go to someone's account
+			"fillSourse": "db",//where passport should look to fill the ui.
+			"customGroupID": 1 //for identifying this pass group in a DB
+		},
+		"LC": {
+			"viewName": "LC",
+			"viewType": "select", // how to display the people in the passgroup
+			"hasRespectiveAccountGroup": "LC", //will the pass go to someone's account
 			"fillSourse": "db",
-			"defaults": { // how each account setting will 
-				"notifyOnNewPass": true, //on default will they recieve a notification on a new pass
-
-			}
+			"showCustomDestinationName": true,
+			"customGroupID": 2 //for identifying this pass group in a DB
+		},
+		"counselors": {
+			"viewName": "Counselors",
+			"viewType": "select", // how to display the people in the passgroup
+			"hasRespectiveAccountGroup": "counselors", //will the pass go to someone's account
+			"fillSourse": "db",
+			"customGroupID": 3 //for identifying this pass group in a DB
 		}
 	},
-	"permissionGroups": { //set in DB
+	"userGroups": { 
 		"default": null, //todo
 		"teacher": {
-			"panel": {//what areas are they allowed to access
-				"teacher": true
+			"permissions": {
+				"dashboards": ["teacher"],// what they can login to.
+				"passes": ["send", "recieve"]// they may send passes to students to come to them, and they may recieve passes
+			},
+			"defaults": { // how each account setting will 
+				"notifyOnNewPass": ["chromeNotification", "email"], //on default will they recieve a notification on a new pass
+
 			}
-		}
+		},
+		"LC": {
+			"useCustomDestinationName": true,//will prompt user to enter a destination name at account setup instead of showing name.
+			"permissions": {
+				"dashboards": ["teacher", "kiosk"],// what they can login to.
+				"passes": ["send", "recieve"]// they may send passes to students to come to them, and they may recieve passes
+			},
+			"defaults": { // how each account setting will 
+				"notifyOnNewPass": false, //on default will they recieve a notification on a new pass
+
+			}
+		},
+		"counselors": {
+			"permissions": {
+				"dashboards": ["teacher"],// what they can login to.
+				"passes": ["send", "recieve"]// they may send passes to students to come to them, and they may recieve passes
+			},
+			"defaults": { // how each account setting will 
+				"notifyOnNewPass": ["chromeNotification", "email"], //on default will they recieve a notification on a new pass
+
+			}
+		},
 	},
 	"dashboards": {
 		"student": {
