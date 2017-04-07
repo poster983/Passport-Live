@@ -12,5 +12,6 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
 4. Download the latest version of "Passport-Live", `~$ mv` it to your desiered location  
 5. `~$ cd` into its containing folder and then Unzip it.  
 6. Run `npm install -g`
+5. done
 ## Usage
 To start the server, run <code>npm start</code> from within the folder "package.json" is located.
