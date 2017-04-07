@@ -10,6 +10,6 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
    b. If that dosn't work, try: `sudo chown -R $(whoami) /usr/local/lib/node_modules`  
 3. Download the latest version of "Passport-Live", `~$ mv` it to your desiered location  
 4. Unzip it.  
-5.  
+5. done
 ## Usage
 To start the server, run <code>npm start</code>
