@@ -1,4 +1,5 @@
 //NEEDS DOCUMENTATION https://www.gitbook.com/book/poster983/passport-developer
+
 {
 	"passGroups": {
 		"enabledPassGroups": ["teacher", "LC", "counselors"], // enables each pass group defined 

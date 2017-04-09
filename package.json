@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -12,7 +12,9 @@
   ],
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "npm run start:node & npm run start:db & wait",
+    "start:node": "nodemon ./bin/www",
+    "start:db": "rethinkdb"
   },
   "repository": {
     "type": "git",
