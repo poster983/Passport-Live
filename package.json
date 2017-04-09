@@ -12,7 +12,9 @@
   ],
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "npm run start:node & npm run start:db & wait",
+    "start:node": "nodemon ./bin/www",
+    "start:db": "rethinkdb"
   },
   "repository": {
     "type": "git",

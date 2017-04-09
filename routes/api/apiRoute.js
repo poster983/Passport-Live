@@ -1,5 +1,4 @@
-<!doctype html>
-<!--
+/*
 Passport-Live is a modern web app for schools that helps them manage passes.
     Copyright (C) 2017  Joseph Hassell
 
@@ -17,9 +16,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 email: hi@josephhassell.com
--->
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css'>
-  <body>
+*/
+var express = require('express');
+var router = express.Router();
+//todo API
+router.get('/', function(req, res, next) {
+	res.send('Please Make a Request ');
+});
+module.exports = router;
