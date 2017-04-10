@@ -393,3 +393,104 @@ L: 100+ (42 - 60) =  82 (relative to base 100%: 18)
   height: 250px;
   transform: rotate(-45deg);
   background-color: white; }
+
+/*From passr.css OLD*/
+.blur-g {
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  position: relative;
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px); }
+
+.blur-sect {
+  z-index: -1;
+  position: relative;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px); }
+
+.containerlogin {
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 50%; }
+
+@media only screen and (min-width: 601px) {
+  .containerlogin {
+    width: 45%; } }
+
+@media only screen and (min-width: 993px) {
+  .containerlogin {
+    width: 30%; } }
+
+.containerlogin .row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem; }
+
+.signin-allign {
+  float: none;
+  margin: 100px auto;
+  width: 300px;
+  height: 300px; }
+
+.signup-allign {
+  float: none;
+  margin: 100px auto;
+  width: 600px;
+  height: 300px; }
+
+.blue-teal {
+  background: -webkit-linear-gradient(#03A9F4, #009688);
+  /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#03A9F4, #009688);
+  /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#03A9F4, #009688);
+  background: linear-gradient(#03A9F4, #009688); }
+
+.red-purple {
+  background-image: linear-gradient(#e74c3c 25%, #9b26af 100%);
+  background-image: -moz-linear-gradient(#e74c3c 25%, #9b26af 100%);
+  background-image: -webkit-linear-gradient(#e74c3c 25%, #9b26af 100%);
+  background-image: -o-linear-gradient(#e74c3c 25%, #9b26af 100%);
+  background-image: -ms-linear-gradient(#e74c3c 25%, #9b26af 100%); }
+
+.red-orange {
+  background: linear-gradient(180deg, #e74c3c, #e67e22);
+  background: -webkit-linear-gradient(180deg, #e74c3c, #e67e22); }
+
+.eagleBlood {
+  background: #f85032;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #f85032, #e73827);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #f85032, #e73827);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+
+.blur-back::before {
+  content: " ";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #2c3e50;
+  background: url("https://source.unsplash.com/category/nature/1920x1080") no-repeat center fixed;
+  z-index: -1;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px); }
+
+.blur-back {
+  position: relative;
+  min-height: 100%; }

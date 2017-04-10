@@ -26,14 +26,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var forever = require('forever-monitor');
 var mustacheExpress = require('mustache-express');
-
+var passport = require('passport')
 
 /*Routes*/
 var studentView = require('./routes/student');
-var api = require('./routes/api/apiRoute.js');
+var api = require('./routes/api/apiRoute');
+var auth = require('./routes/auth');
 //var users = require('./routes/users');
 
 var app = express();
+
+
+
 //Forever - MEMORY LEAK
 /*
   var foreverChild = new (forever.Monitor)('app.js', {
@@ -55,6 +59,11 @@ app.set('view engine', 'mustache');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
+//passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -69,6 +78,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', studentView);
 app.use('/api', api);
+app.use('/auth', auth);
 //app.use('/users', users);
 
 // catch 404 and forward to error handler

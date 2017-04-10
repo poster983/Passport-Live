@@ -12,9 +12,10 @@
   ],
   "private": true,
   "scripts": {
-    "start": "npm run start:node & npm run start:db & wait",
+    "start": "echo 'please run start:db, then start:node  this will change in later updates'",
     "start:node": "nodemon ./bin/www",
-    "start:db": "rethinkdb"
+    "start:db": "rethinkdb",
+    "configure:db": "./bin/configure"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,12 @@
     "config": "latest",
     "nodemon": "latest",
     "mustache-express": "1.2.4",
-    "passport": "0.3.2"
+    "passport": "0.3.2",
+    "bcrypt-nodejs": "0.0.3",
+    "passport-localapikey": "latest",
+    "passport-local": "latest",
+    "connect-ensure-login": "latest",
+    "rethinkdb": "latest"
   },
   "license": "AGPL-3.0"
 }
