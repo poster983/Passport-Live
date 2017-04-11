@@ -11,7 +11,10 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
    b. If that dosn't work, try: `sudo chown -R $(whoami) /usr/local/lib/node_modules`  
 4. Download the latest version of "Passport-Live", `~$ mv` it to your desiered location  
 5. `~$ cd` into its containing folder and then Unzip it.  
-6. Run `npm install -g`
-7. Done
+6. Run `~$ npm install -g`  
+7. Run `~$ npm run start:db`  
+8. Run in a new termanal instance `~$ npm run configure:db`  
+9. CTRL^C Exits the program.
+
 ## Usage
-To start the server, run <code>npm start</code> from within the folder "package.json" is located.
+To start the server, run ~~~$ npm start~~ `~$ npm run start:db` THEN `~$ npm run start:node` from within the folder "package.json" is located.
