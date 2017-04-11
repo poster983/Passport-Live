@@ -26,37 +26,64 @@ var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
   // Rethink db connection
-  var connection = null;
-r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
+
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
 });
 
-/*Local PASSPORT.js auth*/
+passport.deserializeUser(function(id, done) {
+     r.table("accounts").get(id).run(connection, function(err, user) {
+    done(err, user);
+  });
+
+});
+
+/*Local  PASSPORT.js auth*/
 passport.use(new LocalStrategy({
-    emailField: 'email',
+    usernameField: 'email',
     passwordField: 'passwd',
-    session: true
+    session: true,
+    passReqToCallback : true
     },
-  function(email, password, done) {
-    User.findOne({ email: email }, function (err, user) {
+  function(req, username, password, done) {
+    console.log("hi");
+    r.table("accounts").pluck("password").filter({
+        "email": username
+    }).run(connection, function(err, user){
+        console.log(user);
+        console.log(err);
+       return done(null, false, { message: 'Incorrect username.' });
+    })
+    return done(null, false, { message: 'Incorrect everything.' });
+/*
+    User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect email.' });
+        return done(null, false, { message: 'Incorrect username.' });
       }
       if (!user.validPassword(password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
-    });
+    });*/
   }
 ));
+
+
+
 
 
 /* GET home page. */
 
 router.get('/login', function(req, res, next) {
   res.render('auth/login', { title: 'Login -- Passport' });
+});
+router.post('/login', function(req, res) {
+    //console.log(req);  exports.auth = 
+ passport.authenticate('local', { successRedirect: '/',
+                                   failureRedirect: '/login',
+                                   failureFlash: true })
 });
 //et signup
 router.get('/signup', function(req, res, next) {
@@ -78,5 +105,5 @@ router.post('/signup', function(req, res) {
     });
 });
 
-
+module.exports = passport;
 module.exports = router;
