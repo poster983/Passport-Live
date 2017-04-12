@@ -27,9 +27,9 @@ var passport = require('passport')
 
 
 
-
+//require('connect-ensure-login').ensureLoggedIn('/auth/login'),
 /* GET Student page. */
-router.get('/', require('connect-ensure-login').ensureLoggedIn('/auth/login'), function(req, res, next) {
+router.get('/', function(req, res, next) {
 
 	enabledPassGroups = config.get('passGroups.enabledPassGroups');
 	var passGroups = new Array();
