@@ -20,31 +20,49 @@ email: hi@josephhassell.com
 -->
 
     <body class="blur-back">
-        <div class="containerlogin signin-allign">
+        <div class="containerlogin signup-allign">
 
-            <div class="card-panel eagleBlood animated fadeInDown">
-            <form name="form1" method="post" action="/auth/signup">
-                <h3 class="center">Welcome To Passport</h3>
+            <div class="card-panel animated fadeInDown">
+            <form name="form1" method="post" action="{{sendTo}}">
+                <h3 class="center">Signup For Passport</h3>
                 <div class="card-panel">
+                     <div class="input-field">
+                        <p>
+                            <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstname">
+                            <label for="firstname">First Name</label>
+                        </p>
+                    </div>
+                    <div class="input-field">
+                        <p>
+                            <input type="text" required id="lastname" autocomplete="off" class="validate" name="lastname">
+                            <label for="lastname">Last Name</label>
+                        </p>
+                    </div>
+                <!--TODO: Only allow certain email domains to signup-->
+                    <div class="input-field">
+                        <input name="email" type="email" class="validate" id="email">
+                        <label for="email">Email</label>
+                    </div>
+                     <div class="input-field">
+                        <p>
+                            <input type="number" required id="studentID" autocomplete="off" class="validate" name="studentID">
+                            <label data-error="Must Be A Number!" for="studentID">Student ID</label>
+                        </p>
+                    </div>
 
-
-                <div class="input-field">
-                    <input name="email" type="email" id="email">
-                    <label for="email">Email</label>
-                </div>
-
-                <div class="input-field">
-                    <input name="password" type="password" id="password">
-                    <label for="password">Password</label>
-                </div>
+                    <div class="input-field">
+                        <input name="password" type="password" id="password">
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="input-field">
+                        <input name="passwordVer" type="password" id="passwordVer">
+                        <label for="passwordVer">Password (Again)</label>
+                    </div>
                 </div>
                 <button class="btn waves-effect waves-light red darken-4" type="submit" name="Submit">Signup
                     <i class="material-icons right">lock_open</i>
                 </button>
-								<br>
-								<div class="section">
-								<a class="waves-effect waves-light btn" href="createAccount.php">Create An Account</a>
-							</div>
+								
             </form>
             			{{#message}}
 						<h6> {{message}} </h6>
@@ -52,8 +70,10 @@ email: hi@josephhassell.com
             </div>
         </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="js/materialize.js"></script>
-	<script src="js/passport.js"></script>
+    <script src="/js/materialize.js"></script>
+	<script src="/js/passport.js"></script>
+
+
     </body>
 
 

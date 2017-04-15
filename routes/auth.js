@@ -19,91 +19,92 @@ email: hi@josephhassell.com
 */
 
 var express = require('express');
-var router = express();
-var bodyParser = require('body-parser');
+var router = express.Router();
 var r = require('rethinkdb');
+var bcrypt = require('bcrypt-nodejs');
+/*
+var httpv = require('http').Server(router);
+var io = require('socket.io')(httpv);
+*/
+//var r = require('../modules/db/index.js')();
 var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+//  , LocalStrategy = require('passport-local').Strategy;
+
+
+
 
   // Rethink db connection
-
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-     r.table("accounts").get(id).run(connection, function(err, user) {
-    done(err, user);
-  });
-
-});
-
-/*Local  PASSPORT.js auth*/
-passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'passwd',
-    session: true,
-    passReqToCallback : true
-    },
-  function(req, username, password, done) {
-    console.log("hi");
-    r.table("accounts").pluck("password").filter({
-        "email": username
-    }).run(connection, function(err, user){
-        console.log(user);
-        console.log(err);
-       return done(null, false, { message: 'Incorrect username.' });
-    })
-    return done(null, false, { message: 'Incorrect everything.' });
-/*
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });*/
-  }
-));
-
-
+var connection = null;
+        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+            if (err) throw err;
+            connection = conn;
+        });
 
 
 
 /* GET home page. */
 
 router.get('/login', function(req, res, next) {
-  res.render('auth/login', { title: 'Login -- Passport' });
+  res.render('auth/login', { doc_Title: 'Login -- Passport', message: req.flash('loginMessage')});
 });
-router.post('/login', function(req, res) {
-    //console.log(req);  exports.auth = 
- passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login',
-                                   failureFlash: true })
-});
+router.post('/login', passport.authenticate('local-login', { 
+  successRedirect: '/',
+  failureRedirect: '/auth/login',
+  failureFlash: true 
+}));
+
+
 //et signup
-router.get('/signup', function(req, res, next) {
-  res.render('auth/signup', { title: 'Signup -- Passport' });
+router.get('/signup/student', function(req, res, next) {
+  res.render('auth/signup', { doc_Title: 'Signup -- Passport', sendTo:'/auth/signup/student', message: req.flash('signupMessage')});
 });
 
 // POST MAke New Account 
 //THIS IS NOT FINAL MUST BE REWRITAIN 
-router.post('/signup', function(req, res) {
-    var email=req.body.email;
+router.post('/signup/student', function(req, res) {
+  var email=req.body.email;
   var password=req.body.password;
-  console.log("User name = "+email+", password is "+password);
-  promice = r.table("accounts").insert({
-    email: email,
-    password: password
-  }).run(connection);
-    promice.then(function(conn) {
-      res.end("yes");
+  var passwordVer=req.body.passwordVer;
+  var fn = req.body.firstname;
+  var ln = req.body.lastname;
+  var stuID = req.body.studentID;
+  if(password != passwordVer) {
+    req.flash('signupMessage', 'Passwords Don\'t Match');
+    res.redirect('/auth/signup/student');
+    
+  } else {
+    bcrypt.hash(password, null, null, function(err, hash) {
+      // Store hash in your password DB.
+      if(r.table("accounts")('email').contains(email).run(connection)){
+        req.flash('signupMessage', 'Email Already Taken');
+        res.redirect('/auth/signup/student');
+      } else {
+      console.log("User name = "+email+", password is "+password);
+      promice = r.table("accounts").insert({
+        firstName: fn,
+        lastName: ln,
+        stuID: stuID,
+        email: email,
+        password: hash,
+
+      }).run(connection);
+        promice.then(function(conn) {
+          res.end("yes");
+        });
+      }
     });
+  }
 });
 
-module.exports = passport;
+/*io.on('connection', function(socket){
+  console.log('a user connected');
+});*/
+
+
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/auth/login');
+});
+
+
 module.exports = router;

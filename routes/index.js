@@ -20,9 +20,9 @@ email: hi@josephhassell.com
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+//this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.redirect('student')
 });
 
 module.exports = router;

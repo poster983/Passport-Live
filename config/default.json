@@ -28,6 +28,17 @@
 	},
 	"userGroups": { 
 		"default": null, //todo
+		"student": {
+			"permissions": {
+				"dashboards": ["teacher"],// what they can login to.
+				"passes": ["send", "recieve"]// they may send passes to students to come to them, and they may recieve passes
+			},
+			"defaults": { // how each account setting will 
+				"notifyOnAssignNewPass": ["chromeNotification", "email"], //on default will they recieve a notification on a new pass
+
+			},
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+		},
 		"teacher": {
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.
@@ -36,7 +47,8 @@
 			"defaults": { // how each account setting will 
 				"notifyOnNewPass": ["chromeNotification", "email"], //on default will they recieve a notification on a new pass
 
-			}
+			},
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
 		},
 		"LC": {
 			"useCustomDestinationName": true,//will prompt user to enter a destination name at account setup instead of showing name.
@@ -47,7 +59,8 @@
 			"defaults": { // how each account setting will 
 				"notifyOnNewPass": false, //on default will they recieve a notification on a new pass
 
-			}
+			},
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
 		},
 		"counselors": {
 			"permissions": {
@@ -57,7 +70,8 @@
 			"defaults": { // how each account setting will 
 				"notifyOnNewPass": ["chromeNotification", "email"], //on default will they recieve a notification on a new pass
 
-			}
+			},
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
 		},
 	},
 	"dashboards": {

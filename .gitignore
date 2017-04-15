@@ -9,6 +9,4 @@ public/stylesheets/css/
 
 rethinkdb_data/
 
-config/secrets\.json
-
 passport\.sublime-workspace

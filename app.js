@@ -27,16 +27,21 @@ var bodyParser = require('body-parser');
 var forever = require('forever-monitor');
 var mustacheExpress = require('mustache-express');
 var passport = require('passport')
-
+var config = require('config');
+var flash = require('connect-flash');
+var r = require('rethinkdb');
+var bcrypt = require('bcrypt-nodejs');
 /*Routes*/
+var rootLevel = require('./routes/index');
+var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
-var auth = require('./routes/auth');
+
 //var users = require('./routes/users');
 
 var app = express();
 
-
+require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
 
 //Forever - MEMORY LEAK
 /*
@@ -59,15 +64,18 @@ app.set('view engine', 'mustache');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
-//passport
-  app.use(passport.initialize());
-  app.use(passport.session());
 
 
+//config 
+app.use(require('morgan')('combined'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(require('express-session')({ secret: config.get('secrets.session-key'), resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());// persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(require('node-sass-middleware')({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
@@ -76,7 +84,8 @@ app.use(require('node-sass-middleware')({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
-app.use('/', studentView);
+app.use('/', rootLevel);
+app.use('/student', studentView);
 app.use('/api', api);
 app.use('/auth', auth);
 //app.use('/users', users);

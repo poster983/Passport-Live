@@ -20,6 +20,7 @@ email: hi@josephhassell.com
 
 'use strict';
 
+
 var r = require('rethinkdb');
 require('rethinkdb-init')(r);
 
@@ -31,3 +32,5 @@ r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn)
 });
 
 r.conn = connection
+
+module.exports = r;
