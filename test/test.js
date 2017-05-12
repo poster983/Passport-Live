@@ -9,7 +9,7 @@ describe("Server Test", function(){
 	describe("GET /", function() {
 		it("returns status code 200 Continue", function() {
 			request.get(base_url, function(error, response, body) {
-				assert.equal(200, response.statusCode);
+				assert.equal(103, response.statusCode);
 				done();
       });
     });/*
