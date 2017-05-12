@@ -21,6 +21,10 @@ email: hi@josephhassell.com
 */
 
 
+
+
+
+
 /**
  * Module dependencies.
  */
@@ -112,7 +116,14 @@ function onListening() {
   console.log('Listening on ' + bind);
 }
 
+process.on('SIGINT', function() {
+  //socket.close();
+  console.log("Close")
+  server.close();
+  process.exit();
+});
 
 exports.closeServer = function(){
   server.close();
 };
+
