@@ -11,8 +11,8 @@ describe("Server Test", function(){
 			request.get(base_url, function(error, response, body) {
 				assert.equal(103, response.statusCode);
 				done();
-      });*/
-    });
+      });
+    });*/
 		it("returns status code 302 Found (Redirect)", function() {
 			request.get(base_url, function(error, response, body) {
 				assert.equal(302, response.statusCode);
