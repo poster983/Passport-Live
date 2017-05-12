@@ -15,7 +15,8 @@
     "start": "echo 'please run start:db, then start:node  this will change in later updates'",
     "start:node": "nodemon ./bin/www",
     "start:db": "rethinkdb",
-    "configure:db": "./bin/configure"
+    "configure:db": "./bin/configure",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.16.0",
+    "chateau": "latest",
     "config": "latest",
     "connect-ensure-login": "latest",
     "connect-flash": "~0.1.1",
@@ -44,8 +46,7 @@
     "passport-localapikey": "latest",
     "rethinkdb": "latest",
     "serve-favicon": "~2.3.2",
-    "socket.io": "^1.7.3",
-    "chateau": "latest"
+    "socket.io": "^1.7.3"
   },
   "license": "AGPL-3.0"
 }

@@ -7,6 +7,11 @@ before_install:
 - sudo apt-get install rethinkdb
 install:
   - npm install
+  - npm install mocha
+  - npm install request
+before_script:
+  - npm run start:db
+  - npm run configure:db
 node_js:
   - 'node'
   - '6'
