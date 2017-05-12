@@ -68,6 +68,7 @@ router.post('/signup/student', function(req, res) {
   var fn = req.body.firstname;
   var ln = req.body.lastname;
   var stuID = req.body.studentID;
+
   if(password != passwordVer) {
     req.flash('signupMessage', 'Passwords Don\'t Match');
     res.redirect('/auth/signup/student');
@@ -75,23 +76,29 @@ router.post('/signup/student', function(req, res) {
   } else {
     bcrypt.hash(password, null, null, function(err, hash) {
       // Store hash in your password DB.
-      if(r.table("accounts")('email').contains(email).run(connection)){
-        req.flash('signupMessage', 'Email Already Taken');
-        res.redirect('/auth/signup/student');
-      } else {
-      console.log("User name = "+email+", password is "+password);
-      promice = r.table("accounts").insert({
-        firstName: fn,
-        lastName: ln,
-        stuID: stuID,
-        email: email,
-        password: hash,
 
-      }).run(connection);
-        promice.then(function(conn) {
-          res.end("yes");
-        });
-      }
+      r.table("accounts")('email').contains(email).run(connection, function(err, con){
+          console.log(con)
+        
+        if(con){
+          console.log("Taken");
+          req.flash('signupMessage', 'Email Already Taken');
+          res.redirect('/auth/signup/student');
+        } else {
+        //console.log("User name = "+email+", password is "+password);
+        promice = r.table("accounts").insert({
+          firstName: fn,
+          lastName: ln,
+          stuID: stuID,
+          email: email,
+          password: hash,
+          userGroup: "student" // should be same as a usergroup in config/default.json
+        }).run(connection);
+          promice.then(function(conn) {
+            res.end("TODO: Confirmation Email and prompt student to goto their email");
+          });
+        }
+      });
     });
   }
 });

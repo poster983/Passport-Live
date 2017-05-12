@@ -1,4 +1,4 @@
-/*
+<!--
 Passport-Live is a modern web app for schools that helps them manage passes.
     Copyright (C) 2017  Joseph Hassell
 
@@ -16,32 +16,20 @@ Passport-Live is a modern web app for schools that helps them manage passes.
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 email: hi@josephhassell.com
-*/
-var express = require('express');
-var config = require('config');
-var router = express.Router();
+-->
 
-//this page will route each user to the correct page after login 
-router.get('/', function(req, res, next) {
-    if(req.user) {
+<!-- Scripts -->
+        <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+        <script>
+            if ('addEventListener' in window) {
+                window.addEventListener('load', function () {
+                    document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+                });
+                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+            }
+        </script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-        var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
-        if(permittedDash.length > 1) {
-            res.render('multiDashRoute',{doc_Title: "Passport", callbackURL: "/callback/multiDashRoute/", dashboards: permittedDash});
-        } else {
-            res.redirect(permittedDash[0]);
-        }
-        
-    } else {
-        console.log("not Logged In")
-        res.redirect('auth/login');
-    }
-  
-});
-
-router.post('/callback/multiDashRoute/', function(req, res, next) {
-
-});
-
-
-module.exports = router;
+        <!-- Compiled and minified JavaScript -->
+        <script src="js/materialize.js"></script>
+        <script src="js/passport.js"></script>

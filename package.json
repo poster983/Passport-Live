@@ -44,7 +44,8 @@
     "passport-localapikey": "latest",
     "rethinkdb": "latest",
     "serve-favicon": "~2.3.2",
-    "socket.io": "^1.7.3"
+    "socket.io": "^1.7.3",
+    "chateau": "latest"
   },
   "license": "AGPL-3.0"
 }
