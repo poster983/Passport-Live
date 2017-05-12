@@ -1,5 +1,6 @@
 # Passport-Live
-[![Build Status](https://travis-ci.org/poster983/Passport-Live.svg?branch=master)](https://travis-ci.org/poster983/Passport-Live)
+[![Build Status](https://travis-ci.org/poster983/Passport-Live.svg?branch=master)](https://travis-ci.org/poster983/Passport-Live)  
+
 This is the next version of Passport; rebuilt in NodeJS
 Passport Live is a modern web app for schools that helps them manage passes.
 ## Installation
