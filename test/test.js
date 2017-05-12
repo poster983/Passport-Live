@@ -1,3 +1,4 @@
+//Keep this updated to test every page 
 var request = require("request");
 var assert = require('assert');
 var server = require('../bin/www');
