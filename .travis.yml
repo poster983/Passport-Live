@@ -11,6 +11,8 @@ install:
   - npm install request
 #before_script:
 #  - npm run configure:db
+addons:
+  rethinkdb: '2.3.5'
 node_js:
   - 'node'
   - '6'
