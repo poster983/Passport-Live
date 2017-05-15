@@ -13,13 +13,13 @@
   "private": true,
   "scripts": {
     "start": "rethinkdb serve &! npm run start:node",
-    "start:node": "nodemon ./bin/www", 
-    "start:db": "rethinkdb serve", 
+    "start:node": "nodemon ./bin/www",
+    "start:db": "rethinkdb serve",
     "start:dbEdit": "chateau",
-    "configure:db": "rethinkdb &! ./bin/configure", 
+    "configure:db": "nodemon ./bin/configure",
     "test": "rethinkdb &! mocha",
     "test:safe": "mocha",
-    "start:full": "rethinkdb serve &! npm run start:node &! chateau" 
+    "start:full": "rethinkdb serve &! npm run start:node &! chateau"
   },
   "repository": {
     "type": "git",
