@@ -4,7 +4,7 @@ var assert = require('assert');
 var server = require('../bin/www');
 var base_url = "http://localhost:3000/"
 
-
+// Test if server is 
 describe("Server Test", function(){
 	describe("GET /", function() {
 		it("returns status code 200 Continue", function() {
@@ -16,7 +16,6 @@ describe("Server Test", function(){
 		it("returns status code 302 Found (Redirect)", function() {
 			request.get(base_url, function(error, response, body) {
 				assert.equal(302, response.statusCode);
-				server.closeServer();
 				done();
       });
     });
