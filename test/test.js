@@ -1,4 +1,4 @@
-//Keep this updated to test every page 
+//Keep this updated to test every page
 var request = require("request");
 var assert = require('assert');
 var server = require('../bin/www');
@@ -16,9 +16,10 @@ describe("Server Test", function(){
 		it("returns status code 302 Found (Redirect)", function() {
 			request.get(base_url, function(error, response, body) {
 				assert.equal(302, response.statusCode);
+				server.closeServer();
 				done();
       });
-    }); 
+    });
   }); /*
 	describe("GET /auth/login", function() {
 		it("returns status code 200 Continue", function() {
