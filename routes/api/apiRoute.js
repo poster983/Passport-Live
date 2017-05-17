@@ -19,8 +19,38 @@ email: hi@josephhassell.com
 */
 var express = require('express');
 var router = express.Router();
-//todo API
+var r = require('rethinkdb');
+var bcrypt = require('bcrypt-nodejs');
+var passport = require('passport')
+
+//https://blog.hyphe.me/token-based-authentication-with-node/
+
+/**
+PASSPORT AUTH
+**/
+
+
+
+/*
+NEED TO MOVE TO OWN FILE, OR MAKE MORE EFFICIENT
+*/
+var connection = null;
+        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+            if (err) throw err;
+            connection = conn;
+        });
+
+
+/**
+AUTH
+**/
+
+router.post('/auth/login', function(req, res, next) {
+
+});
+
+//default Responce
 router.get('/', function(req, res, next) {
-	res.send('Please Make a Request ');
+	res.send('This is an API.  This is not a valid route');
 });
 module.exports = router;
