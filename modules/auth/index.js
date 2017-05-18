@@ -89,6 +89,9 @@ passport.use('local-login', new LocalStrategy({
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeader(); // Header: "Authorization"
 opts.secretOrKey = 'secret';
+opts.issuer = "localhost";
+opts.audience = "localhost";
+
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
   console.log("HELLOO");
