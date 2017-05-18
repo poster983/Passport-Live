@@ -20,10 +20,14 @@ email: hi@josephhassell.com
 var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
-var bcrypt = require('bcrypt-nodejs');
-var passport = require('passport')
+//var bcrypt = require('bcrypt-nodejs');
+var passport = require('passport');
+var jwt = require('jsonwebtoken');
+var config = require('config');
 
-//https://blog.hyphe.me/token-based-authentication-with-node/
+
+//https://blog.jscrambler.com/implementing-jwt-using-passport/
+
 
 /**
 PASSPORT AUTH
@@ -45,9 +49,60 @@ var connection = null;
 AUTH
 **/
 
-router.post('/auth/login', function(req, res, next) {
+//serializeUser becaule the default passport.serializeUser function wont be called without session
+function serializeUser(req, res, done) {
+    console.log(req.user[0]);
+    //REMOVE SECRET INFO LIKE PASSWORDS 
+    delete req.user[0].password;
+    req.user = req.user[0];
+    /*
+    req.user = {
+      id: req.user[0].id,
+      email: req.user[0].id
+    };
+    */
+  done();
+  console.log(req.user);
+};
 
+//Generates a unique Json Web Token for Auth
+
+function generateToken(req, res, done) {
+    req.token = jwt.sign({
+        id: req.user.id,
+      }, config.get('secrets.api-secret-key'), {
+        expiresIn: 60*60*24
+    });
+    done();
+}
+
+router.post('/auth/login', passport.authenticate('local-login', { 
+  session: false
+}), function(req, res, next) {
+    //Make a token
+    var token = jwt.sign({
+        id: req.user[0].id,
+      }, config.get('secrets.api-secret-key'), {
+        expiresIn: 60*60*24
+    });
+    //Return token to user
+    res.status(200).json({
+        token: token
+    });
+}); 
+
+
+
+
+/**
+    TESTING
+**/
+
+router.post('/test', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+    res.status(200).json(req.user);
+    res.send("Hello");
 });
+
 
 //default Responce
 router.get('/', function(req, res, next) {

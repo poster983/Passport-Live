@@ -3,6 +3,7 @@
 {
 	"secrets": {
 		"api-secret-key": "123456",
+		"session-key": "123456",
 		"OAuth": {
 			"yourKeyHere": "12345"
 		}

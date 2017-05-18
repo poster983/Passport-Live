@@ -20,6 +20,8 @@ email: hi@josephhassell.com
 //'use strict';
 
 var LocalStrategy   = require('passport-local').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
 
 module.exports = function(passport, r, bcrypt) { // takes the passportjs object and a rethinkdb object
 
@@ -33,7 +35,7 @@ var connection = null;
 
 passport.serializeUser(function(user, done) {
   done(null, user[0].id);
-  console.log(user);
+  //console.log(user);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -47,8 +49,8 @@ passport.deserializeUser(function(id, done) {
 /*Local  PASSPORT.js auth*/
 passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
-    passwordField: 'passwd',
-    session: true,
+    passwordField: 'password',
+    //session: true,
     passReqToCallback: true
     },
   function(req, email, password, done) {
@@ -80,7 +82,32 @@ passport.use('local-login', new LocalStrategy({
   }
 ));
 
+/**
+  JSON Wev Token Auth for API 
+**/
 
+var opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeader(); // Header: "Authorization"
+opts.secretOrKey = 'secret';
+
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  console.log("HELLOO");
+  console.log(jwt_payload.id);
+  /*
+    User.findOne({id: jwt_payload.sub}, function(err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            done(null, user);
+        } else {
+            done(null, false);
+            // or you could create a new account 
+        }
+    });
+    */
+    done(null, false);
+}));
 
 
 

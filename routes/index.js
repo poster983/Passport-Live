@@ -23,6 +23,7 @@ var router = express.Router();
 
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
+    
     if(req.user) {
 
         var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
