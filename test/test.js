@@ -131,7 +131,7 @@ describe("REST API Tests" , function() {
 	describe("API Auth Tests", function() {
 		describe("Login /api/auth/login", function() {
 			it("returns http status code 200, and a response JWT", function() {
-				request.post({url:base_url + 'api/auth/login', form: {email:'example@gmail.com', password:'123456'}}, function(err, response, body){
+				request.post({url:base_url + 'api/auth/login', form: {email:'example@gmail.comhjakfhjk', password:'123456'}}, function(err, response, body){
 					assert.equal(200, response.statusCode);
 					studentJWTToken = response.token;
 					done();
