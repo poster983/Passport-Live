@@ -5,6 +5,9 @@ var server = require('../bin/www');
 var base_url = "http://localhost:3000/"
 var r = require('rethinkdb');
 var connection = null;
+function logger(msg) {
+	console.log(msg);
+}
 //Setup and Test Database COnnection
 
 describe("Database Connection", function() {
@@ -86,7 +89,7 @@ describe("Auth Tests", function() {
 				console.log(err);
 				console.log(response);
 				console.log(body);
-				describe(response);
+				logger(response);
 				console.log("__________");
 				done();
 			});
