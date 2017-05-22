@@ -8,7 +8,7 @@ var connection = null;
 //Setup and Test Database COnnection
 
 describe("Database Connection", function() {
-	it("connects to rethinkdb successfully" function() {
+	it("connects to rethinkdb successfully", function() {
 		r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
 		    assert.equal(null, err);
 		    connection = conn;
