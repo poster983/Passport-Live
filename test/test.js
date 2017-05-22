@@ -136,8 +136,8 @@ describe("REST API Tests" , function() {
 					studentJWTToken = response.token;
 					done();
 	      });
-			}):
-		})
+			});
+		});
 	});
 
 });
