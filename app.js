@@ -37,7 +37,6 @@ var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 
-//var users = require('./routes/users');
 
 var app = express();
 
