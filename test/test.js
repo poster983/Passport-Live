@@ -12,7 +12,7 @@ function logger(msg) {
 
 describe("Database Connection", function() {
 	it("connects to rethinkdb successfully", function() {
-		r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+		r.connect( {host: 'localhost', port: 28015}, function(err, conn) { //28015
 		    assert.equal(null, err);
 		    connection = conn;
 				done();
@@ -45,7 +45,7 @@ describe("Create necessary Datastores ", function() {
 
 
 
-// Test if server is
+// Test if server is running normaly
 describe("Server Test", function(){
 	describe("GET /", function() {
 		it("returns status code 200 Continue", function() {
@@ -71,6 +71,14 @@ describe("Server Test", function(){
       });
     });
   });
+	describe("GET a non existent page", function() {
+		it("returns status code of 404 Not Found", function() {
+			request.get(base_url+"thisshouldneverbefound/ever", function(error, response, body) {
+				assert.equal(404, response.statusCode);
+				done();
+      });
+		})
+	});
 });
 //Auth Testing
 describe("Auth Tests", function() {
