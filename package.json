@@ -18,7 +18,9 @@
     "start:dbEdit": "chateau",
     "configure:db": "nodemon ./bin/configure",
     "test": "mocha",
-    "start:full": "rethinkdb serve &! npm run start:node &! chateau"
+    "start:full": "rethinkdb serve &! npm run start:node &! chateau",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -29,14 +31,14 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "~1.16.0",
+    "body-parser": "~1.17.2",
     "chateau": "latest",
     "config": "latest",
     "connect-ensure-login": "latest",
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
-    "express": "~4.14.1",
+    "express": "~4.15.3",
     "express-session": "latest",
     "forever-monitor": "latest",
     "jsonwebtoken": "^7.4.1",
@@ -49,8 +51,10 @@
     "passport-local": "latest",
     "passport-localapikey": "latest",
     "rethinkdb": "latest",
-    "serve-favicon": "~2.3.2",
-    "socket.io": "^1.7.3"
+    "serve-favicon": "~2.4.3",
+    "socket.io": "^2.0.0",
+    "snyk": "^1.30.1"
   },
-  "license": "AGPL-3.0"
+  "license": "AGPL-3.0",
+  "snyk": true
 }
