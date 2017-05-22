@@ -9,10 +9,10 @@ install:
   - npm install --dev
 #before_script:
 #  - npm run configure:db
+after_success: npm run coverage
 addons:
   rethinkdb: '2.3.5'
 node_js:
   - 'node'
   - '6'
   - '5'
-
