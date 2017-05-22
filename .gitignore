@@ -10,3 +10,5 @@ public/stylesheets/css/
 rethinkdb_data/
 
 passport\.sublime-workspace
+
+\.nyc_output/
