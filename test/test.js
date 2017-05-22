@@ -102,7 +102,7 @@ describe("MAIN PASSPORT PROGRAM", function() {
 			it("Makes a student account (POST /auth/signup/student) and returnes 201 Created", function() {
 				request.post({url:base_url + 'auth/signup/student', form: {email:'example@gmail.com', password:'123456', passwordVer:'123456', firstname:'Testey', lastname:'McTestFace', studentID:'12345'}}, function(err, response, body){
 					
-					assert.equal(2011, response.statusCode);
+					assert.equal(201, response.statusCode);
 					done();
 				});
 			});
