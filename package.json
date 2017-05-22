@@ -17,7 +17,7 @@
     "start:db": "rethinkdb serve",
     "start:dbEdit": "chateau",
     "configure:db": "nodemon ./bin/configure",
-    "test": "nyc mocha",
+    "test": "export NODE_ENV=tests && nyc mocha",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"

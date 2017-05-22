@@ -22,6 +22,7 @@ var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
+var config = require('config');
 /*
 var httpv = require('http').Server(router);
 var io = require('socket.io')(httpv);
@@ -35,7 +36,7 @@ var passport = require('passport')
 
   // Rethink db connection
 var connection = null;
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });
@@ -96,6 +97,7 @@ router.post('/signup/student', function(req, res) {
           userGroup: "student" // should be same as a usergroup in config/default.json
         }).run(connection);
           promice.then(function(conn) {
+            res.status(201);
             res.end("TODO: Confirmation Email and prompt student to goto their email");
           });
         }
