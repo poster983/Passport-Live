@@ -3,6 +3,22 @@ var request = require("request");
 var assert = require('assert');
 var server = require('../bin/www');
 var base_url = "http://localhost:3000/"
+var r = require('rethinkdb');
+var connection = null;
+//Setup and Test Database COnnection
+
+describe("Database Connection", function() {
+	it("connects to rethinkdb successfully" function() {
+		var p = r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+		    assert.equal(null, err);
+		    connection = conn;
+				done();
+		});
+	});
+});
+
+describe("Create necessary tables")
+
 
 // Test if server is
 describe("Server Test", function(){
