@@ -9,6 +9,7 @@ install:
   - npm install
   - npm install mocha
   - npm install request
+  - npm install istanbul
 #before_script:
 #  - npm run configure:db
 addons:
