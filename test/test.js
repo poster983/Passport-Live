@@ -86,6 +86,7 @@ describe("Auth Tests", function() {
 				console.log(err);
 				console.log(response);
 				console.log(body);
+				describe(response);
 				console.log("__________");
 				done();
 			});
