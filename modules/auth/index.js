@@ -22,12 +22,13 @@ email: hi@josephhassell.com
 var LocalStrategy   = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
+var config = require('config');
 
 module.exports = function(passport, r, bcrypt) { // takes the passportjs object and a rethinkdb object
 
 
 var connection = null;
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });
@@ -71,9 +72,11 @@ passport.use('local-login', new LocalStrategy({
             return done(err); 
           }
          if(user.length < 1) { // if no users are returned in the array 
+            console.log("Wrong email");
             return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
           }
           if(!bcrypt.compareSync(password, user[0].password)) {
+            console.log("Wrong Pwd");
             return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
           }
           return done(null, user);

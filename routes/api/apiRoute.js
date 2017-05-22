@@ -38,12 +38,13 @@ PASSPORT AUTH
 /*
 NEED TO MOVE TO OWN FILE, OR MAKE MORE EFFICIENT
 */
+/*
 var connection = null;
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });
-
+*/
 
 /**
 AUTH

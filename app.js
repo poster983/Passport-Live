@@ -65,6 +65,7 @@ app.set('view engine', 'mustache');
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
 
 
+
 //config 
 app.use(require('morgan')('combined'));
 app.use(logger('dev'));
