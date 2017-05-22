@@ -9,7 +9,7 @@ var connection = null;
 
 describe("Database Connection", function() {
 	it("connects to rethinkdb successfully" function() {
-		var p = r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+		r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
 		    assert.equal(null, err);
 		    connection = conn;
 				done();
@@ -17,7 +17,29 @@ describe("Database Connection", function() {
 	});
 });
 
-describe("Create necessary tables")
+describe("Create necessary Datastores ", function() {
+	//databases
+	describe("Create Database", function() {
+		it("creates a databaase called \"passport\"", function() {
+			r.dbCreate('passport').run(connection, function(err) {
+				assert.equal(null, err);
+				done();
+			});
+		});
+	});
+	//Tables
+	describe("Create Tables", function() {
+		it("creates a table called \"accounts\"", function() {
+			r.db('passport').tableCreate('accounts').run(connection, function(err) {
+				console.log(err);
+				assert.equal(null, err);
+				done();
+			});
+		});
+	});
+});
+
+
 
 
 // Test if server is
