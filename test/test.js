@@ -6,8 +6,9 @@ var base_url = "http://localhost:3000/"
 var r = require('rethinkdb');
 var connection = null;
 function logger(msg) {
-	console.log(msg);
+	Console.log(msg);
 }
+var studentJWTToken = null;
 //Setup and Test Database COnnection
 
 describe("Database Connection", function() {
@@ -125,4 +126,18 @@ describe("REST API Tests" , function() {
       });
 		});
 	});
+
+	//Auth Tests
+	describe("API Auth Tests", function() {
+		describe("Login /api/auth/login", function() {
+			it("returns http status code 200, and a response JWT", function() {
+				request.post({url:base_url + 'api/auth/login', form: {email:'example@gmail.com', password:'123456'}}, function(err, response, body){
+					assert.equal(200, response.statusCode);
+					studentJWTToken = response.token;
+					done();
+	      });
+			}):
+		})
+	});
+
 });
