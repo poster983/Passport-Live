@@ -12,3 +12,6 @@ patch:
         patched: '2017-05-22T13:37:57.449Z'
     - socket.io > socket.io-adapter > socket.io-parser > debug > ms:
         patched: '2017-05-22T13:37:57.449Z'
+  'npm:qs:20140806':
+    - chateau > express > connect > qs:
+        patched: '2017-05-22T14:47:15.285Z'
