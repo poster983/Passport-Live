@@ -52,7 +52,7 @@ AUTH
 //serializeUser becaule the default passport.serializeUser function wont be called without session
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
-    //REMOVE SECRET INFO LIKE PASSWORDS 
+    //REMOVE SECRET INFO LIKE PASSWORDS
     delete req.user[0].password;
     req.user = req.user[0];
     /*
@@ -76,7 +76,7 @@ function generateToken(req, res, done) {
     done();
 }
 
-router.post('/auth/login', passport.authenticate('local-login', { 
+router.post('/auth/login', passport.authenticate('local-login', {
   session: false
 }), function(req, res, next) {
     //Make a token
@@ -89,7 +89,7 @@ router.post('/auth/login', passport.authenticate('local-login', {
     res.status(200).json({
         token: token
     });
-}); 
+});
 
 
 
@@ -106,6 +106,8 @@ router.post('/test', passport.authenticate('jwt', { session: false}), function(r
 
 //default Responce
 router.get('/', function(req, res, next) {
-	res.send('This is an API.  This is not a valid route');
+  res.status(418)
+	res.send('Brewing your coffee');
+
 });
 module.exports = router;

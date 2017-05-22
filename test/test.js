@@ -80,8 +80,14 @@ describe("Server Test", function(){
 		})
 	});
 });
+
+
 //Auth Testing
 describe("Auth Tests", function() {
+
+	/**
+	STUDENT Signup
+	**/
 	describe("Signup As Student", function() {
 		//Gets student signup page
 		it("Gets Signup Page (GET /auth/signup/student)", function(){
@@ -93,14 +99,30 @@ describe("Auth Tests", function() {
 		//Tries to make an account
 		it("Makes a student account (POST /auth/signup/student)", function() {
 			request.post({url:base_url + 'auth/signup/student', form: {email:'example@gmail.com', password:'123456', passwordVer:'123456', firstname:'Testey', lastname:'McTestFace', studentID:'12345'}}, function(err, response, body){
-				console.log("__________");
-				console.log(err);
+				Console.log("__________");
+				Console.log(err);
 				console.log(response);
 				console.log(body);
 				logger(response);
 				console.log("__________");
 				done();
 			});
+		});
+	});
+});
+
+
+/**
+API Tests
+**/
+describe("REST API Tests" , function() {
+	//Generic Tests
+	describe("Default Route for /api/", function() {
+		it("returns status code 418 I'm a teapot ", function() {
+			request.get(base_url+"api", function(error, response, body) {
+				assert.equal(418, response.statusCode);
+				done();
+      });
 		});
 	});
 });
