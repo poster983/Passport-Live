@@ -15,3 +15,13 @@ patch:
   'npm:qs:20140806':
     - chateau > express > connect > qs:
         patched: '2017-05-22T14:47:15.285Z'
+  'npm:qs:20140806-1':
+    - chateau > express > connect > qs:
+        patched: '2017-05-22T14:56:36.406Z'
+  'npm:uglify-js:20151024':
+    - chateau > jade > transformers > uglify-js:
+        patched: '2017-05-22T14:56:36.406Z'
+    - chateau > jade > with > uglify-js:
+        patched: '2017-05-22T14:56:36.406Z'
+    - chateau > jade > constantinople > uglify-js:
+        patched: '2017-05-22T14:56:36.406Z'
