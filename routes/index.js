@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
         }
         
     } else {
-        console.log("not Logged In")
+        console.log("not Logged In");
         res.redirect('auth/login');
     }
   
