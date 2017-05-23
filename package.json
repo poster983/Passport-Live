@@ -18,6 +18,7 @@
     "start:dbEdit": "chateau",
     "configure:db": "nodemon ./bin/configure",
     "test": "export NODE_ENV=tests && nyc mocha",
+    "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
