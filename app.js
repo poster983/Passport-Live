@@ -18,7 +18,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
+var express = require('express'
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
