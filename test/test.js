@@ -12,7 +12,7 @@ function logger(msg) {
 var studentJWTToken = null;
 
 //Check if NOT using "tests" envirement variable.  Exits if true
-if(config.util.getEnv('NODE_ENV') != "tests") {
+if(config.util.getEnv('NODE_ENV') != "tests" && config.util.getEnv('NODE_ENV') != "gitlab") {
 	console.error("MUST PASS \"NODE_ENV=tests\" WHEN RUNNING.  \n  You Passed: " + config.util.getEnv('NODE_ENV'));
 	process.exit(1);
 }

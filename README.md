@@ -2,8 +2,8 @@
 [![Build Status](https://travis-ci.org/poster983/Passport-Live.svg?branch=master)](https://travis-ci.org/poster983/Passport-Live)  [![Known Vulnerabilities](https://snyk.io/test/github/poster983/passport-live/badge.svg)](https://snyk.io/test/github/poster983/passport-live)  [![Codacy Grade](https://api.codacy.com/project/badge/Grade/08e8ae52cf0f4fde8f5f02fb275839ea)](https://www.codacy.com/app/josephh2018/Passport-Live?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=poster983/Passport-Live&amp;utm_campaign=Badge_Grade)  [![Codecov](https://img.shields.io/codecov/c/github/poster983/Passport-Live.svg)](https://codecov.io/gh/poster983/Passport-Live)  [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-000000.svg)](https://github.com/poster983/Passport-Live/blob/master/LICENSE)  [![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)]()
 
 This is the next version of Passport; rebuilt in NodeJS
-Passport Live is a modern web app for schools that helps them manage passes.  
-## Announcements  
+Passport Live is a modern web app for schools that helps them manage passes.
+## Announcements 
 Migration over to GitLab has begun.
 The GitHub repo will remain, however, the repository will be discontinued within the coming months.
 
