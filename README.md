@@ -26,9 +26,11 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
 To start the server, run ~~~$ npm start~~ `~$ npm run start:db` THEN `~$ npm run start:node` from within the folder "package.json" is located.
 
 ## API 
-[The api can be found over at GitBook](https://poster983.gitbooks.io/passport-developer/content/)
+[The api can be found over at GitBook](https://poster983.gitbooks.io/passport-developer/content/)  
+
 This is a work in progress.
 ## Help 
 [A knowledge base can be found over at GitBook](https://poster983.gitbooks.io/passport-help/content/)  
 If this doesn't help solve your problem, please [create an issue](https://github.com/poster983/Passport-Live/issues) 
+
 This is a work in progress.
