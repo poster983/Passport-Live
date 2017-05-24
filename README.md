@@ -5,13 +5,13 @@ This is the next version of Passport; rebuilt in NodeJS
 Passport Live is a modern web app for schools that helps them manage passes.
 ## Announcements 
 Migration over to GitLab has begun.
-The GitHub repo will remain, however, the repository will be discontinued within the coming months.
+The GitHub repo will remain, however, it will not accept any more PRs and wil be mirrored by the GitLab repo.
 
 ## Installation
 NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS  
-1. Install the latest version of NodeJS [Here] (https://nodejs.org/en/download/)  
+1. Install the latest version of NodeJS [Here](https://nodejs.org/en/download/)  
    a. Be sure that NPM was also installed.  
-2. Install `rethinkdb` by following [this] (https://www.rethinkdb.com/docs/install/ubuntu/) tutorial.  
+2. Install `rethinkdb` by following [this](https://www.rethinkdb.com/docs/install/ubuntu/) tutorial.  
 3. Give your user account ownership of npm.  This is so you don't need sudo.  
    a. First Try: `~$ sudo chown -R $(whoami) ~/.npm`  
    b. If that dosn't work, try: `sudo chown -R $(whoami) /usr/local/lib/node_modules`  
@@ -24,3 +24,11 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
 
 ## Usage
 To start the server, run ~~~$ npm start~~ `~$ npm run start:db` THEN `~$ npm run start:node` from within the folder "package.json" is located.
+
+## API 
+[The api can be found over at GitBook](https://poster983.gitbooks.io/passport-developer/content/)
+This is a work in progress.
+## Help 
+[A knowledge base can be found over at GitBook](https://poster983.gitbooks.io/passport-help/content/)  
+If this doesn't help solve your problem, please [create an issue](https://github.com/poster983/Passport-Live/issues) 
+This is a work in progress.
