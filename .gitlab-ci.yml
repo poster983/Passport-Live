@@ -19,4 +19,5 @@ test:
   script:
    - npm install --dev
    - npm run test-gitlab
-
+  after_script:
+   - npm run coverage
