@@ -24,6 +24,7 @@ var r = require('rethinkdb');
 var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var config = require('config');
+var utils = require('../../modules/passport-utils/index.js');
 
 
 //https://blog.jscrambler.com/implementing-jwt-using-passport/
@@ -54,28 +55,22 @@ AUTH
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
-    delete req.user[0].password;
-    req.user = req.user[0];
-    /*
-    req.user = {
-      id: req.user[0].id,
-      email: req.user[0].id
-    };
-    */
-  done();
-  console.log(req.user);
+    //delete req.user[0].password;
+    //req.user = req.user[0];
+    req.user = utils.cleanUser(req.user);
+    done();
 };
 
-//Generates a unique Json Web Token for Auth
 
-function generateToken(req, res, done) {
-    req.token = jwt.sign({
-        id: req.user.id,
-      }, config.get('secrets.api-secret-key'), {
-        expiresIn: 60*60*24
-    });
+//debug function
+function getHead(req, res, done) {
+    console.log(req.header("Authorization"));
     done();
-}
+};
+
+/** 
+AUTH 
+**/
 
 router.post('/auth/login', passport.authenticate('local-login', {
   session: false
@@ -88,20 +83,21 @@ router.post('/auth/login', passport.authenticate('local-login', {
     });
     //Return token to user
     res.status(200).json({
-        token: token
+        token: "JWT " + token
     });
 });
 
-
+/** 
+PASSES
+**/
 
 
 /**
     TESTING
 **/
 
-router.post('/test', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
     res.status(200).json(req.user);
-    res.send("Hello");
 });
 
 

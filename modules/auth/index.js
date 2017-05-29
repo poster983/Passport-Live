@@ -23,6 +23,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 var config = require('config');
+var utils = require('../passport-utils/index.js');
 
 module.exports = function(passport, r, bcrypt) { // takes the passportjs object and a rethinkdb object
 
@@ -46,6 +47,8 @@ passport.deserializeUser(function(id, done) {
   });
 
 });
+
+
 
 /*Local  PASSPORT.js auth*/
 passport.use('local-login', new LocalStrategy({
@@ -91,28 +94,28 @@ passport.use('local-login', new LocalStrategy({
 
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeader(); // Header: "Authorization"
-opts.secretOrKey = 'secret';
-opts.issuer = "localhost";
-opts.audience = "localhost";
+opts.secretOrKey = config.get('secrets.api-secret-key');
+//opts.issuer = "localhost";
+//opts.audience = "localhost";
 
-
+//TODO: Reissue a new JWT if it has been 10 min from last reissuing 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-  console.log("HELLOO");
-  console.log(jwt_payload.id);
-  /*
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            done(null, user);
-        } else {
-            done(null, false);
-            // or you could create a new account 
-        }
-    });
-    */
-    done(null, false);
+  //console.log("HELLOO");
+  //console.log(jwt_payload.id);
+  //console.log(jwt_payload);
+  //Get account by ID and then upt it into req.user by calling done(null, doc);
+  r.table('accounts').get(jwt_payload.id).run(connection, function(err, doc) {
+    console.log(doc);
+    if (err) {
+      console.error(err)
+      return done(err); 
+    } else if(doc) {
+      return done(null, utils.cleanUser(doc));
+    } else {
+      return done(null, false);
+    }
+    
+  });
 }));
 
 

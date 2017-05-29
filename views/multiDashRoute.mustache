@@ -38,8 +38,8 @@ email: hi@josephhassell.com
             <p class="center white-text"> -- You Have Multiple Options -- </p>
             <div class="container">
                 <div class="input-field col s12">
-                    <form method="post" action="{{callbackURL}}">
-                      <select id="dashSel" onchange="">
+                    <form method="post" id="selForm" action="{{callbackURL}}">
+                      <select id="dashSel" onchange="changed(this.value);">
                         <option value="" disabled selected>Where do you want to go?</option>
                       </select>
                       <label>Dashboard</label>
@@ -52,17 +52,18 @@ email: hi@josephhassell.com
         <script>
             $(document).ready(function() {
                 populateSelect();
-              
-              
-              
             });
             function populateSelect() {
 
-                "{{dashboards}}".split(",").forEach(function(currVal, i) {
-                    $('#dashSel').append("<option value=" + i + ">" + currVal + "</option>");
+                "{{dashboards}}".split(",").forEach(function(currVal) {
+                    $('#dashSel').append("<option value=" + currVal + ">" + currVal + "</option>");
                 });
                 $('select').material_select();
-            }
+            };
+
+            function changed(val) {
+                window.location.href = window.location.href + val;
+            };
 
         </script>
     </body>
