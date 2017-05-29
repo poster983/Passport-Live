@@ -84,7 +84,7 @@ router.post('/signup/student', function(req, res) {
             success: false
           })
         } else if(resp) {
-          res.status(resp).send({
+          res.status(resp.code).send({
             success: true
           });
         }

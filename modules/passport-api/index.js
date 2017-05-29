@@ -32,15 +32,29 @@ module.exports = { //function API(test)
     */
     createAccount: function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
         bcrypt.hash(password, null, null, function(err, hash) {
+            if(err) {
+                console.error(err);
+                return done(err, {
+                    code: 500,
+                    englishResp: "Server Error"
+                });
+            }
           // Store hash in your password DB.
           r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
             if(err) {
-                return done(err, 500);
+                console.error(err);
+                return done(err, {
+                    code: 500,
+                    englishResp: "Server Error"
+                });
             }
             //Checks to see if there is already an email in the DB            
             if(con){
               //THe email has been taken
-              return done(new Error("Email Taken"), 409);
+              return done(null, {
+                    code: 409,
+                    englishResp: "Email Taken"
+                });
             } else {
                 //insert new account
                 promice = r.table("accounts").insert({
@@ -53,7 +67,10 @@ module.exports = { //function API(test)
                 }).run(dbConn);
                 promice.then(function(conn) {
                     //Returns 201
-                    return done(null, 201);
+                    return done(null, {
+                        code: 201,
+                        englishResp: "Created"
+                    });
               });
             }
           });
