@@ -30,7 +30,7 @@ var io = require('socket.io')(httpv);
 //var r = require('../modules/db/index.js')();
 var passport = require('passport')
 //  , LocalStrategy = require('passport-local').Strategy;
-
+var api = require('../modules/passport-api/index.js');
 
 
 
@@ -62,7 +62,7 @@ router.get('/signup/student', function(req, res, next) {
 });
 
 // POST MAke New Account 
-//THIS IS NOT FINAL MUST BE REWRITAIN 
+//THIS WILL BE MOVED TO THE API LATER!!!
 router.post('/signup/student', function(req, res) {
   var email=req.body.email;
   var password=req.body.password;
@@ -71,38 +71,24 @@ router.post('/signup/student', function(req, res) {
   var ln = req.body.lastname;
   var stuID = req.body.studentID;
 
+  
   if(password != passwordVer) {
     req.flash('signupMessage', 'Passwords Don\'t Match');
     res.redirect('/auth/signup/student');
     
   } else {
-    bcrypt.hash(password, null, null, function(err, hash) {
-      // Store hash in your password DB.
-
-      r.table("accounts")('email').contains(email).run(connection, function(err, con){
-          console.log(con)
-        
-        if(con){
-          console.log("Taken");
-          req.flash('signupMessage', 'Email Already Taken');
-          res.redirect('/auth/signup/student');
-        } else {
-        //console.log("User name = "+email+", password is "+password);
-        promice = r.table("accounts").insert({
-          firstName: fn,
-          lastName: ln,
-          stuID: stuID,
-          email: email,
-          password: hash,
-          userGroup: "student" // should be same as a usergroup in config/default.json
-        }).run(connection);
-          promice.then(function(conn) {
-            res.status(201);
-            res.end("TODO: Confirmation Email and prompt student to goto their email");
+      api.createAccount(connection, "student", fn, ln, email, password, {stuID: stuID}, function(err, resp) {
+        if(err) {
+          console.log(err);
+          res.send({
+            success: false
+          })
+        } else if(resp) {
+          res.status(resp).send({
+            success: true
           });
         }
       });
-    });
   }
 });
 

@@ -17,6 +17,8 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
+var bcrypt = require('bcrypt-nodejs');
+var r = require('rethinkdb');
 //All functions that make the api function.
 module.exports = { //function API(test) 
     /**
@@ -24,40 +26,38 @@ module.exports = { //function API(test)
     **/
     //Creates a new account 
     //groupFields takes a json object.
-    //done(err, newID);
-    
-    newAccount: function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
-        if(password != passwordVer) {
-            done(new Error("Passwords Don't Match"))            
-          } else {
-            bcrypt.hash(password, null, null, function(err, hash) {
-              // Store hash in your password DB.
-
-              r.table("accounts")('email').contains(email).run(connection, function(err, con){
-                  console.log(con)
-                
-                if(con){
-                  console.log("Taken");
-                  req.flash('signupMessage', 'Email Already Taken');
-                  res.redirect('/auth/signup/student');
-                } else {
-                //console.log("User name = "+email+", password is "+password);
+    //done(err, httpCode);
+    /*
+        Group field can contain for example {stuID: 123} Or {myCustomField: "Hello"}
+    */
+    createAccount: function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
+        bcrypt.hash(password, null, null, function(err, hash) {
+          // Store hash in your password DB.
+          r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+            if(err) {
+                return done(err, 500);
+            }
+            //Checks to see if there is already an email in the DB            
+            if(con){
+              //THe email has been taken
+              return done(new Error("Email Taken"), 409);
+            } else {
+                //insert new account
                 promice = r.table("accounts").insert({
-                  firstName: fn,
-                  lastName: ln,
-                  stuID: stuID,
+                  firstName: firstName,
+                  lastName: lastName,
                   email: email,
                   password: hash,
-                  userGroup: "student" // should be same as a usergroup in config/default.json
-                }).run(connection);
-                  promice.then(function(conn) {
-                    res.status(201);
-                    res.end("TODO: Confirmation Email and prompt student to goto their email");
-                  });
-                }
+                  userGroup: userGroup, // should be same as a usergroup in config/default.json
+                  groupFields: groupFields
+                }).run(dbConn);
+                promice.then(function(conn) {
+                    //Returns 201
+                    return done(null, 201);
               });
-            });
-          }
+            }
+          });
+        });   
     },
     
 
