@@ -18,14 +18,51 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 //All functions that make the api function.
-module.exports = {
+module.exports = { //function API(test) 
     /**
     ACCOUNTS 
     **/
     //Creates a new account 
     //groupFields takes a json object.
     //done(err, newID);
-    newAccount: function(userGroup, firstName, lastName, email, password, groupFields, done) {
-        
+    
+    newAccount: function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
+        if(password != passwordVer) {
+            done(new Error("Passwords Don't Match"))            
+          } else {
+            bcrypt.hash(password, null, null, function(err, hash) {
+              // Store hash in your password DB.
+
+              r.table("accounts")('email').contains(email).run(connection, function(err, con){
+                  console.log(con)
+                
+                if(con){
+                  console.log("Taken");
+                  req.flash('signupMessage', 'Email Already Taken');
+                  res.redirect('/auth/signup/student');
+                } else {
+                //console.log("User name = "+email+", password is "+password);
+                promice = r.table("accounts").insert({
+                  firstName: fn,
+                  lastName: ln,
+                  stuID: stuID,
+                  email: email,
+                  password: hash,
+                  userGroup: "student" // should be same as a usergroup in config/default.json
+                }).run(connection);
+                  promice.then(function(conn) {
+                    res.status(201);
+                    res.end("TODO: Confirmation Email and prompt student to goto their email");
+                  });
+                }
+              });
+            });
+          }
+    },
+    
+
+    tester: function(hello, done) {
+        console.log(hello);
+        done(null, hello);
     }
 }

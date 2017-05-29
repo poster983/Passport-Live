@@ -25,7 +25,7 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
-
+var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
 
 //https://blog.jscrambler.com/implementing-jwt-using-passport/
 
@@ -97,6 +97,9 @@ PASSES
 **/
 
 router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
+    api.tester("hi There", function(err, resp) {
+        console.log("Error: " + err + " Callback: " + resp);
+    });
     res.status(200).json(req.user);
 });
 
