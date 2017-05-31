@@ -19,11 +19,14 @@ email: hi@josephhassell.com
 */
 var bcrypt = require('bcrypt-nodejs');
 var r = require('rethinkdb');
+var shortid = require('shortid');
+
 //All functions that make the api function.
 module.exports = { //function API(test) 
     /**
     ACCOUNTS 
     **/
+
     //Creates a new account 
     //groupFields takes a json object.
     //done(err, httpCode);
@@ -69,14 +72,64 @@ module.exports = { //function API(test)
                     //Returns 201
                     return done(null, {
                         code: 201,
-                        englishResp: "Created"
+                        englishResp: "Created Account"
                     });
               });
             }
           });
         });   
     },
-    
+
+        
+    /**
+    SECURITY
+    **/
+    /*
+    Creates a short permission key 
+    "permissions": a JSON object with a custom permission payload 
+    "parms": per Use case
+    "timeout": Must be a Json object either:
+    {
+        on: "click" //will only work once
+    }
+    OR 
+    {
+        on: "time",
+        time: Date-time object
+    }
+    */
+    createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
+        var key = shortid.generate()
+        r.table("permissionKeys").insert({
+            key: key,
+            permissions: permissions,
+            parms: parms,
+            timeout: timeout
+        }).run(dbConn, function(err) {
+            if(err) {
+                return done(err, null);
+            }
+            return done(null, key);
+        })
+    },
+    //This checks to see if the Permission key is valid and returns a json object with the permissions.
+    //Callback: done(err, perms)
+    //SHould only return one
+    checkPermissionKey: function(dbConn, key, done) {
+        r.table("permissionKeys").filter({
+            key: key,
+        }).run(dbConn, function(err, document) {
+            if(err) {
+                return done(err, null);
+            } 
+            //if(shortid.isValid())
+            document.toArray(function(err, arr) {
+                    return done(null, arr[0]);
+            })
+            
+            
+        });
+    },
 
     tester: function(hello, done) {
         console.log(hello);

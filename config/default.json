@@ -33,32 +33,37 @@
 			"permissions": {
 				"dashboards": ["student"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
-			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": false //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 		"teacher": {
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
-			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 		"lc": {
 			"useCustomDestinationName": true,//will prompt user to enter a destination name at account setup instead of showing name.
 			"permissions": {
 				"dashboards": ["teacher", "kiosk"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
-			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 		"counselors": {
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
-			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 		"dev": {
 			"permissions": {
 				"dashboards": ["student", "teacher", "kiosk", "administration", "admin"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
-			"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 	},
 	"dashboards": {

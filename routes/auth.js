@@ -66,10 +66,11 @@ router.get('/signup/student', function(req, res, next) {
 router.post('/signup/student', function(req, res) {
   var email=req.body.email;
   var password=req.body.password;
-  var passwordVer=req.body.passwordVer;
-  var fn = req.body.firstname;
-  var ln = req.body.lastname;
-  var stuID = req.body.studentID;
+  var passwordVerification=req.body.passwordVerification;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
+  var groupFields = req.body.groupFields
+  var userGroup = req.params.userGroup;
 
   
   if(password != passwordVer) {
@@ -80,13 +81,16 @@ router.post('/signup/student', function(req, res) {
       api.createAccount(connection, "student", fn, ln, email, password, {stuID: stuID}, function(err, resp) {
         if(err) {
           console.log(err);
-          res.send({
-            success: false
-          })
-        } else if(resp) {
-          res.status(resp.code).send({
-            success: true
-          });
+          req.flash('signupMessage', resp.englishResp);
+          res.status(resp.code).redirect('/auth/signup/student');
+        } else {
+          if(resp.code == 201) {
+            req.flash('loginMessage', resp.englishResp);
+            res.status(resp.code).redirect('/auth/login');
+          } else {
+            req.flash('signupMessage', resp.englishResp);
+            res.status(resp.code).redirect('/auth/signup/student');
+          }
         }
       });
   }

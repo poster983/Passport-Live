@@ -26,9 +26,18 @@ var p = r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
 });
 p.then(function(conn) {
    r.dbCreate('passport').run(conn, function() {
-   	r.db('passport').tableCreate('accounts').run(conn, function(res) {console.log(res); process.exit()});
-   });
+    //create accounts
+   	r.db('passport').tableCreate('accounts').run(conn, function(res) {
+      console.log(res); 
+    });
+    //create 
+    r.db('passport').tableCreate('permissionKeys').run(conn, function(res) {
+      console.log(res); 
+      process.exit();
+    });
 
+   });
+//
 	
 }).error(function(error) {
     console.err(error);
