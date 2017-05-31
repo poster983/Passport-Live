@@ -4,8 +4,8 @@
 This is the next version of Passport; rebuilt in NodeJS
 Passport Live is a modern web app for schools that helps them manage passes.
 ## Announcements 
-Migration over to GitLab has begun.
-The GitHub repo will remain, however, it will not accept any more PRs and wil be mirrored by the GitLab repo.
+Migration over to GitLab will begin in a few weeks.
+The GitHub repo will remain, however, it will not accept any more PRs and wil be mirrored by the GitLab repo.  
 
 ## Installation
 NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS  
