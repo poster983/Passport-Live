@@ -199,9 +199,11 @@ router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
     api.checkPermissionKey(connection, req.params.key, function(err, document) {
         if(err) {
-            next(new Error(err));
-        } 
-        res.json(document);
+            next(err);
+        } else {
+            res.json(document);
+        }
+        
     });
 })
 

@@ -86,6 +86,8 @@ module.exports = { //function API(test)
     **/
     /*
     Creates a short permission key 
+
+    Callback: done(err, key, code)
     "permissions": a JSON object with a custom permission payload 
     "parms": per Use case
     "timeout": Must be a Json object either:
@@ -107,27 +109,38 @@ module.exports = { //function API(test)
             timeout: timeout
         }).run(dbConn, function(err) {
             if(err) {
-                return done(err, null);
+                return done(err, null, 500);
             }
-            return done(null, key);
+            return done(null, key, 201);
         })
     },
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
     //Callback: done(err, perms)
     //SHould only return one
     checkPermissionKey: function(dbConn, key, done) {
+        /*
+        err = new Error('THIS IS A TEST');
+        err.status = 418;
+        return done(err, null);
+        */
+        
         r.table("permissionKeys").filter({
             key: key,
         }).run(dbConn, function(err, document) {
             if(err) {
                 return done(err, null);
-            } 
-            //if(shortid.isValid())
+            }
+            
             document.toArray(function(err, arr) {
-                    return done(null, arr[0]);
-            })
-            
-            
+                console.log(arr)
+                if(0<arr.length) {
+                        return done(null, arr[0]);
+                } else {
+                    err = new Error("Key Not Found");
+                    err.status = 404;
+                    return done(err, null);
+                }
+            });
         });
     },
 
