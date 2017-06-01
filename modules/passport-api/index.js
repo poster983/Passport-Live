@@ -102,7 +102,7 @@ module.exports = { //function API(test)
     */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
         var key = shortid.generate()
-        r.table("permissionKeys").insert({
+        r.table("permissionKeys").insert({ 
             key: key,
             permissions: permissions,
             parms: parms,
