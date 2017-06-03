@@ -28,5 +28,11 @@ module.exports = {
             delete user.password;
             return user;
         }
+    },
+    //THis function checks if the given date is less than today
+    // Takes a date Object
+    compareDateWithToday: function(compare) {
+        var today = new Date();
+        return today >= compare;
     }
 }

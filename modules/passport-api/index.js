@@ -20,6 +20,7 @@ email: hi@josephhassell.com
 var bcrypt = require('bcrypt-nodejs');
 var r = require('rethinkdb');
 var shortid = require('shortid');
+var utils = require('../passport-utils/index.js');
 
 //All functions that make the api function.
 module.exports = { //function API(test) 
@@ -29,7 +30,7 @@ module.exports = { //function API(test)
 
     //Creates a new account 
     //groupFields takes a json object.
-    //done(err, httpCode);
+    //done(err);
     /*
         Group field can contain for example {stuID: 123} Or {myCustomField: "Hello"}
     */
@@ -37,27 +38,20 @@ module.exports = { //function API(test)
         bcrypt.hash(password, null, null, function(err, hash) {
             if(err) {
                 console.error(err);
-                return done(err, {
-                    code: 500,
-                    englishResp: "Server Error"
-                });
+                return done(err, null);
             }
           // Store hash in your password DB.
           r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
             if(err) {
                 console.error(err);
-                return done(err, {
-                    code: 500,
-                    englishResp: "Server Error"
-                });
+                return done(err);
             }
             //Checks to see if there is already an email in the DB            
             if(con){
               //THe email has been taken
-              return done(null, {
-                    code: 409,
-                    englishResp: "Email Taken"
-                });
+              var err = new Error("Email Taken");
+              err.status = 409
+              return done(err);
             } else {
                 //insert new account
                 promice = r.table("accounts").insert({
@@ -69,11 +63,8 @@ module.exports = { //function API(test)
                   groupFields: groupFields
                 }).run(dbConn);
                 promice.then(function(conn) {
-                    //Returns 201
-                    return done(null, {
-                        code: 201,
-                        englishResp: "Created Account"
-                    });
+                    //Returns no error.
+                    return done(null);
               });
             }
           });
@@ -87,12 +78,13 @@ module.exports = { //function API(test)
     /*
     Creates a short permission key 
 
-    Callback: done(err, key, code)
+    Callback: done(err, key)
     "permissions": a JSON object with a custom permission payload 
     "parms": per Use case
     "timeout": Must be a Json object either:
     {
-        on: "click" //will only work once
+        on: "click", //will only work once
+        tally: 5
     }
     OR 
     {
@@ -109,9 +101,9 @@ module.exports = { //function API(test)
             timeout: timeout
         }).run(dbConn, function(err) {
             if(err) {
-                return done(err, null, 500);
+                return done(err, null);
             }
-            return done(null, key, 201);
+            return done(null, key);
         })
     },
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
@@ -130,11 +122,27 @@ module.exports = { //function API(test)
             if(err) {
                 return done(err, null);
             }
-            
+
             document.toArray(function(err, arr) {
                 console.log(arr)
+                //Found key
                 if(0<arr.length) {
-                        return done(null, arr[0]);
+                    if(arr[0].timeout.on == "time") {
+                        if(utils.compareDateWithToday(arr[0].timeout.time)) {
+                            return done(null, arr[0].permissions);
+                        } else {
+                            var err = new Error("Key Not Valid");
+                            err.status = 422;
+                            return done(err, null);
+                        }
+                    } else if(arr[0].timeout.on == "click") {
+                        if(arr[0].timeout.tally >= 1) {
+                            
+                        }
+                    } else {
+
+                    }
+                    //return done(null, arr[0]);
                 } else {
                     err = new Error("Key Not Found");
                     err.status = 404;
