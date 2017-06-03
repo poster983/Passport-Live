@@ -137,7 +137,7 @@ module.exports = { //function API(test)
                         }
                     } else if(arr[0].timeout.on == "click") {
                         if(arr[0].timeout.tally >= 1) {
-                            
+                            ////////////////////////////
                         }
                     } else {
 
