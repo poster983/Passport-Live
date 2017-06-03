@@ -59,7 +59,6 @@
   "license": "AGPL-3.0",
   "snyk": true,
   "devDependencies": {
-    "chateau": "latest",
     "codecov": "^2.2.0",
     "mocha": "^3.4.1",
     "nyc": "^10.3.2",
