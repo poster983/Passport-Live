@@ -21,6 +21,8 @@ var bcrypt = require('bcrypt-nodejs');
 var r = require('rethinkdb');
 var shortid = require('shortid');
 var utils = require('../passport-utils/index.js');
+var moment = require('moment');
+
 
 //All functions that make the api function.
 module.exports = { //function API(test) 
@@ -89,11 +91,15 @@ module.exports = { //function API(test)
     OR 
     {
         on: "time",
-        time: Date-time object
+        time: Date object
     }
     */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
         var key = shortid.generate()
+        if(timeout.time) {
+            //format time to a general format
+            timeout.time = moment(timeout.time).toISOString();
+        }
         r.table("permissionKeys").insert({ 
             key: key,
             permissions: permissions,
@@ -122,8 +128,8 @@ module.exports = { //function API(test)
                 console.log(arr)
                 //Found key
                 if(0<arr.length) {
-                    if(arr[0].timeout.on == 'time') {
-                        if(utils.compareDateWithToday(arr[0].timeout.time)) {
+                    if(arr[0].timeout.on == "time") {
+                        if(moment(arr[0].timeout.time).isSameOrAfter()) {
                             return done(null, arr[0].permissions);
 
                         } else {
@@ -131,19 +137,19 @@ module.exports = { //function API(test)
                             err.status = 422;
                             return done(err, null);
                         }
-                    } else if(arr[0].timeout.on == 'click') {
+                    } else if(arr[0].timeout.on == "click") {
                         if(arr[0].timeout.tally >= 1) {
                             //Subtract 1 from tally
                             r.table("permissionKeys").update({
                                 timeout: { 
-                                    tally: r.row("timeout.tally").sub(1)
+                                    tally: r.row("timeout")("tally").sub(1)
                                 }
-                            }).run(dbConn, function(err, val ) {
+                            }).run(dbConn, function(err) {
                                 if(err) {
                                     return done(err);
                                 } else {
-                                    //return done(null, arr[0].permissions);
-                                    return done(null, val);
+                                    return done(null, arr[0].permissions);
+                                    
                                 }
                             });
                         } else {
