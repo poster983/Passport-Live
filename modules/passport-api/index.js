@@ -110,12 +110,7 @@ module.exports = { //function API(test)
     //Callback: done(err, perms)
     //SHould only return one
     checkPermissionKey: function(dbConn, key, done) {
-        /*
-        err = new Error('THIS IS A TEST');
-        err.status = 418;
-        return done(err, null);
-        */
-        
+
         r.table("permissionKeys").filter({
             key: key,
         }).run(dbConn, function(err, document) {
@@ -127,20 +122,40 @@ module.exports = { //function API(test)
                 console.log(arr)
                 //Found key
                 if(0<arr.length) {
-                    if(arr[0].timeout.on == "time") {
+                    if(arr[0].timeout.on == 'time') {
                         if(utils.compareDateWithToday(arr[0].timeout.time)) {
                             return done(null, arr[0].permissions);
+
                         } else {
                             var err = new Error("Key Not Valid");
                             err.status = 422;
                             return done(err, null);
                         }
-                    } else if(arr[0].timeout.on == "click") {
+                    } else if(arr[0].timeout.on == 'click') {
                         if(arr[0].timeout.tally >= 1) {
-                            ////////////////////////////
+                            //Subtract 1 from tally
+                            r.table("permissionKeys").update({
+                                timeout: { 
+                                    tally: r.row("timeout.tally").sub(1)
+                                }
+                            }).run(dbConn, function(err, val ) {
+                                if(err) {
+                                    return done(err);
+                                } else {
+                                    //return done(null, arr[0].permissions);
+                                    return done(null, val);
+                                }
+                            });
+                        } else {
+                            // Tally is less than 1
+                            var err = new Error("Key Not Valid");
+                            err.status = 422;
+                            return done(err, null);
                         }
                     } else {
-
+                        var err = new Error("Timeout field malformed.");
+                        err.status = 500;
+                        return done(err, null);
                     }
                     //return done(null, arr[0]);
                 } else {

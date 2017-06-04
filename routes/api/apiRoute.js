@@ -166,9 +166,12 @@ SECURITY
 **/
 //WILL NEED ACCOUNT PROTECTION 
 router.post('/security/key/', function(req, res, next) {
+    //res.json(req.body.permissions);
+    
     var permissions=req.body.permissions;
     var parms=req.body.parms;
     var timeout=req.body.timeout;
+
     api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
         if(err) {
             console.error(err);
@@ -178,6 +181,7 @@ router.post('/security/key/', function(req, res, next) {
             key: key
         })
     })
+    
 });
 
 
