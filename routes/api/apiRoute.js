@@ -139,23 +139,21 @@ router.post('/account/:userGroup/', function(req, res, next) {
 
     //Checks to see if the account needs a verification key
     if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-
-    }
-    /*
-    if(password != passwordVer) {
-        res.status(422);
+        
     } else {
-        api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
-            if(err){
-                res.status(resp.code);
-                next(new Error(err));
-            } else {
-                res.status(resp.code);
-                next(null);
-            }
-        });
-    }*/
-    
+        if(password != passwordVer) {
+            res.status(422);
+        } else {
+            api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+                if(err){
+                    next(err);
+                } else {
+                    res.status(201);
+                    next(null);
+                }
+            });
+        }
+    }
 });
 
 /** 
@@ -168,9 +166,12 @@ SECURITY
 **/
 //WILL NEED ACCOUNT PROTECTION 
 router.post('/security/key/', function(req, res, next) {
+    //res.json(req.body.permissions);
+    
     var permissions=req.body.permissions;
     var parms=req.body.parms;
     var timeout=req.body.timeout;
+    
     api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
         if(err) {
             console.error(err);
@@ -180,6 +181,7 @@ router.post('/security/key/', function(req, res, next) {
             key: key
         })
     })
+    
 });
 
 
