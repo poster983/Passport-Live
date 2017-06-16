@@ -18,11 +18,31 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 var express = require('express');
+var config = require('config');
 var router = express.Router();
 
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
-  res.redirect('student')
+    
+    if(req.user) {
+
+        var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
+        if(permittedDash.length > 1) {
+            res.render('multiDashRoute',{doc_Title: "Passport", callbackURL: "/callback/multiDashRoute/", dashboards: permittedDash});
+        } else {
+            res.redirect(permittedDash[0]);
+        }
+        
+    } else {
+        console.log("not Logged In");
+        res.redirect('auth/login');
+    }
+  
 });
+
+router.post('/callback/multiDashRoute/', function(req, res, next) {
+
+});
+
 
 module.exports = router;

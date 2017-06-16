@@ -21,6 +21,10 @@ email: hi@josephhassell.com
 */
 
 
+
+
+
+
 /**
  * Module dependencies.
  */
@@ -28,6 +32,7 @@ email: hi@josephhassell.com
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+var exports = module.exports = {};
 
 /**
  * Get port from environment and store in Express.
@@ -110,3 +115,15 @@ function onListening() {
   //debug('Listening on ' + bind);
   console.log('Listening on ' + bind);
 }
+
+process.on('SIGINT', function() {
+  //socket.close();
+  console.log("Close")
+  server.close();
+  process.exit();
+});
+
+exports.closeServer = function(){
+  server.close();
+};
+

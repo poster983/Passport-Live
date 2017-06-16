@@ -12,10 +12,16 @@
   ],
   "private": true,
   "scripts": {
-    "start": "echo 'please run start:db, then start:node  this will change in later updates'",
+    "start": "rethinkdb serve &! npm run start:node",
     "start:node": "nodemon ./bin/www",
-    "start:db": "rethinkdb",
-    "configure:db": "./bin/configure"
+    "start:db": "rethinkdb serve",
+    "start:dbEdit": "chateau",
+    "configure:db": "nodemon ./bin/configure",
+    "test": "export NODE_ENV=tests && nyc mocha",
+    "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -26,25 +32,38 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "~1.16.0",
+    "body-parser": "~1.17.2",
     "config": "latest",
     "connect-ensure-login": "latest",
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
-    "express": "~4.14.1",
+    "express": "~4.15.3",
     "express-session": "latest",
     "forever-monitor": "latest",
-    "morgan": "~1.7.0",
+    "jsonwebtoken": "^7.4.1",
+    "moment": "^2.18.1",
+    "morgan": "~1.8.2",
     "mustache-express": "1.2.4",
     "node-sass-middleware": "0.9.8",
     "nodemon": "latest",
     "passport": "0.3.2",
+    "passport-jwt": "^2.2.1",
     "passport-local": "latest",
     "passport-localapikey": "latest",
     "rethinkdb": "latest",
-    "serve-favicon": "~2.3.2",
-    "socket.io": "^1.7.3"
+    "serve-favicon": "~2.4.3",
+    "shortid": "^2.2.8",
+    "snyk": "^1.30.1",
+    "socket.io": "^2.0.0",
+    "ssarv": "latest"
   },
-  "license": "AGPL-3.0"
+  "license": "AGPL-3.0",
+  "snyk": true,
+  "devDependencies": {
+    "codecov": "^2.2.0",
+    "mocha": "^3.4.1",
+    "nyc": "^10.3.2",
+    "request": "^2.81.0"
+  }
 }

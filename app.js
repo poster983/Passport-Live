@@ -37,7 +37,6 @@ var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 
-//var users = require('./routes/users');
 
 var app = express();
 
@@ -66,6 +65,7 @@ app.set('view engine', 'mustache');
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
 
 
+
 //config 
 app.use(require('morgan')('combined'));
 app.use(logger('dev'));
@@ -75,6 +75,7 @@ app.use(cookieParser());
 app.use(require('express-session')({ secret: config.get('secrets.session-key'), resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());// persistent login sessions
+
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(require('node-sass-middleware')({
   src: path.join(__dirname, 'public'),

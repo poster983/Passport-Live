@@ -126,3 +126,24 @@ function checkForWeirdKid() {
     console.log("There You Go Carson");
   }
 }
+
+
+//AJAX function for API calls
+//callback callback(err, res);
+function sendAPI(apiURl, restAction, payload, JWTToken, callback){
+  $.ajax({
+    type: restAction,
+    beforeSend: function(request) {
+      request.setRequestHeader("Authorization", JWTToken);
+    },
+    url: apiURl,
+    data: payload,
+    success: function(data) {
+      callback(null, data);
+    },
+    error: function(jqXHR) {
+      callback(jqXHR);
+    }
+  });
+  
+}

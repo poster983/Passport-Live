@@ -2,9 +2,10 @@
 //THis file does not have to be published under the AGPL licence.
 {
 	"secrets": {
+		"api-secret-key": "123456",
 		"session-key": "123456",
 		"OAuth": {
-			"yourKeyHere": "12345" 
+			"yourKeyHere": "12345"
 		}
 	}
 }

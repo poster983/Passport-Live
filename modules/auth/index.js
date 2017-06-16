@@ -20,12 +20,16 @@ email: hi@josephhassell.com
 //'use strict';
 
 var LocalStrategy   = require('passport-local').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
+var config = require('config');
+var utils = require('../passport-utils/index.js');
 
 module.exports = function(passport, r, bcrypt) { // takes the passportjs object and a rethinkdb object
 
 
 var connection = null;
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });
@@ -33,7 +37,7 @@ var connection = null;
 
 passport.serializeUser(function(user, done) {
   done(null, user[0].id);
-  console.log(user);
+  //console.log(user);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -44,11 +48,13 @@ passport.deserializeUser(function(id, done) {
 
 });
 
+
+
 /*Local  PASSPORT.js auth*/
 passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
-    passwordField: 'passwd',
-    session: true,
+    passwordField: 'password',
+    //session: true,
     passReqToCallback: true
     },
   function(req, email, password, done) {
@@ -69,9 +75,11 @@ passport.use('local-login', new LocalStrategy({
             return done(err); 
           }
          if(user.length < 1) { // if no users are returned in the array 
+            console.log("Wrong email");
             return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
           }
           if(!bcrypt.compareSync(password, user[0].password)) {
+            console.log("Wrong Pwd");
             return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
           }
           return done(null, user);
@@ -80,7 +88,35 @@ passport.use('local-login', new LocalStrategy({
   }
 ));
 
+/**
+  JSON Wev Token Auth for API 
+**/
 
+var opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeader(); // Header: "Authorization"
+opts.secretOrKey = config.get('secrets.api-secret-key');
+//opts.issuer = "localhost";
+//opts.audience = "localhost";
+
+//TODO: Reissue a new JWT if it has been 10 min from last reissuing 
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  //console.log("HELLOO");
+  //console.log(jwt_payload.id);
+  //console.log(jwt_payload);
+  //Get account by ID and then upt it into req.user by calling done(null, doc);
+  r.table('accounts').get(jwt_payload.id).run(connection, function(err, doc) {
+    console.log(doc);
+    if (err) {
+      console.error(err)
+      return done(err); 
+    } else if(doc) {
+      return done(null, utils.cleanUser(doc));
+    } else {
+      return done(null, false);
+    }
+    
+  });
+}));
 
 
 

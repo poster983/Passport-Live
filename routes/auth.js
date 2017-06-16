@@ -22,6 +22,7 @@ var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
+var config = require('config');
 /*
 var httpv = require('http').Server(router);
 var io = require('socket.io')(httpv);
@@ -29,13 +30,13 @@ var io = require('socket.io')(httpv);
 //var r = require('../modules/db/index.js')();
 var passport = require('passport')
 //  , LocalStrategy = require('passport-local').Strategy;
-
+var api = require('../modules/passport-api/index.js');
 
 
 
   // Rethink db connection
 var connection = null;
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });
@@ -50,7 +51,8 @@ router.get('/login', function(req, res, next) {
 router.post('/login', passport.authenticate('local-login', { 
   successRedirect: '/',
   failureRedirect: '/auth/login',
-  failureFlash: true 
+  failureFlash: true,
+  session: true
 }));
 
 
@@ -60,39 +62,37 @@ router.get('/signup/student', function(req, res, next) {
 });
 
 // POST MAke New Account 
-//THIS IS NOT FINAL MUST BE REWRITAIN 
+//THIS WILL BE MOVED TO THE API LATER!!!
 router.post('/signup/student', function(req, res) {
   var email=req.body.email;
   var password=req.body.password;
-  var passwordVer=req.body.passwordVer;
-  var fn = req.body.firstname;
-  var ln = req.body.lastname;
-  var stuID = req.body.studentID;
+  var passwordVerification=req.body.passwordVerification;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
+  var groupFields = req.body.groupFields
+  var userGroup = req.params.userGroup;
+
+  
   if(password != passwordVer) {
     req.flash('signupMessage', 'Passwords Don\'t Match');
     res.redirect('/auth/signup/student');
     
   } else {
-    bcrypt.hash(password, null, null, function(err, hash) {
-      // Store hash in your password DB.
-      if(r.table("accounts")('email').contains(email).run(connection)){
-        req.flash('signupMessage', 'Email Already Taken');
-        res.redirect('/auth/signup/student');
-      } else {
-      console.log("User name = "+email+", password is "+password);
-      promice = r.table("accounts").insert({
-        firstName: fn,
-        lastName: ln,
-        stuID: stuID,
-        email: email,
-        password: hash,
-
-      }).run(connection);
-        promice.then(function(conn) {
-          res.end("yes");
-        });
-      }
-    });
+      api.createAccount(connection, "student", fn, ln, email, password, {stuID: stuID}, function(err, resp) {
+        if(err) {
+          console.log(err);
+          req.flash('signupMessage', resp.englishResp);
+          res.status(resp.code).redirect('/auth/signup/student');
+        } else {
+          if(resp.code == 201) {
+            req.flash('loginMessage', resp.englishResp);
+            res.status(resp.code).redirect('/auth/login');
+          } else {
+            req.flash('signupMessage', resp.englishResp);
+            res.status(resp.code).redirect('/auth/signup/student');
+          }
+        }
+      });
   }
 });
 

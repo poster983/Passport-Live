@@ -24,12 +24,13 @@ var router = express.Router();
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 var checkAuth = require('connect-ensure-login');
+var ssarv = require('ssarv');
 
 
 
 
 /* GET Student page. */
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), function(req, res, next) {
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
 
 	enabledPassGroups = config.get('passGroups.enabledPassGroups');
 	var passGroups = new Array();
