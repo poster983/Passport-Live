@@ -136,25 +136,42 @@ router.post('/account/:userGroup/', function(req, res, next) {
     var groupFields = req.body.groupFields
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
-
+    console.log(userGroup);
     //Checks to see if the account needs a verification key
     if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
         
     } else {
-        if(password != passwordVer) {
+        if(password != passwordVerification) {
             res.status(422);
         } else {
             api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
                 if(err){
                     next(err);
                 } else {
-                    res.status(201);
-                    next(null);
+                    res.status(201).redirect('/auth/login');
+                    
                 }
             });
         }
     }
 });
+
+
+router.get('/account/:userGroup/:name', function(req, res, next) {
+    var userGroup = req.params.userGroup;
+    var name = req.params.name;
+    res.json(utils.cleanName(name));
+    //res.send(name);
+    /*
+    api.getUserGroupAccountByName(connection, name, userGroup, function(err, acc) {
+        if(err) {
+            next(err);
+        }
+        res.send(acc);
+    });
+    */
+});
+
 
 /** 
 PASSES

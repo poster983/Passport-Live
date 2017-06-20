@@ -28,6 +28,17 @@ module.exports = {
             delete user.password;
             return user;
         }
+    },
+
+    cleanName: function(name) {
+        //return name.match(/^\w+\.+\s/g);
+        if(name.match(/^\w+\.+\s/g)) {
+            //return name.match(/^\w+\.+\s/g).length;
+            //return name.substring(0,1)
+            var test = name.match(/^\w+\.+\s/g)
+            console.log( test );
+        }
+        return "None";
     }
 
     

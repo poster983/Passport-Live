@@ -57,8 +57,10 @@ module.exports = { //function API(test)
             } else {
                 //insert new account
                 promice = r.table("accounts").insert({
-                  firstName: firstName,
-                  lastName: lastName,
+                  name: {
+                    first: firstName,
+                    last: lastName
+                  },
                   email: email,
                   password: hash,
                   userGroup: userGroup, // should be same as a usergroup in config/default.json
@@ -72,7 +74,25 @@ module.exports = { //function API(test)
           });
         });   
     },
+/*
+r.row("userGroup").eq(userGroup).
+            and(r.row("name")(name))
+*/
+    getUserGroupAccountByNames: function(dbConn, firstName, lastName, userGroup, done) { 
+         r.table("accounts").filter(function(doc){
+                return (doc('name')("last").match("(?i)"+name).or(doc('name')("first").match("(?i)"+name)));
+            }).
+            run(dbConn, function(err, document) {
 
+             if(err) {
+                return done(err, null);
+            }
+
+            document.toArray(function(err, arr) {
+                return done(null, arr)
+            });
+        });
+    },
         
     /**
     SECURITY
