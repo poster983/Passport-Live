@@ -249,20 +249,26 @@ email: hi@josephhassell.com
                             </select>
                             <label>Group</label>
                           </div>
+                          <!-- Immagine this shows when "passGroup" finishes -->
+                          <div id="groDiv" class="input-field col s12">
+                            <input type="text" id="autocomplete-account" class="autocomplete">
+                            <label for="autocomplete-account">Search Teachers</label>
+                          </div>
+                          <!--
                           <div id="locDiv" class="input-field col s12">
                             <select id="department" name="department" required class="white-text validate" onchange="depToReasonAJAX(this.value, '<?php echo $_SESSION['period'] ?>');">
                               <option value="" disabled selected>Choose A Location</option>
                               <option value="LEC">Executive Functioning (LEC)</option>
                               <option value="Math">Math Tutoring</option>
                               <option value="Library">Library</option>
-                              <!--<option value="Help Desk">Help Desk</option>-->
+
                               <option value="Writing Lab">Writing Lab</option>
                               <option value="Foreign Language">Foreign Language Tutoring</option>
-                              <!-- NO LONGER USED <option value="Athletic Mentor">Athletic Mentor</option>-->
+
                             </select>
                             <label>Location</label>
 
-                          </div>
+                          </div>-->
                           <div id="ReasonAJAX"></div>
 
                           <br>
@@ -336,6 +342,18 @@ email: hi@josephhassell.com
                   $('#fullAjaxLoadingScreen').removeClass("loading");
                 });
                 */
+
+                $('input.autocomplete').autocomplete({
+                  data: {
+                    "Apple": null,
+                    "Microsoft": null,
+                    "Google": 'http://placehold.it/250x250'
+                  },
+                  onAutocomplete: function(val) {
+                    console.log(val)
+                  },
+                  minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                });
               });
 
               function debugMode() {
@@ -592,6 +610,46 @@ email: hi@josephhassell.com
               $('#myPassesReturn').html("There was an error.  Please check the console for more details.");
               }
             })};
+
+
+
+
+
+
+
+                /**Autocomplete Accounts**/
+
+                $("#autocomplete-account").keyup(function() {
+                  searchAccounts("student", $("#autocomplete-account").val(), function(err, data) {
+                    if(err) {
+                      console.error(err);
+                    }
+                    else {
+                      console.log(data)
+                    }
+                  });
+                  console.log($("#autocomplete-account").val())
+                })
+
+
+                function searchAccounts(userGroup, query, done) {
+
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/"+userGroup+"/"+query,
+                    dataType: "json",
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
+                    if(err) {
+                      console.error(err);
+                    } else {
+                      return data;
+                    }
+
+                  });*/
+                }
 
               </script>
 

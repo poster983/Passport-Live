@@ -27,6 +27,7 @@ var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
 
+
   // Rethink db connection
 var connection = null;
 r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
@@ -156,20 +157,22 @@ router.post('/account/:userGroup/', function(req, res, next) {
     }
 });
 
-
+/**
+* GETs accounts by name
+*/
 router.get('/account/:userGroup/:name', function(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
-    res.json(utils.cleanName(name));
-    //res.send(name);
-    /*
+
+    
     api.getUserGroupAccountByName(connection, name, userGroup, function(err, acc) {
         if(err) {
             next(err);
         }
-        res.send(acc);
+        console.log(acc)
+        res.json(acc);
     });
-    */
+    
 });
 
 

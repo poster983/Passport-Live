@@ -22,9 +22,10 @@ var r = require('rethinkdb');
 var shortid = require('shortid');
 var utils = require('../passport-utils/index.js');
 var moment = require('moment');
-
+var human = require('humanparser');
 
 //All functions that make the api function.
+/** @module api */
 module.exports = { //function API(test) 
     /**
     ACCOUNTS 
@@ -74,13 +75,28 @@ module.exports = { //function API(test)
           });
         });   
     },
-/*
-r.row("userGroup").eq(userGroup).
-            and(r.row("name")(name))
-*/
-    getUserGroupAccountByNames: function(dbConn, firstName, lastName, userGroup, done) { 
+
+    /** 
+    * Searches by name and usergroup the account database 
+    * @link module:api
+    * @returns {JSON} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} name - user's name, cnd be in any format
+    * @param {constant} userGroup - A usergroup defined in the config
+    * @param {function} done - Callback
+    */
+    getUserGroupAccountByName: function(dbConn, name, userGroup, done) { 
+        var nameSplit = human.parseName(name);
+        if(!nameSplit.lastName) {
+            nameSplit.lastName = null;
+        }
+         if(!nameSplit.firstName) {
+            nameSplit.firstName = null;
+            
+        }
+        console.log(nameSplit)
          r.table("accounts").filter(function(doc){
-                return (doc('name')("last").match("(?i)"+name).or(doc('name')("first").match("(?i)"+name)));
+                return (doc('userGroup').match(userGroup).and(doc('name')("last").match("(?i)"+nameSplit.lastName).or(doc('name')("first").match("(?i)"+nameSplit.firstName))));
             }).
             run(dbConn, function(err, document) {
 
@@ -89,10 +105,17 @@ r.row("userGroup").eq(userGroup).
             }
 
             document.toArray(function(err, arr) {
+                if(err) {
+                    return done(err)
+                }
+                
                 return done(null, arr)
             });
         });
     },
+
+    /** DashBoards **/
+
         
     /**
     SECURITY
@@ -114,6 +137,15 @@ r.row("userGroup").eq(userGroup).
         time: Date object
     }
     */
+    /**
+     * Creates a New Permission Key.
+     * @link module:api
+     * @param {object} dbConn - RethinkDB Connection Object.
+     * @param {json} permissions - Json tree of permissions.
+     * @param {json} parms - unused.
+     * @param {json} timeout - Time.
+     * @param {function} done - Callback.
+     */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
         var key = shortid.generate()
         if(timeout.time) {
@@ -135,6 +167,13 @@ r.row("userGroup").eq(userGroup).
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
     //Callback: done(err, perms)
     //SHould only return one
+    /**
+     * Checks a Permission Key.
+     * @link module:api
+     * @param {object} dbConn - RethinkDB Connection Object.
+     * @param {string} key - the key to check.
+     * @param {function} done - Callback.
+     */
     checkPermissionKey: function(dbConn, key, done) {
 
         r.table("permissionKeys").filter({
