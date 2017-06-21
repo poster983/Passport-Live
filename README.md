@@ -3,12 +3,9 @@
 
 This is the next version of Passport; rebuilt in NodeJS
 Passport Live is a modern web app for schools that helps them manage passes.
-## Announcements 
-Migration over to GitLab will begin in a few weeks.
-The GitHub repo will remain, however, it will not accept any more PRs and wil be mirrored by the GitLab repo.  
 
 ## Installation
-NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS  
+NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS  
 1. Install the latest version of NodeJS [Here](https://nodejs.org/en/download/)  
    a. Be sure that NPM was also installed.  
 2. Install `rethinkdb` by following [this](https://www.rethinkdb.com/docs/install/ubuntu/) tutorial.  
@@ -17,13 +14,15 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04 LTS
    b. If that dosn't work, try: `sudo chown -R $(whoami) /usr/local/lib/node_modules`  
 4. Download the latest version of "Passport-Live", `~$ mv` it to your desiered location  
 5. `~$ cd` into its containing folder and then Unzip it.  
-6. Run `~$ npm install -g`  
-7. Run `~$ npm run start:db`  
+6. Run `~$ npm install`  
+   a. (NOTE.) If you get errors related to "node-sass", run `rm -rf node_modules` and then run `~$ npm install --unsafe-perm`  
+7. Run `~$ rethinkdb`  
 8. Run in a new termanal instance `~$ npm run configure:db`  
 9. CTRL^C Exits the program.
 
 ## Usage
-To start the server, run ~~~$ npm start~~ `~$ npm run start:db` THEN `~$ npm run start:node` from within the folder "package.json" is located.
+To start the server, run `~$ npm run db` THEN `~$ npm start` from within the folder "package.json" is located.  
+[Tmux](https://gist.github.com/MohamedAlaa/2961058) may be useful for servers.
 
 ## API 
 [The api can be found over at GitBook](https://poster983.gitbooks.io/passport-developer/content/)  
