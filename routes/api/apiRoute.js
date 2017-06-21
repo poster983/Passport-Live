@@ -27,6 +27,7 @@ var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
 
+
   // Rethink db connection
 var connection = null;
 r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
@@ -116,7 +117,7 @@ Body Data:
 |firstName|`String` The user's given name|
 |lastName|`String` The user's family name|
 |groupFields|`JSON Object` any special fields that may pertain to any userGroup (like a student ID)|
-|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account|
+|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account. |
 
 Possible Status Codes: 
 * 422 - The passwords don't match;
@@ -136,25 +137,59 @@ router.post('/account/:userGroup/', function(req, res, next) {
     var groupFields = req.body.groupFields
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
-
+    console.log(userGroup);
     //Checks to see if the account needs a verification key
     if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-        
-    } else {
-        if(password != passwordVer) {
-            res.status(422);
-        } else {
-            api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
-                if(err){
-                    next(err);
-                } else {
-                    res.status(201);
-                    next(null);
-                }
-            });
-        }
+        api.checkPermissionKey(connection, permissionKey, function(err, data) {
+            if(err) {
+                return next(err);
+            }
+            //CHeck  if usergroup is present
+            if(!data.permissions.userGroup.includes(userGroup)) {
+                var err = new Error("Permission Needed");
+                err.status = 403;
+                return next(err);
+            }
+        });
     }
+    if(password != passwordVerification) {
+        res.sendStatus(422);
+    } else {
+        api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+            if(err){
+                next(err);
+            } else {
+                res.sendStatus(201);
+                
+            }
+        });
+    }
+    
 });
+
+/**
+* GETs accounts by name
+*/
+router.get('/account/:userGroup/:name', function(req, res, next) {
+    var userGroup = req.params.userGroup;
+    var name = req.params.name;
+
+    
+    api.getUserGroupAccountByName(connection, name, userGroup, function(err, acc) {
+        if(err) {
+            next(err);
+        }
+        console.log(acc)
+        var ret = [];
+        for (var i = 0; i < acc.length; i++) {
+            
+            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
+        }
+        res.json(ret);
+    });
+    
+});
+
 
 /** 
 PASSES
@@ -165,6 +200,7 @@ PASSES
 SECURITY 
 **/
 //WILL NEED ACCOUNT PROTECTION 
+//
 router.post('/security/key/', function(req, res, next) {
     //res.json(req.body.permissions);
     

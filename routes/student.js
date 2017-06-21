@@ -28,7 +28,7 @@ var ssarv = require('ssarv');
 
 
 
-
+//
 /* GET Student page. */
 router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
 
