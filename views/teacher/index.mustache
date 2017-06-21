@@ -31,15 +31,15 @@ email: hi@josephhassell.com
       <a href="#" class="nav-left brand-logo">Teachers</a>
       <ul id="nav-mobile" class="right">
         <!--<li class="right"><a href="logout.php">Logout<i class="material-icons right">lock</i></a></li>-->
-        <li><a class="dropdown-button" href="#!" data-activates="threeDot">	&nbsp; &nbsp; &nbsp;	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="material-icons left">more_vert</i> </a></li>
+        <li><a id="threeDotButton" class="dropdown-button" href="#!" data-activates="threeDot">	&nbsp; &nbsp; &nbsp;	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="material-icons left">more_vert</i> </a></li>
         <li><a href=""></a></li>
       </ul>
     </div>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab"><a class="active" href="#test1">Students Arriving</a></li>
-        <li class="tab"><a href="#test2">Students Leaving</a></li>
-        <li class="tab"><a href="#test4">Request a Student</a></li>
+        <li class="tab"><a class="active" href="#studentsArriving">Students Arriving</a></li>
+        <li class="tab"><a href="#studentsLeaving">Students Leaving</a></li>
+        <li class="tab"><a href="#requestAStudent">Request a Student</a></li>
       </ul>
     </div>
   </nav>
@@ -158,28 +158,85 @@ email: hi@josephhassell.com
   </div>
 
   </div>
+
+  <!--Complete Signup Model-->
+  <div id="completeSignup" class="unclosable modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Let's set up your account!</h4>
+      <p>First, </p>
+      <div class="input-field col s12">
+          <label for="timepicker">Time</label>
+          <input id="timepicker" class="timepicker" type="time">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+    </div>
+  </div>
+
+
   <!--Content-->
   <div class="container">
     <!-- Request a pass for students -->
     <!--Students Leaving-->
-    <div class="section">
+    <!--Tab-->
+    <div id="studentsLeaving" class="col s12">
+      <div class="section">
+          <div class="row">
+            <div class="col s12">
+              <div id="studentsLeavingCard" class="card grey darken-3 hoverable">
+                <div class="card-content white-text">
+                  <span class="card-title">Students Leaving<sup>Beta</sup></span>
+                  <div id="studentsLeavingReturn">
 
-            <div class="row">
-              <div class="col s12">
-                <div id="MyPassesCard" class="card grey darken-3 hoverable">
-                  <div class="card-content white-text">
-                    <span class="card-title">Students Leaving<sup>Beta</sup></span>
-                    <div id="studentsLeavingReturn">
-
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
+          </div>
         </div>
+    </div>
+    <div id="studentsArriving" class="col s12">
+      <div class="section">
+        <div class="row">
+          <div class="col s12">
+            <div id="studentsArrivingCard" class="card grey darken-3 hoverable">
+              <div class="card-content white-text">
+                <span class="card-title">Students Arriving</span>
+                <div id="studentsArrivingReturn">
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="requestAStudent" class="col s12">
+      <div class="section">
+        <div class="row">
+          <div class="col s12">
+            <div id="requestAStudentCard" class="card grey darken-3 hoverable">
+              <div class="card-content white-text">
+                <span class="card-title">Request A Student</span>
+                <div id="requestAStudentReturn">
 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="tap-target" data-activates="threeDotButton">
+    <div class="tap-target-content">
+      <h5>Title</h5>
+      <p>A bunch of text</p>
+    </div>
+  </div>
+          
   <footer class="page-footer grey darken-3">
 <div class="footer-copyright">
   <div class="container">
@@ -205,10 +262,22 @@ email: hi@josephhassell.com
   <!-- Compiled and minified JavaScript -->
   <script src="js/materialize.js"></script>
   <script src="js/passport.js"></script>
+  <script src="js/materialize.clockpicker.js"></script>
+
 
 <script>
 $(document).ready(function(){
-  
+   $('.unclosable').modal({
+    dismissible: false
+   });
+   $('.timepicker').pickatime({
+      autoclose: false,
+      twelvehour: true,
+      darktheme: true,
+      default: 'now',
+      vibrate: true,
+    });
+  checkForUrlHash();
 });
 
 // Pass Avatar Button
@@ -244,6 +313,12 @@ error: function(xhr, desc, err) {
 //Get Messages
 function getMessages(){
   console.log("Remake message system");
+}
+
+function checkForUrlHash() {
+  if(window.location.hash == "#completeSignupStart") {
+    $('#completeSignup').modal('open');
+  }
 }
 
 </script>

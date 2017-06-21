@@ -78,12 +78,20 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(session({ 
-  store: new FileStore(),
-  secret: config.get('secrets.session-key'), 
-  resave: false, 
-  saveUninitialized: false 
-}));
+if(config.get('misc.storeSessionToDisc')) {
+  app.use(session({ 
+    store: new FileStore(),
+    secret: config.get('secrets.session-key'), 
+    resave: false, 
+    saveUninitialized: false 
+  }));
+} else {
+  app.use(session({ 
+    secret: config.get('secrets.session-key'), 
+    resave: false, 
+    saveUninitialized: false 
+  }));
+}
 app.use(passport.initialize());
 app.use(passport.session());// persistent login sessions
 
