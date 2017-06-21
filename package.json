@@ -12,9 +12,8 @@
   ],
   "private": true,
   "scripts": {
-    "start": "npm run node",
+    "start": "nodemon ./bin/www -e js,mustache",
     "node": "nodemon ./bin/www",
-    "node:dev": "nodemon ./bin/www -e js,mustache",
     "db": "rethinkdb serve",
     "start:dbEdit": "chateau",
     "configure:db": "nodemon ./bin/configure",
