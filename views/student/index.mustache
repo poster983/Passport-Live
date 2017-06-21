@@ -249,20 +249,28 @@ email: hi@josephhassell.com
                             </select>
                             <label>Group</label>
                           </div>
+                          <!-- Immagine this shows when "passGroup" finishes -->
+                          <!--Search-->
+                          <div id="groDiv" class="input-field col s12">
+                            <input type="text" id="autocomplete-account" class="autocomplete">
+                            <label for="autocomplete-account">Search Teachers</label>
+                          </div>
+                          
+                          <!--
                           <div id="locDiv" class="input-field col s12">
                             <select id="department" name="department" required class="white-text validate" onchange="depToReasonAJAX(this.value, '<?php echo $_SESSION['period'] ?>');">
                               <option value="" disabled selected>Choose A Location</option>
                               <option value="LEC">Executive Functioning (LEC)</option>
                               <option value="Math">Math Tutoring</option>
                               <option value="Library">Library</option>
-                              <!--<option value="Help Desk">Help Desk</option>-->
+
                               <option value="Writing Lab">Writing Lab</option>
                               <option value="Foreign Language">Foreign Language Tutoring</option>
-                              <!-- NO LONGER USED <option value="Athletic Mentor">Athletic Mentor</option>-->
+
                             </select>
                             <label>Location</label>
 
-                          </div>
+                          </div>-->
                           <div id="ReasonAJAX"></div>
 
                           <br>
@@ -321,7 +329,8 @@ email: hi@josephhassell.com
         <script src="js/passport.js"></script>
         <!--<script src="js/PICS.js"></script>-->
         <script>
-
+              /*Vars*/
+              var currGroup = "";
 
               $(document).ready(function(){
                 // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -336,6 +345,8 @@ email: hi@josephhassell.com
                   $('#fullAjaxLoadingScreen').removeClass("loading");
                 });
                 */
+                initAutocompleteAccounts({"none": null});
+                
               });
 
               function debugMode() {
@@ -592,6 +603,76 @@ email: hi@josephhassell.com
               $('#myPassesReturn').html("There was an error.  Please check the console for more details.");
               }
             })};
+
+
+
+
+
+
+
+                /**Autocomplete Accounts**/
+                function initAutocompleteAccounts(data) {
+                  $('input.autocomplete').autocomplete({
+                    data: data,
+                    onAutocomplete: function(val) {
+                      console.log(val)
+                    },
+                    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                  });
+                }
+
+
+                
+                    
+                $("#autocomplete-account").keyup(function() {
+                  searchAccounts("student", $("#autocomplete-account").val(), function(err, data) {
+                    if(err) {
+                      console.error(err);
+                    }
+                    else {
+                      var newDataAuto = {};
+                      //initAutocompleteAccounts({"joey": null});
+                      console.log(data)
+                      for(var x = 0; x < data.length; x++) {
+                        if(data[x].name.salutation) {
+                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last] = null;
+                        } else if(data[x].name.salutation && data[x].name.first) {
+                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last] = null;
+                        } else {
+                          newDataAuto[data[x].name.first + ' ' + data[x].name.last] = null;
+                        }
+
+                      }
+                      console.log(newDataAuto)
+                      initAutocompleteAccounts(newDataAuto);
+                      //autocompleteAccounts.resultCache = newDataAuto;
+                      //autocompleteAccounts.setValue(newDataAuto);
+                    }
+                  });
+                  console.log($("#autocomplete-account").val())
+                })
+              
+              
+                function searchAccounts(userGroup, query, done) {
+                    if(!query|| !userGroup) {
+                      return done(null, null);
+                    }
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/"+userGroup+"/"+query,
+                    dataType: "json",
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
+                    if(err) {
+                      console.error(err);
+                    } else {
+                      return data;
+                    }
+
+                  });*/
+                }
 
               </script>
 

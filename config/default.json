@@ -75,5 +75,8 @@
 		"host": "localhost",
 		"port": 28015,
 		"database": "passport"
+	},
+	"misc": {
+		"storeSessionToDisc": true
 	}
 }

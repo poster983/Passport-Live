@@ -58,7 +58,7 @@ router.post('/login', passport.authenticate('local-login', {
 
 //et signup
 router.get('/signup/student', function(req, res, next) {
-  res.render('auth/signup', { doc_Title: 'Signup -- Passport', sendTo:'/auth/signup/student', message: req.flash('signupMessage')});
+  res.render('auth/signup', { doc_Title: 'Signup -- Passport', sendTo:'/api/account/student/', message: req.flash('signupMessage')});
 });
 
 // POST MAke New Account 
