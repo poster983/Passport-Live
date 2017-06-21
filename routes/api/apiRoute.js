@@ -117,7 +117,7 @@ Body Data:
 |firstName|`String` The user's given name|
 |lastName|`String` The user's family name|
 |groupFields|`JSON Object` any special fields that may pertain to any userGroup (like a student ID)|
-|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account|
+|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account. |
 
 Possible Status Codes: 
 * 422 - The passwords don't match;
@@ -140,21 +140,31 @@ router.post('/account/:userGroup/', function(req, res, next) {
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-        
-    } else {
-        if(password != passwordVerification) {
-            res.status(422);
-        } else {
-            api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
-                if(err){
-                    next(err);
-                } else {
-                    res.status(201).redirect('/auth/login');
-                    
-                }
-            });
-        }
+        api.checkPermissionKey(connection, permissionKey, function(err, data) {
+            if(err) {
+                return next(err);
+            }
+            //CHeck  if usergroup is present
+            if(!data.permissions.userGroup.includes(userGroup)) {
+                var err = new Error("Permission Needed");
+                err.status = 403;
+                return next(err);
+            }
+        });
     }
+    if(password != passwordVerification) {
+        res.sendStatus(422);
+    } else {
+        api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+            if(err){
+                next(err);
+            } else {
+                res.sendStatus(201);
+                
+            }
+        });
+    }
+    
 });
 
 /**
@@ -170,7 +180,12 @@ router.get('/account/:userGroup/:name', function(req, res, next) {
             next(err);
         }
         console.log(acc)
-        res.json(acc);
+        var ret = [];
+        for (var i = 0; i < acc.length; i++) {
+            
+            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
+        }
+        res.json(ret);
     });
     
 });
@@ -185,6 +200,7 @@ PASSES
 SECURITY 
 **/
 //WILL NEED ACCOUNT PROTECTION 
+//
 router.post('/security/key/', function(req, res, next) {
     //res.json(req.body.permissions);
     

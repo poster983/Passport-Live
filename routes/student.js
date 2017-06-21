@@ -28,9 +28,9 @@ var ssarv = require('ssarv');
 
 
 
-//checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}),
+//
 /* GET Student page. */
-router.get('/',  function(req, res, next) {
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
 
 	enabledPassGroups = config.get('passGroups.enabledPassGroups');
 	var passGroups = new Array();

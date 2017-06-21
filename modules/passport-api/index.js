@@ -68,7 +68,6 @@ module.exports = { //function API(test)
                   groupFields: groupFields
                 }).run(dbConn);
                 promice.then(function(conn) {
-                    //Returns no error.
                     return done(null);
               });
             }
@@ -108,7 +107,10 @@ module.exports = { //function API(test)
                 if(err) {
                     return done(err)
                 }
-                
+                //Add Salutation for compadability
+                for (var i = 0; i < arr.length; i++) {
+                    arr[i].name.salutation = nameSplit.salutation;
+                }
                 return done(null, arr)
             });
         });
@@ -124,7 +126,7 @@ module.exports = { //function API(test)
     Creates a short permission key 
 
     Callback: done(err, key)
-    "permissions": a JSON object with a custom permission payload 
+    "permissions": a JSON object with a custom permission payload, Ex: userGroup
     "parms": per Use case
     "timeout": Must be a Json object either:
     {
@@ -187,16 +189,16 @@ module.exports = { //function API(test)
                 console.log(arr)
                 //Found key
                 if(0<arr.length) {
-                    if(arr[0].timeout.on == "time") {
+                    if(arr[0].timeout.time) {
                         if(moment(arr[0].timeout.time).isSameOrAfter()) {
-                            return done(null, arr[0].permissions);
+                            return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
 
                         } else {
                             var err = new Error("Key Not Valid");
                             err.status = 422;
                             return done(err, null);
                         }
-                    } else if(arr[0].timeout.on == "click") {
+                    } else if(arr[0].timeout.tally) {
                         if(arr[0].timeout.tally >= 1) {
                             //Subtract 1 from tally
                             r.table("permissionKeys").update({
@@ -207,7 +209,7 @@ module.exports = { //function API(test)
                                 if(err) {
                                     return done(err);
                                 } else {
-                                    return done(null, arr[0].permissions);
+                                    return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
                                     
                                 }
                             });

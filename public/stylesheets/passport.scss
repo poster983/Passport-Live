@@ -617,3 +617,34 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
   min-height: 100%;
 
 }
+
+
+/** AUTO COMPLETE*/
+.autocomplete2 {
+            display: -ms-flexbox;
+            display: flex;
+        }
+.autocomplete2 .ac-users {
+    padding-top: 10px;
+}
+.autocomplete2 .ac-users .chip {
+    -ms-flex: auto;
+    flex: auto;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+.autocomplete2 .ac-users .chip:last-child {
+    margin-right: 5px;
+}
+.autocomplete2 .ac-dropdown .ac-hover {
+    background: #eee;
+}
+.autocomplete2 .ac-input {
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 150px;
+    padding-top: 0.6rem;
+}
+.autocomplete2 .ac-input input {
+    height: 2.4rem;
+}

@@ -25,6 +25,7 @@ var JwtStrategy = require('passport-jwt').Strategy,
 var config = require('config');
 var utils = require('../passport-utils/index.js');
 
+
 module.exports = function(passport, r, bcrypt) { // takes the passportjs object and a rethinkdb object
 
 

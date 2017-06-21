@@ -74,6 +74,7 @@
 	"rethinkdb": {
 		"host": "localhost",
 		"port": 28015,
-		"database": "passport"
+		"database": "passport",
+		"storeSession": true
 	}
 }

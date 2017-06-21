@@ -18,18 +18,16 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-'use strict';
+var express = require('express');
+var config = require('config');
+var router = express.Router();
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+var checkAuth = require('connect-ensure-login');
+var ssarv = require('ssarv');
 
-
-var r = require('rethinkdb');
-
-
-  var connection = null;
-r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+    res.render('teacher/index', { doc_Title: 'Passport-Teacher', account_name: req.user.name, account_email: req.user.email});
 });
 
-r.conn = connection
-
-module.exports = r;
+module.exports = router;

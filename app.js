@@ -31,16 +31,22 @@ var config = require('config');
 var flash = require('connect-flash');
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
+var session = require('express-session')
+var FileStore = require('session-file-store')(session);
+
 /*Routes*/
 var rootLevel = require('./routes/index');
 var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
+var teacher = require('./routes/teacher');
 
 
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
+
+
 
 //Forever - MEMORY LEAK
 /*
@@ -72,7 +78,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(require('express-session')({ secret: config.get('secrets.session-key'), resave: false, saveUninitialized: false }));
+app.use(session({ 
+  store: new FileStore(),
+  secret: config.get('secrets.session-key'), 
+  resave: false, 
+  saveUninitialized: false 
+}));
 app.use(passport.initialize());
 app.use(passport.session());// persistent login sessions
 
@@ -87,8 +98,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', rootLevel);
 app.use('/student', studentView);
+app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
+
 //app.use('/users', users);
 
 // catch 404 and forward to error handler
