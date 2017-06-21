@@ -14,7 +14,8 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS
    b. If that dosn't work, try: `sudo chown -R $(whoami) /usr/local/lib/node_modules`  
 4. Download the latest version of "Passport-Live", `~$ mv` it to your desiered location  
 5. `~$ cd` into its containing folder and then Unzip it.  
-6. Run `~$ npm install -g`  
+6. Run `~$ npm install`  
+   a. (NOTE.) If you get errors related to "node-sass", run `rm -rf node_modules` and then run `~$ npm install --unsafe-perm`  
 7. Run `~$ rethinkdb`  
 8. Run in a new termanal instance `~$ npm run configure:db`  
 9. CTRL^C Exits the program.
