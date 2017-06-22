@@ -18,8 +18,18 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 //Useful functions for passport (NOT API FUNCTIONS)
+/** 
+* @module utils 
+*/
 module.exports = {
     //This function removes data like passwords and other sensitive info before sending it to the user 
+    /**
+    * Removes sensitive info from a user object like passwords
+    * @function createAccount
+    * @link module:utils
+    * @async
+    * @param {json} user - The user to clean.  The same user object found in the database 
+    */
     cleanUser: function(user){
         if(Array.isArray(user)){
             delete user[0].password;

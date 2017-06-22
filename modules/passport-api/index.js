@@ -44,7 +44,7 @@ module.exports = {
     /** 
     * Creates An Account 
     * @function createAccount
-    * @link module:api
+    * @link module:passportApi
     * @async
     * @example
     * api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
@@ -110,7 +110,7 @@ module.exports = {
     /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName
-    * @link module:api
+    * @link module:passportApi
     * @async
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {object} dbConn - RethinkDB Connection Object.
@@ -172,7 +172,7 @@ module.exports = {
     /**
      * Creates a New Permission Key.
      * @function createPermissionKey
-     * @link module:api
+     * @link module:passportApi
      * @async
      * @param {object} dbConn - RethinkDB Connection Object.
      * @param {json} permissions - Json tree of permissions.
@@ -210,7 +210,7 @@ module.exports = {
     //SHould only return one
     /**
      * Checks a Permission Key.
-     * @link module:api
+     * @link module:passportApi
      * @async
      * @param {object} dbConn - RethinkDB Connection Object.
      * @param {string} key - the key to check.
