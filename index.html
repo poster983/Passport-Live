@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li></ul></li><li><a href="module-restAPI.html">restAPI</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-restAPI.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-restAPI.html#~serializeUser">serializeUser</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    <!--container.tmpl-->
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>Passport-Live</h1><p><a href="https://travis-ci.org/poster983/Passport-Live"><img src="https://travis-ci.org/poster983/Passport-Live.svg?branch=master" alt="Build Status"></a>  <a href="https://snyk.io/test/github/poster983/passport-live"><img src="https://snyk.io/test/github/poster983/passport-live/badge.svg" alt="Known Vulnerabilities"></a>  <a href="https://www.codacy.com/app/josephh2018/Passport-Live?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=poster983/Passport-Live&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/08e8ae52cf0f4fde8f5f02fb275839ea" alt="Codacy Grade"></a>  <a href="https://codecov.io/gh/poster983/Passport-Live"><img src="https://img.shields.io/codecov/c/github/poster983/Passport-Live.svg" alt="Codecov"></a>  <a href="https://github.com/poster983/Passport-Live/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-000000.svg" alt="License: AGPL-3.0"></a>  <a href=""><img src="https://img.shields.io/maintenance/yes/2017.svg" alt="Maintenance"></a></p>
+<p>This is the next version of Passport; rebuilt in NodeJS
+Passport Live is a modern web app for schools that helps them manage passes.</p>
+<h2>Installation</h2><p>NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS  </p>
+<ol>
+<li>Install the latest version of NodeJS <a href="https://nodejs.org/en/download/">Here</a><br>a. Be sure that NPM was also installed.  </li>
+<li>Install <code>rethinkdb</code> by following <a href="https://www.rethinkdb.com/docs/install/ubuntu/">this</a> tutorial.  </li>
+<li>Give your user account ownership of npm.  This is so you don't need sudo.<br>a. First Try: <code>~$ sudo chown -R $(whoami) ~/.npm</code><br>b. If that dosn't work, try: <code>sudo chown -R $(whoami) /usr/local/lib/node_modules</code>  </li>
+<li>Download the latest version of &quot;Passport-Live&quot;, <code>~$ mv</code> it to your desiered location  </li>
+<li><code>~$ cd</code> into its containing folder and then Unzip it.  </li>
+<li>Run <code>~$ npm install</code><br>a. (NOTE.) If you get errors related to &quot;node-sass&quot;, run <code>rm -rf node_modules</code> and then run <code>~$ npm install --unsafe-perm</code>  </li>
+<li>Run <code>~$ rethinkdb</code>  </li>
+<li>Run in a new termanal instance <code>~$ npm run configure:db</code>  </li>
+<li>CTRL^C Exits the program.</li>
+</ol>
+<h2>Usage</h2><p>To start the server, run <code>~$ npm run db</code> THEN <code>~$ npm start</code> from within the folder &quot;package.json&quot; is located.<br><a href="https://gist.github.com/MohamedAlaa/2961058">Tmux</a> may be useful for servers.</p>
+<h2>API</h2><p><a href="https://poster983.gitbooks.io/passport-developer/content/">The api can be found over at GitBook</a>  </p>
+<p>This is a work in progress.</p>
+<h2>Help</h2><p><a href="https://poster983.gitbooks.io/passport-help/content/">A knowledge base can be found over at GitBook</a><br>If this doesn't help solve your problem, please <a href="https://github.com/poster983/Passport-Live/issues">create an issue</a> </p>
+<p>This is a work in progress.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Jun 22 2017 17:56:08 GMT+0000 (UTC) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
