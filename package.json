@@ -21,7 +21,8 @@
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "generate-docs": "jsdoc --configure config/jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",
@@ -64,6 +65,8 @@
   "snyk": true,
   "devDependencies": {
     "codecov": "^2.2.0",
+    "jsdoc": "^3.4.3",
+    "loke-jsdoc-theme": "^2.1.0",
     "mocha": "^3.4.1",
     "nyc": "^10.3.2",
     "request": "^2.81.0"

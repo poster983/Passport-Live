@@ -14,3 +14,5 @@ passport\.sublime-workspace
 \.nyc_output/
 
 sessions/
+
+out/docs/

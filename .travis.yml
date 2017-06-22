@@ -10,7 +10,9 @@ install:
   - npm install --dev
 #before_script:
 #  - npm run configure:db
-after_success: npm run coverage
+after_success: 
+  - npm run coverage 
+  - npm run generate-docs
 env:
   - CXX=g++-5
 addons:

@@ -17,6 +17,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
+
+
+/**
+* @module restAPI
+*/
 var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
@@ -167,10 +172,17 @@ router.post('/account/:userGroup/', function(req, res, next) {
     
 });
 
+
+router.get('/account/:userGroup/:name', handleGetAccountsByName);
 /**
-* GETs accounts by name
-*/
-router.get('/account/:userGroup/:name', function(req, res, next) {
+    * GETs accounts by name
+    * @function handleGetAccountsByName
+    * @api GET /api/account/:userGroup/:name/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apiparam {string} name - A user's name.  Can be in any name format.
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    */
+function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
@@ -186,9 +198,8 @@ router.get('/account/:userGroup/:name', function(req, res, next) {
             ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
         }
         res.json(ret);
-    });
-    
-});
+    }); 
+}
 
 
 /** 
@@ -201,9 +212,37 @@ SECURITY
 **/
 //WILL NEED ACCOUNT PROTECTION 
 //
-router.post('/security/key/', function(req, res, next) {
-    //res.json(req.body.permissions);
-    
+router.post('/security/key/', handleCreatePermissionKey);
+/**
+    * Creates a new permission key.
+    * @function handleCreatePermissionKey
+    * @api POST /api/security/key/
+    * @apibody {application/json} 
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @example
+    * <caption>Typical body when key is set to timeout at a date</caption>
+    * {
+    *  permissions: {
+    *    userGroup: ["teacher", "admin", "dev"]
+    *  },
+    *  parms: {},
+    *  timeout: {
+    *    time: moment.js compatible time
+    *  }
+    * }
+    * @example
+    * <caption>Typical body when key is set to timeout on a certain number of clicks</caption>
+    * {
+    *  permissions: {
+    *    userGroup: ["teacher", "admin", "dev"]
+    *  },
+    *  parms: {},
+    *  timeout: {
+    *    tally: 5
+    *  }
+    * }
+    */
+function handleCreatePermissionKey(req, res, next) {
     var permissions=req.body.permissions;
     var parms=req.body.parms;
     var timeout=req.body.timeout;
@@ -217,8 +256,7 @@ router.post('/security/key/', function(req, res, next) {
             key: key
         })
     })
-    
-});
+}
 
 
 
@@ -252,3 +290,9 @@ router.get('/', function(req, res, next) {
 
 });
 module.exports = router;
+
+
+/**
+ * A name of a userGroup defined in the configs
+ * @typedef {string} userGroup
+ */
