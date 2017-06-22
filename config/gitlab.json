@@ -1,0 +1,9 @@
+// THis holds special configs for tests 
+// Intended to use with gitlab 
+{
+	"rethinkdb": {
+		"host": "rethinkdb",
+		"port": 28015,
+		"database": "tests" //IMPORTANT THAT THIS VARIABLE IS NOT THE SAME AS THE PRODUCTION DB AD IT WILL BE DELETED AFTER EACH TEST 
+	}
+}

@@ -1,0 +1,31 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "source": {
+    "include": ["modules/passport-api", "routes", "package.json", "README.md"],
+    "exclude": ["public"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "plugins": [
+    "plugins/markdown",
+    "./node_modules/loke-jsdoc-theme/plugins/async",
+    "./node_modules/loke-jsdoc-theme/plugins/rpc",
+    "./node_modules/loke-jsdoc-theme/plugins/api",
+    "./node_modules/loke-jsdoc-theme/plugins/timeout"
+  ],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": true
+  },
+  "opts": {
+    "destination": "./out/docs/",
+    "encoding": "utf8",
+    "private": false,
+    "recurse": true,
+    "template": "./node_modules/loke-jsdoc-theme",
+    "tutorials": "./doc/tutorials"
+  }
+}
