@@ -1,8 +1,0 @@
-// THis holds special configs for tests 
-{
-	"rethinkdb": {
-		"host": "localhost",
-		"port": 28015,
-		"database": "tests" //IMPORTANT THAT THIS VARIABLE IS NOT THE SAME AS THE PRODUCTION DB AD IT WILL BE DELETED AFTER EACH TEST 
-	}
-}
