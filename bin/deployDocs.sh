@@ -6,7 +6,7 @@ TARGET_BRANCH="gh-pages"
 
 function docGen {
   npm run-script generate-docs
-  mv ./out/docs/*/* ./out
+  mv ./out/docs/*/*/* ./out
 }
 NODE_VERSION=`node --version`
 NODE_VERSION=${NODE_VERSION:1:1}
@@ -34,10 +34,11 @@ rm -rf out/**/* || exit 0
 # Run our compile script
 docGen
 
+ls
+
 # Now let's go have some fun with the cloned repo
 cd out
-lsOut='ls'
-echo $lsOut
+
 
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
@@ -50,7 +51,7 @@ fi
 
 # Commit the "changes", i.e. the new version.
 # The delta will show diffs between new and old versions.
-git add .
+git add . 
 git commit -m "Deploy to GitHub Pages: ${SHA}"
 
 # Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
