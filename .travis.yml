@@ -1,27 +1,27 @@
 sudo: true
 language: node_js
 before_install:
-  - npm install -g node-gyp
+- openssl aes-256-cbc -K $encrypted_a91b001030ea_key -iv $encrypted_a91b001030ea_iv
+  -in deploy_key.enc -out deploy_key -d
+- npm install -g node-gyp
 install:
-  - npm install --dev
-#before_script:
-#  - npm run configure:db
-after_success: 
-  - npm run coverage 
-  - bash ./bin/deployDocs.sh
+- npm install --dev
+after_success:
+- npm run coverage
+- bash ./bin/deployDocs.sh
 env:
   global:
-  - ENCRYPTION_LABEL: "a91b001030ea"
-  - COMMIT_AUTHOR_EMAIL: "josephh2018@gmail.com"
+  - ENCRYPTION_LABEL: a91b001030ea
+  - COMMIT_AUTHOR_EMAIL: josephh2018@gmail.com
   - CXX=g++-5
 addons:
-  rethinkdb: '2.3.5'
+  rethinkdb: 2.3.5
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
     - g++-5
 node_js:
-  - 'node'
-  - '6'
-  - '5'
+- node
+- '6'
+- '5'
