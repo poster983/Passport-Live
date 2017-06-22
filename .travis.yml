@@ -12,7 +12,7 @@ install:
 #  - npm run configure:db
 after_success: 
   - npm run coverage 
-  - npm run generate-docs
+  - bash ./bin/deployDocs.sh
 env:
   - CXX=g++-5
 addons:
