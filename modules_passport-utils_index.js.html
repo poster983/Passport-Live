@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tutorial: Usergroup Database Models - Documentation</title>
+    <title>modules/passport-utils/index.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,23 +34,72 @@
 
 <div id="main">
     
-    <h1 class="page-title">Tutorial: Usergroup Database Models</h1>
+    <h1 class="page-title">modules/passport-utils/index.js</h1>
     
 
-    <section class="tutorial">
+    <!--container.tmpl-->
 
-<header class="tutorial-header">
+
+
+
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+*/
+//Useful functions for passport (NOT API FUNCTIONS)
+
+/** 
+* @module utils 
+*/
+module.exports = {
+    /**
+    * Removes data like passwords and other sensitive info before sending it to the user 
+    * @function cleanUser
+    * @link module:utils
+    * @param {user} user - The user to clean.  The same user object found in the database 
+    * @returns {user}
+    */
+    cleanUser: function(user){
+        if(Array.isArray(user)){
+            delete user[0].password;
+            return user[0];
+        } else {
+            delete user.password;
+            return user;
+        }
+    }
+
     
+}
+/**
+* A user object found in the database
+* @typedef {json} user
+*/</code></pre>
+        </article>
+    </section>
 
-</header>
 
-<article>
-    <h1>The Default Usergroup Database Modal</h1><ul>
-<li>Using the default usergroups for passport.  Custom userGroups may or may not follow these modals.</li>
-</ul>
-</article>
 
-</section>
+
 
 </div>
 
