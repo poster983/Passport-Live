@@ -25,8 +25,12 @@ var moment = require('moment');
 var human = require('humanparser');
 
 //All functions that make the api function.
-/** @module api */
-module.exports = { //function API(test) 
+/** 
+* @module passportApi 
+* @example
+* var api = require('./modules/passport-api/index.js')
+*/
+module.exports = { 
     /**
     ACCOUNTS 
     **/
@@ -36,6 +40,29 @@ module.exports = { //function API(test)
     //done(err);
     /*
         Group field can contain for example {stuID: 123} Or {myCustomField: "Hello"}
+    */
+    /** 
+    * Creates An Account 
+    * @function createAccount
+    * @link module:api
+    * @async
+    * @example
+    * api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+    *   if(err) {
+    *     //do something with error
+    *   } else {
+    *     //Created
+    *   }
+    * });
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {constant} userGroup - A usergroup defined in the config
+    * @param {string} firstName - A user's given name
+    * @param {string} lastName - A user's family name
+    * @param {string} email - A user's email address
+    * @param {string} password - The user's password
+    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @param {function} done - Callback
+    * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
     createAccount: function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
         bcrypt.hash(password, null, null, function(err, hash) {
@@ -74,11 +101,18 @@ module.exports = { //function API(test)
           });
         });   
     },
+    /**
+    * @callback createAccountCallback
+    * @param {object} err - Returns an error object if any.
+    */
+
 
     /** 
     * Searches by name and usergroup the account database 
+    * @function getUserGroupAccountByName
     * @link module:api
-    * @returns {JSON} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @async
+    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} name - user's name, cnd be in any format
     * @param {constant} userGroup - A usergroup defined in the config
@@ -116,8 +150,6 @@ module.exports = { //function API(test)
         });
     },
 
-    /** DashBoards **/
-
         
     /**
     SECURITY
@@ -130,23 +162,24 @@ module.exports = { //function API(test)
     "parms": per Use case
     "timeout": Must be a Json object either:
     {
-        on: "click", //will only work once
         tally: 5
     }
     OR 
     {
-        on: "time",
         time: Date object
     }
     */
     /**
      * Creates a New Permission Key.
+     * @function createPermissionKey
      * @link module:api
+     * @async
      * @param {object} dbConn - RethinkDB Connection Object.
      * @param {json} permissions - Json tree of permissions.
      * @param {json} parms - unused.
      * @param {json} timeout - Time.
      * @param {function} done - Callback.
+     * @returns {callback} - See: {@link #params-doneCallback|<a href="#params-createPermissionKeyCallback">Callback Definition</a>}
      */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
         var key = shortid.generate()
@@ -166,12 +199,19 @@ module.exports = { //function API(test)
             return done(null, key);
         })
     },
+    /**
+    * @callback createPermissionKeyCallback
+    * @param {object} err - Returns an error if any. 
+    * @param {string} key - Returnes the new permission key.
+    */
+
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
     //Callback: done(err, perms)
     //SHould only return one
     /**
      * Checks a Permission Key.
      * @link module:api
+     * @async
      * @param {object} dbConn - RethinkDB Connection Object.
      * @param {string} key - the key to check.
      * @param {function} done - Callback.
