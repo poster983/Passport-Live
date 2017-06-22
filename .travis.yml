@@ -2,10 +2,6 @@ sudo: true
 language: node_js
 before_install:
   - npm install -g node-gyp
-#- source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-#- wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-#- sudo apt-get update
-#- sudo apt-get install rethinkdb
 install:
   - npm install --dev
 #before_script:
@@ -15,6 +11,9 @@ after_success:
   - bash ./bin/deployDocs.sh
 env:
   - CXX=g++-5
+  global:
+  - ENCRYPTION_LABEL: "a91b001030ea"
+  - COMMIT_AUTHOR_EMAIL: "josephh2018@gmail.com"
 addons:
   rethinkdb: '2.3.5'
   apt:
