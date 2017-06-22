@@ -24,8 +24,8 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS
 To start the server, run `~$ npm run db` THEN `~$ npm start` from within the folder "package.json" is located.  
 [Tmux](https://gist.github.com/MohamedAlaa/2961058) may be useful for servers.
 
-## API 
-[The api can be found over at GitBook](https://poster983.gitbooks.io/passport-developer/content/)  
+## Docs 
+[](https://poster983.github.io/Passport-Live/)  
 
 This is a work in progress.
 ## Help 
