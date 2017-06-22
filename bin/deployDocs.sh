@@ -6,7 +6,7 @@ TARGET_BRANCH="gh-pages"
 
 function docGen {
   npm run-script generate-docs
-  mv ./out/docs/*/*/* ./out
+  mv ./out/docs/*/* ./out
 }
 NODE_VERSION=`node --version`
 NODE_VERSION=${NODE_VERSION:1:1}
@@ -36,6 +36,7 @@ docGen
 
 # Now let's go have some fun with the cloned repo
 cd out
+ls out -a 
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
 
