@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e # Exit with nonzero exit code if anything fails
 
-SOURCE_BRANCH="docs"
+SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
 
 function docGen {
   npm run-script generate-docs
-  mv ./out/node-bandwidth/*/* ./out
+  mv ./out/docs/*/* ./out
 }
 NODE_VERSION=`node --version`
 NODE_VERSION=${NODE_VERSION:1:1}
