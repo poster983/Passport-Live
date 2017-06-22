@@ -36,7 +36,9 @@ docGen
 
 # Now let's go have some fun with the cloned repo
 cd out
-ls out -a 
+lsOut='ls'
+echo $lsOut
+
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
 
