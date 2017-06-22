@@ -10,10 +10,10 @@ after_success:
   - npm run coverage 
   - bash ./bin/deployDocs.sh
 env:
-  CXX: "g++-5"
   global:
   - ENCRYPTION_LABEL: "a91b001030ea"
   - COMMIT_AUTHOR_EMAIL: "josephh2018@gmail.com"
+  - CXX=g++-5
 addons:
   rethinkdb: '2.3.5'
   apt:
