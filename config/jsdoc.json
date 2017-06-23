@@ -15,9 +15,10 @@
     "./node_modules/loke-jsdoc-theme/plugins/rpc",
     "./node_modules/loke-jsdoc-theme/plugins/api",
     "./node_modules/loke-jsdoc-theme/plugins/timeout"
+    
   ],
   "templates": {
-    "cleverLinks": false,
+    "cleverLinks": true,
     "monospaceLinks": true
   },
   "opts": {

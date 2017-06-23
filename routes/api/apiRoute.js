@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 
 
 /**
-* @module restAPI
+* @module apiRoute
 */
 var express = require('express');
 var router = express.Router();
@@ -65,6 +65,11 @@ AUTH
 **/
 
 //serializeUser becaule the default passport.serializeUser function wont be called without session
+/**
+* takes req.user and makes it useable in the session.  Called automaticly 
+* @function serializeUser
+* @ignore
+*/
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
@@ -87,7 +92,24 @@ AUTH
 
 router.post('/auth/login', passport.authenticate('local-login', {
   session: false
-}), function(req, res, next) {
+}), handleAuthLogin);
+/**
+* Logges the user in using passport.authenticate
+* @function handleAuthLogin
+* @async
+* @param {request} req
+* @param {response} res
+* @api POST /api/auth/login/
+* @apibody {application/x-www-form-urlencoded}
+* @example 
+* <caption>Body structure: </caption>
+* email:<user's email>,
+* password:<user's password>
+* @todo Test application/json
+* @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
+* @todo Require passport to run over https
+*/
+function handleAuthLogin(req, res) {
     //Make a token
     var token = jwt.sign({
         id: req.user[0].id,
@@ -98,8 +120,7 @@ router.post('/auth/login', passport.authenticate('local-login', {
     res.status(200).json({
         token: "JWT " + token
     });
-});
-
+}
 /** 
 ACCOUNTS
 **/
@@ -131,7 +152,30 @@ Possible Status Codes:
 * 201 - Account was created!
 
 */
-router.post('/account/:userGroup/', function(req, res, next) {
+
+
+router.post('/account/:userGroup/', handleNewAccount);
+/**
+* Creates A New Account
+* @function handleNewAccount
+* @api POST /api/account/:userGroup/
+* @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+* @apibody {(application/json | application/x-www-form-urlencoded)}
+* @example 
+* <caption>Body Structure (application/json): </caption>
+* {
+*    "email": "teacher@gmail.com",
+*    "password": "123abc",
+*    "passwordVerification": "123abc",
+*    "firstName": "Teacher",
+*    "lastName": "McTeacher Face",
+*    "groupFields": {
+*        "teacherID": "1598753"
+*    },
+*    "permissionKey": HJhd38
+* }
+*/
+function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
@@ -169,18 +213,21 @@ router.post('/account/:userGroup/', function(req, res, next) {
             }
         });
     }
-    
-});
-
+}
 
 router.get('/account/:userGroup/:name', handleGetAccountsByName);
 /**
     * GETs accounts by name
     * @function handleGetAccountsByName
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
     * @api GET /api/account/:userGroup/:name/
     * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
     * @apiparam {string} name - A user's name.  Can be in any name format.
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
@@ -216,6 +263,10 @@ router.post('/security/key/', handleCreatePermissionKey);
 /**
     * Creates a new permission key.
     * @function handleCreatePermissionKey
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
     * @api POST /api/security/key/
     * @apibody {application/json} 
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
@@ -241,6 +292,8 @@ router.post('/security/key/', handleCreatePermissionKey);
     *    tally: 5
     *  }
     * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo Add JWT Auth
     */
 function handleCreatePermissionKey(req, res, next) {
     var permissions=req.body.permissions;
@@ -289,10 +342,27 @@ router.get('/', function(req, res, next) {
 	res.send('Brewing your coffee');
 
 });
+
+
 module.exports = router;
 
 
 /**
  * A name of a userGroup defined in the configs
  * @typedef {string} userGroup
+ */
+ /**
+ * The request object 
+ * @typedef {object} request
+ */
+
+  /**
+ * The response object sent to the requester 
+ * @typedef {object} response
+ */
+
+
+ /**
+ * @callback nextCallback
+ * @param {object} err - Any errors that may arrise should be passed through here
  */
