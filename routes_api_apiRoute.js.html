@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li></ul></li><li><a href="module-restAPI.html">restAPI</a><ul class='methods'><li data-type='method'><a href="module-restAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-restAPI.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-restAPI.html#~serializeUser">serializeUser</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">handleNewAccount</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -68,7 +68,7 @@ email: hi@josephhassell.com
 
 
 /**
-* @module restAPI
+* @module apiRoute
 */
 var express = require('express');
 var router = express.Router();
@@ -113,6 +113,11 @@ AUTH
 **/
 
 //serializeUser becaule the default passport.serializeUser function wont be called without session
+/**
+* takes req.user and makes it useable in the session.  Called automaticly 
+* @function serializeUser
+* @ignore
+*/
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
@@ -135,7 +140,24 @@ AUTH
 
 router.post('/auth/login', passport.authenticate('local-login', {
   session: false
-}), function(req, res, next) {
+}), handleAuthLogin);
+/**
+* Logges the user in using passport.authenticate
+* @function handleAuthLogin
+* @async
+* @param {request} req
+* @param {response} res
+* @api POST /api/auth/login/
+* @apibody {application/x-www-form-urlencoded}
+* @example 
+* &lt;caption>Body structure: &lt;/caption>
+* email:&lt;user's email>,
+* password:&lt;user's password>
+* @todo Test application/json
+* @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
+* @todo Require passport to run over https
+*/
+function handleAuthLogin(req, res) {
     //Make a token
     var token = jwt.sign({
         id: req.user[0].id,
@@ -146,8 +168,7 @@ router.post('/auth/login', passport.authenticate('local-login', {
     res.status(200).json({
         token: "JWT " + token
     });
-});
-
+}
 /** 
 ACCOUNTS
 **/
@@ -179,7 +200,30 @@ Possible Status Codes:
 * 201 - Account was created!
 
 */
-router.post('/account/:userGroup/', function(req, res, next) {
+
+
+router.post('/account/:userGroup/', handleNewAccount);
+/**
+* Creates A New Account
+* @function handleNewAccount
+* @api POST /api/account/:userGroup/
+* @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+* @apibody {(application/json | application/x-www-form-urlencoded)}
+* @example 
+* &lt;caption>Body Structure (application/json): &lt;/caption>
+* {
+*    "email": "teacher@gmail.com",
+*    "password": "123abc",
+*    "passwordVerification": "123abc",
+*    "firstName": "Teacher",
+*    "lastName": "McTeacher Face",
+*    "groupFields": {
+*        "teacherID": "1598753"
+*    },
+*    "permissionKey": HJhd38
+* }
+*/
+function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
@@ -217,18 +261,21 @@ router.post('/account/:userGroup/', function(req, res, next) {
             }
         });
     }
-    
-});
-
+}
 
 router.get('/account/:userGroup/:name', handleGetAccountsByName);
 /**
     * GETs accounts by name
     * @function handleGetAccountsByName
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
     * @api GET /api/account/:userGroup/:name/
     * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
     * @apiparam {string} name - A user's name.  Can be in any name format.
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
     */
 function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
@@ -264,6 +311,10 @@ router.post('/security/key/', handleCreatePermissionKey);
 /**
     * Creates a new permission key.
     * @function handleCreatePermissionKey
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
     * @api POST /api/security/key/
     * @apibody {application/json} 
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
@@ -289,6 +340,8 @@ router.post('/security/key/', handleCreatePermissionKey);
     *    tally: 5
     *  }
     * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
+    * @todo Add JWT Auth
     */
 function handleCreatePermissionKey(req, res, next) {
     var permissions=req.body.permissions;
@@ -337,6 +390,8 @@ router.get('/', function(req, res, next) {
 	res.send('Brewing your coffee');
 
 });
+
+
 module.exports = router;
 
 
@@ -344,7 +399,21 @@ module.exports = router;
  * A name of a userGroup defined in the configs
  * @typedef {string} userGroup
  */
-</code></pre>
+ /**
+ * The request object 
+ * @typedef {object} request
+ */
+
+  /**
+ * The response object sent to the requester 
+ * @typedef {object} response
+ */
+
+
+ /**
+ * @callback nextCallback
+ * @param {object} err - Any errors that may arrise should be passed through here
+ */</code></pre>
         </article>
     </section>
 
@@ -357,7 +426,7 @@ module.exports = router;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Jun 22 2017 18:36:46 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Jun 23 2017 00:44:35 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
