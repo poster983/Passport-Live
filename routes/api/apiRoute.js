@@ -31,6 +31,10 @@ var jwt = require('jsonwebtoken');
 var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
+var cors = require('cors');
+
+router.use(cors());
+router.options('*', cors())
 
 
   // Rethink db connection
