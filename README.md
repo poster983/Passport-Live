@@ -33,7 +33,7 @@ To start the server, run `~$ npm run db` THEN `~$ npm start` from within the fol
 [Tmux](https://gist.github.com/MohamedAlaa/2961058) may be useful for servers.
 
 ## Docs 
-[](https://poster983.github.io/Passport-Live/)  
+[github.io docs](https://poster983.github.io/Passport-Live/)  
 
 This is a work in progress.
 ## Help 
