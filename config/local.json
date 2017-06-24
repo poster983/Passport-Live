@@ -3,7 +3,7 @@
 {
 	"secrets": {
 		"api-secret-key": "123456", //for use with jwt
-		"session-key": "654321",
+		"session-key": "6543210",
 		"OAuth": {
 			"yourKeyHere": "12345"
 		}
