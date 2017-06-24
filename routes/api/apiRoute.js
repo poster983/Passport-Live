@@ -147,7 +147,7 @@ Body Data:
 |firstName|`String` The user's given name|
 |lastName|`String` The user's family name|
 |groupFields|`JSON Object` any special fields that may pertain to any userGroup (like a student ID)|
-|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account. |
+|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account. permissionKey requires permission: "userGroups": ["blablabla"]|
 
 Possible Status Codes: 
 * 422 - The passwords don't match;
@@ -198,7 +198,7 @@ function handleNewAccount(req, res, next) {
                 return next(err);
             }
             //CHeck  if usergroup is present
-            if(!data.permissions.userGroup.includes(userGroup)) {
+            if(!data.permissions.userGroups.includes(userGroup)) {
                 var err = new Error("Permission Needed");
                 err.status = 403;
                 return next(err);
@@ -315,6 +315,20 @@ function handleCreatePermissionKey(req, res, next) {
     })
 }
 
+/**
+SERVER
+**/
+
+router.get('/server/config/schedule/', function(req, res, next) {
+    try {
+        res.json(config.get('schedule'));
+    } catch (e) {
+        next(e);
+    }
+
+
+})
+
 
 
 /**
@@ -339,6 +353,8 @@ router.get('/test/key/:key', function(req, res, next) {
         
     });
 })
+
+
 
 //default Responce
 router.get('/', function(req, res, next) {

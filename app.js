@@ -40,7 +40,7 @@ var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
-
+var administrator = require('./routes/administrator')
 
 var app = express();
 
@@ -109,7 +109,7 @@ app.use('/student', studentView);
 app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
-
+app.use('/administrator', administrator)
 //app.use('/users', users);
 
 // catch 404 and forward to error handler

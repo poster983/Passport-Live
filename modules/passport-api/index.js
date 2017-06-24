@@ -158,7 +158,7 @@ module.exports = {
     Creates a short permission key 
 
     Callback: done(err, key)
-    "permissions": a JSON object with a custom permission payload, Ex: userGroup
+    "permissions": a JSON object with a custom permission payload, Ex: userGroups
     "parms": per Use case
     "timeout": Must be a Json object either:
     {
@@ -273,6 +273,8 @@ module.exports = {
             });
         });
     },
+
+    
 
     tester: function(hello, done) {
         console.log(hello);

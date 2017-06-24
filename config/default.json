@@ -51,9 +51,16 @@
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
-		"counselors": {
+		"counselor": {
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
+			},
+			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
+			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
+		},
+		"administrator": {
+			"permissions": {
+				"dashboards": ["administrator"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
@@ -75,6 +82,18 @@
 		"host": "localhost",
 		"port": 28015,
 		"database": "passport"
+	},
+	"schedule": { 
+		"period": ["a", "b", "c", "d", "e1", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed durring school year
+		"daysOfTheWeek": { //Choose what days have school
+			"monday": true,
+			"tuesday": true,
+			"wednesday": true,
+			"thursday": true,
+			"friday": true,
+			"saturday": false, //if you set this to "true", you are a monster
+			"sunday": false
+		}
 	},
 	"misc": {
 		"storeSessionToDisc": true
