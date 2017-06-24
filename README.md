@@ -20,6 +20,14 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS
 8. Run in a new termanal instance `~$ npm run configure:db`  
 9. CTRL^C Exits the program.
 
+## Updating 
+We HIGHLY recommend that you use git for updating the code, however please be sure that there are no breaking changes documented or you may have to change any coustom code.  
+
+If you are using git:  
+Before you update for the first time, please run `~$ git update-index --skip-worktree config/local.json && git update-index --skip-worktree config/default.json && git update-index --skip-worktree config.js`  
+
+To update, run `git pull`
+
 ## Usage
 To start the server, run `~$ npm run db` THEN `~$ npm start` from within the folder "package.json" is located.  
 [Tmux](https://gist.github.com/MohamedAlaa/2961058) may be useful for servers.
