@@ -61,40 +61,6 @@ router.get('/signup/student', function(req, res, next) {
   res.render('auth/signup', { doc_Title: 'Signup -- Passport', sendTo:'/api/account/student/', message: req.flash('signupMessage')});
 });
 
-// POST MAke New Account 
-//THIS WILL BE MOVED TO THE API LATER!!!
-router.post('/signup/student', function(req, res) {
-  var email=req.body.email;
-  var password=req.body.password;
-  var passwordVerification=req.body.passwordVerification;
-  var firstName = req.body.firstName;
-  var lastName = req.body.lastName;
-  var groupFields = req.body.groupFields
-  var userGroup = req.params.userGroup;
-
-  
-  if(password != passwordVer) {
-    req.flash('signupMessage', 'Passwords Don\'t Match');
-    res.redirect('/auth/signup/student');
-    
-  } else {
-      api.createAccount(connection, "student", fn, ln, email, password, {stuID: stuID}, function(err, resp) {
-        if(err) {
-          console.log(err);
-          req.flash('signupMessage', resp.englishResp);
-          res.status(resp.code).redirect('/auth/signup/student');
-        } else {
-          if(resp.code == 201) {
-            req.flash('loginMessage', resp.englishResp);
-            res.status(resp.code).redirect('/auth/login');
-          } else {
-            req.flash('signupMessage', resp.englishResp);
-            res.status(resp.code).redirect('/auth/signup/student');
-          }
-        }
-      });
-  }
-});
 
 /*io.on('connection', function(socket){
   console.log('a user connected');
