@@ -313,6 +313,7 @@ module.exports = {
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} date - Moment.js compadable date
     * @param {function} done - Callback
+    * @todo MAKE BETTER
     */
 
     getScheduleOfADate: function(dbConn, date, done) {
@@ -322,7 +323,7 @@ module.exports = {
             return done(err)
         }
         var momentDate = moment(date);
-        var returner = {};
+        
         date = momentDate.format("Y-MM-DD");
 
         //Look for date in scheduleCalendar table 
@@ -333,9 +334,9 @@ module.exports = {
             cursor.toArray(function(err, results) {
                 if (err) return done(err);
                 if(results.length > 0) {
-                    returner.calendar = results;
+                    
                     //return callback
-                    return returnIt(returner);
+                    returnIt(results, {});
                 } else {
                     secondCheck();
                 }
@@ -346,16 +347,55 @@ module.exports = {
         function secondCheck() {
 
         }
-        function returnIt() {
-            /*returner.definition
+        /*function returnIt(res) {
+            //RECURSSIONs
+            var retArr = [];
+            var returner = {};
+            for(var i = 0; i < res.length || function(){
+                //callback
+               console.log("hi")
+               return done(null, retArr)
+            }(); i++) {
+                //console.log(res[i].ScheduleDefinitionID)
+                var keepIndex = i;
+                r.table('scheduleDefinitions').get(res[i].ScheduleDefinitionID).run(dbConn, function(err, data) {
+                    if(err) {
+                        return done(err);
+                    }
+                    
+                    returner.scheduleDefinition = data;
+                    returner.planned = res[keepIndex];
+                    //console.log(res[keepIndex])
+                    retArr.push(returner)
+                    //BAD SOLUTION
+                    
+                    if(i == res.length) {
+                        //return done(null, retArr)
+                    }
+                    //retArr.push(returner);
+                });
+            }
             
-            r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
-                if(err) {
-                    return done(err);
-                }
-                return done(null, data)
-            });*/
-            return done(null, "hi")
+return done(null, retArr)
+            
+            //return done(null, returner.calendar)
+        }*/
+
+        function returnIt(res, json) {
+            if(res.length <= 0 ) return done(null, json);
+            var returner = {};
+            //console.log(res);
+            //return done(null, res[0].ScheduleDefinitionID);
+            var ScheduleDefinitionID = res[0].ScheduleDefinitionID
+            r.table('scheduleDefinitions').get(ScheduleDefinitionID).run(dbConn, function(err, data) {
+                    if(err) {
+                        return done(err);
+                    }
+                    returner.scheduleDefinition = data;
+                    returner.planned = res[0];
+                    return returnIt(res.shift(), returner)
+                });
+            
         }
 
     },

@@ -350,6 +350,7 @@ router.post('/schedule/plan/date', function(req, res, next) {
         if(err) {
             return next(err);
         }
+
         res.status(201).json(data);
     });
 })
@@ -372,6 +373,7 @@ router.get('/schedule/for/:date', function(req, res, next) {
         if(err) {
             return next(err);
         }
+
         res.json(data);
     });
 })
