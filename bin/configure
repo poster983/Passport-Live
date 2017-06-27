@@ -33,6 +33,16 @@ p.then(function(conn) {
     //create 
     r.db('passport').tableCreate('permissionKeys').run(conn, function(res) {
       console.log(res); 
+    });
+     r.db('passport').tableCreate('scheduleDefinitions').run(conn, function(res) {
+      console.log(res); 
+    });
+    r.db('passport').tableCreate('scheduleCalendar').run(conn, function(res) {
+      console.log(res); 
+
+    });
+    r.db('passport').tableCreate('scheduleRepeating').run(conn, function(res) {
+      console.log(res); 
       process.exit();
     });
 

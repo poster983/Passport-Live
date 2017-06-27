@@ -22,36 +22,80 @@ email: hi@josephhassell.com
 <body class="grey darken-4">
 
     <nav>
-        <div class="nav-wrapper">
-          <a href="#!" class="right brand-logo">Administrators</a>
-        </div>
-      </nav>
-      <nav>
-        <div class="nav-wrapper">
-          <form>
-            <div class="input-field">
-              <input id="search" type="search" required>
-              <label class="label-icon" for="search"><i class="material-icons">add</i></label>
-              <i class="material-icons">close</i>
+      <div class="nav-wrapper">
+       
+        <a href="#!" class="right brand-logo">Administrators</a>
+         <ul id="slide-out" class="side-nav">
+          <li><div class="user-view">
+            <div class="background">
+              <img src="images/office.jpg">
             </div>
-          </form>
-        </div>
-      </nav>
-
-       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large red waves-effect waves-light">
-          <i class="large material-icons">mode_edit</i>
-        </a>
-        <!--<ul>
-          <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-          <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-          <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-          <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-        </ul>-->
+            <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+            <a href="#!name"><span class="white-text name">John Doe</span></a>
+            <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+          </div></li>
+          <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+          <li><a href="#!">Second Link</a></li>
+          <li><div class="divider"></div></li>
+          <li><a class="subheader">Subheader</a></li>
+          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+        </ul>
+        <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
       </div>
+    </nav>
+    <nav>
+      <div class="nav-wrapper">
+        <form>
+          <div class="input-field">
+            <input id="search" type="search" required>
+            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+            <i class="material-icons">close</i>
+          </div>
+        </form>
+      </div>
+    </nav>
+
+    <!-- Side Nav-->
+   
+
+     <div class="fixed-action-btn">
+      <a onclick="openPage('scheduleEditor')" class="btn-floating btn-large red waves-effect waves-light">
+        <i class="large material-icons">mode_edit</i>
+      </a>
+      <!--<ul>
+        <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+        <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+        <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+        <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+      </ul>-->
+    </div>
 
     <div class="container">
+      <div id="cal"> 
+        <div class="row">
+          <div class="col s12">
+            <div class="card grey darken-3">
+              <div class="card-content white-text">
+                <span class="card-title">Schedules</span>
+                <input id="ScheduleDate" type="date" class="datepicker">
+                <label for="ScheduleDate">View Date</label>
+                <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+              </div>
+              <div class="card-action">
+                <a href="#">Edit Current Schedule</a>
+                <a href="#">Temporarily Change To A New Schedule</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div id="mustacheMixens">
+      <div class="mustacheMixen page" id="scheduleEditor"> 
+        {{>administrator/mixinScheduler}}
+      </div>
     </div>
     <!-- Scripts -->
         <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
@@ -68,5 +112,28 @@ email: hi@josephhassell.com
         <!-- Compiled and minified JavaScript -->
         <script src="js/materialize.js"></script>
         <script src="js/passport.js"></script>
+        <script>
+          $(document).ready(function(){
+            $(".button-collapse").sideNav();
+            $('.datepicker').pickadate({
+              selectMonths: true, // Creates a dropdown to control month
+              selectYears: 15 // Creates a dropdown of 15 years to control year
+            });
+            $('.timepicker').pickatime({
+              default: 'now', // Set default time
+              fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+              twelvehour: false, // Use AM/PM or 24-hour format
+              donetext: 'OK', // text for done-button
+              cleartext: 'Clear', // text for clear-button
+              canceltext: 'Cancel', // Text for cancel-button
+              autoclose: false, // automatic close timepicker
+              ampmclickable: true, // make AM PM clickable
+              aftershow: function(){} //Function for after opening timepicker  
+            });
+            $('select').material_select();
+          });
+
+          
+        </script>
 </body>
 </html>

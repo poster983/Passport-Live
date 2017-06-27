@@ -23,7 +23,7 @@ var shortid = require('shortid');
 var utils = require('../passport-utils/index.js');
 var moment = require('moment');
 var human = require('humanparser');
-
+var config = require('config');
 //All functions that make the api function.
 /** 
 * @module passportApi 
@@ -148,6 +148,216 @@ module.exports = {
                 return done(null, arr)
             });
         });
+    },
+
+    /** 
+    ADMINISTRATION
+    **/
+
+    /** 
+    * Creates a new Schedule Definition
+    * @function newScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} error and Rethinkdb action sum
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} name - Name of the Schedule
+    * @param {scheduleData} scheduleData - See: {@link #params-scheduleData|<a href="#params-scheduleData">Tree Example</a>}
+    * @param {function} done - Callback
+    */
+    newScheduleDefinition: function(dbConn, name, scheduleData, done) {
+        //check if times are in correct spots 
+        var allowedPer = config.get('schedule.periods');
+        //loop through keys
+        for (var key in scheduleData) {
+          if (scheduleData.hasOwnProperty(key)) {
+            var currKey = scheduleData[key]
+            if(allowedPer.indexOf(key) == -1) {
+                var err = new Error("Config constant for periods not found: " + key);
+                    err.status = 404;
+                    return done(err);
+            }
+            if(currKey.hasOwnProperty("start") && currKey.hasOwnProperty("end")){
+                if(moment(currKey.start, "HH:mm").isBefore(moment(currKey.end, "HH:mm"))) {
+                    //return done(null, moment(currKey.start, "HH:mm").utc().format("HH:mm"));
+                    scheduleData[key].start = moment(currKey.start, "HH:mm").utc().format("HH:mm");
+                    scheduleData[key].end = moment(currKey.end, "HH:mm").utc().format("HH:mm");
+                } else {
+                    var err = new Error("Start time is after end time");
+                    err.status = 400;
+                    return done(err)
+                }
+                
+            } else {
+                var err = new Error("start or end Key not Found");
+                err.status = 400;
+                return done(err);
+            }
+          }
+        }
+        //send to db
+       r.table("scheduleDefinitions").insert({
+            name: name,
+            scheduleData: scheduleData
+        }).run(dbConn, function(err, data) {
+            if (err) {
+                return done(err);
+            }
+            return done(null, data)
+        }) 
+    },
+    /** 
+    * Gets a Schedule Definition
+    * @function getScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the row
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} id - Id of the row
+    * @param {function} done - Callback
+    */
+    getScheduleDefinition: function(dbConn, id, done) {
+        r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data)
+        });
+    },
+
+    /** 
+    * Schedules a date for a Schedule Definition
+    * @function scheduleSingleScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} SCid - Id of the Schedule Definition
+    * @param {string} date - Moment.js compadable date
+    * @param {function} done - Callback
+    */
+    scheduleSingleScheduleDefinition: function(dbConn, SCid, date, done) {
+        if(!moment(date).isValid()) {
+            var err = new Error("Date not valid");
+            err.status = 400;
+            return done(err)
+        }
+        date = moment(date).format("Y-MM-DD");
+        
+        r.table("scheduleCalendar").insert({
+            ScheduleDefinitionID: SCid,
+            date: date
+        }).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data);
+        })
+    },
+
+    /** 
+    * Schedules a date for a Schedule Definition
+    * @function scheduleSingleScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} SCid - Id of the Schedule Definition
+    * @param {repeatingRule} repeatingRule - See: {@link #params-repeatingRule|<a href="#params-repeatingRule">Object Example</a>}
+    * @param {function} done - Callback
+    */
+    scheduleRepeatingScheduleDefinition: function(dbConn, SCid, repeatingRule, done) {
+        //Check if repeatingRule is valid
+        if(repeatingRule.repeats == "daily") {
+            if(!Number.isInteger(repeatingRule.every)) {
+                var err = new Error("repeatingRule.every expected a number");
+                err.status = 400;
+                return done(err); 
+            }
+        } else if(repeatingRule.repeats == "weekly") {
+            if(!Number.isInteger(repeatingRule.every)) {
+                var err = new Error("repeatingRule.every expected a number");
+                err.status = 400;
+                return done(err); 
+
+            }
+            if(!Array.isArray(repeatingRule.on)) {
+                    var err = new Error("repeatingRule.on expected an Array");
+                    err.status = 400;
+                    return done(err); 
+                }
+        } else {
+            var err = new Error("repeatingRule has invalid syntex");
+            err.status = 400;
+            return done(err)
+        }
+
+
+        r.table("scheduleRepeating").insert({
+            ScheduleDefinitionID: SCid,
+            repeatingRule: repeatingRule
+        }).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data);
+        })
+    },
+
+    /** 
+    * Gets the Schedule for that date 
+    * @function getScheduleOfADate
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} date - Moment.js compadable date
+    * @param {function} done - Callback
+    */
+
+    getScheduleOfADate: function(dbConn, date, done) {
+         if(!moment(date).isValid()) {
+            var err = new Error("Date not valid");
+            err.status = 400;
+            return done(err)
+        }
+        var momentDate = moment(date);
+        var returner = {};
+        date = momentDate.format("Y-MM-DD");
+
+        //Look for date in scheduleCalendar table 
+        r.table('scheduleCalendar').filter({
+            date: date
+        }).run(dbConn, function(err, cursor) {
+            if(err) return done(err);
+            cursor.toArray(function(err, results) {
+                if (err) return done(err);
+                if(results.length > 0) {
+                    returner.calendar = results;
+                    //return callback
+                    return returnIt(returner);
+                } else {
+                    secondCheck();
+                }
+            });
+
+        });
+        //mini callback
+        function secondCheck() {
+
+        }
+        function returnIt() {
+            /*returner.definition
+            
+            r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
+                if(err) {
+                    return done(err);
+                }
+                return done(null, data)
+            });*/
+            return done(null, "hi")
+        }
+
     },
 
         
@@ -281,3 +491,47 @@ module.exports = {
         done(null, hello);
     }
 }
+
+/**
+* The json tree for laying out the period times
+* The key must equal a period constant defined in the config array (schedule.period)
+* Times are in 24hr time
+* @example
+* {
+* "a": { 
+*   "start": 14:25,
+*   "end": 15:35
+* },
+* "b": { 
+*   "start": 9:25,
+*   "end": 10:35
+* },
+* "c": { 
+*   "start": 13:25,
+*   "end": 14:10
+* },
+* "lunch2": {
+*   "start": 12:00,
+*   "end": 13:05
+* }
+* }
+* @typedef {json} scheduleData
+*/
+
+/**
+* rule to let the program know when to Repeats.
+* @example
+* <caption>Repeating daily</caption>
+* {
+*    "repeats": "daily",
+*    "every": 1 //days
+* }
+* @example
+* <caption>Repeating Weekly</caption>
+* {
+    "repeats": "weekly",
+    "every": 1, //weeks
+    "on": ["monday", "tuesday", "thursday", "friday"]
+* }
+* @typedef {json} repeatingRule
+*/

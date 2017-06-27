@@ -316,6 +316,67 @@ function handleCreatePermissionKey(req, res, next) {
 }
 
 /**
+schedule
+**/
+//new Schedule Definition 
+router.post('/schedule/definition', function(req, res, next) {
+    var name=req.body.name;
+    var scheduleData=req.body.scheduleData;
+
+    api.newScheduleDefinition(connection, name, scheduleData, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(data);
+    });
+})
+//get Schedule Definition
+router.get('/schedule/definition/id/:id', function(req, res, next) {
+    var id=req.params.id;
+
+    api.getScheduleDefinition(connection, id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.json(data);
+    });
+})
+//schedule Single Schedule Definition
+router.post('/schedule/plan/date', function(req, res, next) {
+    var SCid=req.body.ScheduleDefinitionID;
+    var date=req.body.date;
+
+    api.scheduleSingleScheduleDefinition(connection, SCid, date, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(data);
+    });
+})
+router.post('/schedule/plan/repeat', function(req, res, next) {
+    var SCid=req.body.ScheduleDefinitionID;
+    var repeatingRule=req.body.repeatingRule;
+
+    api.scheduleRepeatingScheduleDefinition(connection, SCid, repeatingRule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(data);
+    });
+})
+
+router.get('/schedule/for/:date', function(req, res, next) {
+    var date=req.params.date;
+    console.log(date)
+    api.getScheduleOfADate(connection, date, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.json(data);
+    });
+})
+
+/**
 SERVER
 **/
 

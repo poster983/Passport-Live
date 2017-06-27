@@ -147,3 +147,10 @@ function sendAPI(apiURl, restAction, payload, JWTToken, callback){
   });
   
 }
+
+function openPage(pageID) {
+  $("#" + pageID).addClass("active");
+}
+function closePage(pageID) {
+  $("#" + pageID).removeClass("active");
+}

@@ -1,0 +1,72 @@
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+<nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo right">Schedule Editor</a>
+      <a href="#" onclick="closePage('scheduleEditor')"><i class=" left-allign nav-sandwich material-icons">arrow_back</i></a>
+    </div>
+</nav>
+<div class="container">
+  <div id="cal"> 
+    <div class="row">
+      <div class="col s12">
+        <div class="card grey darken-3">
+          <div class="card-content white-text">
+            <span class="card-title">New Schedule</span>
+           
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Period Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="input-field col s12">
+                                <select>
+                                  <option value="" disabled selected>Choose your option</option>
+                                  <option value="1">Option 1</option>
+                                  <option value="2">Option 2</option>
+                                  <option value="3">Option 3</option>
+                                </select>
+                                <label>Materialize Select</label>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="date" class="timepicker">
+                        </td>
+                        <td>
+                            <input type="date" class="timepicker">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+          <div class="card-action">
+            <a href="#">Save</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
