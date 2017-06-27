@@ -405,6 +405,21 @@ router.post('/test', getHead, passport.authenticate('jwt', { session: false}), f
     res.status(200).json(req.user);
 });
 
+router.post('/test/db', function(req, res, next) {
+    r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
+        "left": {
+            "c_id": function(row) {return r.row("left")("id")}
+        }
+    })).without({"left": {"ScheduleDefinitionID": true}}).zip().run(connection, function(err, cursor) {
+        if(err) return next(err);
+        cursor.toArray(function(err, results) {
+            if(err) return next(err);
+            res.send(results);
+        });
+        
+    })
+});
+
 router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
     api.checkPermissionKey(connection, req.params.key, function(err, document) {
