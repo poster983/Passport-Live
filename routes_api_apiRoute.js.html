@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">handleNewAccount</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">handleNewAccount</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -364,6 +364,77 @@ function handleCreatePermissionKey(req, res, next) {
 }
 
 /**
+schedule
+**/
+//new Schedule Definition 
+router.post('/schedule/definition', function(req, res, next) {
+    var name=req.body.name;
+    var scheduleData=req.body.scheduleData;
+
+    api.newScheduleDefinition(connection, name, scheduleData, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(data);
+    });
+})
+//get Schedule Definition
+router.get('/schedule/definition/:id', function(req, res, next) {
+    var id=req.params.id;
+
+    api.getScheduleDefinition(connection, id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.json(data);
+    });
+})
+//schedule Single Schedule Definition
+
+router.post('/schedule/date', function(req, res, next) {
+    var SCid=req.body.ScheduleDefinitionID;
+    var date=req.body.date;
+
+    api.scheduleSingleScheduleDefinition(connection, SCid, date, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+
+        res.status(201).json(data);
+    });
+})
+router.get('/schedule/date/:id', function(req, res, next) {
+    res.sendStatus(501);
+});
+
+router.post('/schedule/repeat', function(req, res, next) {
+    var SCid=req.body.ScheduleDefinitionID;
+    var repeatingRule=req.body.repeatingRule;
+
+    api.scheduleRepeatingScheduleDefinition(connection, SCid, repeatingRule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(data);
+    });
+})
+
+router.get('/schedule/repeat/:id', function(req, res, next) {
+    res.sendStatus(501);
+});
+
+router.get('/schedule/for/:date', function(req, res, next) {
+    var date=req.params.date;
+    api.getScheduleOfADate(connection, date, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+
+        res.json(data);
+    });
+})
+
+/**
 SERVER
 **/
 
@@ -388,6 +459,29 @@ router.post('/test', getHead, passport.authenticate('jwt', { session: false}), f
         console.log("Error: " + err + " Callback: " + resp);
     });
     res.status(200).json(req.user);
+});
+
+router.post('/test/db', function(req, res, next) {
+    /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
+            "c_id": r.row("id")
+    })).without({"left": {"ScheduleDefinitionID": true}}).zip().run(connection, function(err, cursor) {
+        if(err) return next(err);
+        cursor.toArray(function(err, results) {
+            if(err) return next(err);
+            res.send(results);
+        });
+        
+    })*/
+    r.table("scheduleCalendar").map( r.row.merge(function(ro) {
+        return {ider: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+    })).run(connection, function(err, cursor) {
+        if(err) return next(err);
+        cursor.toArray(function(err, results) {
+            if(err) return next(err);
+            res.send(results);
+        });
+        
+    })
 });
 
 router.get('/test/key/:key', function(req, res, next) {
@@ -446,7 +540,7 @@ module.exports = router;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 03:51:20 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jun 28 2017 03:48:02 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>

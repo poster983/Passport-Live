@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">handleNewAccount</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/:userGroup/:name/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewAccount">handleNewAccount</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -71,7 +71,7 @@ var shortid = require('shortid');
 var utils = require('../passport-utils/index.js');
 var moment = require('moment');
 var human = require('humanparser');
-
+var config = require('config');
 //All functions that make the api function.
 /** 
 * @module passportApi 
@@ -118,35 +118,40 @@ module.exports = {
                 console.error(err);
                 return done(err, null);
             }
-          // Store hash in your password DB.
-          r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
-            if(err) {
-                console.error(err);
-                return done(err);
-            }
-            //Checks to see if there is already an email in the DB            
-            if(con){
-              //THe email has been taken
-              var err = new Error("Email Taken");
-              err.status = 409
-              return done(err);
-            } else {
-                //insert new account
-                promice = r.table("accounts").insert({
-                  name: {
-                    first: firstName,
-                    last: lastName
-                  },
-                  email: email,
-                  password: hash,
-                  userGroup: userGroup, // should be same as a usergroup in config/default.json
-                  groupFields: groupFields
-                }).run(dbConn);
-                promice.then(function(conn) {
-                    return done(null);
+            try {
+              // Store hash in your password DB.
+              r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+                if(err) {
+                    console.error(err);
+                    return done(err);
+                }
+                //Checks to see if there is already an email in the DB            
+                if(con){
+                  //THe email has been taken
+                  var err = new Error("Email Taken");
+                  err.status = 409
+                  return done(err);
+                } else {
+                    //insert new account
+                    promice = r.table("accounts").insert({
+                      name: {
+                        first: firstName,
+                        last: lastName
+                      },
+                      email: email,
+                      password: hash,
+                      userGroup: userGroup, // should be same as a usergroup in config/default.json
+                      groupFields: groupFields
+                    }).run(dbConn);
+                    promice.then(function(conn) {
+                        return done(null);
+                  });
+                }
               });
+            } catch(e) {
+                
+                return done(e);
             }
-          });
         });   
     },
     /**
@@ -196,6 +201,284 @@ module.exports = {
                 return done(null, arr)
             });
         });
+    },
+
+    /** 
+    ADMINISTRATION
+    **/
+
+    /** 
+    * Creates a new Schedule Definition
+    * @function newScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} error and Rethinkdb action sum
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} name - Name of the Schedule
+    * @param {scheduleData} scheduleData - See: {@link #params-scheduleData|&lt;a href="#params-scheduleData">Tree Example&lt;/a>}
+    * @param {function} done - Callback
+    */
+    newScheduleDefinition: function(dbConn, name, scheduleData, done) {
+        //check if times are in correct spots 
+        var allowedPer = config.get('schedule.periods');
+        //loop through keys
+        for (var key in scheduleData) {
+          if (scheduleData.hasOwnProperty(key)) {
+            var currKey = scheduleData[key]
+            if(allowedPer.indexOf(key) == -1) {
+                var err = new Error("Config constant for periods not found: " + key);
+                    err.status = 404;
+                    return done(err);
+            }
+            if(currKey.hasOwnProperty("start") &amp;&amp; currKey.hasOwnProperty("end")){
+                if(moment(currKey.start, "HH:mm").isBefore(moment(currKey.end, "HH:mm"))) {
+                    //return done(null, moment(currKey.start, "HH:mm").utc().format("HH:mm"));
+                    scheduleData[key].start = moment(currKey.start, "HH:mm").utc().format("HH:mm");
+                    scheduleData[key].end = moment(currKey.end, "HH:mm").utc().format("HH:mm");
+                } else {
+                    var err = new Error("Start time is after end time");
+                    err.status = 400;
+                    return done(err)
+                }
+                
+            } else {
+                var err = new Error("start or end Key not Found");
+                err.status = 400;
+                return done(err);
+            }
+          }
+        }
+        //send to db
+       r.table("scheduleDefinitions").insert({
+            name: name,
+            scheduleData: scheduleData
+        }).run(dbConn, function(err, data) {
+            if (err) {
+                return done(err);
+            }
+            return done(null, data)
+        }) 
+    },
+    /** 
+    * Gets a Schedule Definition
+    * @function getScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the row
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} id - Id of the row
+    * @param {function} done - Callback
+    */
+    getScheduleDefinition: function(dbConn, id, done) {
+        r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data)
+        });
+    },
+
+    /** 
+    * Schedules a date for a Schedule Definition
+    * @function scheduleSingleScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} SCid - Id of the Schedule Definition
+    * @param {string} date - Moment.js compadable date
+    * @param {function} done - Callback
+    */
+    scheduleSingleScheduleDefinition: function(dbConn, SCid, date, done) {
+        if(!moment(date).isValid()) {
+            var err = new Error("Date not valid");
+            err.status = 400;
+            return done(err)
+        }
+        date = moment(date).format("Y-MM-DD");
+        
+        r.table("scheduleCalendar").insert({
+            ScheduleDefinitionID: SCid,
+            date: date
+        }).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data);
+        })
+    },
+
+    /** 
+    * Schedules a date for a Schedule Definition
+    * @function scheduleSingleScheduleDefinition
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} SCid - Id of the Schedule Definition
+    * @param {repeatingRule} repeatingRule - See: {@link #params-repeatingRule|&lt;a href="#params-repeatingRule">Object Example&lt;/a>}
+    * @param {function} done - Callback
+    */
+    scheduleRepeatingScheduleDefinition: function(dbConn, SCid, repeatingRule, done) {
+        //Check if repeatingRule is valid
+        if(repeatingRule.repeats == "daily") {
+            if(!Number.isInteger(repeatingRule.every)) {
+                var err = new Error("repeatingRule.every expected a number");
+                err.status = 400;
+                return done(err); 
+            }
+            if(!repeatingRule.startsOn || !moment(repeatingRule.startsOn).isValid()) {
+                var err = new Error("repeatingRule.startsOn not a date");
+                err.status = 400;
+                return done(err); 
+            }
+        } else if(repeatingRule.repeats == "weekly") {
+            if(!Number.isInteger(repeatingRule.every)) {
+                var err = new Error("repeatingRule.every expected a number");
+                err.status = 400;
+                return done(err); 
+
+            }
+            if(!Array.isArray(repeatingRule.on)) {
+                    var err = new Error("repeatingRule.on expected an Array");
+                    err.status = 400;
+                    return done(err); 
+                }
+            if(!repeatingRule.startsOn || !moment(repeatingRule.startsOn).isValid()) {
+                var err = new Error("repeatingRule.startsOn not a date");
+                err.status = 400;
+                return done(err); 
+            }
+        } else {
+            var err = new Error("repeatingRule has invalid syntex");
+            err.status = 400;
+            return done(err)
+        }
+
+        //defaults
+        if(!repeatingRule.importance) {
+            repeatingRule.importance = 0;
+        }
+
+        repeatingRule.startsOn = moment(repeatingRule.startsOn).format("Y-MM-DD");
+        r.table("scheduleRepeating").insert({
+            ScheduleDefinitionID: SCid,
+            repeatingRule: repeatingRule
+        }).run(dbConn, function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data);
+        })
+    },
+
+    /** 
+    * Gets the Schedule for that date 
+    * @function getScheduleOfADate
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Data of the action
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} date - Moment.js compadable date
+    * @param {function} done - Callback
+    * @todo MAKE BETTER
+    */
+
+    getScheduleOfADate: function(dbConn, date, done) {
+         if(!moment(date).isValid()) {
+
+            var err = new Error("Date not valid");
+            err.status = 400;
+            return done(err)
+        }
+        var momentDate = moment(date);
+        
+        date = momentDate.format("Y-MM-DD");
+
+        //Look for date in scheduleCalendar table 
+        /*
+        r.table('scheduleCalendar').filter({
+            date: date
+        }).run(dbConn, function(err, cursor) {
+            if(err) return done(err);
+            cursor.toArray(function(err, results) {
+                if (err) return done(err);
+                if(results.length > 0) {
+                    
+                    //return callback
+                    returnIt(results, {});
+                } else {
+                    secondCheck();
+                }
+            });
+
+
+        });*/
+
+        r.table("scheduleCalendar").filter({
+            date: date
+        }).map( r.row.merge(function(ro) {
+            return {scheduleDefinition: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+        })).without('ScheduleDefinitionID').run(dbConn, function(err, cursor) {
+            if(err) return done(err);
+            cursor.toArray(function(err, results) {
+                if(err) return done(err);
+                //check if array is empty
+                if(results.length > 0) {
+                    //return results 
+                    return done(null, results)
+                } else {
+                    checkRepeating();
+                }
+            });
+            
+        })
+
+        function checkRepeating() {
+            var validRows = [];
+            r.table("scheduleRepeating").map( r.row.merge(function(ro) {
+                return {scheduleDefinition: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+            })).without('ScheduleDefinitionID').run(dbConn, function(err, cursor) {
+                if(err) return done(err);
+                cursor.toArray(function(err, results) {
+                    if(err) return done(err);
+                    //start checking rules
+                    for(var x = 0; x &lt; results.length; x++) {
+                        var startDay = moment(results[x].repeatingRule.startsOn);
+                        var queryDay = moment(date);
+                        //weekly
+                        if(results[x].repeatingRule.repeats == "weekly") {
+                            //if diffence bt weeks is below 0 then assume that it is not needed
+                            var weekDif = queryDay.format('w') - startDay.format('w');
+                            if(weekDif >= 0) {
+                                //console.log(startDay.toString())
+                                
+                                //check if query week is in the set
+                                if(weekDif % results[x].repeatingRule.every == 0) {
+                                    //check if the day is on the rule
+                                    if(results[x].repeatingRule.on.indexOf(queryDay.format("dddd").toLowerCase()) != -1) {
+                                        validRows.push(results[x])
+                                    }
+                                }
+                            }
+                        }
+                        /*
+                        console.log(startDay.toString() + " + diff: ");
+                        console.log(queryDay.format('w') - startDay.format('w'))
+                        console.log("Mod:");
+                        console.log(weekDif % results[x].repeatingRule.every)
+                        console.log("_________");*/
+                        if(x >= results.length-1) {
+                            return done(null, validRows);
+                        }
+                    }
+                    
+                    //return done(null, results)
+                });
+            });
+        }
+        
+
     },
 
         
@@ -328,7 +611,55 @@ module.exports = {
         console.log(hello);
         done(null, hello);
     }
-}</code></pre>
+}
+
+/**
+* The json tree for laying out the period times
+* The key must equal a period constant defined in the config array (schedule.period)
+* Times are in 24hr time
+* @example
+* {
+* "a": { 
+*   "start": 14:25,
+*   "end": 15:35
+* },
+* "b": { 
+*   "start": 9:25,
+*   "end": 10:35
+* },
+* "c": { 
+*   "start": 13:25,
+*   "end": 14:10
+* },
+* "lunch2": {
+*   "start": 12:00,
+*   "end": 13:05
+* }
+* }
+* @typedef {json} scheduleData
+*/
+
+/**
+* rule to let the program know when to Repeats.
+* @example
+* &lt;caption>Repeating daily&lt;/caption>
+* {
+*    "startsOn": "2017-06-26",
+*    "repeats": "daily",
+*    "every": 1, //days
+*    "importance": 0 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API  
+* }
+* @example
+* &lt;caption>Repeating Weekly&lt;/caption>
+* {
+    "startsOn": "2017-06-26",
+    "repeats": "weekly",
+    "every": 1, //weeks
+    "on": ["monday", "tuesday", "thursday", "friday"],
+*    "importance": 1 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API
+* }
+* @typedef {json} repeatingRule
+*/</code></pre>
         </article>
     </section>
 
@@ -341,7 +672,7 @@ module.exports = {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jun 24 2017 03:51:20 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed Jun 28 2017 03:48:02 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
