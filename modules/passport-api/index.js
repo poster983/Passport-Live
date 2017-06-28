@@ -274,6 +274,11 @@ module.exports = {
                 err.status = 400;
                 return done(err); 
             }
+            if(!repeatingRule.startsOn || !moment(repeatingRule.startsOn).isValid()) {
+                var err = new Error("repeatingRule.startsOn not a date");
+                err.status = 400;
+                return done(err); 
+            }
         } else if(repeatingRule.repeats == "weekly") {
             if(!Number.isInteger(repeatingRule.every)) {
                 var err = new Error("repeatingRule.every expected a number");
@@ -286,13 +291,23 @@ module.exports = {
                     err.status = 400;
                     return done(err); 
                 }
+            if(!repeatingRule.startsOn || !moment(repeatingRule.startsOn).isValid()) {
+                var err = new Error("repeatingRule.startsOn not a date");
+                err.status = 400;
+                return done(err); 
+            }
         } else {
             var err = new Error("repeatingRule has invalid syntex");
             err.status = 400;
             return done(err)
         }
 
+        //defaults
+        if(!repeatingRule.importance) {
+            repeatingRule.importance = 0;
+        }
 
+        repeatingRule.startsOn = moment(repeatingRule.startsOn).format("Y-MM-DD");
         r.table("scheduleRepeating").insert({
             ScheduleDefinitionID: SCid,
             repeatingRule: repeatingRule
@@ -318,6 +333,7 @@ module.exports = {
 
     getScheduleOfADate: function(dbConn, date, done) {
          if(!moment(date).isValid()) {
+
             var err = new Error("Date not valid");
             err.status = 400;
             return done(err)
@@ -327,6 +343,7 @@ module.exports = {
         date = momentDate.format("Y-MM-DD");
 
         //Look for date in scheduleCalendar table 
+        /*
         r.table('scheduleCalendar').filter({
             date: date
         }).run(dbConn, function(err, cursor) {
@@ -342,61 +359,72 @@ module.exports = {
                 }
             });
 
-        });
-        //mini callback
-        function secondCheck() {
 
+        });*/
+
+        r.table("scheduleCalendar").filter({
+            date: date
+        }).map( r.row.merge(function(ro) {
+            return {scheduleDefinition: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+        })).without('ScheduleDefinitionID').run(dbConn, function(err, cursor) {
+            if(err) return done(err);
+            cursor.toArray(function(err, results) {
+                if(err) return done(err);
+                //check if array is empty
+                if(results.length > 0) {
+                    //return results 
+                    return done(null, results)
+                } else {
+                    checkRepeating();
+                }
+            });
+            
+        })
+
+        function checkRepeating() {
+            var validRows = [];
+            r.table("scheduleRepeating").map( r.row.merge(function(ro) {
+                return {scheduleDefinition: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+            })).without('ScheduleDefinitionID').run(dbConn, function(err, cursor) {
+                if(err) return done(err);
+                cursor.toArray(function(err, results) {
+                    if(err) return done(err);
+                    //start checking rules
+                    for(var x = 0; x < results.length; x++) {
+                        var startDay = moment(results[x].repeatingRule.startsOn);
+                        var queryDay = moment(date);
+                        //weekly
+                        if(results[x].repeatingRule.repeats == "weekly") {
+                            //if diffence bt weeks is below 0 then assume that it is not needed
+                            var weekDif = queryDay.format('w') - startDay.format('w');
+                            if(weekDif >= 0) {
+                                //console.log(startDay.toString())
+                                
+                                //check if query week is in the set
+                                if(weekDif % results[x].repeatingRule.every == 0) {
+                                    //check if the day is on the rule
+                                    if(results[x].repeatingRule.on.indexOf(queryDay.format("dddd").toLowerCase()) != -1) {
+                                        validRows.push(results[x])
+                                    }
+                                }
+                            }
+                        }
+                        /*
+                        console.log(startDay.toString() + " + diff: ");
+                        console.log(queryDay.format('w') - startDay.format('w'))
+                        console.log("Mod:");
+                        console.log(weekDif % results[x].repeatingRule.every)
+                        console.log("_________");*/
+                        if(x >= results.length-1) {
+                            return done(null, validRows);
+                        }
+                    }
+                    
+                    //return done(null, results)
+                });
+            });
         }
-        /*function returnIt(res) {
-            //RECURSSIONs
-            var retArr = [];
-            var returner = {};
-            for(var i = 0; i < res.length || function(){
-                //callback
-               console.log("hi")
-               return done(null, retArr)
-            }(); i++) {
-                //console.log(res[i].ScheduleDefinitionID)
-                var keepIndex = i;
-                r.table('scheduleDefinitions').get(res[i].ScheduleDefinitionID).run(dbConn, function(err, data) {
-                    if(err) {
-                        return done(err);
-                    }
-                    
-                    returner.scheduleDefinition = data;
-                    returner.planned = res[keepIndex];
-                    //console.log(res[keepIndex])
-                    retArr.push(returner)
-                    //BAD SOLUTION
-                    
-                    if(i == res.length) {
-                        //return done(null, retArr)
-                    }
-                    //retArr.push(returner);
-                });
-            }
-            
-return done(null, retArr)
-            
-            //return done(null, returner.calendar)
-        }*/
-        /*
-        function returnIt(res, json) {
-            if(res.length <= 0 ) return done(null, json);
-            var returner = {};
-            //console.log(res);
-            //return done(null, res[0].ScheduleDefinitionID);
-            var ScheduleDefinitionID = res[0].ScheduleDefinitionID
-            r.table('scheduleDefinitions').get(ScheduleDefinitionID).run(dbConn, function(err, data) {
-                    if(err) {
-                        return done(err);
-                    }
-                    returner.scheduleDefinition = data;
-                    returner.planned = res[0];
-                    return returnIt(res.shift(), returner)
-                });
-            
-        }*/
+        
 
     },
 
@@ -563,15 +591,19 @@ return done(null, retArr)
 * @example
 * <caption>Repeating daily</caption>
 * {
+*    "startsOn": "2017-06-26",
 *    "repeats": "daily",
-*    "every": 1 //days
+*    "every": 1, //days
+*    "importance": 0 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API  
 * }
 * @example
 * <caption>Repeating Weekly</caption>
 * {
+    "startsOn": "2017-06-26",
     "repeats": "weekly",
     "every": 1, //weeks
-    "on": ["monday", "tuesday", "thursday", "friday"]
+    "on": ["monday", "tuesday", "thursday", "friday"],
+*    "importance": 1 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API
 * }
 * @typedef {json} repeatingRule
 */

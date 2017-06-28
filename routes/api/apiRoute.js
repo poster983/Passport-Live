@@ -331,7 +331,7 @@ router.post('/schedule/definition', function(req, res, next) {
     });
 })
 //get Schedule Definition
-router.get('/schedule/definition/id/:id', function(req, res, next) {
+router.get('/schedule/definition/:id', function(req, res, next) {
     var id=req.params.id;
 
     api.getScheduleDefinition(connection, id, function(err, data) {
@@ -342,7 +342,8 @@ router.get('/schedule/definition/id/:id', function(req, res, next) {
     });
 })
 //schedule Single Schedule Definition
-router.post('/schedule/plan/date', function(req, res, next) {
+
+router.post('/schedule/date', function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -354,7 +355,11 @@ router.post('/schedule/plan/date', function(req, res, next) {
         res.status(201).json(data);
     });
 })
-router.post('/schedule/plan/repeat', function(req, res, next) {
+router.get('/schedule/date/:id', function(req, res, next) {
+    res.sendStatus(501);
+});
+
+router.post('/schedule/repeat', function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var repeatingRule=req.body.repeatingRule;
 
@@ -366,9 +371,12 @@ router.post('/schedule/plan/repeat', function(req, res, next) {
     });
 })
 
+router.get('/schedule/repeat/:id', function(req, res, next) {
+    res.sendStatus(501);
+});
+
 router.get('/schedule/for/:date', function(req, res, next) {
     var date=req.params.date;
-    console.log(date)
     api.getScheduleOfADate(connection, date, function(err, data) {
         if(err) {
             return next(err);
@@ -406,11 +414,19 @@ router.post('/test', getHead, passport.authenticate('jwt', { session: false}), f
 });
 
 router.post('/test/db', function(req, res, next) {
-    r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
-        "left": {
-            "c_id": function(row) {return r.row("left")("id")}
-        }
+    /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
+            "c_id": r.row("id")
     })).without({"left": {"ScheduleDefinitionID": true}}).zip().run(connection, function(err, cursor) {
+        if(err) return next(err);
+        cursor.toArray(function(err, results) {
+            if(err) return next(err);
+            res.send(results);
+        });
+        
+    })*/
+    r.table("scheduleCalendar").map( r.row.merge(function(ro) {
+        return {ider: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
+    })).run(connection, function(err, cursor) {
         if(err) return next(err);
         cursor.toArray(function(err, results) {
             if(err) return next(err);
