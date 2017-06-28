@@ -70,35 +70,40 @@ module.exports = {
                 console.error(err);
                 return done(err, null);
             }
-          // Store hash in your password DB.
-          r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
-            if(err) {
-                console.error(err);
-                return done(err);
-            }
-            //Checks to see if there is already an email in the DB            
-            if(con){
-              //THe email has been taken
-              var err = new Error("Email Taken");
-              err.status = 409
-              return done(err);
-            } else {
-                //insert new account
-                promice = r.table("accounts").insert({
-                  name: {
-                    first: firstName,
-                    last: lastName
-                  },
-                  email: email,
-                  password: hash,
-                  userGroup: userGroup, // should be same as a usergroup in config/default.json
-                  groupFields: groupFields
-                }).run(dbConn);
-                promice.then(function(conn) {
-                    return done(null);
+            try {
+              // Store hash in your password DB.
+              r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+                if(err) {
+                    console.error(err);
+                    return done(err);
+                }
+                //Checks to see if there is already an email in the DB            
+                if(con){
+                  //THe email has been taken
+                  var err = new Error("Email Taken");
+                  err.status = 409
+                  return done(err);
+                } else {
+                    //insert new account
+                    promice = r.table("accounts").insert({
+                      name: {
+                        first: firstName,
+                        last: lastName
+                      },
+                      email: email,
+                      password: hash,
+                      userGroup: userGroup, // should be same as a usergroup in config/default.json
+                      groupFields: groupFields
+                    }).run(dbConn);
+                    promice.then(function(conn) {
+                        return done(null);
+                  });
+                }
               });
+            } catch(e) {
+                
+                return done(e);
             }
-          });
         });   
     },
     /**

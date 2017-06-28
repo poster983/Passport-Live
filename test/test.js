@@ -82,7 +82,7 @@ describe("MAIN PASSPORT PROGRAM", function() {
 	describe("Auth Tests", function() {
 
 		/**
-		STUDENT Signup
+		STUDENT userGroup Signup
 		**/
 		describe("Signup As Student", function() {
 			//Gets student signup page
@@ -93,13 +93,13 @@ describe("MAIN PASSPORT PROGRAM", function() {
 	      		});
 			});
 			//Tries to make an account
-			it("Makes a student account (POST /auth/signup/student) and returnes 201 Created", function(done) {
+			/*it("Makes a student account (POST /auth/signup/student) and returnes 201 Created", function(done) {
 				request.post({url:base_url + 'auth/signup/student', form: {email:'example@gmail.com', password:'123456', passwordVer:'123456', firstname:'Testey', lastname:'McTestFace', studentID:'12345'}}, function(err, response, body){
 					
 					assert.equal(response.statusCode, 201);
 					done();
 				});
-			});
+			});*/
 		});
 	});
 
@@ -118,6 +118,22 @@ describe("MAIN PASSPORT PROGRAM", function() {
 			});
 		});
 
+		//Account Tests
+		context("API Account Tests.  ", function() {
+			describe("Create Account ", function() {
+				context("userGroup is student", function() {
+					it("POST /api/account/student", function(done) {
+						request.post({url:base_url + 'api/account/student', form: {email:'example@gmail.com', password:'123456', passwordVerification:'123456', firstName:'Testey', lastName:'McTestFace', groupFields: {studentID:'12345'}, permissionKey: null }}, function(err, response, body){
+					
+							assert.equal(response.statusCode, 201);
+							done();
+						});
+					})
+				})
+			})
+		})
+
+
 		//Auth Tests
 		describe("API Auth Tests", function() {
 			describe("Login /api/auth/login", function() {
@@ -130,6 +146,8 @@ describe("MAIN PASSPORT PROGRAM", function() {
 				});
 			});
 		});
+
+
 
 	});
 
