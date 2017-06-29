@@ -20,7 +20,9 @@
     "test": "export NODE_ENV=tests && nyc mocha",
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "generate-docs": "jsdoc --configure config/jsdoc.json --verbose"
+    "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -57,7 +59,8 @@
     "session-file-store": "^1.0.0",
     "shortid": "^2.2.8",
     "socket.io": "^2.0.0",
-    "ssarv": "latest"
+    "ssarv": "latest",
+    "snyk": "^1.36.2"
   },
   "license": "AGPL-3.0",
   "snyk": true,
