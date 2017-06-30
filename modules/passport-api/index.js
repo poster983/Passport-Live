@@ -154,6 +154,32 @@ module.exports = {
             });
         });
     },
+    /** 
+    * Searches by usergroup the account database 
+    * @function getUserGroupAccountByUserGroup
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {constant} userGroup - A usergroup defined in the config
+    * @param {function} done - Callback
+    */
+    getUserGroupAccountByUserGroup: function(dbConn, userGroup, done) { 
+         r.table("accounts").filter({
+            userGroup: userGroup
+         }).run(dbConn, function(err, document) {
+            if(err) {
+                return done(err);
+            }
+            document.toArray(function(err, arr) {
+                if(err) {
+                    return done(err);
+                }
+                return done(null, arr);
+            });
+         })
+    },
+    
 
     /** 
     ADMINISTRATION
@@ -347,26 +373,6 @@ module.exports = {
         
         date = momentDate.format("Y-MM-DD");
 
-        //Look for date in scheduleCalendar table 
-        /*
-        r.table('scheduleCalendar').filter({
-            date: date
-        }).run(dbConn, function(err, cursor) {
-            if(err) return done(err);
-            cursor.toArray(function(err, results) {
-                if (err) return done(err);
-                if(results.length > 0) {
-                    
-                    //return callback
-                    returnIt(results, {});
-                } else {
-                    secondCheck();
-                }
-            });
-
-
-        });*/
-
         r.table("scheduleCalendar").filter({
             date: date
         }).map( r.row.merge(function(ro) {
@@ -555,6 +561,38 @@ module.exports = {
                 }
             });
         });
+    },
+
+    /**
+    Server
+    **/
+
+     /** 
+    * Gets all passgroups defined in configs 
+    * @function getPassGroups
+    * @link module:passportApi
+    * @async
+    * @returns {callback} error and array of passGroup info.
+    * @param {function} done - Callback
+    */
+    getPassGroups: function(done) {
+        var uG = config.get('userGroups');
+        var pG = {};
+        var i = 0;
+        for (var key in uG) {
+            if (uG.hasOwnProperty(key) && config.has('userGroups.' + key + '.passes')) {
+               //console.log(key + " -> " + uG[key]);
+               pG[key] = uG[key].passes
+            }
+            if(i >= Object.keys(uG).length-1) {
+                
+                return done(null, pG);
+            }
+            
+            i++;
+        }
+        
+        
     },
 
     

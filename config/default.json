@@ -40,13 +40,22 @@
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 			},
+			"passes": { //by defining "passes" this will show up in the pass groups get api
+				"preferSearch": true, //tells programs via api that inorder to find the person, they must use a search.  Otherwise a select is used(if implemented)
+				"viewName": "Teachers" //friendly name
+			},
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 		"lc": {
-			"useCustomDestinationName": true,//will prompt user to enter a destination name at account setup instead of showing name.
+			
 			"permissions": {
 				"dashboards": ["teacher", "kiosk"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
+			},
+			"passes": { //by defining "passes" this will show up in the pass groups get api
+				"preferSearch": false, //tells programs via api that inorder to find the person, they must use a search.  Otherwise a select is used(if implemented)
+				"viewName": "LC", //friendly name
+				"useCustomName": true,//will prompt user to enter a destination name at account setup instead of showing name with pass groups.
 			},
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
@@ -54,6 +63,10 @@
 		"counselor": {
 			"permissions": {
 				"dashboards": ["teacher"],// what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
+			},
+			"passes": { //by defining "passes" this will show up in the pass groups get api
+				"preferSearch": false, //tells programs via api that inorder to find the person, they must use a search.  Otherwise a select is used(if implemented)
+				"viewName": "Counselors" //friendly name
 			},
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.

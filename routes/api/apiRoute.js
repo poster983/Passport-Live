@@ -219,6 +219,37 @@ function handleNewAccount(req, res, next) {
     }
 }
 
+router.get('/account/:userGroup/', handleGetAccountsByUserGroup);
+/**
+    * GETs all accounts by usergroup
+    * @function handleGetAccountsByUserGroup
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/:userGroup/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+function handleGetAccountsByUserGroup(req, res, next) {
+    var userGroup = req.params.userGroup;
+
+    
+    api.getUserGroupAccountByUserGroup(connection, userGroup, function(err, acc) {
+        if(err) {
+            next(err);
+        }
+        console.log(acc)
+        var ret = [];
+        for (var i = 0; i < acc.length; i++) {
+            
+            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
+        }
+        res.json(ret);
+    }); 
+}
+
 router.get('/account/:userGroup/:name', handleGetAccountsByName);
 /**
     * GETs accounts by name
@@ -251,6 +282,8 @@ function handleGetAccountsByName(req, res, next) {
         res.json(ret);
     }); 
 }
+
+
 
 
 /** 
@@ -396,9 +429,27 @@ router.get('/server/config/schedule/', function(req, res, next) {
     } catch (e) {
         next(e);
     }
-
-
 })
+
+router.get('/server/config/passGroup', getPassGroups);
+/**
+    * GETs pass groups defined in the config
+    * @function handleGetAccountsByName
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/server/config/passGroup/
+    * @apiresponse {json} Returns json with all passGroups
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+function getPassGroups(req, res, next) {
+    api.getPassGroups(function(err, data) {
+        if(err) {return next(err)}
+
+        res.json(data);  
+    })
+}
 
 
 

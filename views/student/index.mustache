@@ -133,7 +133,7 @@ email: hi@josephhassell.com
         <ul>
             <li><a class="btn-floating red modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Bug Report" href="#bugmodal"><i class="material-icons">report_problem</i></a></li>
             <li><a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Leave A Review" href="#reviewmodaldis"><i class="material-icons">thumbs_up_down</i></a></li>
-            <li><a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.gitbooks.io/passport-help/content/"><i class="material-icons">live_help</i></a></li>
+            <li><a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.github.io/Passport-Live/"><i class="material-icons">live_help</i></a></li>
             <li><a class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Github" href="https://github.com/poster983/passport/"><i class="material-icons">code</i></a></li>
         </ul>
     </div>
@@ -241,19 +241,23 @@ email: hi@josephhassell.com
 
                       <form id="passForm" method="post">
                           <div id="groDiv" class="input-field col s12">
-                            <select id="passGroup" name="passGroup" required class="white-text validate">
+                            <select id="passGroup" name="passGroup" required class="white-text validate" onchange="onPassGroupSelectChange(this)">
                               <option value="" disabled selected>Choose A Group</option>
-                              {{#passGroups}}
-                                <option value="{{value}}">{{viewName}}</option>
-                              {{/passGroups}}
                             </select>
                             <label>Group</label>
                           </div>
                           <!-- Immagine this shows when "passGroup" finishes -->
                           <!--Search-->
-                          <div id="groDiv" class="input-field col s12">
+                          <div id="searchDiv" class="input-field col s12" style="display: none;">
                             <input type="text" id="autocomplete-account" class="autocomplete">
-                            <label for="autocomplete-account">Search Teachers</label>
+                            <label for="autocomplete-account">Search People</label>
+                          </div>
+                          <!--Select People-->
+                          <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
+                            <select id="selectPeople" name="selectPeople" required class="white-text validate">
+                              <option value="" disabled selected>Choose A Person</option>
+                            </select>
+                            <label>Select a Person</label>
                           </div>
                           
                           <!--
@@ -340,11 +344,11 @@ email: hi@josephhassell.com
                 $('select').material_select();
                 //temp
                 $('#fullAjaxLoadingScreen').removeClass("loading");
-                /*
-                $.when(AllStudentmessageAjaxAfterPageLoad(), checkDebugModeCookies(), getMyPasses()).done(function(a1, a2, a3){
+                
+                $.when(setPassGroupSelect(), checkDebugModeCookies()).done(function(a1, a2){
                   $('#fullAjaxLoadingScreen').removeClass("loading");
                 });
-                */
+                
                 initAutocompleteAccounts({"none": null});
                 
               });
@@ -375,240 +379,84 @@ email: hi@josephhassell.com
                 }
               }
 
-
-              $("#sao").change(function() {
-                  if(this.checked) {
-                    $('#passrequestAdvanced').show();
-                      $('#passrequestAdvanced').animateCss('bounceIn');
-                      $('#subPassAdv').html(" (Using Advanced Options) <i class='material-icons right'>error_outline</i>");
-                  } else {
-                    $('#passrequestAdvanced').animateCss('bounceOut');
-                    $('#passrequestAdvanced').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                  function(e) {
-                    $('#passrequestAdvanced').hide();
-                    $('#subPassAdv').html("<i class='material-icons right'>send</i>");
-                  });
-                  }
-              });
-
-
-              depLock = 0;
-              dateshowLock = 0;
-              selVal = 0;
-
-              passSubmitReady = 0;
-              depReady = false;
-              reasonReady = false;
-              dateReady = false;
               function carsonRau(){
                 $(document.body).css('background-image', 'url(/passport/image/cork-board.jpg)');
-                /*
-                $('#PassCard').addClass("animated infinite jello");
-                $('#navBar').addClass("animated infinite rubberBand");
-                */
                 console.log("There You Go Carson");
               }
-              function showDatePicker() {
-                if(dateshowLock == 0) {
-                $('#datePicker').show();
 
-                  dateshowLock = 1;
-                }
+              /**Fill Pass Groups**/
+
+              function getPassGroups(done) {
+                $.ajax({
+                    type: "get",
+                    url: "/api/server/config/passGroup",
+                    dataType: "json",
+                    success: function(data) {
+                      return done(null, data);
+                    },
+                    error: function(jqXHR) {
+                      return done(jqXHR);
+                    }                      
+                  });
               }
-              function dateVal() {
-
-                    dateReady = true;
-
-                checkPassSubmit();
-
-              }
-                  function depToReasonAJAX(depart, perd) {
-
-
-
-                    if(depLock == 0) {
-                      selVal +=1;
-                      depLock = 1;
-                      depReady = true;
+              function setPassGroupSelect() {
+                getPassGroups(function(err, data) {
+                  if(err) {
+                    errorHand(err);
+                  }
+                  for(var it = 0; it < Object.keys(data).length; it++) {
+                    var key = Object.keys(data)[it];
+                    console.log(Object.keys(data)[it])
+                    $('#passGroup').append("<option value=\'" + key + "\' data-prefersearch=\'" + data[key].preferSearch + "\'>" + data[key].viewName + "</option>");
+                    if(it >= Object.keys(data).length-1) {
+                      //re init the select
+                      $('#passGroup').material_select();
+                      
                     }
-                    dateshowLock = 0;
-                    reasonReady = false;
-                    dateReady = false;
-                    checkPassSubmit();
-
-                    $('#ReasonAJAX').html("<br><br>\r\n  \r\n  <br>\r\n  <br>\r\n              <div class=\"hCenter\">\r\n                <div class=\"preloader-wrapper big active\">\r\n                 <div class=\"spinner-layer spinner-blue\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-red\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-yellow\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-green\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n               <\/div>\r\n              <\/div><br>\r\n  <br>\r\n  <br>\r\n\r\n  \r\n  <h5 class=\"center white-text\">Loading<\/h5>");
-                    $.ajax({
-                  url: '/passport/students/ajaxGetReasonsAndBlackout.php',
-                  data: {'dep': depart, 'per': perd},
-                  type: 'get',
-                  success: function(data) {
-                    $('#ReasonAJAX').html(data);
-                  },
-                  error: function(xhr, desc, err) {
-                  console.log(xhr);
-                  console.log("Details: " + desc + "\nError:" + err);
-                  $('#ReasonAJAX').html("There was an error.  Please check the console for more details.");
                   }
                 })
-                $( document ).ajaxComplete(function() {
-
-                  $('select').material_select();
-                  if(selVal == 1) {
-                    $("#depDiv input[type=text]").addClass('valid');
-                  } else if(selVal ==2) {
-                    $("#shPer input[type=text]").addClass('valid');
-                  } else if(selVal == 3) {
-                    $("#shPer input[type=text]").addClass('valid');
-                    $("#stYear input[type=text]").addClass('valid');
-                  }
-
-                });
-                };
-
-                function submitPassToAjax(id, depart, reason, day, isDebug) {
-                  $('#behindCard').html("<div class=\"hCenter\">\r\n                <div class=\"preloader-wrapper big active\">\r\n                 <div class=\"spinner-layer spinner-blue\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-red\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-yellow\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-green\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n               <\/div>\r\n              <\/div> <br> <br> <h5 class='center'>Loading</h5>");
-                  $.ajax({
-                url: '/passport/students/ajaxSubmit.php',
-                data: {'sAccID': id, 'dep': depart, 'reason': reason, 'day': day, 'isDebug': isDebug},
-                type: 'get',
-                success: function(data) {
-                  $('#behindCard').html("");
-
-                  depLock = 0;
-                  dateshowLock = 0;
-                  selVal = 0;
-
-                  dateshowLock = 0;
-                  depReady = false;
-                  reasonReady = false;
-                  dateReady = false;
-                  console.log("AJAX");
-                  $('#ReasonAJAX').html("");
-                  $('#submitPass').attr("disabled",true);
-                  $('#datePicker').hide();
-                  $('#passForm').formClear();
-                  $('#PassCard').show();
-                  $('#PassCard').animateCss('fadeInLeft');
-                  $('#PassCard').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                function(e) {
-                $('select').material_select();
-                if(!depReady || !reasonReady || !dateReady){
-                  console.log("json_encode");
-                  console.log(data);
-                if (data.status == "error") {
-                  if(data.code == "8001") {
-                    openFullOverlay("confirmOver");
-
-                        console.warn("Limit Reached");
-                        $( "#checkmarkAnimationfull" ).html("<span class='Xleft'></span><span class='Xright'></span>")
-                        $('#ConfirmOverlayWords').html("Limit Reached");
-                        closeFullOverlay("confirmOver", 4000);
-
-                  }
-                  if(data.code == "5002") {
-                    openFullOverlay("confirmOver");
-
-                        console.warn("You Have Already Requested A Pass");
-                        $( "#checkmarkAnimationfull" ).html("<span class='Xleft'></span><span class='Xright'></span>")
-                        $('#ConfirmOverlayWords').html("You Have Already Requested A Pass");
-                        closeFullOverlay("confirmOver", 3000);
-                  }
-                }
-                if (data.status == "success") {
-                  openFullOverlay("confirmOver");
-
-                  $('#ConfirmOverlayWords').html("Pass Requested");
-                  setTimeout(function(){
-                    $( "#checkmarkAnimationfull" ).html('<svg class="pause-Ani checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path id="checkMarkAni"  class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>');
-                    $('#checkMarkAni').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                      function(e) {
-                        getMyPasses();
-                        console.log("done");
-                      closeFullOverlay("confirmOver", 1000);
-
-                      });
-                  }, 500);
-                }
-
-                }
-                });
-
-                },
-                error: function(xhr, desc, err) {
-                console.log(xhr);
-                console.error("Details: " + desc + "\nError:" + err);
-                console.warn(xhr.responseText)
-                $('#behindCard').html("There was an error.  Please check the console for more details.");
-                }
-
-              })};
-
-                function submitPass(id, isDebug) {
-                  if (passSubmitReady == 1 && dateshowLock == 1){
-                    passSubmitReady = 0;
-                    console.log("hi");
-                    $('#PassCard').animateCss('fadeOutRight');
-                    $('#PassCard').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                  function(e) {
-
-                    console.log($("input[name=day]:checked").val());
-                    if($("input[name=day]:checked").val() != undefined) {
-                      $('#PassCard').hide();
-                  submitPassToAjax(id,$('#department').val(),$('#ajaxReason').val(),$("input[name=day]:checked").val(), isDebug);
-                  console.log("byeee");
-                } else {
-                  console.log("aaaaaaaaaaaaa");
-                }
-                console.log("bysdfsdeee");
-                  });
-                  console.log("bye");
-                  }
-                };
-
-                function checkPassSubmit(){
-                  if(depReady && reasonReady && dateReady){
-                    $('#submitPass').attr("disabled",false);
-                    passSubmitReady = 1;
-                  } else {
-                    $('#submitPass').attr("disabled",true);
-                    passSubmitReady = 0;
-                  }
-                };
-
-                function AllStudentmessageAjaxAfterPageLoad() {
-                  $('#ajaxAllStudentMess').html("<div class=\"hCenter\">\r\n                <div class=\"preloader-wrapper big active\">\r\n                 <div class=\"spinner-layer spinner-blue\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-red\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-yellow\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-green\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n               <\/div>\r\n              <\/div> <br> <br> <h5 class='center'>Checking for Messages</h5>");
-                  $.ajax({
-                url: '/passport/students/ajaxMessage.php',
-                success: function(data) {
-                  $('#ajaxAllStudentMess').html(data);
-                },
-                error: function(xhr, desc, err) {
-                console.log(xhr);
-                console.log("Details: " + desc + "\nError:" + err);
-                $('#ajaxAllStudentMess').html("There was an error.  Please check the console for more details.");
-                }
-              })};
-
-              function getMyPasses(){
-                $('#myPassesReturn').html("<div class=\"hCenter\">\r\n                <div class=\"preloader-wrapper big active\">\r\n                 <div class=\"spinner-layer spinner-blue\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-red\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-yellow\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-green\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n               <\/div>\r\n              <\/div> <br> <br> <h5 class='center'>Getting Your Passes</h5> ");
-                $.ajax({
-              url: '/passport/students/studentAJAX/getMyPasses.php',
-              success: function(data) {
-                $('#myPassesReturn').html(data);
-
-              },
-              error: function(xhr, desc, err) {
-              console.log(xhr);
-              console.log("Details: " + desc + "\nError:" + err);
-              $('#myPassesReturn').html("There was an error.  Please check the console for more details.");
               }
-            })};
 
 
-
-
-
-
+              function onPassGroupSelectChange(select) {
+                console.log(select)
+                currGroup = select.value;
+                if($(select).find(':selected').attr('data-prefersearch') == "true") {
+                  console.log("yes")
+                  $("#searchDiv").show();
+                  $("#selectPeopleDiv").hide();
+                } else {
+                  //trigger getting all usergroups in the passGroup for a select
+                  preparePeopleSelect(currGroup);
+                  
+                  $("#searchDiv").hide();
+                  $("#selectPeopleDiv").show();
+                }
+              }
+              function preparePeopleSelect(userGroup) {
+                 $.ajax({
+                    type: "get",
+                    url: "/api/account/"+userGroup,
+                    //dataType: "json",
+                    success: function(data) {
+                      //set data
+                      console.log(data)
+                      for(var i = 0; i < data.length; i++ ) {
+                        $('#selectPeople').append("<option value=\'" + data[i].id + "\'>" + data[i].name.first + " " + data[i].name.last + "</option>");
+                        console.log(data[i].id)
+                        if(i >= data.length-1) {
+                          //re init the select
+                          $('#selectPeople').material_select();
+                          
+                        }
+                      }
+                    },
+                    error: function(jqXHR) {
+                      errorHand(jqXHR)
+                    }                      
+                  });
+              }
+              
 
                 /**Autocomplete Accounts**/
                 function initAutocompleteAccounts(data) {
@@ -625,13 +473,14 @@ email: hi@josephhassell.com
                 
                     
                 $("#autocomplete-account").keyup(function() {
-                  searchAccounts("student", $("#autocomplete-account").val(), function(err, data) {
+                  searchAccounts(currGroup, $("#autocomplete-account").val(), function(err, data) {
                     if(err) {
                       console.error(err);
                     }
-                    else {
+                    else if(data) {
                       var newDataAuto = {};
                       //initAutocompleteAccounts({"joey": null});
+
                       console.log(data)
                       for(var x = 0; x < data.length; x++) {
                         if(data[x].name.salutation) {
@@ -647,14 +496,14 @@ email: hi@josephhassell.com
                       initAutocompleteAccounts(newDataAuto);
                       //autocompleteAccounts.resultCache = newDataAuto;
                       //autocompleteAccounts.setValue(newDataAuto);
-                    }
+                    } 
                   });
                   console.log($("#autocomplete-account").val())
                 })
               
               
                 function searchAccounts(userGroup, query, done) {
-                    if(!query|| !userGroup) {
+                    if(!query|| userGroup == "") {
                       return done(null, null);
                     }
                    $.ajax({
@@ -673,6 +522,27 @@ email: hi@josephhassell.com
 
                   });*/
                 }
+
+
+                function errorHand(err) {
+                  //Do more Later
+                  console.error(err);
+                }
+
+                 $("#sao").change(function() {
+                  if(this.checked) {
+                    $('#passrequestAdvanced').show();
+                      $('#passrequestAdvanced').animateCss('bounceIn');
+                      $('#subPassAdv').html(" (Using Advanced Options) <i class='material-icons right'>error_outline</i>");
+                  } else {
+                    $('#passrequestAdvanced').animateCss('bounceOut');
+                    $('#passrequestAdvanced').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                  function(e) {
+                    $('#passrequestAdvanced').hide();
+                    $('#subPassAdv').html("<i class='material-icons right'>send</i>");
+                  });
+                  }
+              });
 
               </script>
 

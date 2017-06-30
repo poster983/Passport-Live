@@ -1,7 +1,8 @@
 # The Default Usergroup Database Model
 - Using the default usergroups for passport.  Custom userGroups should follow these models.
 
- 
+ Full:  
+
 ```json
 {
 	"id": "RethinkDB Issued ID.  Don't set",
@@ -41,7 +42,7 @@
 				}
 			}, 
 			"settings": {
-				//...
+				//Need to figure out later
 			}
 		},
 		"custom": {// must match the dashboard route
@@ -51,3 +52,4 @@
 	"password": "HashedPass"
 }
 ```
+
