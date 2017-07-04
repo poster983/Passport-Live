@@ -22,7 +22,6 @@ email: hi@josephhassell.com
 var LocalStrategy   = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
-var LocalAPIKeyStrategy = require('passport-localapikey')
 var config = require('config');
 var utils = require('../passport-utils/index.js');
 
