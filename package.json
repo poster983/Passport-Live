@@ -16,7 +16,7 @@
     "node": "nodemon ./bin/www",
     "db": "rethinkdb serve",
     "start:dbEdit": "chateau",
-    "configure:db": "nodemon ./bin/configure",
+    "configure:db": "node ./bin/configure",
     "test": "export NODE_ENV=tests && nyc mocha",
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",

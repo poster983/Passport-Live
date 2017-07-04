@@ -283,7 +283,7 @@ function handleGetAccountsByName(req, res, next) {
     }); 
 }
 
-router.patch('/account/dashboard/', passport.authenticate('jwt', { session: false}), handleUpdateAccountDashboardsByID);
+router.patch('/account/dashboard/', passport.authenticate('jwt', { session: false}), handleUpdateAccountDashboardsByUser);
 /**
     * Updates dashboard specific data.
     * REQUIRES JWT Authorization in headers
@@ -319,7 +319,7 @@ router.patch('/account/dashboard/', passport.authenticate('jwt', { session: fals
     * }
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-function handleUpdateAccountDashboardsByID(req, res, next) {
+function handleUpdateAccountDashboardsByUser(req, res, next) {
     var updateDoc = req.body.update;
     api.updateAccountDashboardsByID(connection, req.user.id, updateDoc, function(err, data) {
         if(err) {
