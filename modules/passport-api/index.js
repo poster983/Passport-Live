@@ -179,6 +179,39 @@ module.exports = {
             });
          })
     },
+
+    /** 
+    * Updates/sets any account field by its id 
+    * @function updateAccountByID
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {string} id - id of the account 
+    * @param {json} doc - Json object for the update.  Top key should be the name of the dashboard it is for.
+    * @param {function} done - Callback
+    */
+    updateAccountDashboardsByID: function(dbConn, id, doc, done) {
+        if(!id) {
+            var err = new Error("ID Required");
+            err.status = 400;
+            return done(err);
+        } else if(!doc) {
+            var err = new Error("doc Required");
+            err.status = 400;
+            return done(err);
+        } else {
+            r.table("accounts").get(id).update({dashboards: doc}).run(dbConn, function(err, data) {
+                if(err) {
+                    return done(err);
+                }
+                return done(null, data)
+            })
+        }
+
+    },
+
+
     
 
     /** 

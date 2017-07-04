@@ -46,12 +46,15 @@ var connection = null;
 /* GET home page. */
 
 router.get('/login', function(req, res, next) {
-  res.render('auth/login', { doc_Title: 'Login -- Passport', message: req.flash('loginMessage')});
+  var msg = "";
+  if(req.query.msg) {
+    msg = req.query.msg;
+  }
+  res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
 });
 router.post('/login', passport.authenticate('local-login', { 
   successRedirect: '/',
-  failureRedirect: '/auth/login',
-  failureFlash: true,
+  failureRedirect: '/auth/login?',
   session: true
 }));
 

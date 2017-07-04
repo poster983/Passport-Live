@@ -40,7 +40,8 @@ var auth = require('./routes/auth');
 var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
-var administrator = require('./routes/administrator')
+var administrator = require('./routes/administrator');
+
 
 var app = express();
 

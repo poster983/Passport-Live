@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 var LocalStrategy   = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
+var LocalAPIKeyStrategy = require('passport-localapikey')
 var config = require('config');
 var utils = require('../passport-utils/index.js');
 
@@ -77,11 +78,11 @@ passport.use('local-login', new LocalStrategy({
           }
          if(user.length < 1) { // if no users are returned in the array 
             console.log("Wrong email");
-            return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
+            return done(null, false);// , req.flash('loginMessage', 'Incorrect Email or Password')
           }
           if(!bcrypt.compareSync(password, user[0].password)) {
             console.log("Wrong Pwd");
-            return done(null, false, req.flash('loginMessage', 'Incorrect Email or Password'));
+            return done(null, false); // , req.flash('loginMessage', 'Incorrect Email or Password')
           }
           return done(null, user);
       });

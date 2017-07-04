@@ -283,6 +283,52 @@ function handleGetAccountsByName(req, res, next) {
     }); 
 }
 
+router.patch('/account/dashboard/', passport.authenticate('jwt', { session: false}), handleUpdateAccountDashboardsByID);
+/**
+    * Updates dashboard specific data.
+    * REQUIRES JWT Authorization in headers
+    * @function handleUpdateAccountDashboardsByID
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/dashboard/
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @example 
+    * <caption>Body Structure (application/json): </caption>
+    * {
+    * "update": {
+    *     "student": { //any dashboard name
+    *        "periodSchedule": {
+    *                "a": {
+    *                    "teacherID": "46545645-456-4-45645-45646" //id from database
+    *                },
+    *                "b": {
+    *                    "teacherID": "456486-5190814-4567" //id from database
+    *                },
+    *                "lunch1": {
+    *                    "teacherID": null, //if teacherID is null or undefined, passport expects data about where the period takes place
+    *                    "room": "Cafeteria"
+    *                }
+    *            }, 
+    *         "settings": {
+    *             "test": false
+    *          }
+    *      }
+    *  }
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+function handleUpdateAccountDashboardsByID(req, res, next) {
+    var updateDoc = req.body.update;
+    api.updateAccountDashboardsByID(connection, req.user.id, updateDoc, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data);
+    })
+}
+
 
 
 
@@ -346,6 +392,24 @@ function handleCreatePermissionKey(req, res, next) {
             key: key
         })
     })
+}
+
+router.post('/security/apikey/', handleNewApiKey);
+/**
+    * Creates a new API key.
+    * @function handleNewApiKey
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api POST /api/security/apikey/
+    * @apibody {application/json} 
+    * @apiresponse {json} Returns the new api key
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo Add JWT Auth ADMIN
+    */
+function handleNewApiKey(req, res, next) {
+    res.sendStatus(501);
 }
 
 /**
