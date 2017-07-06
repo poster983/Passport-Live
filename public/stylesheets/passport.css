@@ -82,7 +82,7 @@ email: hi@josephhassell.com
   transition: all .3s ease .15s;
   overflow: hidden; }
 
-.passportLoader.box {
+.passportLogo.box {
   position: relative;
   width: 171px;
   height: 235px;
@@ -104,7 +104,7 @@ See if you can make it all the "P" via an ::after
 
 }
 */
-.passportLoader.box > .dark-half {
+.passportLogo.box > .dark-half {
   position: relative;
   width: 171px;
   height: 50%;
@@ -115,16 +115,18 @@ See if you can make it all the "P" via an ::after
   transform: translateX(-50%);
   z-index: 1; }
 
-.passportLoader.box > .logo {
+.passportLogo.box > .logo {
   position: relative;
   left: 50%;
   top: 50%;
   width: 171px;
   color: #F5F5F5;
   fill: currentcolor;
-  -webkit-transform: translate(-50%, -50%) rotate(0deg);
-  transform: translate(-50%, -50%) rotate(0deg);
   z-index: 2;
+  -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg); }
+
+.passportLogo.box > .logo.load {
   -webkit-animation-name: passport-logo-loading;
   animation-name: passport-logo-loading;
   -webkit-animation-duration: 4s;
@@ -154,6 +156,66 @@ See if you can make it all the "P" via an ::after
     -webkit-transform: rotate(-10deg) translate(-50%, -80%);
     transform: rotate(-10deg) translate(-50%, -80%); } }
 
+/**Error Animation**/
+/*
+@keyframes passport-logo-error-logo {
+  0% {
+    transform: rotate(0deg) rotateX(0deg) translate(-50%, -50%);
+  }
+  20% {
+    transform: rotate(20deg) translate(-50%, -25%);
+  }
+  50% {
+    transform: rotate(20deg) translate(-50%, -25%);
+  }
+  100% {
+    transform: rotate(0deg) translate(-50%, 20%) rotateX(-85deg) ;
+  }
+}*/
+@keyframes passport-logo-error-logo {
+  0% {
+    transform: rotate(0deg) rotateX(0deg) translate(-50%, -50%); }
+  100% {
+    transform: rotate(95deg) rotateX(0deg) translate(-50%, -50%); } }
+
+@keyframes passport-logo-error-logo-ro {
+  0% {
+    transform: rotate(0deg) rotateX(0deg) translate(-50%, -50%); }
+  100% {
+    transform: rotate(360deg) rotateX(0deg) translate(-50%, -50%); } }
+
+.passportLogo.box.error > .logo {
+  transform: translate(-50%, -50%) rotate(0deg) rotateX(0deg);
+  animation-fill-mode: forwards;
+  animation-name: passport-logo-error-logo-ro;
+  animation-duration: 0.5s;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  transform-origin: -10% -35%; }
+
+@keyframes passport-box-error {
+  0% {
+    transform: rotate(0deg) rotateY(0deg) translate(-50%, 0%); }
+  100% {
+    transform: rotate(0deg) rotateY(180deg) translate(-50%, 0%); } }
+
+.passportLogo.box.error {
+  transform: rotate(0deg) rotateY(0deg) translate(-50%, 0%);
+  animation-fill-mode: forwards;
+  animation-name: passport-box-erro r;
+  animation-duration: 0.5s;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  transform-origin: 0%; }
+
+/*
+.passportLogo.box > p {
+  position: relative;
+  left: 50%;
+  top: 50%:
+  z-index: 2;
+  font-size: 4em
+}*/
 .vCenter {
   position: relative;
   top: 50%;

@@ -551,6 +551,12 @@ router.post('/test/db', function(req, res, next) {
     })
 });
 
+router.get('/test/error/:error', function(req, res, next) {
+    var err =  new Error(req.params.error);
+    err.status = 404
+    next();
+});
+
 router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
     api.checkPermissionKey(connection, req.params.key, function(err, document) {
