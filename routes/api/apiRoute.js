@@ -552,9 +552,9 @@ router.post('/test/db', function(req, res, next) {
 });
 
 router.get('/test/error/:error', function(req, res, next) {
-    var err =  new Error(req.params.error);
-    err.status = 404
-    next();
+    var err = new Error(req.params.error);
+    err.status = 400
+    next(err);
 });
 
 router.get('/test/key/:key', function(req, res, next) {

@@ -213,59 +213,86 @@ See if you can make it all the "P" via an ::after
  0% {
     transform: rotate(0deg) rotateX(0deg) translate(-50%, -50%);
   }
+20% {
+    transform: rotate(-95deg) rotateY(0deg) translate(-70%, -10%);
+  }
+40% {
+    transform: rotate(-95deg) rotateY(90deg) translate(-70%, -10%);
+    
+  }
 100% {
-    transform: rotate(95deg) rotateX(0deg) translate(-50%, -50%);
-  }
-
-}
-@keyframes passport-logo-error-logo-ro {
-  0% {
-    transform: rotate(0deg) rotateX(0deg) translate(-50%, -50%);
-  }
+  transform: rotate(0deg) rotateY(90deg) translate(-50%, -50%);
   
-  100% {
-    transform: rotate(360deg) rotateX(0deg) translate(-50%, -50%);
-  }
+  } 
 }
+
 
 .passportLogo.box.error > .logo { 
             transform: translate(-50%, -50%) rotate(0deg) rotateX(0deg) ;
             animation-fill-mode: forwards;
-            animation-name: passport-logo-error-logo-ro;
-            animation-duration: 0.5s;
-            animation-delay: 0s;
-            animation-iteration-count: infinite;
-
+            animation-name: passport-logo-error-logo;
+            animation-duration: 1s;
+            animation-delay: 1s;
+            animation-iteration-count: 1;
             transform-origin: -10% -35%;
-           
+            backface-visibility: hidden;
+           transform-style: preserve-3d;
   }
 @keyframes passport-box-error {
   0% {
     transform: rotate(0deg) rotateY(0deg) translate(-50%, 0%);
   }
   
-  100% {
+  50% {
     transform: rotate(0deg) rotateY(180deg) translate(-50%, 0%);
   }
+  100% {
+    transform: rotate(90deg) rotateY(180deg) translate(-50%, 0%);
+  }
+  
 }
-.passportLogo.box > p {
-  position: relative;
-  left: 50%;
-  top: 50%:
-  z-index: 2;
-  font-size: 40em
-}
+
 .passportLogo.box.error {
     transform: rotate(0deg) rotateY(0deg) translate(-50%, 0%);
       animation-fill-mode: forwards;
       animation-name: passport-box-error;
-      animation-duration: 0.5s;
-      animation-delay: 0s;
-      animation-iteration-count: infinite;
+      animation-duration: 2s;
+      animation-delay: 1s;
+      animation-iteration-count: 1;
       transform-origin: 0%;
-      
 }
 
+@keyframes passport-box-error-code {
+  0% {
+    transform: rotate(-90deg) rotateX(0deg) translate(0%, 0%);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: rotate(-90deg) rotateX(180deg) translate(0%, 0%);
+    opacity: 1;
+
+  }
+
+}
+.passportLogo.box > .code {
+  transform: rotateY(0deg) rotate(-90deg);
+  opacity: 0;
+  position: absolute;
+  text-align: center;
+  left: 25%;
+  top: 5%;
+  z-index: 3;
+  font-size: 4em;
+  transform-style: preserve-3d;
+  
+  animation-fill-mode: forwards;
+      animation-name: passport-box-error-code;
+      animation-duration: 1s;
+      animation-delay: 1s;
+      animation-iteration-count: 1;
+      transform-origin: center center;
+}
 
 
 .vCenter {
