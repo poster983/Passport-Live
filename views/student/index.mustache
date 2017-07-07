@@ -214,25 +214,22 @@ email: hi@josephhassell.com
                           </div>
 
                           <!--Pick a Date -->
-                          <input type="date" class="datepicker">
-                          
-                          <!--
-                          <div id="locDiv" class="input-field col s12">
-                            <select id="department" name="department" required class="white-text validate" onchange="depToReasonAJAX(this.value, '<?php echo $_SESSION['period'] ?>');">
-                              <option value="" disabled selected>Choose A Location</option>
-                              <option value="LEC">Executive Functioning (LEC)</option>
-                              <option value="Math">Math Tutoring</option>
-                              <option value="Library">Library</option>
+                          <div id="dayToCome" class="input-field col s12" style="display: none;">
+                            <input type="date" id="datepicker" name="dayToCome" class="datepicker" onchange="onDateChange(this)">
+                            <label for="datepicker">Day To Come</label>
+                          </div>
 
-                              <option value="Writing Lab">Writing Lab</option>
-                              <option value="Foreign Language">Foreign Language Tutoring</option>
+                           <!--Select Period-->
+                          <div id="selectPeriodDiv" class="input-field col s12" >
+                            
+                          </div>
 
-                            </select>
-                            <label>Location</label>
-
-                          </div>-->
-                          <div id="ReasonAJAX"></div>
-
+                          <br>
+                          <br>
+                          <br>
+                          <br>
+                          <br>
+                          <br>
                           <br>
                         <!--Advanced-->
                       <div>
@@ -292,6 +289,7 @@ email: hi@josephhassell.com
               /*Vars*/
               var currGroup = "";
               var toPerson = "";
+              var dayToCome = "";
 
               $(document).ready(function(){
                 // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -427,7 +425,12 @@ email: hi@josephhassell.com
                     errorHand(err);
                   } else {
                     toPerson = data;
-                    console.log(toPerson);
+                    //check date settings set by teacher dash 
+                    var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+                    var endDate = new Date();
+                    endDate.setDate(endDate.getDate() + advance)
+                    console.log(endDate.toString())
+                    setupDatePicker(endDate, [])
                   }
 
                 })
@@ -509,25 +512,69 @@ email: hi@josephhassell.com
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      
                   });
-                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
-                    if(err) {
-                      console.error(err);
-                    } else {
-                      return data;
-                    }
-
-                  });*/
                 }
 
 
-                /* Date THings */
+                /* Date Things */
 
-                function setupDatePicker(selectMonths, selectYears){
-                  $('.datepicker').pickadate({
-                    selectMonths: selectMonths, // Creates a dropdown to control month
-                    selectYears: selectYears // Creates a dropdown of 15 years to control year
+                function setupDatePicker(max, disable) {
+                  $('#dayToCome').show();
+                  $('#datepicker').pickadate({
+                    selectMonths: true, // Creates a dropdown to control month
+                    selectYears: 2, // Creates a dropdown of 15 years to control year
+                    min: new Date(),
+                    max: max,
+                    disable: disable,
+                    formatSubmit: 'yyyy-mm-dd',
+                    hiddenName: true
                   });
                 }
+
+                function onDateChange(date) {
+                  //get hidden date vfalue
+                  dayToCome = $('[name=dayToCome]').val();
+                  setupPeriods();
+                }
+
+                /* Periods */
+
+                function setupPeriods() {
+                  if(dayToCome == "") {
+                    return false;
+                  }
+                  $('#selectPeriodDiv').empty();
+                  $.ajax({
+                    type: "get",
+                    url: "/api/schedule/for/"+dayToCome,
+                    dataType: "json",
+                    success: function(data) {
+                      console.log(data);
+                      //multiple periods
+                      if(data.length > 0 ) {
+                        //most important schedule
+                        var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+                        for(var i = 0; i < data.length; i++) {
+                          if(data[i].repeatingRule.importance > mIS.repeatingRule.importance ) {
+                            mIS = data[i]
+                          }
+                          //end
+                          if(i >= data.length-1 ) {
+                            console.log(mIS)
+
+                            var periods = Object.keys(mIS.scheduleDefinition.scheduleData)
+                            console.log(periods);
+                            for(var x = 0; x < periods.length; x++) {
+                                $('#selectPeriodDiv').append("<input name=\"period\" type=\"radio\" id=" + periods[x] +" /> ");
+                                $('#selectPeriodDiv').append("<label for="+ periods[x] +">" + periods[x].charAt(0).toUpperCase() +  periods[x].slice(1) + "</label> &nbsp &nbsp");
+                            }
+                          }
+                        }
+                      }
+
+                    },
+                    error: function(jqXHR) {errorHand(jqXHR)}                      
+                  });
+                } 
 
 
                 function errorHand(err) {

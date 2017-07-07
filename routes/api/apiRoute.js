@@ -333,6 +333,7 @@ router.patch('/account/groupfields/', passport.authenticate('jwt', { session: fa
     * Updates usergroup specific data.
     * REQUIRES JWT Authorization in headers.
     * account must be in the usergroup for it to update
+    * Check Example usergroup model for more examples 
     * @function handleUpdateAccountGroupFieldsByUser
     * @async
     * @param {request} req
@@ -343,8 +344,8 @@ router.patch('/account/groupfields/', passport.authenticate('jwt', { session: fa
     * @example 
     * <caption>Body Structure (application/json): </caption>
     * {
-    * 
-    *     "student": { //any usergroup name
+    *     "id": 123456, //school id
+    *     "student": { //any dashboard name
     *        "periodSchedule": {
     *                "a": {
     *                    "teacherID": "46545645-456-4-45645-45646" //id from database
@@ -367,27 +368,14 @@ router.patch('/account/groupfields/', passport.authenticate('jwt', { session: fa
     */
 function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     var updateDoc = req.body;
-    var keys = Object.keys(updateDoc);
-    for(var i = 0; i < keys.length; i++) {
 
-        if(!keys[i].includes(req.user.userGroup)) {
-            var err = new Error("Forbidden: Usergroups don't match");
-            err.status = 403;
-            return next(err)
+     api.updateAccountGroupFieldsByID(connection, req.user.id, updateDoc, function(err, data) {
+        if(err) {
+            return next(err);
         }
+        return res.send(data);
+    })
 
-        if(i >= keys.length-1) {
-            //finished check 
-             api.updateAccountGroupFieldsByID(connection, req.user.id, updateDoc, function(err, data) {
-                if(err) {
-                    return next(err);
-                }
-                return res.send(data);
-            })
-
-        }
-
-    }
 }
 
 
