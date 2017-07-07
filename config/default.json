@@ -3,31 +3,7 @@
 {
 	// passGroups Needs A Rewrite
 	//only for filling the main student page
-	"passGroups": {
-		"enabledPassGroups": ["teacher", "LC", "counselors"], // enables each pass group defined 
-		"teacher": {  
-			"viewName": "Teacher", //what it will look like to students
-			"viewType": "search", // how to display the people in the passgroup
-			"hasRespectiveAccountGroup": "teacher", //will the pass go to someone's account
-			"fillSourse": "db",//where passport should look to fill the ui.
-			"customGroupID": 1 //for identifying this pass group in a DB
-		},
-		"LC": {
-			"viewName": "LC",
-			"viewType": "select", // how to display the people in the passgroup
-			"hasRespectiveAccountGroup": "LC", //will the pass go to someone's account
-			"fillSourse": "db",
-			"showCustomDestinationName": true,
-			"customGroupID": 2 //for identifying this pass group in a DB
-		},
-		"counselors": {
-			"viewName": "Counselors",
-			"viewType": "select", // how to display the people in the passgroup
-			"hasRespectiveAccountGroup": "counselors", //will the pass go to someone's account
-			"fillSourse": "db",
-			"customGroupID": 3 //for identifying this pass group in a DB
-		}
-	},
+	
 	"userGroups": { 
 		"student": {
 			"permissions": {
@@ -109,6 +85,6 @@
 		}
 	},
 	"misc": {
-		"storeSessionToDisc": false
+		"storeSessionToDisc": true
 	}
 }

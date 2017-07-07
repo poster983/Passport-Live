@@ -283,22 +283,23 @@ function handleGetAccountsByName(req, res, next) {
     }); 
 }
 
-router.patch('/account/dashboard/', passport.authenticate('jwt', { session: false}), handleUpdateAccountDashboardsByUser);
+router.patch('/account/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
 /**
-    * Updates dashboard specific data.
-    * REQUIRES JWT Authorization in headers
-    * @function handleUpdateAccountDashboardsByID
+    * Updates usergroup specific data.
+    * REQUIRES JWT Authorization in headers.
+    * account must be in the usergroup for it to update
+    * @function handleUpdateAccountGroupFieldsByUser
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api PATCH /api/account/dashboard/
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @api PATCH /api/account/groupfields/
+    * @apiresponse {json} Returns rethink db action summery
     * @example 
     * <caption>Body Structure (application/json): </caption>
     * {
-    * "update": {
-    *     "student": { //any dashboard name
+    * 
+    *     "student": { //any usergroup name
     *        "periodSchedule": {
     *                "a": {
     *                    "teacherID": "46545645-456-4-45645-45646" //id from database
@@ -316,17 +317,32 @@ router.patch('/account/dashboard/', passport.authenticate('jwt', { session: fals
     *          }
     *      }
     *  }
-    * }
+    * 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-function handleUpdateAccountDashboardsByUser(req, res, next) {
-    var updateDoc = req.body.update;
-    api.updateAccountDashboardsByID(connection, req.user.id, updateDoc, function(err, data) {
-        if(err) {
-            return next(err);
+function handleUpdateAccountGroupFieldsByUser(req, res, next) {
+    var updateDoc = req.body;
+    var keys = Object.keys(updateDoc);
+    for(var i = 0; i < keys.length; i++) {
+
+        if(!keys[i].includes(req.user.userGroup)) {
+            var err = new Error("Forbidden: Usergroups don't match");
+            err.status = 403;
+            return next(err)
         }
-        res.send(data);
-    })
+
+        if(i >= keys.length-1) {
+            //finished check 
+             api.updateAccountGroupFieldsByID(connection, req.user.id, updateDoc, function(err, data) {
+                if(err) {
+                    return next(err);
+                }
+                return res.send(data);
+            })
+
+        }
+
+    }
 }
 
 

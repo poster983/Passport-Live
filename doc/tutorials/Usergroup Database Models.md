@@ -17,18 +17,7 @@
 	"userGroup": "student||teacher||admin||dev||Custom", //Defined in configs
 	"groupFields": {//used for fields needed exclusively by one usergroup.  NOTE: normaly there would only be one key in here named after the current userGroup
 		"student": {
-			"id": "123456"
-		},
-		"teacher": {
-			"id": "456789"
-		},
-		"custom": {
-			"data": "FooBar",
-			"key": "value"
-		}
-	}, 
-	"dashboards": { // when a user connects to a dashboard for the first time, it will start adding settings and other things here.  
-		"student": {
+			"id": "123456",
 			"periodSchedule": {
 				"a": {
 					"teacherID": "46545645-456-4-45645-45646" //id from database
@@ -45,10 +34,75 @@
 				//Need to figure out later
 			}
 		},
-		"custom": {// must match the dashboard route
+		"teacher": {
+			"id": "456789"
+			"periodSchedule": {
+				"a": {
+					"room": 1,
+					"isTeaching": true,
+					"className": "Biology"
+				},
+				"b": {
+					"room": 1,
+					"isTeaching": true,
+					"className": "Biology"
+				},
+				"c": {
+					"room": 4500,
+					"isTeaching": false,
+					"className": "Off Period"
+				},
+				"d": {
+					"room": 3,
+					"isTeaching": true,
+					"className": "Algebra 1"
+				},
+				"lunch1": {
+					"room": "Cafeteria",
+					"isTeaching": false,
+					"className": "Lunch"
+				},
+				"e1": {
+					"room": 3,
+					"isTeaching": true,
+					"className": "Algebra 1"
+				},
+				"f": {
+					"room": 1,
+					"isTeaching": true,
+					"className": "Biology"
+				},
+				"g": {
+					"room": 25,
+					"isTeaching": false,
+					"className": "Sub Period"
+				},
+				"h": {
+					"room": 1,
+					"isTeaching": true,
+					"className": "Biology"
+				},
+				"flex": {
+					"room": 1,
+					"isTeaching": false
+				},
+				"m": {
 
+					"isTeaching": false
+
+				},
+				"home": {
+					"room": 4500,
+					"isTeaching": false,
+					"className": "Homeroom"
+				}
+			}
+		},
+		"custom": {
+			"data": "FooBar",
+			"key": "value"
 		}
-	},
+	}, 
 	"password": "HashedPass"
 }
 ```

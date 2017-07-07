@@ -182,16 +182,16 @@ module.exports = {
 
     /** 
     * Updates/sets any account field by its id 
-    * @function updateAccountByID
+    * @function updateAccountGroupFieldsByID
     * @link module:passportApi
     * @async
-    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @returns {callback} Returns rethink db summery
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} id - id of the account 
     * @param {json} doc - Json object for the update.  Top key should be the name of the dashboard it is for.
     * @param {function} done - Callback
     */
-    updateAccountDashboardsByID: function(dbConn, id, doc, done) {
+    updateAccountGroupFieldsByID: function(dbConn, id, doc, done) {
         if(!id) {
             var err = new Error("ID Required");
             err.status = 400;
@@ -201,7 +201,7 @@ module.exports = {
             err.status = 400;
             return done(err);
         } else {
-            r.table("accounts").get(id).update({dashboards: doc}).run(dbConn, function(err, data) {
+            r.table("accounts").get(id).update({groupFields: doc}).run(dbConn, function(err, data) {
                 if(err) {
                     return done(err);
                 }
@@ -247,7 +247,7 @@ module.exports = {
                     scheduleData[key].start = moment(currKey.start, "HH:mm").utc().format("HH:mm");
                     scheduleData[key].end = moment(currKey.end, "HH:mm").utc().format("HH:mm");
                 } else {
-                    var err = new Error("Start time is after end time");
+                    var err = new Error("Start time is after end time for period: \"" + key + "\"");
                     err.status = 400;
                     return done(err)
                 }
