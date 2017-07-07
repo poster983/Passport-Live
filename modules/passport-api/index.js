@@ -181,6 +181,26 @@ module.exports = {
     },
 
     /** 
+    * Searches by id in the account database 
+    * @function getUserByID
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @param {object} dbConn - RethinkDB Connection Object.
+    * @param {constant} id - The ID of the user
+    * @param {function} done - Callback
+    */
+    getUserByID: function(dbConn, id, done) { 
+         r.table("accounts").get(id).run(dbConn, function(err, document) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, document);
+           
+         })
+    },
+
+    /** 
     * Updates/sets any account field by its id 
     * @function updateAccountGroupFieldsByID
     * @link module:passportApi

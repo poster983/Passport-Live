@@ -193,6 +193,11 @@ function handleNewAccount(req, res, next) {
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+        if(!permissionKey) {
+            var err = new Error("Permission Key Required");
+                err.status = 403;
+                return next(err);
+        }
         api.checkPermissionKey(connection, permissionKey, function(err, data) {
             if(err) {
                 return next(err);
@@ -219,6 +224,30 @@ function handleNewAccount(req, res, next) {
     }
 }
 
+router.get('/account/id/:id/', handleGetAccountsById);
+/**
+    * GETs accounts by id
+    * @function handleGetAccountsById
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/id/:id
+    * @apiparam {userGroup} id - The id of the user
+    * @apiresponse {json} Returnes the safe info
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+
+function handleGetAccountsById(req, res, next) {
+    var id = req.params.id;
+    api.getUserByID(connection, id, function(err, data) {
+        if(err) {
+            return next(err) 
+        }
+        res.json(utils.cleanUser(data));
+    })
+}
+
 router.get('/account/:userGroup/', handleGetAccountsByUserGroup);
 /**
     * GETs all accounts by usergroup
@@ -243,8 +272,15 @@ function handleGetAccountsByUserGroup(req, res, next) {
         console.log(acc)
         var ret = [];
         for (var i = 0; i < acc.length; i++) {
-            
-            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
+            var safeUser = {
+                name: acc[i].name, 
+                email: acc[i].email, 
+                userGroup: acc[i].userGroup, 
+                id: acc[i].id, 
+                groupFields: acc[i].groupFields[userGroup]
+                
+            }
+            ret.push(safeUser);
         }
         res.json(ret);
     }); 
@@ -261,7 +297,7 @@ router.get('/account/:userGroup/:name', handleGetAccountsByName);
     * @api GET /api/account/:userGroup/:name/
     * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
     * @apiparam {string} name - A user's name.  Can be in any name format.
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 function handleGetAccountsByName(req, res, next) {
@@ -276,12 +312,21 @@ function handleGetAccountsByName(req, res, next) {
         console.log(acc)
         var ret = [];
         for (var i = 0; i < acc.length; i++) {
-            
-            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
+             var safeUser = {
+                name: acc[i].name, 
+                email: acc[i].email, 
+                userGroup: acc[i].userGroup, 
+                id: acc[i].id, 
+                groupFields: acc[i].groupFields[userGroup]
+                
+            }
+            ret.push(safeUser);
         }
         res.json(ret);
     }); 
 }
+
+
 
 router.patch('/account/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
 /**

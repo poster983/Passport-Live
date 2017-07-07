@@ -31,15 +31,16 @@ module.exports = {
     * @returns {user}
     */
     cleanUser: function(user){
-        if(Array.isArray(user)){
-            delete user[0].password;
-            return user[0];
-        } else {
-            delete user.password;
-            return user;
+        if(user) {
+            if(Array.isArray(user)){
+                delete user[0].password;
+                return user[0];
+            } else {
+                delete user.password;
+                return user;
+            }
         }
     }
-
     
 }
 /**

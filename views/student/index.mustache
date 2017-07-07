@@ -207,11 +207,14 @@ email: hi@josephhassell.com
                           </div>
                           <!--Select People-->
                           <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
-                            <select id="selectPeople" name="selectPeople" required class="white-text validate">
+                            <select id="selectPeople" name="selectPeople" required class="white-text validate" onchange="onSelectPeopleChange(this)">
                               <option value="" disabled selected>Choose A Person</option>
                             </select>
                             <label>Select a Person</label>
                           </div>
+
+                          <!--Pick a Date -->
+                          <input type="date" class="datepicker">
                           
                           <!--
                           <div id="locDiv" class="input-field col s12">
@@ -288,6 +291,7 @@ email: hi@josephhassell.com
         <script>
               /*Vars*/
               var currGroup = "";
+              var toPerson = "";
 
               $(document).ready(function(){
                 // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -373,6 +377,10 @@ email: hi@josephhassell.com
 
               function onPassGroupSelectChange(select) {
                 console.log(select)
+                //delete all dchildern
+                 $('#selectPeople').empty();
+                 initAutocompleteAccounts({});
+                 $('#selectPeople').material_select();
                 currGroup = select.value;
                 if($(select).find(':selected').attr('data-prefersearch') == "true") {
                   console.log("yes")
@@ -409,14 +417,28 @@ email: hi@josephhassell.com
                     }                      
                   });
               }
-              
+
+              //when the people select changes 
+
+              function onSelectPeopleChange(select) {
+                //get full account data 
+                searchAccountsByID(select.value, function(err, data) {
+                  if(err) {
+                    errorHand(err);
+                  } else {
+                    toPerson = data;
+                    console.log(toPerson);
+                  }
+
+                })
+              }
 
                 /**Autocomplete Accounts**/
                 function initAutocompleteAccounts(data) {
                   $('input.autocomplete').autocomplete({
                     data: data,
                     onAutocomplete: function(val) {
-                      console.log(val)
+                      toPerson = val;
                     },
                     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                   });
@@ -474,6 +496,37 @@ email: hi@josephhassell.com
                     }
 
                   });*/
+                }
+
+                function searchAccountsByID(id, done) {
+                    if(id == "") {
+                      return done(null, null);
+                    }
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/id/"+id,
+                    dataType: "json",
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
+                    if(err) {
+                      console.error(err);
+                    } else {
+                      return data;
+                    }
+
+                  });*/
+                }
+
+
+                /* Date THings */
+
+                function setupDatePicker(selectMonths, selectYears){
+                  $('.datepicker').pickadate({
+                    selectMonths: selectMonths, // Creates a dropdown to control month
+                    selectYears: selectYears // Creates a dropdown of 15 years to control year
+                  });
                 }
 
 
