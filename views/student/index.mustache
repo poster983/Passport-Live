@@ -47,14 +47,14 @@ email: hi@josephhassell.com
           <ul id="slide-out" class="side-nav">
            <li><div class="userView">
              <div class="background">
-               <img alt="Side-Nav Background" src="images/stunav.jpg">
+               <img alt="Side-Nav Background" src="/images/stunav.jpg">
              </div>
              <a href="#!user"><i class="material-icons md-48 md-light">account_circle</i></a>
-             <a href="#!name"><span class="white-text name">{{account_FirstName}} {{account_LastName}}</span></a>
-             <a href="#!email"><span class="white-text email">{{account_Email}}</span></a>
+             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
+             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
            </div></li>
-           <li><a class="waves-effect" href="#!">Home</a></li>
-           <li><a class="waves-effect" href="students/account.php">Your Account</a></li>
+           <li><a class="waves-effect active" href="#!">Home</a></li>
+           <li><a class="waves-effect" href="/student/account">Your Account</a></li>
            <li><div class="divider"></div></li>
            <!--<li><a class="subheader">Subheader</a></li>-->
            <li><a class="waves-effect" href="auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
@@ -62,7 +62,7 @@ email: hi@josephhassell.com
          </ul>
           <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
             <a href="#" class="brand-logo center">Passport</a>
-            <span class="nav-right">{{passport_Version}}</span>
+            <span class="nav-right">{{passportVersion}}</span>
         </div>
     </nav>
 
@@ -193,30 +193,49 @@ email: hi@josephhassell.com
                     <span class="card-title">Get A Pass</span>
 
                       <form id="passForm" method="post">
-                          <div id="groDiv" class="input-field col s12">
-                            <select id="passGroup" name="passGroup" required class="white-text validate" onchange="onPassGroupSelectChange(this)">
-                              <option value="" disabled selected>Choose A Group</option>
-                            </select>
-                            <label>Group</label>
-                          </div>
-                          <!-- Immagine this shows when "passGroup" finishes -->
-                          <!--Search-->
-                          <div id="searchDiv" class="input-field col s12" style="display: none;">
-                            <input type="text" id="autocomplete-account" class="autocomplete">
-                            <label for="autocomplete-account">Search People</label>
-                          </div>
-                          <!--Select People-->
-                          <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
-                            <select id="selectPeople" name="selectPeople" required class="white-text validate" onchange="onSelectPeopleChange(this)">
-                              <option value="" disabled selected>Choose A Person</option>
-                            </select>
-                            <label>Select a Person</label>
-                          </div>
+                          <div id="from" class="section">
+                            <h6>Leaving From:</h6>
 
+                            <!--Select My Teachers-->
+                            <div id="selectMyTeachersDiv" class="input-field col s12">
+                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" onchange="onSelectMyTeachersChange(this)">
+                                <option value="" disabled selected>Choose A Person</option>
+                              </select>
+                              <label>Select a Person</label>
+                            </div>
+                          </div>
+                          <div id="to" class="section">
+                            <h6>Going To:</h6>
+
+                            <div id="groDiv" class="input-field col s12">
+                              <select id="passGroup" name="passGroup" required class="white-text validate" onchange="onPassGroupSelectChange(this)">
+                                <option value="" disabled selected>Choose A Group</option>
+                              </select>
+                              <label>Group</label>
+                            </div>
+                            <!-- Immagine this shows when "passGroup" finishes -->
+                            <!--Search-->
+                            <div id="searchDiv" class="input-field col s12" style="display: none;">
+                              <input type="text" id="autocomplete-account" class="autocomplete">
+                              <label for="autocomplete-account">Search People</label>
+                            </div>
+                            <!--Select People-->
+                            <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
+                              <select id="selectPeople" name="selectPeople" required class="white-text validate" onchange="onSelectPeopleChange(this)">
+                                <option value="" disabled selected>Choose A Person</option>
+                              </select>
+                              <label>Select a Person</label>
+                            </div>
+
+                          </div>
                           <!--Pick a Date -->
-                          <div id="dayToCome" class="input-field col s12" style="display: none;">
-                            <input type="date" id="datepicker" name="dayToCome" class="datepicker" onchange="onDateChange(this)">
-                            <label for="datepicker">Day To Come</label>
+                          <div id="time" class="section">
+                            <h6>Time:</h6>
+                            <div id="dayToCome" class="input-field col s12" style="display: none;">
+
+                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" onchange="onDateChange(this)">
+                              <label for="datepicker">Day To Come</label>
+                            </div>
                           </div>
 
                            <!--Select Period-->
@@ -224,13 +243,7 @@ email: hi@josephhassell.com
                             
                           </div>
 
-                          <br>
-                          <br>
-                          <br>
-                          <br>
-                          <br>
-                          <br>
-                          <br>
+                         
                         <!--Advanced-->
                       <div>
                         <input type="checkbox" id="sao" />
@@ -282,8 +295,9 @@ email: hi@josephhassell.com
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
         <!-- Compiled and minified JavaScript -->
-        <script src="js/materialize.js"></script>
-        <script src="js/passport.js"></script>
+        <script src="/js/materialize.js"></script>
+        <script src="/js/passport.js"></script>
+        
         <!--<script src="js/PICS.js"></script>-->
         <script>
               /*Vars*/
@@ -338,6 +352,10 @@ email: hi@josephhassell.com
                 $(document.body).css('background-image', 'url(/passport/image/cork-board.jpg)');
                 console.log("There You Go Carson");
               }
+
+              /** Fill My Teachers **/
+
+
 
               /**Fill Pass Groups**/
 
@@ -552,16 +570,22 @@ email: hi@josephhassell.com
                       //multiple periods
                       if(data.length > 0 ) {
                         //most important schedule
-                        var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+                        //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+                        var mIS;
                         for(var i = 0; i < data.length; i++) {
-                          if(data[i].repeatingRule.importance > mIS.repeatingRule.importance ) {
+                          if(i==0) {
+                            mIS = data[i];
+                          }
+                          if(data[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
                             mIS = data[i]
                           }
+                          console.log(mIS)
                           //end
                           if(i >= data.length-1 ) {
                             console.log(mIS)
 
-                            var periods = Object.keys(mIS.scheduleDefinition.scheduleData)
+                            var periods = Object.keys(mIS.scheduleDefinition.scheduleData);
+
                             console.log(periods);
                             for(var x = 0; x < periods.length; x++) {
                                 $('#selectPeriodDiv').append("<input name=\"period\" type=\"radio\" id=" + periods[x] +" /> ");

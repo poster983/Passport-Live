@@ -110,6 +110,7 @@ app.use(require('node-sass-middleware')({
   indentedSyntax: false,
   sourceMap: false
 }));
+app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', rootLevel);
@@ -147,7 +148,7 @@ app.use(function(err, req, res, next) {
     err.status = 500;
   }
   res.locals.message = err.message;
-   if(config.has('secrets.loggingDSN')){
+   if(config.has('secrets.loggingDSN') && Raven){
       res.locals.raven = true;
     }
   res.locals.error = req.app.get('env') === 'development' ? err : {};

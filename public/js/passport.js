@@ -154,3 +154,31 @@ function openPage(pageID) {
 function closePage(pageID) {
   $("#" + pageID).removeClass("active");
 }
+
+//Morphy sidebar
+
+//ACTIVE PAGE FOR SESSION:
+var ACTIVE_NAV = $("ul.side-nav li.selected");
+var NAV_MORPH_ID;
+function navMorphInit(id) {
+  NAV_MORPH_ID = id;
+  var mBo = $("#"+NAV_MORPH_ID);
+  mBo.html(ACTIVE_NAV.find("a").html());
+  console.log(ACTIVE_NAV)
+   $("#SBmorphBox").css({
+    "transform": "translate(0px, " + ACTIVE_NAV.position()["top"] + "px)"});
+}
+function navMorph(obj) {
+  //var firstLI = $("li").get(0).position();
+  var mBo = $("#"+NAV_MORPH_ID).position();
+  var pos = $(obj).position();
+
+  console.log(pos["top"]);
+  $("#"+NAV_MORPH_ID).css({
+    "transform": "translate(0px, " + pos["top"] + "px)",
+    "transition": "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)",      //"transform-origin": "" + firstLI["left"] +"px " + firstLI["top"] +"px"
+    "transform-origin": "0px 0px"
+  });
+  $("#"+NAV_MORPH_ID).html($(obj).find("a").html()); 
+
+} 

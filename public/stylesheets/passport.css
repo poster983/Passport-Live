@@ -627,3 +627,32 @@ L: 100+ (42 - 60) =  82 (relative to base 100%: 18)
 
 .autocomplete2 .ac-input input {
   height: 2.4rem; }
+
+.SBmorphBox {
+  position: absolute;
+  width: 210px;
+  height: 54px;
+  padding: 5px 15px;
+  /*0px 15px 15px 15px;*/
+  margin: 5px 15px 5px 15px;
+  border-radius: 3px;
+  background-color: #f44336;
+  line-height: 44px;
+  z-index: 2;
+  color: white;
+  box-shadow: 0 12px 20px -10px rgba(244, 67, 54, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(244, 67, 54, 0.2); }
+
+.nav-noshadow {
+  box-shadow: 0px 0px !important; }
+
+.bigHead {
+  position: absolute;
+  top: 0px;
+  height: 40%;
+  width: 100%;
+  text-align: center;
+  z-index: -1; }
+
+.userCardBundle {
+  position: relative;
+  top: 15%; }

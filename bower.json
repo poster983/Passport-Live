@@ -1,0 +1,28 @@
+{
+  "name": "passport-live",
+  "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
+  "main": "app.js",
+  "authors": [
+    "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)"
+  ],
+  "license": "AGPL-3.0",
+  "keywords": [
+    "passport",
+    "pass",
+    "school",
+    "student",
+    "express"
+  ],
+  "homepage": "https://github.com/poster983/Passport-Live",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.stellar": "^0.6.2"
+  }
+}
