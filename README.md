@@ -3,7 +3,8 @@
 
 This is the next version of Passport; rebuilt in NodeJS
 Passport Live is a modern web app for schools that helps them manage passes.
-
+## NOTE
+Raven and Sentry.io are included if you install the optional deps.  You must include 
 ## Installation
 NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS  
 1. Install the latest version of NodeJS [Here](https://nodejs.org/en/download/)  

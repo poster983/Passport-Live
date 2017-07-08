@@ -192,36 +192,48 @@ function handleNewAccount(req, res, next) {
     var userGroup = req.params.userGroup;
     console.log(userGroup);
     //Checks to see if the account needs a verification key
-    if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-        if(!permissionKey) {
-            var err = new Error("Permission Key Required");
-                err.status = 403;
-                return next(err);
+    var promise = new Promise(function(resolve, reject) {
+
+        if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+            if(!permissionKey) {
+                var err = new Error("Permission Key Required");
+                    err.status = 403;
+                    reject(err);
+            }
+            api.checkPermissionKey(connection, permissionKey, function(err, data) {
+                if(err) {
+                    reject(err);
+                } 
+                //CHeck  if usergroup is present
+                else if(!data.permissions.userGroups.includes(userGroup)) {
+                    var err = new Error("Permission Needed");
+                    err.status = 403;
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        } else {
+            resolve();
         }
-        api.checkPermissionKey(connection, permissionKey, function(err, data) {
-            if(err) {
-                return next(err);
-            }
-            //CHeck  if usergroup is present
-            if(!data.permissions.userGroups.includes(userGroup)) {
-                var err = new Error("Permission Needed");
-                err.status = 403;
-                return next(err);
-            }
-        });
-    }
-    if(password != passwordVerification) {
-        res.sendStatus(422);
-    } else {
-        api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
-            if(err){
-                next(err);
-            } else {
-                res.sendStatus(201);
-                
-            }
-        });
-    }
+    })
+
+    promise.then(function(result) {
+        if(password != passwordVerification) {
+            res.sendStatus(422);
+        } else {
+            api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+                if(err){
+                    next(err);
+                } else {
+                    res.sendStatus(201);
+                    
+                }
+            });
+        }
+    }, function(err) {
+        next(err);
+    })
 }
 
 router.get('/account/id/:id/', handleGetAccountsById);
@@ -406,7 +418,7 @@ router.post('/security/key/', handleCreatePermissionKey);
     * <caption>Typical body when key is set to timeout at a date</caption>
     * {
     *  permissions: {
-    *    userGroup: ["teacher", "admin", "dev"]
+    *    userGroups: ["teacher", "admin", "dev"]
     *  },
     *  parms: {},
     *  timeout: {
@@ -417,7 +429,7 @@ router.post('/security/key/', handleCreatePermissionKey);
     * <caption>Typical body when key is set to timeout on a certain number of clicks</caption>
     * {
     *  permissions: {
-    *    userGroup: ["teacher", "admin", "dev"]
+    *    userGroups: ["teacher", "admin", "dev"]
     *  },
     *  parms: {},
     *  timeout: {
@@ -601,8 +613,17 @@ router.post('/test/db', function(req, res, next) {
 });
 
 router.get('/test/error/:error', function(req, res, next) {
+    /*
     var err = new Error(req.params.error);
     err.status = 400
+    next(err);*/
+    throw new Error(req.params.error);
+});
+router.get('/test/error/account/:error', function(req, res, next) {
+    
+    var err = new Error(req.params.error);
+    err.status = 400
+    err.level = 'fatal'
     next(err);
 });
 

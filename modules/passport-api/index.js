@@ -580,7 +580,7 @@ module.exports = {
                             err.status = 422;
                             return done(err, null);
                         }
-                    } else if(arr[0].timeout.tally) {
+                    } else if(Number.isInteger(arr[0].timeout.tally)) {
                         if(arr[0].timeout.tally >= 1) {
                             //Subtract 1 from tally
                             r.table("permissionKeys").update({

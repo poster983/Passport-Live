@@ -33,6 +33,9 @@ var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var session = require('express-session')
 var FileStore = require('session-file-store')(session);
+var optional = require('optional');
+var Raven = optional('raven');
+
 
 /*Routes*/
 var rootLevel = require('./routes/index');
@@ -47,8 +50,12 @@ var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
 
-
-
+//Config raven / sentry
+if(Raven) {
+  Raven.config(config.get('secrets.loggingDSN')).install();
+  var RavenUber = new Raven.Client(config.get('secrets.loggingDSN'));
+  app.use(Raven.requestHandler());
+}
 //Forever - MEMORY LEAK
 /*
   var foreverChild = new (forever.Monitor)('app.js', {
@@ -113,6 +120,11 @@ app.use('/auth', auth);
 app.use('/administrator', administrator)
 //app.use('/users', users);
 
+if(Raven) {
+  //raven error catcher 
+  app.use(Raven.errorHandler());
+}
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -120,15 +132,33 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+  if(Raven) {
+    var extra = {};
+    extra.level = err.level
+    console.log(extra)
+    RavenUber.captureException(err, extra);
+  }
+
+  if(!err.status){
+    err.status = 500;
+  }
   res.locals.message = err.message;
+   if(config.has('secrets.loggingDSN')){
+      res.locals.raven = true;
+    }
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  
   // render the error page
-  res.status(err.status || 500);
+  res.status(err.status);
   res.render('error');
 });
+
+
+
 
 module.exports = app;
