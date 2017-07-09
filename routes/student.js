@@ -43,7 +43,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev"
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
-
+    user.id = req.user.id;
     res.render('student/index', { doc_Title: 'Passport-Student', user, passportVersion: process.env.npm_package_version});
 });
 
