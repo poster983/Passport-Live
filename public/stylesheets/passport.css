@@ -648,11 +648,32 @@ L: 100+ (42 - 60) =  82 (relative to base 100%: 18)
 .bigHead {
   position: absolute;
   top: 0px;
-  height: 40%;
+  height: 375px;
   width: 100%;
   text-align: center;
   z-index: -1; }
 
+.bigHead * {
+  position: relative;
+  text-align: center;
+  top: 75px; }
+
 .userCardBundle {
   position: relative;
-  top: 15%; }
+  top: 123px; }
+
+.card-avatar {
+  position: absolute;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background-color: #e0e0e0;
+  z-index: 1;
+  top: 125px;
+  left: 50%;
+  transform: translate(-50%, 0%); }
+
+.passport-avatar {
+  position: inherit;
+  border-radius: 50%;
+  background-color: #e0e0e0; }

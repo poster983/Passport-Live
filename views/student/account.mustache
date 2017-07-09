@@ -29,7 +29,7 @@ email: hi@josephhassell.com
              <div class="background">
                <img alt="Side-Nav Background" src="/images/stunav.jpg">
              </div>
-             <a href="#!user"><i class="material-icons md-48 md-light">account_circle</i></a>
+             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
              <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
              <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
            </div></li>
@@ -38,7 +38,7 @@ email: hi@josephhassell.com
            <li><a class="waves-effect active" href="#!">Your Account</a></li>
            <li><div class="divider"></div></li>
            <!--<li><a class="subheader">Subheader</a></li>-->
-           <li><a class="waves-effect" href="auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
+           <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
 
          </ul>
           <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
@@ -48,17 +48,21 @@ email: hi@josephhassell.com
     </nav>
 
     <!--Top paralax-->
-    <div class="bigHead red" data-stellar-ratio="0.5"></div>
+    <div class="bigHead red" data-stellar-ratio="0.5">
+        <h3 class="white-text">Your Passport Account</h3>
+    </div>
     <div class="userCardBundle">
     <!--Main Info-->
      <div class="row">
         <div class="col s12 m12 l6 push-l3">
           <div class="card small">
             <div class="card-image">
-              <img src="/images/stunav.jpg">
+              <img src="/api/media/background/{{user.id}}.svg">
               
             </div>
             <div class="card-content">
+                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="card-avatar circle responsive-img">
+                <br>
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
             </div>
           </div>
@@ -73,7 +77,7 @@ email: hi@josephhassell.com
             <span class="right waves-effect"><i class="material-icons md-48 md-light">edit</i></span>
              <span class="card-title">Schedules</span>
 
-               <table class="highlight">
+               <table class="highlight responsive-table">
                 <thead>
                   <tr>
                       <th>Period</th>
@@ -85,21 +89,33 @@ email: hi@josephhassell.com
 
                 <tbody>
                   <tr>
-                    <td>Alvin</td>
-                    <td>Eclair</td>
-                    <td>$0.87</td>
-                    <td>$0.87</td>
-                  </tr>
-                  <tr>
-                    <td>Alan</td>
-                    <td>Jellybean</td>
-                    <td>$0.87</td>
+                    <td>A</td>
+                    <td>History</td>
+                    <td>Teacher1</td>
                     <td>$0.87</td>
                   </tr>
                   <tr>
-                    <td>Jonathan</td>
-                    <td>Lollipop</td>
-                    <td>$7.00</td>
+                    <td>B</td>
+                    <td>Math</td>
+                    <td>Mr. Teacher</td>
+                    <td>$0.87</td>
+                  </tr>
+                  <tr>
+                    <td>C</td>
+                    <td>Science</td>
+                    <td>Ms. Teacher</td>
+                    <td>$0.87</td>
+                  </tr>
+                  <tr>
+                    <td>D</td>
+                    <td>Theater</td>
+                    <td>Dr. Doctor</td>
+                    <td>$0.87</td>
+                  </tr>
+                  <tr>
+                    <td>E</td>
+                    <td>Engrish</td>
+                    <td>Ms. Humpdidinkle</td>
                     <td>$0.87</td>
                   </tr>
                 </tbody>

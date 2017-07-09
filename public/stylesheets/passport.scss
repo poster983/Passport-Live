@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-
+//@import "components/variables";
 /*For Global Styles*/
 
 .nav-right {
@@ -801,16 +801,37 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
 }
 
 .bigHead {
-  position: absolute;
-  top: 0px;
-  height: 40%;
-  width: 100%;
-  text-align: center;
-  z-index: -1;
-}
+    position: absolute;
+    top: 0px;
+    height: 375px;
+    width: 100%;
+    text-align: center;
+    z-index: -1;
+  }
+  .bigHead * {
+    position: relative;
+    text-align: center;
+    top: 75px;
+  }
 
-.userCardBundle {
-  position: relative;
-  top: 15%;
-}
+  .userCardBundle {
+    position: relative;
+    top: 123px;
+  }
 
+  .card-avatar {
+    position: absolute;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #e0e0e0;
+    z-index: 1;
+    top: 125px;
+    left: 50%;
+    transform: translate(-50%, 0%)
+  }
+  .passport-avatar {
+    position: inherit;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+  }

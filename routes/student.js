@@ -52,6 +52,7 @@ router.get('/account', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student"
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
+    user.id = req.user.id;
 
     res.render('student/account', { doc_Title: 'Your Account Passport-Student', user, passportVersion: process.env.npm_package_version});
 });

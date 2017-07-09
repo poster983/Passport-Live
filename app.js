@@ -44,11 +44,13 @@ var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
-
+var apiMedia = require('./routes/api/media');
 
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
+
+require('./modules/db/index.js').setup();
 
 //Config raven / sentry
 if(Raven) {
@@ -119,6 +121,8 @@ app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
 app.use('/administrator', administrator)
+//api routes
+app.use('/api/media', apiMedia)
 //app.use('/users', users);
 
 if(Raven) {
