@@ -297,7 +297,7 @@ email: hi@josephhassell.com
         <!-- Compiled and minified JavaScript -->
         <script src="/js/materialize.js"></script>
         <script src="/js/passport.js"></script>
-        
+        <script src="/sw.js"></script>
         <!--<script src="js/PICS.js"></script>-->
         <script>
               /*Vars*/
@@ -413,7 +413,7 @@ email: hi@josephhassell.com
               function preparePeopleSelect(userGroup) {
                  $.ajax({
                     type: "get",
-                    url: "/api/account/"+userGroup,
+                    url: "/api/account/userGroup/"+userGroup,
                     //dataType: "json",
                     success: function(data) {
                       //set data
@@ -504,7 +504,7 @@ email: hi@josephhassell.com
                     }
                    $.ajax({
                     type: "get",
-                    url: "/api/account/"+userGroup+"/"+query,
+                    url: "/api/account/usergroup/"+userGroup+"/name/"+query,
                     dataType: "json",
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      

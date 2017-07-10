@@ -17,9 +17,13 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
+/**
+* @module mediaRESTAPI
+*/
 var express = require('express');
 var router = express.Router();
-var r = require('../../modules/db/index.js').get();
+var r = require('rethinkdb')
+var db = require('../../modules/db/index.js');
 var GeoPattern = require('geopattern');
 var jdenticon = require("jdenticon");
 var crypto = require('crypto');
@@ -50,15 +54,15 @@ jdenticon.config = {
 * @todo move rethink db to passport-api module
 */
 router.get('/background/:id.svg',function generateBackdrop(req, res, next) {
+    
     res.setHeader('Content-Type', 'image/svg+xml');
-    r.table('accounts').get(req.params.id).run(r.conn, function(err, data) {
+    r.table('accounts').get(req.params.id).run(db.conn(), function(err, data) {
         if (err) {
             return next(err);
         } 
         if(data) {
             var pattern = GeoPattern.generate(data.name.first + " " + data.name.last);
             var svg = pattern.toSvg();
-            console.log(svg)
             var color = pattern.color;
             res.status(200).send(svg);
             //res.sendFile(svg)
@@ -92,14 +96,13 @@ router.get('/avatar/:id/:size.svg', function getAvatar(req, res, next) {
                 err.status = 400;
                 return next(err)
     } else {
-        r.table('accounts').get(req.params.id).run(r.conn, function(err, data) {
+        r.table('accounts').get(req.params.id).run(db.conn(), function(err, data) {
             if (err) {
                 return next(err);
             } 
             if(data) {
                 var hash = crypto.createHash('md5').update(data.name.first + " " + data.name.last).digest("hex")
                 var svg = jdenticon.toSvg(hash, size);
-                console.log(svg)
                 res.status(200).send(svg);
             } else {
                 var err = new Error("Not Found");

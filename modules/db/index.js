@@ -25,18 +25,26 @@ var r = require('rethinkdb');
 var connection = null;
 
 
-
 exports.setup = function() {
-    r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
-        if (err) throw err;
-        console.log("Connected")
-        r.conn = conn;
-        return true;
-    });
+
+
+        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+            if (err) {
+
+                throw err;
+            }
+            console.log("DB Connected")
+            connection = conn;
+
+            return true
+        });
 }
 
 exports.get = function() {
-    return r;
+        return r;
+}
+exports.conn = function() {
+    return connection;
 }
 
 //return module.exports

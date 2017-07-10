@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 -->
 
 <body class="grey darken-4">
-
+<main>
     <nav id="navBar">
         <div class="nav-wrapper nav-noshadow" data-stellar-ratio="5">
           <!--SideNav-->
@@ -49,7 +49,7 @@ email: hi@josephhassell.com
 
     <!--Top paralax-->
     <div class="bigHead red" data-stellar-ratio="0.5">
-        <h3 class="white-text">Your Passport Account</h3>
+        <h3 class="white-text"  >Your Passport Account</h3>
     </div>
     <div class="userCardBundle">
     <!--Main Info-->
@@ -61,7 +61,7 @@ email: hi@josephhassell.com
               
             </div>
             <div class="card-content">
-                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="card-avatar circle responsive-img">
+                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img">
                 <br>
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
             </div>
@@ -69,9 +69,9 @@ email: hi@josephhassell.com
         </div>
       </div>
       <!--Schedules-->
-      <div class="row">
+      <div class="row" >
         <div class="col s12 m12 l6 push-l3">
-          <div class="card">
+          <div class="card" >
              
             <div class="card-content">
             <span class="right waves-effect"><i class="material-icons md-48 md-light">edit</i></span>
@@ -92,31 +92,31 @@ email: hi@josephhassell.com
                     <td>A</td>
                     <td>History</td>
                     <td>Teacher1</td>
-                    <td>$0.87</td>
+                    <td>1234</td>
                   </tr>
                   <tr>
                     <td>B</td>
                     <td>Math</td>
                     <td>Mr. Teacher</td>
-                    <td>$0.87</td>
+                    <td>2546</td>
                   </tr>
                   <tr>
                     <td>C</td>
                     <td>Science</td>
                     <td>Ms. Teacher</td>
-                    <td>$0.87</td>
+                    <td>4864</td>
                   </tr>
                   <tr>
                     <td>D</td>
                     <td>Theater</td>
                     <td>Dr. Doctor</td>
-                    <td>$0.87</td>
+                    <td>5248</td>
                   </tr>
                   <tr>
                     <td>E</td>
                     <td>Engrish</td>
                     <td>Ms. Humpdidinkle</td>
-                    <td>$0.87</td>
+                    <td>1025</td>
                   </tr>
                 </tbody>
               </table>
@@ -147,6 +147,7 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
+    </main>
      <!-- Scripts -->
     <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
     <script>
@@ -171,6 +172,41 @@ email: hi@josephhassell.com
             });
             //navMorphInit("SBmorphBox");
         });
+
+       
+
+
+
+
+        
+
+
+        //const game = new IconGame("avatar");
+        /*window.addEventListener("keydown", keydown, false)
+        window.addEventListener("keyup", keyup, false)*/
+        //EE (I'm a nerd :P)
+        //call key press function 
+        document.onkeydown = checkKey;
+        var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        var konamiUser = 0;
+        function checkKey(e) {
+            e = e || window.event;
+            //check if game is running
+            /*if(game.isRunning) {
+                console.log("runn")
+            }*/
+            if(konami[konamiUser] != e.keyCode) {
+                konamiUser = 0;
+            } else {
+                konamiUser++;
+            }
+            if (konami.length == konamiUser) {
+                konamiUser = 0;
+                console.log("TODO")
+            }
+            
+        }
+        
     </script>
 
 </body>
