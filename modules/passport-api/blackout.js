@@ -21,12 +21,13 @@ email: hi@josephhassell.com
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require("config");
+var moment = require("moment");
 
-exports.newBlackout = function(day, periods, creator, message, done) {
+exports.newBlackout = function(day, periods, userId, message, done) {
     r.table("blackouts").insert({
         day: day,
         periods: periods,
-        creator: creator,
+        userId: userId,
         message: message
     }).run(db.conn(), function(err, data) {
         if (err) {
@@ -34,4 +35,36 @@ exports.newBlackout = function(day, periods, creator, message, done) {
         }
         return done(null, data);
     })
+}
+
+exports.getBlackoutByUserId = function(userId, done) {
+    r.table('blackouts').filter({
+        userId: userId
+    }).run(db.conn(), function(err, curDoc) {
+        if(err) {
+            return done(err);
+        }
+        curDoc.toArray(function(err, doc) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, doc);
+        });
+        
+    })
+}
+
+exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
+    //error check if date is not valid 
+    if(!moment(date).isValid()) {
+        var err = new Error("Date not valid")
+        err.status = 400; //bad request
+        return done(err);  //callback error 
+    }
+    var date = moment(date).format("Y-MM-DD"); //get date in format {string}
+    
+    
+
+
+    //do your thing...
 }

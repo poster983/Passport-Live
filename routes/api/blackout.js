@@ -40,15 +40,30 @@ function serializeUser(req, res, done) {
 router.post('/', function(req, res, next) {
     var day = req.body.day;
     var periods = req.body.periods;
-    var creator = req.body.creator;
+    var userId = req.body.userId;
     var message = req.body.message;
 
-    api.newBlackout(day, periods, creator, message, function(err, trans) {
+    api.newBlackout(day, periods, userId, message, function(err, trans) {
         if (err) {
             return next(err);
         }
         res.status(201).json(trans);
     }) 
+})
+
+//select by USER ID 
+router.get('/:userId', function(req, res, next) {
+    api.getBlackoutByUserId(req.params.userId, function(err, doc) {
+        if(err) {
+            return next(err);
+        }
+        res.json(doc);
+    })
+})
+
+//select by USER ID AND Day
+router.get('/:userId/:day', function(req, res, next) {
+    //
 })
 
 module.exports = router;
