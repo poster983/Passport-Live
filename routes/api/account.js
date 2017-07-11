@@ -51,25 +51,25 @@ function serializeUser(req, res, done) {
 
 router.post('/:userGroup/', handleNewAccount);
 /**
-* Creates A New Account
-* @function handleNewAccount
-* @api POST /api/account/:userGroup/
-* @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
-* @apibody {(application/json | application/x-www-form-urlencoded)}
-* @example 
-* <caption>Body Structure (application/json): </caption>
-* {
-*    "email": "teacher@gmail.com",
-*    "password": "123abc",
-*    "passwordVerification": "123abc",
-*    "firstName": "Teacher",
-*    "lastName": "McTeacher Face",
-*    "groupFields": {
-*        "teacherID": "1598753"
-*    },
-*    "permissionKey": HJhd38
-* }
-*/
+    * Creates A New Account
+    * @function handleNewAccount
+    * @api POST /api/account/:userGroup/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apibody {(application/json | application/x-www-form-urlencoded)}
+    * @example 
+    * <caption>Body Structure (application/json): </caption>
+    * {
+    *    "email": "teacher@gmail.com",
+    *    "password": "123abc",
+    *    "passwordVerification": "123abc",
+    *    "firstName": "Teacher",
+    *    "lastName": "McTeacher Face",
+    *    "groupFields": {
+    *        "teacherID": "1598753"
+    *    },
+    *    "permissionKey": HJhd38
+    * }
+    */
 function handleNewAccount(req, res, next) {
     //Get Params
     
@@ -232,32 +232,6 @@ function handleGetAccountsByName(req, res, next) {
 
 //Special dashboard specific gets//
 
-/** GETs accounts by name
-    * @function getSchedulesForStudentDash
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/schedule/student/id/:id/
-    * @apiparam {string} id - A user's ID.
-    * @apiresponse {json} Returns Joined data of the schedule
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Auth
-*/
-router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req, res, next) {
-    if(!req.params.id) {
-        var err = new Error("ID Required");
-        err.status = 400;
-        return next(err)
-    }
-    api.getSchedulesForStudentDash(req.params.id, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-        res.send(data)
-    })
-});
-
 
 //MAKE CHANGES.  REQUIRES AUTH AND PERMISSION.  
 router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
@@ -309,6 +283,60 @@ function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     })
 }
 
+router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    console.log(dashboard)
+    api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
+});
+
+router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    if(!req.user.schedules || !req.user.schedules[dashboard]) {
+        var err = new Error("Schedule refrence not found");
+        err.status = 404;
+        return next(err)
+    }
+    console.log(dashboard)
+    api.updateUserSchedule(req.user.schedules[dashboard], dashboard, schedule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
+});
+
+/** GETs account schedules for student dash
+    * @function getSchedulesForStudentDash
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/student/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns Joined data of the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo Auth
+*/
+router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    api.getStudentSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
+});
 
 
 module.exports = router;
