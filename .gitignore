@@ -18,3 +18,11 @@ sessions/
 out/docs/
 
 bower_components/
+
+public/stylesheets/animate\.css
+
+public/stylesheets/materialize\.clockpicker\.css
+
+public/stylesheets/materialize\.css
+
+public/stylesheets/passport\.css
