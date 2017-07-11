@@ -23,12 +23,12 @@ email: hi@josephhassell.com
 
 var r = require('rethinkdb');
 var connection = null;
-
+var config = require('config');
 
 exports.setup = function() {
 
 
-        r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
             if (err) {
 
                 throw err;
