@@ -27,7 +27,6 @@ var router = express.Router();
 var r = require('rethinkdb');
 //var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
-var jwt = require('jsonwebtoken');
 var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
@@ -93,10 +92,10 @@ function getHead(req, res, done) {
 /** 
 AUTH 
 **/
-
+/*
 router.post('/auth/login', passport.authenticate('local-login', {
   session: false
-}), handleAuthLogin);
+}), handleAuthLogin);*/
 /**
 * Logges the user in using passport.authenticate
 * @function handleAuthLogin
@@ -112,19 +111,20 @@ router.post('/auth/login', passport.authenticate('local-login', {
 * @todo Test application/json
 * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
 * @todo Require passport to run over https
-*/
+*//*
 function handleAuthLogin(req, res) {
     //Make a token
+    /*
     var token = jwt.sign({
         id: req.user[0].id,
       }, config.get('secrets.api-secret-key'), {
         expiresIn: 60*60*24
-    });
+    });*
     //Return token to user
     res.status(200).json({
         token: "JWT " + token
     });
-}
+}*/
 
 
 

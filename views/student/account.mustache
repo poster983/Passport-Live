@@ -87,37 +87,7 @@ email: hi@josephhassell.com
                   </tr>
                 </thead>
 
-                <tbody>
-                  <tr>
-                    <td>A</td>
-                    <td>History</td>
-                    <td>Teacher1</td>
-                    <td>1234</td>
-                  </tr>
-                  <tr>
-                    <td>B</td>
-                    <td>Math</td>
-                    <td>Mr. Teacher</td>
-                    <td>2546</td>
-                  </tr>
-                  <tr>
-                    <td>C</td>
-                    <td>Science</td>
-                    <td>Ms. Teacher</td>
-                    <td>4864</td>
-                  </tr>
-                  <tr>
-                    <td>D</td>
-                    <td>Theater</td>
-                    <td>Dr. Doctor</td>
-                    <td>5248</td>
-                  </tr>
-                  <tr>
-                    <td>E</td>
-                    <td>Engrish</td>
-                    <td>Ms. Humpdidinkle</td>
-                    <td>1025</td>
-                  </tr>
+                <tbody id="scheduleBody">
                 </tbody>
               </table>
             </div>
@@ -131,17 +101,18 @@ email: hi@josephhassell.com
           <div class="card">
              
             <div class="card-content">
+
              <span class="card-title">Settings</span>
                <div class="switch">
                Email Reminders:
                 <label>
-                  <input type="checkbox">
+                  <input type="checkbox" onchange="setingNeedsSaving();">
                   <span class="lever"></span>
                 </label>
               </div>
             </div>
             <div class="card-action">
-              <a href="#">This is a link</a>
+              <a class="waves-effect waves-light btn disabled" id="saveSetings" ><i class="material-icons left">cloud</i>Save</a>
             </div>
           </div>
         </div>
@@ -165,21 +136,93 @@ email: hi@josephhassell.com
     <script src="/js/passport.js"></script>
     <script src="/jquery.stellar/jquery.stellar.min.js"></script>
     <script type="text/javascript">
+        var idOfUser = "{{user.id}}";
         $(document).ready(function(){
             $(".button-collapse").sideNav();
             $(window).stellar({
                 responsive: true,
             });
+            loadMySchedules();
             //navMorphInit("SBmorphBox");
         });
 
-       
-
-
-
-
         
 
+       //GET SCHEDULES//
+       function getMySchedules(done) {
+         $.ajax({
+            type: "get",
+            url: "/api/account/schedule/student/id/" + idOfUser,
+            dataType: "json",
+            success: function(data) {done(null, data)},
+            error: function(jqXHR) {done(jqXHR)}                      
+          });
+       }
+
+       function loadMySchedules() {
+        getMySchedules(function(err, data) {
+          if(err) {
+            return errorHand(err);
+          }
+          if(data && data.schedule) {
+            //do stuff with schedule 
+            console.log(data)
+            var keys = Object.keys(data.schedule);
+            for(var i = 0; i < keys.length; i++) {
+              var tr = document.createElement("TR");
+              //create elements
+              var idEl = document.createElement("TD");
+              var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+
+              var classEl = document.createElement("TD");
+              if(data.schedule[keys[i]].className) {
+                var classElText = document.createTextNode(data.schedule[keys[i]].className);
+              } else {
+                var classElText = document.createTextNode(" ");
+              }
+
+              var teacherEl = document.createElement("TD");
+              if(data.schedule[keys[i]].teacher) {
+                var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+              } else {
+                var teacherElText = document.createTextNode(" ");
+              }
+              var roomEl = document.createElement("TD");
+              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+
+              //append
+              idEl.appendChild(idElText);
+              tr.appendChild(idEl);
+
+              classEl.appendChild(classElText);
+              tr.appendChild(classEl);
+
+              teacherEl.appendChild(teacherElText);
+              tr.appendChild(teacherEl);
+
+              roomEl.appendChild(roomElText);
+              tr.appendChild(roomEl);
+
+              //set
+              $('#scheduleBody').append(tr);
+            }
+
+          } else {
+            err = new Error("Data is Undefined");
+            err.status = 500;
+            return errorHand(err);
+          }
+        })
+      }   
+
+        
+      function setingNeedsSaving() {
+
+        $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
+      }
+      function saveSettings() {
+        console.log("Not Implemented")
+      }
 
         //const game = new IconGame("avatar");
         /*window.addEventListener("keydown", keydown, false)

@@ -182,3 +182,8 @@ function navMorph(obj) {
   $("#"+NAV_MORPH_ID).html($(obj).find("a").html()); 
 
 } 
+
+function errorHand(err) {
+  //Do more Later
+  console.error(err);
+}

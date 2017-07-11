@@ -4,6 +4,7 @@
 	"secrets": {
 		"api-secret-key": "123456", //for use with jwt
 		"session-key": "6543210",
+		"cookie-secret": "159753",
 		"loggingDSN": "https://sfgdgfsdfgsdgfsdgfsdgfgfsd:sfgdfgsdgfsdfgsdgf@sentry.io/123456",
 		"OAuth": {
 			"yourKeyHere": "12345"

@@ -23,7 +23,7 @@ email: hi@josephhassell.com
         <div class="containerlogin signin-allign">
 
             <div class="card-panel eagleBlood animated fadeInDown">
-            <form name="form1" method="post" action="/auth/login">
+            <form name="form1" method="post">
                 <h3 class="center">Welcome To Passport</h3>
                 <div class="card-panel">
 
@@ -38,7 +38,7 @@ email: hi@josephhassell.com
                     <label for="password">Password</label>
                 </div>
                 </div>
-                <button class="btn waves-effect waves-light red darken-4" type="submit" name="Submit">Login
+                <button class="btn waves-effect waves-light red darken-4" onclick="login()">Login
                     <i class="material-icons right">lock_open</i>
                 </button>
 								<br>
@@ -49,11 +49,28 @@ email: hi@josephhassell.com
             			{{#message}}
 						<h6> {{message}} </h6>
 						{{/message}}
+                        <h6 id="msg"></h6>
             </div>
         </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="/js/materialize.js"></script>
 	<script src="/js/passport.js"></script>
+
+    <script type="text/javascript">
+        function login() {
+            var email = $("#email").val();
+            var password = $("#password").val();
+            $.ajax({
+                type: "post",
+                url: "/api/auth/login/dscm/",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data)
+                },
+                error: function(jqXHR) {errorHand(jqXHR)}                      
+              });
+        }
+    </script>
     </body>
 
 
