@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modules/passport-utils/index.js - Documentation</title>
+    <title>routes/student.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modules/passport-utils/index.js</h1>
+    <h1 class="page-title">routes/student.js</h1>
     
 
     <!--container.tmpl-->
@@ -65,35 +65,34 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-//Useful functions for passport (NOT API FUNCTIONS)
 
-/** 
-* @module utils 
-*/
-module.exports = {
-    /**
-    * Removes data like passwords and other sensitive info before sending it to the user 
-    * @function cleanUser
-    * @link module:utils
-    * @param {user} user - The user to clean.  The same user object found in the database 
-    * @returns {user}
-    */
-    cleanUser: function(user){
-        if(Array.isArray(user)){
-            delete user[0].password;
-            return user[0];
-        } else {
-            delete user.password;
-            return user;
-        }
-    }
+var express = require('express');
+var config = require('config');
+var router = express.Router();
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+var checkAuth = require('connect-ensure-login');
+var ssarv = require('ssarv');
 
-    
-}
-/**
-* A user object found in the database
-* @typedef {json} user
-*/</code></pre>
+
+
+//
+/* GET Student page. */
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+
+	/*enabledPassGroups = config.get('passGroups.enabledPassGroups');
+	var passGroups = new Array();
+
+	for (var i = 0, len = enabledPassGroups.length; i &lt; len; i++) {
+		
+		passGroups[i] = JSON.parse('{ "viewName":"' + config.get('passGroups.' + enabledPassGroups[i] + '.viewName') + '", "value": "' + config.get('passGroups.' + enabledPassGroups[i] + '.customGroupID') + '"}');
+		
+	}*/
+    res.render('student/index', { doc_Title: 'Passport-Student'});
+});
+
+module.exports = router;
+</code></pre>
         </article>
     </section>
 

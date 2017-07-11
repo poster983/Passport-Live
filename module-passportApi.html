@@ -133,7 +133,7 @@
     
 
     <h4 class="name" id=".checkPermissionKey">
-      <a href="#params-checkPermissionKey"><span class="type-signature">(static) </span>checkPermissionKey</a><span class="signature">(dbConn, key, done)</span><span class="type-signature"></span>
+      <a href="#params-checkPermissionKey"><span class="type-signature">(async, static) </span>checkPermissionKey</a><span class="signature">(dbConn, key, done)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -331,7 +331,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n     * Checks a Permission Key.\n     * @link module:passportApi\n     * @async\n     * @param {object} dbConn - RethinkDB Connection Object.\n     * @param {string} key - the key to check.\n     * @param {function} done - Callback.\n     */","meta":{"range":[19988,22362],"filename":"index.js","lineno":541,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100001435","name":"checkPermissionKey","type":"FunctionExpression"},"vars":{"":null},"shortpath":"modules/passport-api/index.js"},"description":"<p>Checks a Permission Key.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>the key to check.</p>","name":"key"},{"type":{"names":["function"]},"description":"<p>Callback.</p>","name":"done"}],"name":"checkPermissionKey","longname":"module:passportApi.checkPermissionKey","kind":"function","memberof":"module:passportApi","scope":"static","___id":"T000002R000107","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".checkPermissionKey","signature":"<span class=\"signature\">(dbConn, key, done)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>."]}
+{"comment":"/**\n     * Checks a Permission Key.\n     * @link module:passportApi\n     * @async\n     * @param {object} dbConn - RethinkDB Connection Object.\n     * @param {string} key - the key to check.\n     * @param {function} done - Callback.\n     */","meta":{"range":[19988,22362],"filename":"index.js","lineno":541,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100001436","name":"checkPermissionKey","type":"FunctionExpression"},"vars":{"":null},"shortpath":"modules/passport-api/index.js"},"description":"<p>Checks a Permission Key.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>the key to check.</p>","name":"key"},{"type":{"names":["function"]},"description":"<p>Callback.</p>","name":"done"}],"name":"checkPermissionKey","longname":"module:passportApi.checkPermissionKey","kind":"function","memberof":"module:passportApi","scope":"static","___id":"T000002R000109","___s":true,"attribs":"<span class=\"type-signature\">(async, static) </span>","id":".checkPermissionKey","signature":"<span class=\"signature\">(dbConn, key, done)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>."]}
 </pre>
 -->
 </div>
@@ -360,7 +360,7 @@
     
 
     <h4 class="name" id="~createAccount">
-      <a href="#params-createAccount"><span class="type-signature">(inner) </span>createAccount</a><span class="signature">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-createAccount"><span class="type-signature">(async, inner) </span>createAccount</a><span class="signature">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -711,7 +711,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Creates An Account \n    * @function createAccount\n    * @link module:passportApi\n    * @async\n    * @example\n    * api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n    *   if(err) {\n    *     //do something with error\n    *   } else {\n    *     //Created\n    *   }\n    * });\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {string} firstName - A user's given name\n    * @param {string} lastName - A user's family name\n    * @param {string} email - A user's email address\n    * @param {string} password - The user's password\n    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)\n    * @param {function} done - Callback\n    * @returns {callback} - See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code> \n    */","meta":{"range":[1459,2535],"filename":"index.js","lineno":44,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates An Account</p>","kind":"function","name":"createAccount","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"examples":[{"caption":"","code":"api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n  if(err) {\n    //do something with error\n  } else {\n    //Created\n  }\n});"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["string"]},"description":"<p>A user's given name</p>","name":"firstName"},{"type":{"names":["string"]},"description":"<p>A user's family name</p>","name":"lastName"},{"type":{"names":["string"]},"description":"<p>A user's email address</p>","name":"email"},{"type":{"names":["string"]},"description":"<p>The user's password</p>","name":"password"},{"type":{"names":["json"]},"description":"<p>A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)</p>","name":"groupFields"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:passportApi~createAccount","scope":"inner","memberof":"module:passportApi","___id":"T000002R000011","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~createAccount","signature":"<span class=\"signature\">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Creates An Account \n    * @function createAccount\n    * @link module:passportApi\n    * @async\n    * @example\n    * api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n    *   if(err) {\n    *     //do something with error\n    *   } else {\n    *     //Created\n    *   }\n    * });\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {string} firstName - A user's given name\n    * @param {string} lastName - A user's family name\n    * @param {string} email - A user's email address\n    * @param {string} password - The user's password\n    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)\n    * @param {function} done - Callback\n    * @returns {callback} - See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code> \n    */","meta":{"filename":"index.js","lineno":44,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates An Account</p>","kind":"function","name":"createAccount","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"examples":[{"caption":"","code":"api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n  if(err) {\n    //do something with error\n  } else {\n    //Created\n  }\n});"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["string"]},"description":"<p>A user's given name</p>","name":"firstName"},{"type":{"names":["string"]},"description":"<p>A user's family name</p>","name":"lastName"},{"type":{"names":["string"]},"description":"<p>A user's email address</p>","name":"email"},{"type":{"names":["string"]},"description":"<p>The user's password</p>","name":"password"},{"type":{"names":["json"]},"description":"<p>A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)</p>","name":"groupFields"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:passportApi~createAccount","scope":"inner","memberof":"module:passportApi","___id":"T000002R000013","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~createAccount","signature":"<span class=\"signature\">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -740,7 +740,7 @@
     
 
     <h4 class="name" id="~createPermissionKey">
-      <a href="#params-createPermissionKey"><span class="type-signature">(inner) </span>createPermissionKey</a><span class="signature">(dbConn, permissions, parms, timeout, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-createPermissionKey"><span class="type-signature">(async, inner) </span>createPermissionKey</a><span class="signature">(dbConn, permissions, parms, timeout, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -1011,7 +1011,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n     * Creates a New Permission Key.\n     * @function createPermissionKey\n     * @link module:passportApi\n     * @async\n     * @param {object} dbConn - RethinkDB Connection Object.\n     * @param {json} permissions - Json tree of permissions.\n     * @param {json} parms - unused.\n     * @param {json} timeout - Time.\n     * @param {function} done - Callback.\n     * @returns {callback} - See: <code><a href=\"#params-createPermissionKeyCallback\">Callback Definition</a></code>\n     */","meta":{"range":[18306,18808],"filename":"index.js","lineno":494,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates a New Permission Key.</p>","kind":"function","name":"createPermissionKey","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["json"]},"description":"<p>Json tree of permissions.</p>","name":"permissions"},{"type":{"names":["json"]},"description":"<p>unused.</p>","name":"parms"},{"type":{"names":["json"]},"description":"<p>Time.</p>","name":"timeout"},{"type":{"names":["function"]},"description":"<p>Callback.</p>","name":"done"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-createPermissionKeyCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:passportApi~createPermissionKey","scope":"inner","memberof":"module:passportApi","___id":"T000002R000098","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~createPermissionKey","signature":"<span class=\"signature\">(dbConn, permissions, parms, timeout, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/**\n     * Creates a New Permission Key.\n     * @function createPermissionKey\n     * @link module:passportApi\n     * @async\n     * @param {object} dbConn - RethinkDB Connection Object.\n     * @param {json} permissions - Json tree of permissions.\n     * @param {json} parms - unused.\n     * @param {json} timeout - Time.\n     * @param {function} done - Callback.\n     * @returns {callback} - See: <code><a href=\"#params-createPermissionKeyCallback\">Callback Definition</a></code>\n     */","meta":{"filename":"index.js","lineno":494,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates a New Permission Key.</p>","kind":"function","name":"createPermissionKey","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["json"]},"description":"<p>Json tree of permissions.</p>","name":"permissions"},{"type":{"names":["json"]},"description":"<p>unused.</p>","name":"parms"},{"type":{"names":["json"]},"description":"<p>Time.</p>","name":"timeout"},{"type":{"names":["function"]},"description":"<p>Callback.</p>","name":"done"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-createPermissionKeyCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:passportApi~createPermissionKey","scope":"inner","memberof":"module:passportApi","___id":"T000002R000100","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~createPermissionKey","signature":"<span class=\"signature\">(dbConn, permissions, parms, timeout, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -1040,7 +1040,7 @@
     
 
     <h4 class="name" id="~getPassGroups">
-      <a href="#params-getPassGroups"><span class="type-signature">(inner) </span>getPassGroups</a><span class="signature">(done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-getPassGroups"><span class="type-signature">(async, inner) </span>getPassGroups</a><span class="signature">(done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -1217,7 +1217,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Gets all passgroups defined in configs \n    * @function getPassGroups\n    * @link module:passportApi\n    * @async\n    * @returns {callback} error and array of passGroup info.\n    * @param {function} done - Callback\n    */","meta":{"range":[22399,22631],"filename":"index.js","lineno":604,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets all passgroups defined in configs</p>","kind":"function","name":"getPassGroups","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>error and array of passGroup info.</p>"}],"params":[{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getPassGroups","scope":"inner","memberof":"module:passportApi","___id":"T000002R000123","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getPassGroups","signature":"<span class=\"signature\">(done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Gets all passgroups defined in configs \n    * @function getPassGroups\n    * @link module:passportApi\n    * @async\n    * @returns {callback} error and array of passGroup info.\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":604,"columnno":5,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets all passgroups defined in configs</p>","kind":"function","name":"getPassGroups","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>error and array of passGroup info.</p>"}],"params":[{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getPassGroups","scope":"inner","memberof":"module:passportApi","___id":"T000002R000125","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getPassGroups","signature":"<span class=\"signature\">(done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -1246,7 +1246,7 @@
     
 
     <h4 class="name" id="~getScheduleDefinition">
-      <a href="#params-getScheduleDefinition"><span class="type-signature">(inner) </span>getScheduleDefinition</a><span class="signature">(dbConn, id, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-getScheduleDefinition"><span class="type-signature">(async, inner) </span>getScheduleDefinition</a><span class="signature">(dbConn, id, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -1469,7 +1469,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Gets a Schedule Definition\n    * @function getScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the row\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} id - Id of the row\n    * @param {function} done - Callback\n    */","meta":{"range":[10148,10457],"filename":"index.js","lineno":273,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets a Schedule Definition</p>","kind":"function","name":"getScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the row</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the row</p>","name":"id"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000056","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getScheduleDefinition","signature":"<span class=\"signature\">(dbConn, id, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Gets a Schedule Definition\n    * @function getScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the row\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} id - Id of the row\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":273,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets a Schedule Definition</p>","kind":"function","name":"getScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the row</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the row</p>","name":"id"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000058","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getScheduleDefinition","signature":"<span class=\"signature\">(dbConn, id, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -1498,7 +1498,7 @@
     
 
     <h4 class="name" id="~getScheduleOfADate">
-      <a href="#params-getScheduleOfADate"><span class="type-signature">(inner) </span>getScheduleOfADate</a><span class="signature">(dbConn, date, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-getScheduleOfADate"><span class="type-signature">(async, inner) </span>getScheduleOfADate</a><span class="signature">(dbConn, date, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -1728,7 +1728,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Gets the Schedule for that date \n    * @function getScheduleOfADate\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} date - Moment.js compadable date\n    * @param {function} done - Callback\n    * @todo MAKE BETTER\n    */","meta":{"range":[14233,14586],"filename":"index.js","lineno":386,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets the Schedule for that date</p>","kind":"function","name":"getScheduleOfADate","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Moment.js compadable date</p>","name":"date"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"todo":["MAKE BETTER"],"longname":"module:passportApi~getScheduleOfADate","scope":"inner","memberof":"module:passportApi","___id":"T000002R000083","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getScheduleOfADate","signature":"<span class=\"signature\">(dbConn, date, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Gets the Schedule for that date \n    * @function getScheduleOfADate\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} date - Moment.js compadable date\n    * @param {function} done - Callback\n    * @todo MAKE BETTER\n    */","meta":{"filename":"index.js","lineno":386,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Gets the Schedule for that date</p>","kind":"function","name":"getScheduleOfADate","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Moment.js compadable date</p>","name":"date"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"todo":["MAKE BETTER"],"longname":"module:passportApi~getScheduleOfADate","scope":"inner","memberof":"module:passportApi","___id":"T000002R000085","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getScheduleOfADate","signature":"<span class=\"signature\">(dbConn, date, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -1757,7 +1757,7 @@
     
 
     <h4 class="name" id="~getUserGroupAccountByName">
-      <a href="#params-getUserGroupAccountByName"><span class="type-signature">(inner) </span>getUserGroupAccountByName</a><span class="signature">(dbConn, name, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-getUserGroupAccountByName"><span class="type-signature">(async, inner) </span>getUserGroupAccountByName</a><span class="signature">(dbConn, name, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -2003,7 +2003,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Searches by name and usergroup the account database \n    * @function getUserGroupAccountByName\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} name - user's name, cnd be in any format\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"range":[4274,4784],"filename":"index.js","lineno":115,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Searches by name and usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByName","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>user's name, cnd be in any format</p>","name":"name"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getUserGroupAccountByName","scope":"inner","memberof":"module:passportApi","___id":"T000002R000023","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getUserGroupAccountByName","signature":"<span class=\"signature\">(dbConn, name, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Searches by name and usergroup the account database \n    * @function getUserGroupAccountByName\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} name - user's name, cnd be in any format\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":115,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Searches by name and usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByName","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>user's name, cnd be in any format</p>","name":"name"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getUserGroupAccountByName","scope":"inner","memberof":"module:passportApi","___id":"T000002R000026","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getUserGroupAccountByName","signature":"<span class=\"signature\">(dbConn, name, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -2032,7 +2032,7 @@
     
 
     <h4 class="name" id="~getUserGroupAccountByUserGroup">
-      <a href="#params-getUserGroupAccountByUserGroup"><span class="type-signature">(inner) </span>getUserGroupAccountByUserGroup</a><span class="signature">(dbConn, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-getUserGroupAccountByUserGroup"><span class="type-signature">(async, inner) </span>getUserGroupAccountByUserGroup</a><span class="signature">(dbConn, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -2255,7 +2255,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Searches by usergroup the account database \n    * @function getUserGroupAccountByUserGroup\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"range":[5892,6335],"filename":"index.js","lineno":157,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Searches by usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByUserGroup","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getUserGroupAccountByUserGroup","scope":"inner","memberof":"module:passportApi","___id":"T000002R000031","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getUserGroupAccountByUserGroup","signature":"<span class=\"signature\">(dbConn, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Searches by usergroup the account database \n    * @function getUserGroupAccountByUserGroup\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":157,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Searches by usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByUserGroup","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~getUserGroupAccountByUserGroup","scope":"inner","memberof":"module:passportApi","___id":"T000002R000033","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getUserGroupAccountByUserGroup","signature":"<span class=\"signature\">(dbConn, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -2284,7 +2284,7 @@
     
 
     <h4 class="name" id="~newScheduleDefinition">
-      <a href="#params-newScheduleDefinition"><span class="type-signature">(inner) </span>newScheduleDefinition</a><span class="signature">(dbConn, name, scheduleData, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-newScheduleDefinition"><span class="type-signature">(async, inner) </span>newScheduleDefinition</a><span class="signature">(dbConn, name, scheduleData, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -2441,7 +2441,7 @@
             <td class="type">
             
                 
-<span class="param-type">scheduleData</span>
+<span class="param-type"><a href="global.html#scheduleData">scheduleData</a></span>
 
 
             
@@ -2530,7 +2530,282 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Creates a new Schedule Definition\n    * @function newScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} error and Rethinkdb action sum\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} name - Name of the Schedule\n    * @param {scheduleData} scheduleData - See: <code><a href=\"#params-scheduleData\">Tree Example</a></code>\n    * @param {function} done - Callback\n    */","meta":{"range":[7921,8386],"filename":"index.js","lineno":221,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates a new Schedule Definition</p>","kind":"function","name":"newScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>error and Rethinkdb action sum</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Name of the Schedule</p>","name":"name"},{"type":{"names":["scheduleData"]},"description":"<p>See: <code><a href=\"#params-scheduleData\">Tree Example</a></code></p>","name":"scheduleData"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~newScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000041","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newScheduleDefinition","signature":"<span class=\"signature\">(dbConn, name, scheduleData, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Creates a new Schedule Definition\n    * @function newScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} error and Rethinkdb action sum\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} name - Name of the Schedule\n    * @param {scheduleData} scheduleData - See: <code><a href=\"#params-scheduleData\">Tree Example</a></code>\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":221,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Creates a new Schedule Definition</p>","kind":"function","name":"newScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>error and Rethinkdb action sum</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Name of the Schedule</p>","name":"name"},{"type":{"names":["scheduleData"]},"description":"<p>See: <code><a href=\"#params-scheduleData\">Tree Example</a></code></p>","name":"scheduleData"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~newScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000043","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newScheduleDefinition","signature":"<span class=\"signature\">(dbConn, name, scheduleData, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line322">322</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~scheduleSingleScheduleDefinition">
+      <a href="#params-scheduleSingleScheduleDefinition"><span class="type-signature">(async, inner) </span>scheduleSingleScheduleDefinition</a><span class="signature">(dbConn, SCid, repeatingRule, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Schedules a date for a Schedule Definition</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-scheduleSingleScheduleDefinition">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-scheduleSingleScheduleDefinition" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SCid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the Schedule Definition</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>repeatingRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#repeatingRule">repeatingRule</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>See: <code><a href="#params-repeatingRule">Object Example</a></code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <p>Data of the action</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Schedules a date for a Schedule Definition\n    * @function scheduleSingleScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} SCid - Id of the Schedule Definition\n    * @param {repeatingRule} repeatingRule - See: <code><a href=\"#params-repeatingRule\">Object Example</a></code>\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":322,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Schedules a date for a Schedule Definition</p>","kind":"function","name":"scheduleSingleScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the Schedule Definition</p>","name":"SCid"},{"type":{"names":["repeatingRule"]},"description":"<p>See: <code><a href=\"#params-repeatingRule\">Object Example</a></code></p>","name":"repeatingRule"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~scheduleSingleScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000067","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~scheduleSingleScheduleDefinition","signature":"<span class=\"signature\">(dbConn, SCid, repeatingRule, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -2559,7 +2834,7 @@
     
 
     <h4 class="name" id="~scheduleSingleScheduleDefinition">
-      <a href="#params-scheduleSingleScheduleDefinition"><span class="type-signature">(inner) </span>scheduleSingleScheduleDefinition</a><span class="signature">(dbConn, SCid, date, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-scheduleSingleScheduleDefinition"><span class="type-signature">(async, inner) </span>scheduleSingleScheduleDefinition</a><span class="signature">(dbConn, SCid, date, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -2805,282 +3080,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Schedules a date for a Schedule Definition\n    * @function scheduleSingleScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} SCid - Id of the Schedule Definition\n    * @param {string} date - Moment.js compadable date\n    * @param {function} done - Callback\n    */","meta":{"range":[10725,11137],"filename":"index.js","lineno":292,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Schedules a date for a Schedule Definition</p>","kind":"function","name":"scheduleSingleScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the Schedule Definition</p>","name":"SCid"},{"type":{"names":["string"]},"description":"<p>Moment.js compadable date</p>","name":"date"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~scheduleSingleScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000058","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~scheduleSingleScheduleDefinition","signature":"<span class=\"signature\">(dbConn, SCid, date, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line322">322</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~scheduleSingleScheduleDefinition">
-      <a href="#params-scheduleSingleScheduleDefinition"><span class="type-signature">(inner) </span>scheduleSingleScheduleDefinition</a><span class="signature">(dbConn, SCid, repeatingRule, done)</span><span class="type-signature"> &rarr; {callback}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Schedules a date for a Schedule Definition</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-scheduleSingleScheduleDefinition">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-  <div id="params-scheduleSingleScheduleDefinition" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>dbConn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>RethinkDB Connection Object.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>SCid</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Id of the Schedule Definition</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>repeatingRule</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">repeatingRule</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>See: <code><a href="#params-repeatingRule">Object Example</a></code></p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>done</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Callback</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns (Async)</h5>
-
-        
-<div class="param-desc">
-    <p>Data of the action</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">callback</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** \n    * Schedules a date for a Schedule Definition\n    * @function scheduleSingleScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} SCid - Id of the Schedule Definition\n    * @param {repeatingRule} repeatingRule - See: <code><a href=\"#params-repeatingRule\">Object Example</a></code>\n    * @param {function} done - Callback\n    */","meta":{"range":[11710,12198],"filename":"index.js","lineno":322,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Schedules a date for a Schedule Definition</p>","kind":"function","name":"scheduleSingleScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the Schedule Definition</p>","name":"SCid"},{"type":{"names":["repeatingRule"]},"description":"<p>See: <code><a href=\"#params-repeatingRule\">Object Example</a></code></p>","name":"repeatingRule"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~scheduleSingleScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000065","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~scheduleSingleScheduleDefinition","signature":"<span class=\"signature\">(dbConn, SCid, repeatingRule, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Schedules a date for a Schedule Definition\n    * @function scheduleSingleScheduleDefinition\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Data of the action\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} SCid - Id of the Schedule Definition\n    * @param {string} date - Moment.js compadable date\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":292,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Schedules a date for a Schedule Definition</p>","kind":"function","name":"scheduleSingleScheduleDefinition","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Data of the action</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>Id of the Schedule Definition</p>","name":"SCid"},{"type":{"names":["string"]},"description":"<p>Moment.js compadable date</p>","name":"date"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~scheduleSingleScheduleDefinition","scope":"inner","memberof":"module:passportApi","___id":"T000002R000060","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~scheduleSingleScheduleDefinition","signature":"<span class=\"signature\">(dbConn, SCid, date, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -3109,7 +3109,7 @@
     
 
     <h4 class="name" id="~updateAccountGroupFieldsByID">
-      <a href="#params-updateAccountGroupFieldsByID"><span class="type-signature">(inner) </span>updateAccountGroupFieldsByID</a><span class="signature">(dbConn, id, doc, done)</span><span class="type-signature"> &rarr; {callback}</span>
+      <a href="#params-updateAccountGroupFieldsByID"><span class="type-signature">(async, inner) </span>updateAccountGroupFieldsByID</a><span class="signature">(dbConn, id, doc, done)</span><span class="type-signature"> &rarr; {callback}</span>
 
     </h4>
 
@@ -3355,7 +3355,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n    * Updates/sets any account field by its id \n    * @function updateAccountGroupFieldsByID\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Returns rethink db summery\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} id - id of the account \n    * @param {json} doc - Json object for the update.  Top key should be the name of the dashboard it is for.\n    * @param {function} done - Callback\n    */","meta":{"range":[6812,7269],"filename":"index.js","lineno":183,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Updates/sets any account field by its id</p>","kind":"function","name":"updateAccountGroupFieldsByID","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Returns rethink db summery</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>id of the account</p>","name":"id"},{"type":{"names":["json"]},"description":"<p>Json object for the update.  Top key should be the name of the dashboard it is for.</p>","name":"doc"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~updateAccountGroupFieldsByID","scope":"inner","memberof":"module:passportApi","___id":"T000002R000034","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateAccountGroupFieldsByID","signature":"<span class=\"signature\">(dbConn, id, doc, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/** \n    * Updates/sets any account field by its id \n    * @function updateAccountGroupFieldsByID\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Returns rethink db summery\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} id - id of the account \n    * @param {json} doc - Json object for the update.  Top key should be the name of the dashboard it is for.\n    * @param {function} done - Callback\n    */","meta":{"filename":"index.js","lineno":183,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"description":"<p>Updates/sets any account field by its id</p>","kind":"function","name":"updateAccountGroupFieldsByID","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Returns rethink db summery</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>id of the account</p>","name":"id"},{"type":{"names":["json"]},"description":"<p>Json object for the update.  Top key should be the name of the dashboard it is for.</p>","name":"doc"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportApi~updateAccountGroupFieldsByID","scope":"inner","memberof":"module:passportApi","___id":"T000002R000036","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~updateAccountGroupFieldsByID","signature":"<span class=\"signature\">(dbConn, id, doc, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -3549,7 +3549,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n    * @callback createAccountCallback\n    * @param {object} err - Returns an error object if any.\n    */","meta":{"range":[4159,4267],"filename":"index.js","lineno":109,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"kind":"typedef","name":"createAccountCallback","type":{"names":["function"]},"params":[{"type":{"names":["object"]},"description":"<p>Returns an error object if any.</p>","name":"err"}],"longname":"module:passportApi~createAccountCallback","scope":"inner","memberof":"module:passportApi","___id":"T000002R000024","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"~createAccountCallback","signature":"<span class=\"signature\">(err)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/**\n    * @callback createAccountCallback\n    * @param {object} err - Returns an error object if any.\n    */","meta":{"filename":"index.js","lineno":109,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"kind":"typedef","name":"createAccountCallback","type":{"names":["function"]},"params":[{"type":{"names":["object"]},"description":"<p>Returns an error object if any.</p>","name":"err"}],"longname":"module:passportApi~createAccountCallback","scope":"inner","memberof":"module:passportApi","___id":"T000002R000025","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"~createAccountCallback","signature":"<span class=\"signature\">(err)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
 </div>
@@ -3760,243 +3760,9 @@
 
 <!--
 <pre>
-{"comment":"/**\n    * @callback createPermissionKeyCallback\n    * @param {object} err - Returns an error if any. \n    * @param {string} key - Returnes the new permission key.\n    */","meta":{"range":[19403,19572],"filename":"index.js","lineno":524,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"kind":"typedef","name":"createPermissionKeyCallback","type":{"names":["function"]},"params":[{"type":{"names":["object"]},"description":"<p>Returns an error if any.</p>","name":"err"},{"type":{"names":["string"]},"description":"<p>Returnes the new permission key.</p>","name":"key"}],"longname":"module:passportApi~createPermissionKeyCallback","scope":"inner","memberof":"module:passportApi","___id":"T000002R000106","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"~createPermissionKeyCallback","signature":"<span class=\"signature\">(err, key)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
+{"comment":"/**\n    * @callback createPermissionKeyCallback\n    * @param {object} err - Returns an error if any. \n    * @param {string} key - Returnes the new permission key.\n    */","meta":{"filename":"index.js","lineno":524,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/index.js"},"kind":"typedef","name":"createPermissionKeyCallback","type":{"names":["function"]},"params":[{"type":{"names":["object"]},"description":"<p>Returns an error if any.</p>","name":"err"},{"type":{"names":["string"]},"description":"<p>Returnes the new permission key.</p>","name":"key"}],"longname":"module:passportApi~createPermissionKeyCallback","scope":"inner","memberof":"module:passportApi","___id":"T000002R000108","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"~createPermissionKeyCallback","signature":"<span class=\"signature\">(err, key)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportApi.html\">passportApi</a>~"]}
 </pre>
 -->
-</div>
-
-            
-                <!--members.tmpl-->
-<div class="member-details">
-
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line666">666</a>
-  </code>
-</div>
-
-
-
-<h4 class="name" id="~repeatingRule">
-  repeatingRule
-</h4>
-
-
-
-
-<div class="description">
-    <p>rule to let the program know when to Repeats.</p>
-</div>
-
-
-<div>
-
-<!-- details.tmpl -->
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line666">666</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-    <h5>Examples</h5>
-    
-        <p class="code-caption">Repeating daily</p>
-    
-    <pre class="prettyprint"><code>{
-   "startsOn": "2017-06-26",
-   "repeats": "daily",
-   "every": 1, //days
-   "importance": 0 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API  
-}</code></pre>
-
-        <p class="code-caption">Repeating Weekly</p>
-    
-    <pre class="prettyprint"><code>{
-    "startsOn": "2017-06-26",
-    "repeats": "weekly",
-    "every": 1, //weeks
-    "on": ["monday", "tuesday", "thursday", "friday"],
-   "importance": 1 // (Defaults to: 0) if a conflict happens between two diffrent Repeating schedules, the program can deside what schedule to use.  NOTE: Not implemented in API
-}</code></pre>
-
-
-
-</div>
-
-</div>
-
-            
-                <!--members.tmpl-->
-<div class="member-details">
-
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line640">640</a>
-  </code>
-</div>
-
-
-
-<h4 class="name" id="~scheduleData">
-  scheduleData
-</h4>
-
-
-
-
-<div class="description">
-    <p>The json tree for laying out the period times
-The key must equal a period constant defined in the config array (schedule.period)
-Times are in 24hr time</p>
-</div>
-
-
-<div>
-
-<!-- details.tmpl -->
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_index.js.html">index.js</a>:<a href="modules_passport-api_index.js.html#line640">640</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>{
-"a": { 
-  "start": 14:25,
-  "end": 15:35
-},
-"b": { 
-  "start": 9:25,
-  "end": 10:35
-},
-"c": { 
-  "start": 13:25,
-  "end": 14:10
-},
-"lunch2": {
-  "start": 12:00,
-  "end": 13:05
-}
-}</code></pre>
-
-
-
-</div>
-
 </div>
 
             
@@ -4015,7 +3781,7 @@ Times are in 24hr time</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Jul 07 2017 18:30:59 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.1</a> on Tue Jul 11 2017 04:17:24 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>

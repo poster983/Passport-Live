@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modules/passport-utils/index.js - Documentation</title>
+    <title>routes/index.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modules/passport-utils/index.js</h1>
+    <h1 class="page-title">routes/index.js</h1>
     
 
     <!--container.tmpl-->
@@ -65,35 +65,36 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-//Useful functions for passport (NOT API FUNCTIONS)
+var express = require('express');
+var config = require('config');
+var router = express.Router();
 
-/** 
-* @module utils 
-*/
-module.exports = {
-    /**
-    * Removes data like passwords and other sensitive info before sending it to the user 
-    * @function cleanUser
-    * @link module:utils
-    * @param {user} user - The user to clean.  The same user object found in the database 
-    * @returns {user}
-    */
-    cleanUser: function(user){
-        if(Array.isArray(user)){
-            delete user[0].password;
-            return user[0];
-        } else {
-            delete user.password;
-            return user;
-        }
-    }
-
+//this page will route each user to the correct page after login 
+router.get('/', function(req, res, next) {
     
-}
-/**
-* A user object found in the database
-* @typedef {json} user
-*/</code></pre>
+    if(req.user) {
+
+        var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
+        if(permittedDash.length > 1) {
+            res.render('multiDashRoute',{doc_Title: "Passport", callbackURL: "/callback/multiDashRoute/", dashboards: permittedDash});
+        } else {
+            res.redirect(permittedDash[0]);
+        }
+        
+    } else {
+        console.log("not Logged In");
+        res.redirect('auth/login');
+    }
+  
+});
+
+router.post('/callback/multiDashRoute/', function(req, res, next) {
+
+});
+
+
+module.exports = router;
+</code></pre>
         </article>
     </section>
 

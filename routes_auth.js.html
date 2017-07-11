@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>modules/passport-utils/index.js - Documentation</title>
+    <title>routes/auth.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">modules/passport-utils/index.js</h1>
+    <h1 class="page-title">routes/auth.js</h1>
     
 
     <!--container.tmpl-->
@@ -65,35 +65,67 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-//Useful functions for passport (NOT API FUNCTIONS)
 
-/** 
-* @module utils 
+var express = require('express');
+var router = express.Router();
+var r = require('rethinkdb');
+var bcrypt = require('bcrypt-nodejs');
+var config = require('config');
+/*
+var httpv = require('http').Server(router);
+var io = require('socket.io')(httpv);
 */
-module.exports = {
-    /**
-    * Removes data like passwords and other sensitive info before sending it to the user 
-    * @function cleanUser
-    * @link module:utils
-    * @param {user} user - The user to clean.  The same user object found in the database 
-    * @returns {user}
-    */
-    cleanUser: function(user){
-        if(Array.isArray(user)){
-            delete user[0].password;
-            return user[0];
-        } else {
-            delete user.password;
-            return user;
-        }
-    }
+//var r = require('../modules/db/index.js')();
+var passport = require('passport')
+//  , LocalStrategy = require('passport-local').Strategy;
+var api = require('../modules/passport-api/index.js');
 
-    
-}
-/**
-* A user object found in the database
-* @typedef {json} user
-*/</code></pre>
+
+
+  // Rethink db connection
+var connection = null;
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
+            if (err) throw err;
+            connection = conn;
+        });
+
+
+
+/* GET home page. */
+
+router.get('/login', function(req, res, next) {
+  var msg = "";
+  if(req.query.msg) {
+    msg = req.query.msg;
+  }
+  res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
+});
+router.post('/login', passport.authenticate('local-login', { 
+  successRedirect: '/',
+  failureRedirect: '/auth/login?',
+  session: true
+}));
+
+
+//et signup
+router.get('/signup/student', function(req, res, next) {
+  res.render('auth/signup', { doc_Title: 'Signup -- Passport', sendTo:'/api/account/student/', message: req.flash('signupMessage')});
+});
+
+
+/*io.on('connection', function(socket){
+  console.log('a user connected');
+});*/
+
+
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/auth/login');
+});
+
+
+module.exports = router;
+</code></pre>
         </article>
     </section>
 
