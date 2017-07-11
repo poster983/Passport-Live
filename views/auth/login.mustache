@@ -23,7 +23,7 @@ email: hi@josephhassell.com
         <div class="containerlogin signin-allign">
 
             <div class="card-panel eagleBlood animated fadeInDown">
-            <form name="form1" method="post">
+            <div>
                 <h3 class="center">Welcome To Passport</h3>
                 <div class="card-panel">
 
@@ -45,7 +45,7 @@ email: hi@josephhassell.com
 								<div class="section">
 								<a class="waves-effect waves-light btn" href="/auth/signup/student">Create An Account</a>
 							</div>
-            </form>
+            </div>
             			{{#message}}
 						<h6> {{message}} </h6>
 						{{/message}}
@@ -57,19 +57,36 @@ email: hi@josephhassell.com
 	<script src="/js/passport.js"></script>
 
     <script type="text/javascript">
+
         function login() {
             var email = $("#email").val();
             var password = $("#password").val();
             $.ajax({
                 type: "post",
                 url: "/api/auth/login/dscm/",
-                dataType: "json",
+                data: {email: email, password: password},
                 success: function(data) {
-                    console.log(data)
+                    window.location.href = "/"
                 },
-                error: function(jqXHR) {errorHand(jqXHR)}                      
+                error: function(jqXHR) {
+                    if(jqXHR.status == 401) {
+                        $("#msg").html("Email or Password is incorrect");
+                    } else if(jqXHR.status == 400) {
+                        $("#msg").html("Email or Password is incorrect");
+                    } else {
+                        errorHand(jqXHR)
+                    }
+                    
+                }                      
               });
         }
+        //handle submit
+        $('body').keypress(function (e) {
+          if (e.which == 13) {
+            login();
+            return false;   
+          }
+        });
     </script>
     </body>
 

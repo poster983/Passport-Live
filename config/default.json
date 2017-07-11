@@ -85,6 +85,6 @@
 		}
 	},
 	"misc": {
-		"storeSessionToDisc": true
+		"storeSessionToDisc": false
 	}
 }

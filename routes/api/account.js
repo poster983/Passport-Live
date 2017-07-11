@@ -73,7 +73,7 @@ router.post('/:userGroup/', handleNewAccount);
     */
 function handleNewAccount(req, res, next) {
     //Get Params
-    
+    console.log(req)
     var email=req.body.email;
     var password=req.body.password;
     var passwordVerification=req.body.passwordVerification;

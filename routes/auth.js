@@ -52,11 +52,12 @@ router.get('/login', function(req, res, next) {
   }
   res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
 });
+/*
 router.post('/login', passport.authenticate('local-login', { 
   successRedirect: '/',
   failureRedirect: '/auth/login?',
   session: true
-}));
+}));*/
 
 
 //et signup

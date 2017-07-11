@@ -96,7 +96,7 @@ router.post('/login', passport.authenticate('local-login', {
     */
 
 router.post('/login/dscm', passport.authenticate('local-login', {
-  session: false
+  session: true
 }), function loginDSCM(req, res, next) {
     api.newJWTForCookies(req.user[0].id, function(err, jwtData) {
         if(err) {
