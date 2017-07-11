@@ -16,3 +16,5 @@ passport\.sublime-workspace
 sessions/
 
 out/docs/
+
+bower_components/
