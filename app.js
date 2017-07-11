@@ -46,6 +46,7 @@ var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
+var apiBlackouts = require('./routes/api/blackout');
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -125,6 +126,7 @@ app.use('/administrator', administrator)
 //api routes
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
+app.use('/api/blackout', apiBlackouts)
 //app.use('/users', users);
 
 if(Raven) {
