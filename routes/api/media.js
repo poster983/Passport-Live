@@ -50,7 +50,7 @@ jdenticon.config = {
 * @param {response} res
 * @api GET /api/media/background/:id.svg
 * @apiparam {string} id ID of the user.
-* @apiresponse {image/svg+xml} Returnes the unique svg image
+* @apiresponse {image/svg\u002Bxml} Returnes the unique svg image
 * @todo move rethink db to passport-api module
 */
 router.get('/background/:id.svg',function generateBackdrop(req, res, next) {
@@ -85,7 +85,7 @@ router.get('/background/:id.svg',function generateBackdrop(req, res, next) {
 * @api GET /api/media/avatar/:id/:size.svg
 * @apiparam {string} id ID of the user.
 * @apiparam {string} size How big the svg should be
-* @apiresponse {image/svg+xml} Returnes the avatar png
+* @apiresponse {image/svg\u002Bxml} Returnes the avatar png
 * @todo move rethink db to passport-api module
 */
 router.get('/avatar/:id/:size.svg', function getAvatar(req, res, next) {
