@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>routes/api/apiRoute.js - Documentation</title>
+    <title>routes/api/account.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">routes/api/apiRoute.js</h1>
+    <h1 class="page-title">routes/api/account.js</h1>
     
 
     <!--container.tmpl-->
@@ -65,63 +65,26 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-
-
 /**
-* @module apiRoute
+* @module accountRESTAPI
 */
 var express = require('express');
 var router = express.Router();
-var r = require('rethinkdb');
-//var bcrypt = require('bcrypt-nodejs');
-var passport = require('passport');
-var jwt = require('jsonwebtoken');
-var config = require('config');
-var utils = require('../../modules/passport-utils/index.js');
-var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
+var r = require('../../modules/db/index.js');
 var cors = require('cors');
+var utils = require('../../modules/passport-utils/index.js');
+var api = require('../../modules/passport-api/accounts.js'); //("jdsfak"); 
+var passport = require('passport');
+var config = require('config');
+
+
+//var for backwards compadability.  neads to be removed later 
+
+
 
 router.use(cors());
 router.options('*', cors())
 
-
-  // Rethink db connection
-var connection = null;
-r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
-});
-
-//https://blog.jscrambler.com/implementing-jwt-using-passport/
-
-
-/**
-PASSPORT AUTH
-**/
-
-
-
-/*
-NEED TO MOVE TO OWN FILE, OR MAKE MORE EFFICIENT
-*/
-/*
-var connection = null;
-        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
-            if (err) throw err;
-            connection = conn;
-        });
-*/
-
-/**
-AUTH
-**/
-
-//serializeUser becaule the default passport.serializeUser function wont be called without session
-/**
-* takes req.user and makes it useable in the session.  Called automaticly 
-* @function serializeUser
-* @ignore
-*/
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
@@ -132,310 +95,300 @@ function serializeUser(req, res, done) {
 };
 
 
-//debug function
-function getHead(req, res, done) {
-    console.log(req.header("Authorization"));
-    done();
-};
+//NEW ACCOUNT//
 
-/** 
-AUTH 
-**/
 
-router.post('/auth/login', passport.authenticate('local-login', {
-  session: false
-}), handleAuthLogin);
+router.post('/:userGroup/', handleNewAccount);
 /**
-* Logges the user in using passport.authenticate
-* @function handleAuthLogin
-* @async
-* @param {request} req
-* @param {response} res
-* @api POST /api/auth/login/
-* @apibody {application/x-www-form-urlencoded}
-* @example 
-* &lt;caption>Body structure: &lt;/caption>
-* email:&lt;user's email>,
-* password:&lt;user's password>
-* @todo Test application/json
-* @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-* @todo Require passport to run over https
-*/
-function handleAuthLogin(req, res) {
-    //Make a token
-    var token = jwt.sign({
-        id: req.user[0].id,
-      }, config.get('secrets.api-secret-key'), {
-        expiresIn: 60*60*24
-    });
-    //Return token to user
-    res.status(200).json({
-        token: "JWT " + token
-    });
-}
-
-
-
-
-
-/** 
-PASSES
-**/
-
-
-/**
-SECURITY 
-**/
-//WILL NEED ACCOUNT PROTECTION 
-//
-router.post('/security/key/', handleCreatePermissionKey);
-/**
-    * Creates a new permission key.
-    * @function handleCreatePermissionKey
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/security/key/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
-    * @example
-    * &lt;caption>Typical body when key is set to timeout at a date&lt;/caption>
+    * Creates A New Account
+    * @function handleNewAccount
+    * @api POST /api/account/:userGroup/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apibody {(application/json | application/x-www-form-urlencoded)}
+    * @example 
+    * &lt;caption>Body Structure (application/json): &lt;/caption>
     * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    time: moment.js compatible time
-    *  }
+    *    "email": "teacher@gmail.com",
+    *    "password": "123abc",
+    *    "passwordVerification": "123abc",
+    *    "firstName": "Teacher",
+    *    "lastName": "McTeacher Face",
+    *    "groupFields": {
+    *        "teacherID": "1598753"
+    *    },
+    *    "permissionKey": HJhd38
     * }
-    * @example
-    * &lt;caption>Typical body when key is set to timeout on a certain number of clicks&lt;/caption>
-    * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    tally: 5
-    *  }
-    * }
-    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
-    * @todo Add JWT Auth
     */
-function handleCreatePermissionKey(req, res, next) {
-    var permissions=req.body.permissions;
-    var parms=req.body.parms;
-    var timeout=req.body.timeout;
+function handleNewAccount(req, res, next) {
+    //Get Params
     
-    api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
-        if(err) {
-            console.error(err);
-            res.status(500)
+    var email=req.body.email;
+    var password=req.body.password;
+    var passwordVerification=req.body.passwordVerification;
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var groupFields = req.body.groupFields
+    var permissionKey = req.body.permissionKey;
+    var userGroup = req.params.userGroup;
+    console.log(userGroup);
+    //Checks to see if the account needs a verification key
+    var promise = new Promise(function(resolve, reject) {
+
+        if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+            if(!permissionKey) {
+                var err = new Error("Permission Key Required");
+                    err.status = 403;
+                    reject(err);
+            }
+            api.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
+                if(err) {
+                    reject(err);
+                } 
+                //CHeck  if usergroup is present
+                else if(!data.permissions.userGroups.includes(userGroup)) {
+                    var err = new Error("Permission Needed");
+                    err.status = 403;
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        } else {
+            resolve();
         }
-        res.status(201).send({
-            key: key
-        })
+    })
+
+    promise.then(function(result) {
+        if(password != passwordVerification) {
+            res.sendStatus(422);
+        } else {
+            api.createAccount(r.conn(), userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+                if(err){
+                    next(err);
+                } else {
+                    res.sendStatus(201);
+                    
+                }
+            });
+        }
+    }, function(err) {
+        next(err);
     })
 }
 
-router.post('/security/apikey/', handleNewApiKey);
+//GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
+router.get('/id/:id/', handleGetAccountsById);
 /**
-    * Creates a new API key.
-    * @function handleNewApiKey
+    * GETs accounts by id
+    * @function handleGetAccountsById
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api POST /api/security/apikey/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns the new api key
+    * @api GET /api/account/id/:id
+    * @apiparam {userGroup} id - The id of the user
+    * @apiresponse {json} Returnes the safe info
     * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
-    * @todo Add JWT Auth ADMIN
     */
-function handleNewApiKey(req, res, next) {
-    res.sendStatus(501);
+
+function handleGetAccountsById(req, res, next) {
+    var id = req.params.id;
+    api.getUserByID(r.conn(), id, function(err, data) {
+        if(err) {
+            return next(err) 
+        }
+        res.json(utils.cleanUser(data));
+    })
 }
 
+router.get('/userGroup/:userGroup/', handleGetAccountsByUserGroup);
 /**
-schedule
-**/
-//new Schedule Definition 
-router.post('/schedule/definition', function(req, res, next) {
-    var name=req.body.name;
-    var scheduleData=req.body.scheduleData;
+    * GETs all accounts by usergroup
+    * @function handleGetAccountsByUserGroup
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/userGroup/:userGroup/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
+    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
+    */
+function handleGetAccountsByUserGroup(req, res, next) {
+    var userGroup = req.params.userGroup;
 
-    api.newScheduleDefinition(connection, name, scheduleData, function(err, data) {
+    
+    api.getUserGroupAccountByUserGroup(r.conn(), userGroup, function(err, acc) {
         if(err) {
-            return next(err);
+            next(err);
         }
-        res.status(201).json(data);
-    });
-})
-//get Schedule Definition
-router.get('/schedule/definition/:id', function(req, res, next) {
-    var id=req.params.id;
-
-    api.getScheduleDefinition(connection, id, function(err, data) {
-        if(err) {
-            return next(err);
+        console.log(acc)
+        var ret = [];
+        for (var i = 0; i &lt; acc.length; i++) {
+            /*var safeUser = {
+                name: acc[i].name, 
+                email: acc[i].email, 
+                userGroup: acc[i].userGroup, 
+                id: acc[i].id, 
+                groupFields: acc[i].groupFields[userGroup]
+                
+            }*/
+            ret.push(utils.cleanUser(acc[i]));
         }
-        res.json(data);
-    });
-})
-//schedule Single Schedule Definition
+        res.json(ret);
+    }); 
+}
 
-router.post('/schedule/date', function(req, res, next) {
-    var SCid=req.body.ScheduleDefinitionID;
-    var date=req.body.date;
-
-    api.scheduleSingleScheduleDefinition(connection, SCid, date, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-
-        res.status(201).json(data);
-    });
-})
-router.get('/schedule/date/:id', function(req, res, next) {
-    res.sendStatus(501);
-});
-
-router.post('/schedule/repeat', function(req, res, next) {
-    var SCid=req.body.ScheduleDefinitionID;
-    var repeatingRule=req.body.repeatingRule;
-
-    api.scheduleRepeatingScheduleDefinition(connection, SCid, repeatingRule, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-        res.status(201).json(data);
-    });
-})
-
-router.get('/schedule/repeat/:id', function(req, res, next) {
-    res.sendStatus(501);
-});
-
-router.get('/schedule/for/:date', function(req, res, next) {
-    var date=req.params.date;
-    api.getScheduleOfADate(connection, date, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-
-        res.json(data);
-    });
-})
-
+router.get('/userGroup/:userGroup/name/:name', handleGetAccountsByName);
 /**
-SERVER
-**/
-
-router.get('/server/config/schedule/', function(req, res, next) {
-    try {
-        res.json(config.get('schedule'));
-    } catch (e) {
-        next(e);
-    }
-})
-
-router.get('/server/config/passGroup', getPassGroups);
-/**
-    * GETs pass groups defined in the config
+    * GETs accounts by name
     * @function handleGetAccountsByName
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/server/config/passGroup/
-    * @apiresponse {json} Returns json with all passGroups
+    * @api GET /api/account/userGroup/:userGroup/name/:name/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apiparam {string} name - A user's name.  Can be in any name format.
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
     */
-function getPassGroups(req, res, next) {
-    api.getPassGroups(function(err, data) {
-        if(err) {return next(err)}
+function handleGetAccountsByName(req, res, next) {
+    var userGroup = req.params.userGroup;
+    var name = req.params.name;
 
-        res.json(data);  
+    
+    api.getUserGroupAccountByName(r.conn(), name, userGroup, function(err, acc) {
+        if(err) {
+            next(err);
+        }
+        console.log(acc)
+        var ret = [];
+        for (var i = 0; i &lt; acc.length; i++) {
+             var safeUser = {
+                name: acc[i].name, 
+                email: acc[i].email, 
+                userGroup: acc[i].userGroup, 
+                id: acc[i].id, 
+                groupFields: acc[i].groupFields[userGroup]
+                
+            }
+            ret.push(safeUser);
+        }
+        res.json(ret);
+    }); 
+}
+
+//Special dashboard specific gets//
+
+
+//MAKE CHANGES.  REQUIRES AUTH AND PERMISSION.  
+router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
+/**
+    * Updates usergroup specific data.
+    * REQUIRES JWT Authorization in headers.
+    * account must be in the usergroup for it to update
+    * Check Example usergroup model for more examples 
+    * @function handleUpdateAccountGroupFieldsByUser
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/groupfields/
+    * @apiresponse {json} Returns rethink db action summery
+    * @example 
+    * &lt;caption>Body Structure (application/json): &lt;/caption>
+    * {
+    *     "id": 123456, //school id
+    *     "student": { //any dashboard name
+    *        "periodSchedule": {
+    *                "a": {
+    *                    "teacherID": "46545645-456-4-45645-45646" //id from database
+    *                },
+    *                "b": {
+    *                    "teacherID": "456486-5190814-4567" //id from database
+    *                },
+    *                "lunch1": {
+    *                    "teacherID": null, //if teacherID is null or undefined, passport expects data about where the period takes place
+    *                    "room": "Cafeteria"
+    *                }
+    *            }, 
+    *         "settings": {
+    *             "test": false
+    *          }
+    *      }
+    *  }
+    * 
+    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
+    */
+function handleUpdateAccountGroupFieldsByUser(req, res, next) {
+    var updateDoc = req.body;
+
+     api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        return res.send(data);
     })
 }
 
-
-
-/**
-    TESTING
-**/
-
-router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
-    api.tester("hi There", function(err, resp) {
-        console.log("Error: " + err + " Callback: " + resp);
-    });
-    res.status(200).json(req.user);
-});
-
-router.post('/test/db', function(req, res, next) {
-    /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
-            "c_id": r.row("id")
-    })).without({"left": {"ScheduleDefinitionID": true}}).zip().run(connection, function(err, cursor) {
-        if(err) return next(err);
-        cursor.toArray(function(err, results) {
-            if(err) return next(err);
-            res.send(results);
-        });
-        
-    })*/
-    r.table("scheduleCalendar").map( r.row.merge(function(ro) {
-        return {ider: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
-    })).run(connection, function(err, cursor) {
-        if(err) return next(err);
-        cursor.toArray(function(err, results) {
-            if(err) return next(err);
-            res.send(results);
-        });
-        
+router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    console.log(dashboard)
+    api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
     })
 });
 
-router.get('/test/error/:error', function(req, res, next) {
-    /*
-    var err = new Error(req.params.error);
-    err.status = 400
-    next(err);*/
-    throw new Error(req.params.error);
-});
-router.get('/test/error/account/:error', function(req, res, next) {
-    
-    var err = new Error(req.params.error);
-    err.status = 400
-    err.level = 'fatal'
-    next(err);
-});
-
-router.get('/test/key/:key', function(req, res, next) {
-    console.log(req.params.key)
-    api.checkPermissionKey(connection, req.params.key, function(err, document) {
+router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    if(!req.user.schedules || !req.user.schedules[dashboard]) {
+        var err = new Error("Schedule refrence not found");
+        err.status = 404;
+        return next(err)
+    }
+    console.log(dashboard)
+    api.updateUserSchedule(req.user.schedules[dashboard], dashboard, schedule, function(err, data) {
         if(err) {
-            next(err);
-        } else {
-            res.json(document);
+            return next(err);
         }
-        
-    });
-})
+        res.send(data)
+    })
+});
 
-
-
-//default Responce
-router.get('/', function(req, res, next) {
-  res.status(418)
-	res.send('Brewing your coffee');
-
+/** GETs account schedules for student dash
+    * @function getSchedulesForStudentDash
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/student/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns Joined data of the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|&lt;a href="#params-nextCallback">Callback Definition&lt;/a>} 
+    * @todo Auth
+*/
+router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    api.getStudentSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
 });
 
 
 module.exports = router;
-
 
 /**
  * A name of a userGroup defined in the configs

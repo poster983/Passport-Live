@@ -1,0 +1,2682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>passportAccountsApi - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Notes for the devs.html">Notes for the devs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/security/apikey/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-accountRESTAPI.html">accountRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-passportAccountsApi.html">passportAccountsApi</a><ul class='methods'><li data-type='method'><a href="module-passportAccountsApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~verifyUserSchedule">verifyUserSchedule</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">passportAccountsApi</h1>
+    
+
+    <!--container.tmpl-->
+
+
+
+
+
+<section>
+
+
+
+<header data-tmpl="container.tmpl">
+    
+      <h2>Module: passportAccountsApi</h2>
+        
+    
+
+    
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#createAccount">createAccount</a></li>
+            
+            <li><a href="#getUserByID">getUserByID</a></li>
+            
+            <li><a href="#getUserGroupAccountByName">getUserGroupAccountByName</a></li>
+            
+            <li><a href="#getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li>
+            
+            <li><a href="#newUserSchedule">newUserSchedule</a></li>
+            
+            <li><a href="#newUserSchedule">newUserSchedule</a></li>
+            
+            <li><a href="#updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li>
+            
+            <li><a href="#updateUserSchedule">updateUserSchedule</a></li>
+            
+            <li><a href="#verifyUserSchedule">verifyUserSchedule</a></li>
+            </ul></dd></dl></div>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line32">32</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~createAccount">
+      <a href="#params-createAccount"><span class="type-signature">(async, inner) </span>createAccount</a><span class="signature">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Creates An Account</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+  if(err) {
+    //do something with error
+  } else {
+    //Created
+  }
+});</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-createAccount">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-createAccount" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A usergroup defined in the config</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>firstName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A user's given name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lastName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A user's family name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A user's email address</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The user's password</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>groupFields</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>See: <code><a href="#params-createAccountCallback">Callback Definition</a></code></li>
+</ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Creates An Account \n    * @function createAccount\n    * @link module:passportApi\n    * @async\n    * @example\n    * api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n    *   if(err) {\n    *     //do something with error\n    *   } else {\n    *     //Created\n    *   }\n    * });\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {string} firstName - A user's given name\n    * @param {string} lastName - A user's family name\n    * @param {string} email - A user's email address\n    * @param {string} password - The user's password\n    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)\n    * @param {function} done - Callback\n    * @returns {callback} - See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code> \n    */","meta":{"filename":"accounts.js","lineno":32,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Creates An Account</p>","kind":"function","name":"createAccount","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"examples":[{"caption":"","code":"api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n  if(err) {\n    //do something with error\n  } else {\n    //Created\n  }\n});"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["string"]},"description":"<p>A user's given name</p>","name":"firstName"},{"type":{"names":["string"]},"description":"<p>A user's family name</p>","name":"lastName"},{"type":{"names":["string"]},"description":"<p>A user's email address</p>","name":"email"},{"type":{"names":["string"]},"description":"<p>The user's password</p>","name":"password"},{"type":{"names":["json"]},"description":"<p>A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)</p>","name":"groupFields"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-createAccountCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:passportAccountsApi~createAccount","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000009","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~createAccount","signature":"<span class=\"signature\">(dbConn, userGroup, firstName, lastName, email, password, groupFields, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line171">171</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getUserByID">
+      <a href="#params-getUserByID"><span class="type-signature">(async, inner) </span>getUserByID</a><span class="signature">(dbConn, id, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Searches by id in the account database</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getUserByID">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getUserByID" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ID of the user</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Searches by id in the account database \n    * @function getUserByID\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} id - The ID of the user\n    * @param {function} done - Callback\n    */","meta":{"filename":"accounts.js","lineno":171,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Searches by id in the account database</p>","kind":"function","name":"getUserByID","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>The ID of the user</p>","name":"id"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportAccountsApi~getUserByID","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000032","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getUserByID","signature":"<span class=\"signature\">(dbConn, id, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line103">103</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getUserGroupAccountByName">
+      <a href="#params-getUserGroupAccountByName"><span class="type-signature">(async, inner) </span>getUserGroupAccountByName</a><span class="signature">(dbConn, name, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Searches by name and usergroup the account database</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getUserGroupAccountByName">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getUserGroupAccountByName" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>user's name, cnd be in any format</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A usergroup defined in the config</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Searches by name and usergroup the account database \n    * @function getUserGroupAccountByName\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} name - user's name, cnd be in any format\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"filename":"accounts.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Searches by name and usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByName","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>user's name, cnd be in any format</p>","name":"name"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportAccountsApi~getUserGroupAccountByName","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000022","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getUserGroupAccountByName","signature":"<span class=\"signature\">(dbConn, name, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line145">145</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getUserGroupAccountByUserGroup">
+      <a href="#params-getUserGroupAccountByUserGroup"><span class="type-signature">(async, inner) </span>getUserGroupAccountByUserGroup</a><span class="signature">(dbConn, userGroup, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Searches by usergroup the account database</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getUserGroupAccountByUserGroup">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getUserGroupAccountByUserGroup" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A usergroup defined in the config</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Searches by usergroup the account database \n    * @function getUserGroupAccountByUserGroup\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {constant} userGroup - A usergroup defined in the config\n    * @param {function} done - Callback\n    */","meta":{"filename":"accounts.js","lineno":145,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Searches by usergroup the account database</p>","kind":"function","name":"getUserGroupAccountByUserGroup","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["constant"]},"description":"<p>A usergroup defined in the config</p>","name":"userGroup"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportAccountsApi~getUserGroupAccountByUserGroup","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000029","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getUserGroupAccountByUserGroup","signature":"<span class=\"signature\">(dbConn, userGroup, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line423">423</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newUserSchedule">
+      <a href="#params-newUserSchedule"><span class="type-signature">(async, inner) </span>newUserSchedule</a><span class="signature">(userID, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Gets a schedule for a student dash</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newUserSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newUserSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of User.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Gets a schedule for a student dash \n    * @function newUserSchedule\n    * @link module:passportAccountsApi\n    * @async\n    * @param {string} userID - ID of User.\n    * @param {function} done - Callback\n    * @returns {callback}\n    */","meta":{"filename":"accounts.js","lineno":423,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Gets a schedule for a student dash</p>","kind":"function","name":"newUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:passportAccountsApi","value":"module:passportAccountsApi"}],"async":true,"params":[{"type":{"names":["string"]},"description":"<p>ID of User.</p>","name":"userID"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]}}],"longname":"module:passportAccountsApi~newUserSchedule","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000064","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newUserSchedule","signature":"<span class=\"signature\">(userID, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line362">362</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newUserSchedule">
+      <a href="#params-newUserSchedule"><span class="type-signature">(async, inner) </span>newUserSchedule</a><span class="signature">(userID, dashboard, schedule_UIN, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Creates a new user schedule</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+  if(err) {
+    //do something with error
+  } else {
+    //Created
+  }
+});</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newUserSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newUserSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of User.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>may be either &quot;student&quot; or &quot;teacher&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schedule_UIN</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The schedule.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Creates a new user schedule \n    * @function newUserSchedule\n    * @link module:passportAccountsApi\n    * @async\n    * @example\n    * api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n    *   if(err) {\n    *     //do something with error\n    *   } else {\n    *     //Created\n    *   }\n    * });\n    * @param {string} userID - ID of User.\n    * @param {constant} dashboard - may be either \"student\" or \"teacher\"\n    * @param {json} schedule_UIN  - The schedule.\n    * @param {function} done - Callback\n    * @returns {callback}\n    */","meta":{"filename":"accounts.js","lineno":362,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Creates a new user schedule</p>","kind":"function","name":"newUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:passportAccountsApi","value":"module:passportAccountsApi"}],"async":true,"examples":[{"caption":"","code":"api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n  if(err) {\n    //do something with error\n  } else {\n    //Created\n  }\n});"}],"params":[{"type":{"names":["string"]},"description":"<p>ID of User.</p>","name":"userID"},{"type":{"names":["constant"]},"description":"<p>may be either &quot;student&quot; or &quot;teacher&quot;</p>","name":"dashboard"},{"type":{"names":["json"]},"description":"<p>The schedule.</p>","name":"schedule_UIN"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]}}],"longname":"module:passportAccountsApi~newUserSchedule","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000055","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newUserSchedule","signature":"<span class=\"signature\">(userID, dashboard, schedule_UIN, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line191">191</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~updateAccountGroupFieldsByID">
+      <a href="#params-updateAccountGroupFieldsByID"><span class="type-signature">(async, inner) </span>updateAccountGroupFieldsByID</a><span class="signature">(dbConn, id, doc, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Updates/sets any account field by its id</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-updateAccountGroupFieldsByID">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-updateAccountGroupFieldsByID" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dbConn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>RethinkDB Connection Object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>id of the account</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>doc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Json object for the update.  Top key should be the name of the dashboard it is for.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <p>Returns rethink db summery</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Updates/sets any account field by its id \n    * @function updateAccountGroupFieldsByID\n    * @link module:passportApi\n    * @async\n    * @returns {callback} Returns rethink db summery\n    * @param {object} dbConn - RethinkDB Connection Object.\n    * @param {string} id - id of the account \n    * @param {json} doc - Json object for the update.  Top key should be the name of the dashboard it is for.\n    * @param {function} done - Callback\n    */","meta":{"filename":"accounts.js","lineno":191,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Updates/sets any account field by its id</p>","kind":"function","name":"updateAccountGroupFieldsByID","tags":[{"originalTitle":"link","title":"link","text":"module:passportApi","value":"module:passportApi"}],"async":true,"returns":[{"type":{"names":["callback"]},"description":"<p>Returns rethink db summery</p>"}],"params":[{"type":{"names":["object"]},"description":"<p>RethinkDB Connection Object.</p>","name":"dbConn"},{"type":{"names":["string"]},"description":"<p>id of the account</p>","name":"id"},{"type":{"names":["json"]},"description":"<p>Json object for the update.  Top key should be the name of the dashboard it is for.</p>","name":"doc"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"longname":"module:passportAccountsApi~updateAccountGroupFieldsByID","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000034","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~updateAccountGroupFieldsByID","signature":"<span class=\"signature\">(dbConn, id, doc, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line327">327</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~updateUserSchedule">
+      <a href="#params-updateUserSchedule"><span class="type-signature">(async, inner) </span>updateUserSchedule</a><span class="signature">(id, dashboard, schedule_UIN, done)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Updates a user schedule</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+  if(err) {
+    //do something with error
+  } else {
+    //Created
+  }
+});</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-updateUserSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-updateUserSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of Schedule.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">constant</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>may be either &quot;student&quot; or &quot;teacher&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schedule_UIN</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The schedule.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n    * Updates a user schedule \n    * @function updateUserSchedule\n    * @link module:passportAccountsApi\n    * @async\n    * @example\n    * api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n    *   if(err) {\n    *     //do something with error\n    *   } else {\n    *     //Created\n    *   }\n    * });\n    * @param {string} id - ID of Schedule.\n    * @param {constant} dashboard - may be either \"student\" or \"teacher\"\n    * @param {json} schedule_UIN  - The schedule.\n    * @param {function} done - Callback\n    * @returns {callback}\n    */","meta":{"filename":"accounts.js","lineno":327,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>Updates a user schedule</p>","kind":"function","name":"updateUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:passportAccountsApi","value":"module:passportAccountsApi"}],"async":true,"examples":[{"caption":"","code":"api.createAccount(connection, \"student\", \"James\", \"Smith\", \"james.smith@gmail.com\", \"123456\", {studentID: 01236, isArchived: false }, function(err){\n  if(err) {\n    //do something with error\n  } else {\n    //Created\n  }\n});"}],"params":[{"type":{"names":["string"]},"description":"<p>ID of Schedule.</p>","name":"id"},{"type":{"names":["constant"]},"description":"<p>may be either &quot;student&quot; or &quot;teacher&quot;</p>","name":"dashboard"},{"type":{"names":["json"]},"description":"<p>The schedule.</p>","name":"schedule_UIN"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"done"}],"returns":[{"type":{"names":["callback"]}}],"longname":"module:passportAccountsApi~updateUserSchedule","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000053","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~updateUserSchedule","signature":"<span class=\"signature\">(id, dashboard, schedule_UIN, done)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line293">293</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~verifyUserSchedule">
+      <a href="#params-verifyUserSchedule"><span class="type-signature">(inner) </span>verifyUserSchedule</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>/*
+exports.getSchedulesForStudentDash = function(id, done) {
+    r.table(&quot;accounts&quot;).get(id).eqJoin(r.row('groupFields')('student')('periodSchedule')('a')('teacherID'), r.table(&quot;accounts&quot;)).zip().run(db.conn(), function(err, data) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, data)
+        })
+}</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-verifyUserSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/*\nexports.getSchedulesForStudentDash = function(id, done) {\n    r.table(\"accounts\").get(id).eqJoin(r.row('groupFields')('student')('periodSchedule')('a')('teacherID'), r.table(\"accounts\")).zip().run(db.conn(), function(err, data) {\n        if(err) {\n            return done(err);\n        }\n        return done(null, data)\n        })\n}*/","meta":{"range":[10255,11157],"filename":"accounts.js","lineno":293,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100000530","name":"verifyUserSchedule","type":"FunctionDeclaration","paramnames":["id","dashboard","schedule_UIN","done"]},"vars":{"schedule":"module:passportAccountsApi~verifyUserSchedule~schedule","err":"module:passportAccountsApi~verifyUserSchedule~err","err.status":"module:passportAccountsApi~verifyUserSchedule~err.status","requiredPeriods":"module:passportAccountsApi~verifyUserSchedule~requiredPeriods","givenPeriods":"module:passportAccountsApi~verifyUserSchedule~givenPeriods","x":"module:passportAccountsApi~verifyUserSchedule~x","toDB":"module:passportAccountsApi~verifyUserSchedule~toDB"},"shortpath":"modules/passport-api/accounts.js"},"description":"<p>/*\nexports.getSchedulesForStudentDash = function(id, done) {\n    r.table(&quot;accounts&quot;).get(id).eqJoin(r.row('groupFields')('student')('periodSchedule')('a')('teacherID'), r.table(&quot;accounts&quot;)).zip().run(db.conn(), function(err, data) {\n        if(err) {\n            return done(err);\n        }\n        return done(null, data)\n        })\n}</p>","name":"verifyUserSchedule","longname":"module:passportAccountsApi~verifyUserSchedule","kind":"function","scope":"inner","memberof":"module:passportAccountsApi","params":[],"___id":"T000002R000041","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~verifyUserSchedule","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line97">97</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~createAccountCallback">
+      <a href="#params-createAccountCallback"><span class="type-signature"></span>createAccountCallback</a><span class="signature">(err)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-createAccountCallback">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_accounts.js.html">accounts.js</a>:<a href="modules_passport-api_accounts.js.html#line97">97</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-createAccountCallback" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Returns an error object if any.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * @callback createAccountCallback\n    * @param {object} err - Returns an error object if any.\n    */","meta":{"filename":"accounts.js","lineno":97,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/accounts.js"},"kind":"typedef","name":"createAccountCallback","type":{"names":["function"]},"params":[{"type":{"names":["object"]},"description":"<p>Returns an error object if any.</p>","name":"err"}],"longname":"module:passportAccountsApi~createAccountCallback","scope":"inner","memberof":"module:passportAccountsApi","___id":"T000002R000021","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"~createAccountCallback","signature":"<span class=\"signature\">(err)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passportAccountsApi.html\">passportAccountsApi</a>~"]}
+</pre>
+-->
+</div>
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.1</a> on Tue Jul 11 2017 05:25:36 GMT+0000 (UTC) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

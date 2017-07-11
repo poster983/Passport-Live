@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tutorial: Configs - Documentation</title>
+    <title>Tutorial: Setup Error Monitoring - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Tutorial: Configs</h1>
+    <h1 class="page-title">Tutorial: Setup Error Monitoring</h1>
     
 
     <section class="tutorial">
@@ -45,7 +45,15 @@
 </header>
 
 <article>
-    <h1>How to configure Passport</h1>
+    <h1>Setup Error Monitoring</h1><ol>
+<li>Install the optional dependency &quot;raven&quot; (npm install raven).  </li>
+<li>Create a free account with <a href="https://sentry.io">sentry.io</a> and create a project.  </li>
+<li>Get your DSN and put it in the <code>local.json</code> config file.  It should look like this: </li>
+</ol>
+<pre class="prettyprint source lang-json"><code>    &quot;secrets&quot;: {
+        &quot;loggingDSN&quot;: &quot;https://asdfghjklqwertyuiop:asdfghjklqwertyuiop@sentry.io/123456&quot;
+    }</code></pre><p>NOTE:</p>
+<p>PLEASE!!! .gitignore local.json before pushing to a public repo. </p>
 </article>
 
 </section>

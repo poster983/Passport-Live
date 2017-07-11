@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>mediaRESTAPI - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Notes for the devs.html">Notes for the devs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/security/apikey/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-accountRESTAPI.html">accountRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-accountRESTAPI.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-accountRESTAPI.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-apiRoute.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-passportAccountsApi.html">passportAccountsApi</a><ul class='methods'><li data-type='method'><a href="module-passportAccountsApi.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-passportAccountsApi.html#~verifyUserSchedule">verifyUserSchedule</a></li></ul></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~cleanUser">cleanUser</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">mediaRESTAPI</h1>
+    
+
+    <!--container.tmpl-->
+
+
+
+
+
+<section>
+
+
+
+<header data-tmpl="container.tmpl">
+    
+      <h2>Module: mediaRESTAPI</h2>
+        
+    
+
+    
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#generateBackdrop">generateBackdrop</a></li>
+            
+            <li><a href="#getIdenticon">getIdenticon</a></li>
+            </ul></dd></dl></div>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line45">45</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~generateBackdrop">
+      <a href="#params-generateBackdrop"><span class="type-signature">(async, inner) </span>generateBackdrop</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-generateBackdrop">
+        <span class="label label-api">API: GET /api/media/background/:id.svg</span>
+      </a>
+    
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Generates a unique backdrop for each user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-generateBackdrop">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
+    <ul>
+        <li>move rethink db to passport-api module</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-generateBackdrop" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-generateBackdrop">
+    <h5>
+      API Route:
+      GET /api/media/background/:id.svg
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the user.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returnes the unique svg image
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">image/svg\u002Bxml</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Generates a unique backdrop for each user\n* @function generateBackdrop\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/background/:id.svg\n* @apiparam {string} id ID of the user.\n* @apiresponse {image/svg\\u002Bxml} Returnes the unique svg image\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Generates a unique backdrop for each user</p>","kind":"function","name":"generateBackdrop","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/background/:id.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the unique svg image"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~generateBackdrop","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000337","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~generateBackdrop","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line79">79</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getIdenticon">
+      <a href="#params-getIdenticon"><span class="type-signature">(async, inner) </span>getIdenticon</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-getIdenticon">
+        <span class="label label-api">API: GET /api/media/avatar/:id/:size.svg</span>
+      </a>
+    
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Gets an avatar for the user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getIdenticon">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
+    <ul>
+        <li>move rethink db to passport-api module</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-getIdenticon" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-getIdenticon">
+    <h5>
+      API Route:
+      GET /api/media/avatar/:id/:size.svg
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the user.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">How big the svg should be</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returnes the avatar png
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">image/svg\u002Bxml</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Gets an avatar for the user\n* @function getIdenticon\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/avatar/:id/:size.svg\n* @apiparam {string} id ID of the user.\n* @apiparam {string} size How big the svg should be\n* @apiresponse {image/svg\\u002Bxml} Returnes the avatar png\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":79,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Gets an avatar for the user</p>","kind":"function","name":"getIdenticon","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/avatar/:id/:size.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} size How big the svg should be","value":{"type":{"names":["string"]},"description":"How big the svg should be","name":"size"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the avatar png"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~getIdenticon","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000343","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getIdenticon","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.1</a> on Tue Jul 11 2017 05:25:36 GMT+0000 (UTC) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
