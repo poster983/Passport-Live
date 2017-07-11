@@ -33,6 +33,9 @@ var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var session = require('express-session')
 var FileStore = require('session-file-store')(session);
+var optional = require('optional');
+var Raven = optional('raven');
+
 
 /*Routes*/
 var rootLevel = require('./routes/index');
@@ -41,14 +44,21 @@ var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
-
-
+var apiMedia = require('./routes/api/media');
+var apiAccounts = require('./routes/api/account');
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
 
+//setup db conn
+require('./modules/db/index.js').setup();
 
-
+//Config raven / sentry
+if(Raven) {
+  Raven.config(config.get('secrets.loggingDSN')).install();
+  var RavenUber = new Raven.Client(config.get('secrets.loggingDSN'));
+  app.use(Raven.requestHandler());
+}
 //Forever - MEMORY LEAK
 /*
   var foreverChild = new (forever.Monitor)('app.js', {
@@ -103,6 +113,7 @@ app.use(require('node-sass-middleware')({
   indentedSyntax: false,
   sourceMap: false
 }));
+app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', rootLevel);
@@ -111,7 +122,15 @@ app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
 app.use('/administrator', administrator)
+//api routes
+app.use('/api/media', apiMedia)
+app.use('/api/account', apiAccounts)
 //app.use('/users', users);
+
+if(Raven) {
+  //raven error catcher 
+  app.use(Raven.errorHandler());
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -120,15 +139,33 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+  if(Raven) {
+    var extra = {};
+    extra.level = err.level
+    console.log(extra)
+    RavenUber.captureException(err, extra);
+  }
+
+  if(!err.status){
+    err.status = 500;
+  }
   res.locals.message = err.message;
+   if(config.has('secrets.loggingDSN') && Raven){
+      res.locals.raven = true;
+    }
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  
   // render the error page
-  res.status(err.status || 500);
+  res.status(err.status);
   res.render('error');
 });
+
+
+
 
 module.exports = app;

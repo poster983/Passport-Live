@@ -125,225 +125,7 @@ function handleAuthLogin(req, res) {
         token: "JWT " + token
     });
 }
-/** 
-ACCOUNTS
-**/
-//New Account 
-/*
-Route:
-`/api/account/new/:userGroup`
 
-:userGroup = a userGroup set in the config files. 
-
-
-The the post body is form-urlencoded
-Body Data:
-
-|Key|Data Type|
-|---|---------|
-|email|`String` The user's email address|
-|password|`String` The user's requested password|
-|passwordVerification|`String` A safety measure to verify that the user didn't mistype their password|
-|firstName|`String` The user's given name|
-|lastName|`String` The user's family name|
-|groupFields|`JSON Object` any special fields that may pertain to any userGroup (like a student ID)|
-|permissionKey|`String` (Optional, depending on userGroup Config) verifies that the user has permission to make an account. permissionKey requires permission: "userGroups": ["blablabla"]|
-
-Possible Status Codes: 
-* 422 - The passwords don't match;
-* 500 - The server encountered an error.  It's on our end.
-* 409 - The email has already been taken
-* 201 - Account was created!
-
-*/
-
-
-router.post('/account/:userGroup/', handleNewAccount);
-/**
-* Creates A New Account
-* @function handleNewAccount
-* @api POST /api/account/:userGroup/
-* @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
-* @apibody {(application/json | application/x-www-form-urlencoded)}
-* @example 
-* <caption>Body Structure (application/json): </caption>
-* {
-*    "email": "teacher@gmail.com",
-*    "password": "123abc",
-*    "passwordVerification": "123abc",
-*    "firstName": "Teacher",
-*    "lastName": "McTeacher Face",
-*    "groupFields": {
-*        "teacherID": "1598753"
-*    },
-*    "permissionKey": HJhd38
-* }
-*/
-function handleNewAccount(req, res, next) {
-    //Get Params
-    
-    var email=req.body.email;
-    var password=req.body.password;
-    var passwordVerification=req.body.passwordVerification;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var groupFields = req.body.groupFields
-    var permissionKey = req.body.permissionKey;
-    var userGroup = req.params.userGroup;
-    console.log(userGroup);
-    //Checks to see if the account needs a verification key
-    if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-        api.checkPermissionKey(connection, permissionKey, function(err, data) {
-            if(err) {
-                return next(err);
-            }
-            //CHeck  if usergroup is present
-            if(!data.permissions.userGroups.includes(userGroup)) {
-                var err = new Error("Permission Needed");
-                err.status = 403;
-                return next(err);
-            }
-        });
-    }
-    if(password != passwordVerification) {
-        res.sendStatus(422);
-    } else {
-        api.createAccount(connection, userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
-            if(err){
-                next(err);
-            } else {
-                res.sendStatus(201);
-                
-            }
-        });
-    }
-}
-
-router.get('/account/:userGroup/', handleGetAccountsByUserGroup);
-/**
-    * GETs all accounts by usergroup
-    * @function handleGetAccountsByUserGroup
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/:userGroup/
-    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    */
-function handleGetAccountsByUserGroup(req, res, next) {
-    var userGroup = req.params.userGroup;
-
-    
-    api.getUserGroupAccountByUserGroup(connection, userGroup, function(err, acc) {
-        if(err) {
-            next(err);
-        }
-        console.log(acc)
-        var ret = [];
-        for (var i = 0; i < acc.length; i++) {
-            
-            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
-        }
-        res.json(ret);
-    }); 
-}
-
-router.get('/account/:userGroup/:name', handleGetAccountsByName);
-/**
-    * GETs accounts by name
-    * @function handleGetAccountsByName
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/:userGroup/:name/
-    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
-    * @apiparam {string} name - A user's name.  Can be in any name format.
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    */
-function handleGetAccountsByName(req, res, next) {
-    var userGroup = req.params.userGroup;
-    var name = req.params.name;
-
-    
-    api.getUserGroupAccountByName(connection, name, userGroup, function(err, acc) {
-        if(err) {
-            next(err);
-        }
-        console.log(acc)
-        var ret = [];
-        for (var i = 0; i < acc.length; i++) {
-            
-            ret.push({name: acc[i].name, email: acc[i].email, userGroup: acc[i].userGroup, id: acc[i].id});
-        }
-        res.json(ret);
-    }); 
-}
-
-router.patch('/account/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
-/**
-    * Updates usergroup specific data.
-    * REQUIRES JWT Authorization in headers.
-    * account must be in the usergroup for it to update
-    * @function handleUpdateAccountGroupFieldsByUser
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api PATCH /api/account/groupfields/
-    * @apiresponse {json} Returns rethink db action summery
-    * @example 
-    * <caption>Body Structure (application/json): </caption>
-    * {
-    * 
-    *     "student": { //any usergroup name
-    *        "periodSchedule": {
-    *                "a": {
-    *                    "teacherID": "46545645-456-4-45645-45646" //id from database
-    *                },
-    *                "b": {
-    *                    "teacherID": "456486-5190814-4567" //id from database
-    *                },
-    *                "lunch1": {
-    *                    "teacherID": null, //if teacherID is null or undefined, passport expects data about where the period takes place
-    *                    "room": "Cafeteria"
-    *                }
-    *            }, 
-    *         "settings": {
-    *             "test": false
-    *          }
-    *      }
-    *  }
-    * 
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    */
-function handleUpdateAccountGroupFieldsByUser(req, res, next) {
-    var updateDoc = req.body;
-    var keys = Object.keys(updateDoc);
-    for(var i = 0; i < keys.length; i++) {
-
-        if(!keys[i].includes(req.user.userGroup)) {
-            var err = new Error("Forbidden: Usergroups don't match");
-            err.status = 403;
-            return next(err)
-        }
-
-        if(i >= keys.length-1) {
-            //finished check 
-             api.updateAccountGroupFieldsByID(connection, req.user.id, updateDoc, function(err, data) {
-                if(err) {
-                    return next(err);
-                }
-                return res.send(data);
-            })
-
-        }
-
-    }
-}
 
 
 
@@ -373,7 +155,7 @@ router.post('/security/key/', handleCreatePermissionKey);
     * <caption>Typical body when key is set to timeout at a date</caption>
     * {
     *  permissions: {
-    *    userGroup: ["teacher", "admin", "dev"]
+    *    userGroups: ["teacher", "admin", "dev"]
     *  },
     *  parms: {},
     *  timeout: {
@@ -384,7 +166,7 @@ router.post('/security/key/', handleCreatePermissionKey);
     * <caption>Typical body when key is set to timeout on a certain number of clicks</caption>
     * {
     *  permissions: {
-    *    userGroup: ["teacher", "admin", "dev"]
+    *    userGroups: ["teacher", "admin", "dev"]
     *  },
     *  parms: {},
     *  timeout: {
@@ -568,8 +350,17 @@ router.post('/test/db', function(req, res, next) {
 });
 
 router.get('/test/error/:error', function(req, res, next) {
+    /*
     var err = new Error(req.params.error);
     err.status = 400
+    next(err);*/
+    throw new Error(req.params.error);
+});
+router.get('/test/error/account/:error', function(req, res, next) {
+    
+    var err = new Error(req.params.error);
+    err.status = 400
+    err.level = 'fatal'
     next(err);
 });
 

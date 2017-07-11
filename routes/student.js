@@ -40,7 +40,21 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev"
 		passGroups[i] = JSON.parse('{ "viewName":"' + config.get('passGroups.' + enabledPassGroups[i] + '.viewName') + '", "value": "' + config.get('passGroups.' + enabledPassGroups[i] + '.customGroupID') + '"}');
 		
 	}*/
-    res.render('student/index', { doc_Title: 'Passport-Student'});
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    res.render('student/index', { doc_Title: 'Passport-Student', user, passportVersion: process.env.npm_package_version});
+});
+
+//Student Account Page
+router.get('/account', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+
+    res.render('student/account', { doc_Title: 'Your Account Passport-Student', user, passportVersion: process.env.npm_package_version});
 });
 
 module.exports = router;

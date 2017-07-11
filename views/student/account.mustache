@@ -1,0 +1,214 @@
+{{>head}}
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+
+<body class="grey darken-4">
+<main>
+    <nav id="navBar">
+        <div class="nav-wrapper nav-noshadow" data-stellar-ratio="5">
+          <!--SideNav-->
+          <ul id="slide-out" class="side-nav">
+           <li><div class="userView">
+             <div class="background">
+               <img alt="Side-Nav Background" src="/images/stunav.jpg">
+             </div>
+             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
+             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
+             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
+           </div></li>
+           
+           <li><a class="waves-effect" href="/student">Home</a></li>
+           <li><a class="waves-effect active" href="#!">Your Account</a></li>
+           <li><div class="divider"></div></li>
+           <!--<li><a class="subheader">Subheader</a></li>-->
+           <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
+
+         </ul>
+          <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
+            <a href="#" class="brand-logo center">Passport</a>
+            <span class="nav-right">{{passportVersion}}</span>
+        </div>
+    </nav>
+
+    <!--Top paralax-->
+    <div class="bigHead red" data-stellar-ratio="0.5">
+        <h3 class="white-text"  >Your Passport Account</h3>
+    </div>
+    <div class="userCardBundle">
+    <!--Main Info-->
+     <div class="row">
+        <div class="col s12 m12 l6 push-l3">
+          <div class="card small">
+            <div class="card-image">
+              <img src="/api/media/background/{{user.id}}.svg">
+              
+            </div>
+            <div class="card-content">
+                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img">
+                <br>
+              <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Schedules-->
+      <div class="row" >
+        <div class="col s12 m12 l6 push-l3">
+          <div class="card" >
+             
+            <div class="card-content">
+            <span class="right waves-effect"><i class="material-icons md-48 md-light">edit</i></span>
+             <span class="card-title">Schedules</span>
+
+               <table class="highlight responsive-table">
+                <thead>
+                  <tr>
+                      <th>Period</th>
+                      <th>Class</th>
+                      <th>Teacher</th>
+                      <th>Room</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>History</td>
+                    <td>Teacher1</td>
+                    <td>1234</td>
+                  </tr>
+                  <tr>
+                    <td>B</td>
+                    <td>Math</td>
+                    <td>Mr. Teacher</td>
+                    <td>2546</td>
+                  </tr>
+                  <tr>
+                    <td>C</td>
+                    <td>Science</td>
+                    <td>Ms. Teacher</td>
+                    <td>4864</td>
+                  </tr>
+                  <tr>
+                    <td>D</td>
+                    <td>Theater</td>
+                    <td>Dr. Doctor</td>
+                    <td>5248</td>
+                  </tr>
+                  <tr>
+                    <td>E</td>
+                    <td>Engrish</td>
+                    <td>Ms. Humpdidinkle</td>
+                    <td>1025</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Settings-->
+      <div class="row">
+        <div class="col s12 m12 l3 push-l3">
+          <div class="card">
+             
+            <div class="card-content">
+             <span class="card-title">Settings</span>
+               <div class="switch">
+               Email Reminders:
+                <label>
+                  <input type="checkbox">
+                  <span class="lever"></span>
+                </label>
+              </div>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+     <!-- Scripts -->
+    <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+    <script>
+        if ('addEventListener' in window) {
+            window.addEventListener('load', function () {
+                document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+            });
+            document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+        }
+    </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="/js/materialize.js"></script>
+    <script src="/js/passport.js"></script>
+    <script src="/jquery.stellar/jquery.stellar.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".button-collapse").sideNav();
+            $(window).stellar({
+                responsive: true,
+            });
+            //navMorphInit("SBmorphBox");
+        });
+
+       
+
+
+
+
+        
+
+
+        //const game = new IconGame("avatar");
+        /*window.addEventListener("keydown", keydown, false)
+        window.addEventListener("keyup", keyup, false)*/
+        //EE (I'm a nerd :P)
+        //call key press function 
+        document.onkeydown = checkKey;
+        var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        var konamiUser = 0;
+        function checkKey(e) {
+            e = e || window.event;
+            //check if game is running
+            /*if(game.isRunning) {
+                console.log("runn")
+            }*/
+            if(konami[konamiUser] != e.keyCode) {
+                konamiUser = 0;
+            } else {
+                konamiUser++;
+            }
+            if (konami.length == konamiUser) {
+                konamiUser = 0;
+                console.log("TODO")
+            }
+            
+        }
+        
+    </script>
+
+</body>
+
+</html>

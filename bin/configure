@@ -39,7 +39,14 @@ p.then(function(conn) {
     });
     r.db('passport').tableCreate('scheduleCalendar').run(conn, function(res) {
       console.log(res); 
-
+    });
+    r.db('passport').tableCreate('userSchedules').run(conn, function(res) {
+      console.log(res); 
+      /*
+      r.db('passport').table("userSchedules").indexCreate("userId").run(conn, function(res) {
+        console.log("SECONDARY")
+        console.log(res); 
+      });*/
     });
     r.db('passport').tableCreate('scheduleRepeating').run(conn, function(res) {
       console.log(res); 
@@ -49,9 +56,11 @@ p.then(function(conn) {
       process.exit();
     });
 
-   });
-//
-	
+
+
+//secondary index
+   
+})
 }).error(function(error) {
     console.err(error);
 });

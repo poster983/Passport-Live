@@ -18,18 +18,33 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-'use strict';
+//'use strict';
 
 
 var r = require('rethinkdb');
+var connection = null;
+var config = require('config');
+
+exports.setup = function() {
 
 
-  var connection = null;
-r.connect( {host: 'localhost', port: 28015, db: 'passport'}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
-});
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
+            if (err) {
 
-r.conn = connection
+                throw err;
+            }
+            console.log("DB Connected")
+            connection = conn;
 
-module.exports = r;
+            return true
+        });
+}
+
+exports.get = function() {
+        return r;
+}
+exports.conn = function() {
+    return connection;
+}
+
+//return module.exports
