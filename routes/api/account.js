@@ -27,6 +27,7 @@ var cors = require('cors');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/accounts.js'); //("jdsfak"); 
 var passport = require('passport');
+var config = require('config');
 
 
 //var for backwards compadability.  neads to be removed later 

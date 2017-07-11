@@ -25,6 +25,8 @@ email: hi@josephhassell.com
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require('config');
+var bcrypt = require('bcrypt-nodejs');
+var human = require('humanparser');
 const util = require('util')
 
 /** 
