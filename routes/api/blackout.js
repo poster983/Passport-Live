@@ -63,7 +63,12 @@ router.get('/:userId', function(req, res, next) {
 
 //select by USER ID AND Day
 router.get('/:userId/:day', function(req, res, next) {
-    //
+    api.getBlackoutByUserIdAndDate(req.params.userId, req.params.day, function(err, doc) {
+        if (err) {
+            return next(err);
+        }
+        res.json(doc);
+    })
 })
 
 module.exports = router;

@@ -63,7 +63,20 @@ exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
     }
     var date = moment(date).format("Y-MM-DD"); //get date in format {string}
     
-    
+    r.table('blackouts').filter({
+        userId: userId,
+        date: date
+    }).run(db.conn(), function(err, curDoc) {
+        if (err) {
+            return done(err);
+        }
+        curDoc.toArray(function(err, doc) {
+            if (err) {
+                return done(err);
+            }
+            return done(null, doc);
+        })
+    });
 
 
     //do your thing...
