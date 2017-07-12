@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tutorial: Configs - Documentation</title>
+    <title>passportAuthApi - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,21 +34,523 @@
 
 <div id="main">
     
-    <h1 class="page-title">Tutorial: Configs</h1>
+    <h1 class="page-title">passportAuthApi</h1>
     
 
-    <section class="tutorial">
+    <!--container.tmpl-->
 
-<header class="tutorial-header">
+
+
+
+
+<section>
+
+
+
+<header data-tmpl="container.tmpl">
+    
+      <h2>Module: passportAuthApi</h2>
+        
     
 
+    
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#newJWT">newJWT</a></li>
+            
+            <li><a href="#newJWTForCookies">newJWTForCookies</a></li>
+            </ul></dd></dl></div>
 </header>
 
 <article>
-    <h1>How to configure Passport</h1>
+    <div class="container-overview">
+    
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_auth.js.html">auth.js</a>:<a href="modules_passport-api_auth.js.html#line38">38</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newJWT">
+      <a href="#params-newJWT"><span class="type-signature">(async, inner) </span>newJWT</a><span class="signature">(userID, done)</span><span class="type-signature"> &rarr; {done}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Generates a new JWT with no Double Submit Cookies Method support.  Ment for phone apps.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newJWT">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newJWT" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of user</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">done</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Generates a new JWT with no Double Submit Cookies Method support.  Ment for phone apps.\n    * @function newJWT\n    * @async\n    * @param {string} userID -Id of user\n    * @param {callback} done\n    * @returns {done}\n  */","meta":{"filename":"auth.js","lineno":38,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/auth.js"},"description":"<p>Generates a new JWT with no Double Submit Cookies Method support.  Ment for phone apps.</p>","kind":"function","name":"newJWT","async":true,"params":[{"type":{"names":["string"]},"description":"<p>Id of user</p>","name":"userID"},{"type":{"names":["callback"]},"name":"done"}],"returns":[{"type":{"names":["done"]}}],"longname":"module:passportAuthApi~newJWT","scope":"inner","memberof":"module:passportAuthApi","___id":"T000002R000091","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newJWT","signature":"<span class=\"signature\">(userID, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-passportAuthApi.html\">passportAuthApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_auth.js.html">auth.js</a>:<a href="modules_passport-api_auth.js.html#line55">55</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newJWTForCookies">
+      <a href="#params-newJWTForCookies"><span class="type-signature">(async, inner) </span>newJWTForCookies</a><span class="signature">(userID, done)</span><span class="type-signature"> &rarr; {done}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Generates a new JWT WITH Double Submit Cookies Method support.  Ment for web apps.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newJWTForCookies">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newJWTForCookies" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of user</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>returnsjwt token and a random string for</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">done</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Generates a new JWT WITH Double Submit Cookies Method support.  Ment for web apps.\n    * @function newJWTForCookies\n    * @async\n    * @param {string} userID -Id of user\n    * @param {callback} done - returnsjwt token and a random string for \n    * @returns {done}\n  */","meta":{"filename":"auth.js","lineno":55,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/auth.js"},"description":"<p>Generates a new JWT WITH Double Submit Cookies Method support.  Ment for web apps.</p>","kind":"function","name":"newJWTForCookies","async":true,"params":[{"type":{"names":["string"]},"description":"<p>Id of user</p>","name":"userID"},{"type":{"names":["callback"]},"description":"<p>returnsjwt token and a random string for</p>","name":"done"}],"returns":[{"type":{"names":["done"]}}],"longname":"module:passportAuthApi~newJWTForCookies","scope":"inner","memberof":"module:passportAuthApi","___id":"T000002R000094","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newJWTForCookies","signature":"<span class=\"signature\">(userID, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-passportAuthApi.html\">passportAuthApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+    
+
+    
+
+    
 </article>
 
 </section>
+
+
+
 
 </div>
 

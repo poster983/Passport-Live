@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>utils - Documentation</title>
+    <title>authRESTAPI - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">utils</h1>
+    <h1 class="page-title">authRESTAPI</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: utils</h2>
+      <h2>Module: authRESTAPI</h2>
         
     
 
@@ -59,9 +59,9 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#cleanUser">cleanUser</a></li>
+            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
             
-            <li><a href="#dscm">dscm</a></li>
+            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -101,7 +101,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line28">28</a>
+    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line82">82</a>
   </code>
 </div>
 
@@ -112,8 +112,8 @@
 
     
 
-    <h4 class="name" id="~cleanUser">
-      <a href="#params-cleanUser"><span class="type-signature">(inner) </span>cleanUser</a><span class="signature">(user)</span><span class="type-signature"> &rarr; {<a href="global.html#user">user</a>}</span>
+    <h4 class="name" id="~handleAuthLogin">
+      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -123,228 +123,38 @@
 
 
 
+      <a href="#api-handleAuthLogin">
+        <span class="label label-api">API: POST /api/auth/login/</span>
+      </a>
+    
 
 
 
-
+<span class="label label-default">Async</span>
 
 
 
 
 <div class="description">
-    <p>Removes data like passwords and other sensitive info before sending it to the user</p>
+    <p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>
 </div>
 
 
 
 
-
-
-
-
-<div class="collapse_" id="methodCollapse-cleanUser">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
+    <h5>Example</h5>
     
-
+        <p class="code-caption">Body structure: </p>
     
+    <pre class="prettyprint"><code>email:&lt;user's email>,
+password:&lt;user's password></code></pre>
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-  <div id="params-cleanUser" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>user</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#user">user</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The user to clean.  The same user object found in the database</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="global.html#user">user</a></span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Removes data like passwords and other sensitive info before sending it to the user \n    * @function cleanUser\n    * @link module:utils\n    * @param {user} user - The user to clean.  The same user object found in the database \n    * @returns {user}\n    */","meta":{"filename":"index.js","lineno":28,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Removes data like passwords and other sensitive info before sending it to the user</p>","kind":"function","name":"cleanUser","tags":[{"originalTitle":"link","title":"link","text":"module:utils","value":"module:utils"}],"params":[{"type":{"names":["user"]},"description":"<p>The user to clean.  The same user object found in the database</p>","name":"user"}],"returns":[{"type":{"names":["user"]}}],"longname":"module:utils~cleanUser","scope":"inner","memberof":"module:utils","___id":"T000002R000205","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~cleanUser","signature":"<span class=\"signature\">(user)</span><span class=\"type-signature\"> &rarr; {<a href=\"global.html#user\">user</a>}</span>","ancestors":["<a href=\"module-utils.html\">utils</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line47">47</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~dscm">
-      <a href="#params-dscm"><span class="type-signature">(inner) </span>dscm</a><span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {next}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Checks if req is using DSCM and then allows passport to view the data</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-dscm">
+<div class="collapse_" id="methodCollapse-handleAuthLogin">
 
   
 
@@ -391,7 +201,9 @@
   <div class="bs-callout bs-callout-default">
     <h5>To Do</h5>
     <ul>
-        <li>Make a passportjs stratagy for this</li>
+        <li>Test application/json</li>
+    
+        <li>Require passport to run over https</li>
     </ul>
   </div>
 
@@ -400,7 +212,7 @@
 
 
 
-  <div id="params-dscm" class="bs-callout bs-callout-primary">
+  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -433,7 +245,7 @@
             <td class="type">
             
                 
-<span class="param-type">json</span>
+<span class="param-type"><a href="global.html#request">request</a></span>
 
 
             
@@ -443,7 +255,7 @@
 
             
 
-            <td class="description last"><p>Request</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -456,7 +268,7 @@
             <td class="type">
             
                 
-<span class="param-type">json</span>
+<span class="param-type"><a href="global.html#response">response</a></span>
 
 
             
@@ -466,30 +278,7 @@
 
             
 
-            <td class="description last"><p>Response</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Callback</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -510,9 +299,20 @@
 
 
 
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
 
+
+  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
+    <h5>
+      API Route:
+      POST /api/auth/login/
+    </h5>
+
+    
+
+    
+
+    
+        <h6>Body</h6>
         
 
 
@@ -522,16 +322,37 @@
     </dt>
     <dd>
         
-<span class="param-type">next</span>
+<span class="param-type">application/x-www-form-urlencoded</span>
 
 
     </dd>
 </dl>
 
     
-</div>
-  
 
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Sends Status code of 200.  Sets Cookies for webapp auth
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
 
 
 
@@ -541,7 +362,285 @@
 
 <!--
 <pre>
-{"comment":"/**\n        * Checks if req is using DSCM and then allows passport to view the data \n        * @function dscm\n        * @link module:utils\n        * @param {json} req - Request \n        * @param {json} res - Response \n        * @param {function} next - Callback \n        * @returns {next}\n        * @todo Make a passportjs stratagy for this \n        */","meta":{"filename":"index.js","lineno":47,"columnno":5,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Checks if req is using DSCM and then allows passport to view the data</p>","kind":"function","name":"dscm","tags":[{"originalTitle":"link","title":"link","text":"module:utils","value":"module:utils"}],"params":[{"type":{"names":["json"]},"description":"<p>Request</p>","name":"req"},{"type":{"names":["json"]},"description":"<p>Response</p>","name":"res"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"next"}],"returns":[{"type":{"names":["next"]}}],"todo":["Make a passportjs stratagy for this"],"longname":"module:utils~dscm","scope":"inner","memberof":"module:utils","___id":"T000002R000207","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~dscm","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {next}</span>","ancestors":["<a href=\"module-utils.html\">utils</a>~"]}
+{"comment":"/**\n    * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/x-www-form-urlencoded}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth\n    * @todo Require passport to run over https\n    */","meta":{"filename":"auth.js","lineno":82,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/x-www-form-urlencoded"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json","Require passport to run over https"],"response":{"type":{"names":["json"]},"description":"Sends Status code of 200.  Sets Cookies for webapp auth"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R000350","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line52">52</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~handleAuthLogin">
+      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-handleAuthLogin">
+        <span class="label label-api">API: POST /api/auth/login/</span>
+      </a>
+    
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Logges the user in using passport.authenticate</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+        <p class="code-caption">Body structure: </p>
+    
+    <pre class="prettyprint"><code>email:&lt;user's email>,
+password:&lt;user's password></code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-handleAuthLogin">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
+    <ul>
+        <li>Test application/json</li>
+    
+        <li>Require passport to run over https.  Dissallow any website to use it</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
+    <h5>
+      API Route:
+      POST /api/auth/login/
+    </h5>
+
+    
+
+    
+
+    
+        <h6>Body</h6>
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">application/x-www-form-urlencoded</span>
+
+
+    </dd>
+</dl>
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Logges the user in using passport.authenticate\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/x-www-form-urlencoded}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT\n    * @todo Require passport to run over https.  Dissallow any website to use it\n    */","meta":{"filename":"auth.js","lineno":52,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/x-www-form-urlencoded"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json","Require passport to run over https.  Dissallow any website to use it"],"response":{"type":{"names":["json"]},"description":"Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R000347","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
 </pre>
 -->
 </div>
