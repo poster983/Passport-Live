@@ -49,7 +49,7 @@ function serializeUser(req, res, done) {
     * <caption>Body Structure (application/json): </caption>
     * {
     *    "date": "2017-07-11",
-    *    "periods": "["a", "b". "c"]",
+    *    "periods": ["a", "b". "c"],
     *    "userId": "1fgsdfdsg879f6f879d79f98d7g8",
     *    "message": "I am sick."
     * }
