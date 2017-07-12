@@ -35,7 +35,7 @@ var session = require('express-session')
 var FileStore = require('session-file-store')(session);
 var optional = require('optional');
 var Raven = optional('raven');
-
+var utils = require('./modules/passport-utils/index');
 
 /*Routes*/
 var rootLevel = require('./routes/index');
@@ -104,8 +104,13 @@ if(config.get('misc.storeSessionToDisc')) {
     saveUninitialized: false 
   }));
 }
+//dscm protection
+app.use(utils.dscm)
+
 app.use(passport.initialize());
 app.use(passport.session());// persistent login sessions
+
+//
 
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(require('node-sass-middleware')({

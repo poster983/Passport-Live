@@ -45,6 +45,7 @@ passport.deserializeUser(function(id, done) {
      r.table("accounts").get(id).run(connection, function(err, user) {
     done(err, user);
     console.log("deserializeUser");
+
   });
 
 });
@@ -106,9 +107,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
   //console.log(jwt_payload);
   //Get account by ID and then upt it into req.user by calling done(null, doc);
   r.table('accounts').get(jwt_payload.id).run(connection, function(err, doc) {
-    console.log(doc);
     if (err) {
-      console.error(err)
       return done(err); 
     } else if(doc) {
       return done(null, utils.cleanUser(doc));

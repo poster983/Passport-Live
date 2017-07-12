@@ -463,7 +463,7 @@ exports.getStudentSchedule = function(userID, done) {
                     if(err) {
                         return done(err);
                     }
-                    console.log(joined);
+                    //console.log(joined);
                     return done(null, joined)
                 });
                 
@@ -476,8 +476,8 @@ function recursiveStudentScheduleJoin(keys, student, done) {
     if(keys.length <= 0) {
         return done(null, student);
     }
-    console.log(student.schedule);
-    console.log(keys[0])
+    //console.log(student.schedule);
+    //console.log(keys[0])
     if(student.schedule[keys[0]].teacherID) {
         r.table('accounts').get(student.schedule[keys[0]].teacherID).pluck({
             "schedules": {
@@ -485,12 +485,12 @@ function recursiveStudentScheduleJoin(keys, student, done) {
             }, 
             "name": true
         }).run(db.conn(), function(err, teacherAccount) {
-            console.log(teacherAccount.schedules.teacher)
+            //console.log(teacherAccount.schedules.teacher)
             r.table('userSchedules').get(teacherAccount.schedules.teacher).run(db.conn(), function(err, teacher) {
                 if(err) {
                     return done(err);
                 }
-                console.log(teacher)
+                //console.log(teacher)
                 if(!teacher || !teacher.schedule || !teacher.userId) {
                     var err = new Error("teacher is not set in the db");
                     err.status = 500;

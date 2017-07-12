@@ -235,7 +235,7 @@ function handleGetAccountsByName(req, res, next) {
 
 
 //MAKE CHANGES.  REQUIRES AUTH AND PERMISSION.  
-router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
+router.patch('/groupfields/', utils.dscm, passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
 /**
     * Updates usergroup specific data.
     * REQUIRES JWT Authorization in headers.
@@ -323,9 +323,9 @@ router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: fal
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns Joined data of the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Auth
+    * @todo Auth //utils.dscm
 */
-router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req, res, next) {
+router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForStudentDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
@@ -335,6 +335,7 @@ router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req,
         if(err) {
             return next(err);
         }
+    
         res.send(data)
     })
 });

@@ -22,6 +22,8 @@ email: hi@josephhassell.com
 /** 
 * @module utils 
 */
+var jwt = require("jsonwebtoken");
+var config = require("config");
 module.exports = {
     /**
     * Removes data like passwords and other sensitive info before sending it to the user 
@@ -40,6 +42,42 @@ module.exports = {
                 return user;
             }
         }
+    },
+
+     /**
+        * Checks if req is using DSCM and then allows passport to view the data 
+        * @function dscm
+        * @link module:utils
+        * @param {json} req - Request 
+        * @param {json} res - Response 
+        * @param {function} next - Callback 
+        * @returns {next}
+        * @todo Make a passportjs stratagy for this 
+        */
+    dscm: function(req, res, next) {            
+        if(req.header("x-xsrf-token") && req.signedCookies && req.signedCookies.JWT) {
+            //using DSCM
+            jwt.verify(req.signedCookies.JWT.substring(4), config.get("secrets.api-secret-key"), function(err, decode) {
+                if(err) {
+                    return next(err);
+                }
+                if(decode.dscm == req.header("x-xsrf-token")) {
+                    //put in headder for passport auth
+                    console.log("DSCM In Use");
+                    req.headers.authorization = req.signedCookies.JWT;
+                    return next();
+
+                } else {
+                    var err = new Error("Unauthorized");
+                    err.status = 401;
+                    return next(err)
+                }
+            })
+
+        } else {
+            return next();
+        }
+        
     }
     
 }

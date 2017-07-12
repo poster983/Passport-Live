@@ -40,6 +40,7 @@ router.options('*', cors())
 * @ignore
 */
 function serializeUser(req, res, done) {
+    console.log("USer:")
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
     //delete req.user[0].password;
@@ -103,7 +104,7 @@ router.post('/login/dscm', passport.authenticate('local-login', {
             return next(err);
         }
         res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
-        res.cookie('XSRF-TOKEN', jwtData.dscm, {signed: true});
+        res.cookie('XSRF-TOKEN', jwtData.dscm);
         res.sendStatus(200);
     })
 });

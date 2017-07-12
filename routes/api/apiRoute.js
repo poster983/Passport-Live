@@ -85,6 +85,7 @@ function serializeUser(req, res, done) {
 
 //debug function
 function getHead(req, res, done) {
+    console.log(req.headers)
     console.log(req.header("Authorization"));
     done();
 };
@@ -319,12 +320,17 @@ function getPassGroups(req, res, next) {
     TESTING
 **/
 
+router.post('/test', getHead, function(req, res, next) {
+    res.status(200).json({});
+});
+
+/*
 router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
     api.tester("hi There", function(err, resp) {
         console.log("Error: " + err + " Callback: " + resp);
     });
     res.status(200).json(req.user);
-});
+});*/
 
 router.post('/test/db', function(req, res, next) {
     /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
