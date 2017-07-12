@@ -73,7 +73,7 @@ router.post('/:userGroup/', handleNewAccount);
     */
 function handleNewAccount(req, res, next) {
     //Get Params
-    console.log(req)
+    
     var email=req.body.email;
     var password=req.body.password;
     var passwordVerification=req.body.passwordVerification;
@@ -235,7 +235,7 @@ function handleGetAccountsByName(req, res, next) {
 
 
 //MAKE CHANGES.  REQUIRES AUTH AND PERMISSION.  
-router.patch('/groupfields/', utils.dscm, passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
+router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
 /**
     * Updates usergroup specific data.
     * REQUIRES JWT Authorization in headers.
