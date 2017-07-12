@@ -35,7 +35,7 @@ var session = require('express-session')
 var FileStore = require('session-file-store')(session);
 var optional = require('optional');
 var Raven = optional('raven');
-
+var utils = require('./modules/passport-utils/index');
 
 /*Routes*/
 var rootLevel = require('./routes/index');
@@ -46,6 +46,7 @@ var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
+var apiAuth = require('./routes/api/auth');
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -88,7 +89,7 @@ app.use(require('morgan')('combined'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser(config.get('secrets.cookie-secret')));
 if(config.get('misc.storeSessionToDisc')) {
   app.use(session({ 
     store: new FileStore(),
@@ -103,8 +104,13 @@ if(config.get('misc.storeSessionToDisc')) {
     saveUninitialized: false 
   }));
 }
+//dscm protection
+app.use(utils.dscm)
+
 app.use(passport.initialize());
 app.use(passport.session());// persistent login sessions
+
+//
 
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(require('node-sass-middleware')({
@@ -125,6 +131,7 @@ app.use('/administrator', administrator)
 //api routes
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
+app.use('/api/auth', apiAuth)
 //app.use('/users', users);
 
 if(Raven) {

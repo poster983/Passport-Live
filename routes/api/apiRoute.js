@@ -27,7 +27,6 @@ var router = express.Router();
 var r = require('rethinkdb');
 //var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
-var jwt = require('jsonwebtoken');
 var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
@@ -86,6 +85,7 @@ function serializeUser(req, res, done) {
 
 //debug function
 function getHead(req, res, done) {
+    console.log(req.headers)
     console.log(req.header("Authorization"));
     done();
 };
@@ -93,10 +93,10 @@ function getHead(req, res, done) {
 /** 
 AUTH 
 **/
-
+/*
 router.post('/auth/login', passport.authenticate('local-login', {
   session: false
-}), handleAuthLogin);
+}), handleAuthLogin);*/
 /**
 * Logges the user in using passport.authenticate
 * @function handleAuthLogin
@@ -112,19 +112,20 @@ router.post('/auth/login', passport.authenticate('local-login', {
 * @todo Test application/json
 * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
 * @todo Require passport to run over https
-*/
+*//*
 function handleAuthLogin(req, res) {
     //Make a token
+    /*
     var token = jwt.sign({
         id: req.user[0].id,
       }, config.get('secrets.api-secret-key'), {
         expiresIn: 60*60*24
-    });
+    });*
     //Return token to user
     res.status(200).json({
         token: "JWT " + token
     });
-}
+}*/
 
 
 
@@ -319,12 +320,17 @@ function getPassGroups(req, res, next) {
     TESTING
 **/
 
+router.post('/test', getHead, function(req, res, next) {
+    res.status(200).json({});
+});
+
+/*
 router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
     api.tester("hi There", function(err, resp) {
         console.log("Error: " + err + " Callback: " + resp);
     });
     res.status(200).json(req.user);
-});
+});*/
 
 router.post('/test/db', function(req, res, next) {
     /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
