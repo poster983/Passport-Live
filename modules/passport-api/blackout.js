@@ -68,3 +68,4 @@ exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
 
     //do your thing...
 }
+
