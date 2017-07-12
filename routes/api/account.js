@@ -20,14 +20,14 @@ email: hi@josephhassell.com
 /**
 * @module accountRESTAPI
 */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var r = require('../../modules/db/index.js');
+var r = require("../../modules/db/index.js");
 var cors = require('cors');
-var utils = require('../../modules/passport-utils/index.js');
-var api = require('../../modules/passport-api/accounts.js'); //("jdsfak"); 
-var passport = require('passport');
-var config = require('config');
+var utils = require("../../modules/passport-utils/index.js");
+var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
+var passport = require("passport");
+var config = require("config");
 
 
 //var for backwards compadability.  neads to be removed later 
@@ -50,7 +50,7 @@ function serializeUser(req, res, done) {
 //NEW ACCOUNT//
 
 
-router.post('/:userGroup/', handleNewAccount);
+
 /**
     * Creates A New Account
     * @function handleNewAccount
@@ -71,7 +71,7 @@ router.post('/:userGroup/', handleNewAccount);
     *    "permissionKey": HJhd38
     * }
     */
-function handleNewAccount(req, res, next) {
+    router.post("/:userGroup/", function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
@@ -126,10 +126,9 @@ function handleNewAccount(req, res, next) {
     }, function(err) {
         next(err);
     })
-}
+});
 
-//GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
-router.get('/id/:id/', handleGetAccountsById);
+
 /**
     * GETs accounts by id
     * @function handleGetAccountsById
@@ -142,8 +141,8 @@ router.get('/id/:id/', handleGetAccountsById);
     * @apiresponse {json} Returnes the safe info
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-
-function handleGetAccountsById(req, res, next) {
+//GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
+router.get("/id/:id/", function handleGetAccountsById(req, res, next) {
     var id = req.params.id;
     api.getUserByID(r.conn(), id, function(err, data) {
         if(err) {
@@ -151,9 +150,9 @@ function handleGetAccountsById(req, res, next) {
         }
         res.json(utils.cleanUser(data));
     })
-}
+});
 
-router.get('/userGroup/:userGroup/', handleGetAccountsByUserGroup);
+
 /**
     * GETs all accounts by usergroup
     * @function handleGetAccountsByUserGroup
@@ -166,7 +165,7 @@ router.get('/userGroup/:userGroup/', handleGetAccountsByUserGroup);
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-function handleGetAccountsByUserGroup(req, res, next) {
+router.get("/userGroup/:userGroup/", function handleGetAccountsByUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
 
     
@@ -189,9 +188,9 @@ function handleGetAccountsByUserGroup(req, res, next) {
         }
         res.json(ret);
     }); 
-}
+});
 
-router.get('/userGroup/:userGroup/name/:name', handleGetAccountsByName);
+
 /**
     * GETs accounts by name
     * @function handleGetAccountsByName
@@ -205,7 +204,7 @@ router.get('/userGroup/:userGroup/name/:name', handleGetAccountsByName);
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-function handleGetAccountsByName(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
@@ -229,13 +228,13 @@ function handleGetAccountsByName(req, res, next) {
         }
         res.json(ret);
     }); 
-}
+});
 
 //Special dashboard specific gets//
 
 
 //MAKE CHANGES.  REQUIRES AUTH AND PERMISSION.  
-router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), handleUpdateAccountGroupFieldsByUser);
+
 /**
     * Updates usergroup specific data.
     * REQUIRES JWT Authorization in headers.
@@ -273,7 +272,7 @@ router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), h
     * 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-function handleUpdateAccountGroupFieldsByUser(req, res, next) {
+router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     var updateDoc = req.body;
 
      api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
@@ -282,9 +281,9 @@ function handleUpdateAccountGroupFieldsByUser(req, res, next) {
         }
         return res.send(data);
     })
-}
+});
 
-router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     console.log(dashboard)
@@ -296,7 +295,7 @@ router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: fals
     })
 });
 
-router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     if(!req.user.schedules || !req.user.schedules[dashboard]) {
@@ -323,8 +322,9 @@ router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: fal
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns Joined data of the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Auth //utils.dscm
+    * @todo Auth
 */
+//MAKE REQ.USER SUPPLY THE ID
 router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForStudentDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
