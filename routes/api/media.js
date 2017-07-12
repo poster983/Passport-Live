@@ -53,7 +53,7 @@ jdenticon.config = {
 * @apiresponse {image/svg\u002Bxml} Returnes the unique svg image
 * @todo move rethink db to passport-api module
 */
-router.get('/background/:id.svg',function generateBackdrop(req, res, next) {
+router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
     
     res.setHeader('Content-Type', 'image/svg+xml');
     r.table('accounts').get(req.params.id).run(db.conn(), function(err, data) {
@@ -88,7 +88,7 @@ router.get('/background/:id.svg',function generateBackdrop(req, res, next) {
 * @apiresponse {image/svg\u002Bxml} Returnes the avatar png
 * @todo move rethink db to passport-api module
 */
-router.get('/avatar/:id/:size.svg', function getAvatar(req, res, next) {
+router.get("/avatar/:id/:size.svg", function getAvatar(req, res, next) {
     res.setHeader('Content-Type', 'image/svg+xml');
     var size = parseInt(req.params.size)
     if(isNaN(size)) {

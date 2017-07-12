@@ -71,7 +71,7 @@ function serializeUser(req, res, done) {
     *    "permissionKey": HJhd38
     * }
     */
-    router.post('/:userGroup/', function handleNewAccount(req, res, next) {
+    router.post("/:userGroup/", function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
@@ -142,7 +142,7 @@ function serializeUser(req, res, done) {
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 //GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
-router.get('/id/:id/', function handleGetAccountsById(req, res, next) {
+router.get("/id/:id/", function handleGetAccountsById(req, res, next) {
     var id = req.params.id;
     api.getUserByID(r.conn(), id, function(err, data) {
         if(err) {
@@ -165,7 +165,7 @@ router.get('/id/:id/', function handleGetAccountsById(req, res, next) {
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get('/userGroup/:userGroup/', function handleGetAccountsByUserGroup(req, res, next) {
+router.get("/userGroup/:userGroup/", function handleGetAccountsByUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
 
     
@@ -204,7 +204,7 @@ router.get('/userGroup/:userGroup/', function handleGetAccountsByUserGroup(req, 
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get('/userGroup/:userGroup/name/:name', function handleGetAccountsByName(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
@@ -272,7 +272,7 @@ router.get('/userGroup/:userGroup/name/:name', function handleGetAccountsByName(
     * 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
+router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     var updateDoc = req.body;
 
      api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
@@ -283,7 +283,7 @@ router.patch('/groupfields/', passport.authenticate('jwt', { session: false}), f
     })
 });
 
-router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     console.log(dashboard)
@@ -295,7 +295,7 @@ router.post('/schedule/:dashboard', passport.authenticate('jwt', { session: fals
     })
 });
 
-router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     if(!req.user.schedules || !req.user.schedules[dashboard]) {
@@ -324,7 +324,7 @@ router.patch('/schedule/:dashboard', passport.authenticate('jwt', { session: fal
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo Auth
 */
-router.get('/schedule/student/id/:id/', function getSchedulesForStudentDash(req, res, next) {
+router.get("/schedule/student/id/:id/", function getSchedulesForStudentDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
