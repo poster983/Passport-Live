@@ -20,14 +20,14 @@ email: hi@josephhassell.com
 /**
 * @module accountRESTAPI
 */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var r = require('../../modules/db/index.js');
+var r = require("../../modules/db/index.js");
 var cors = require('cors');
-var utils = require('../../modules/passport-utils/index.js');
-var api = require('../../modules/passport-api/accounts.js'); //("jdsfak"); 
-var passport = require('passport');
-var config = require('config');
+var utils = require("../../modules/passport-utils/index.js");
+var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
+var passport = require("passport");
+var config = require("config");
 
 
 //var for backwards compadability.  neads to be removed later 
