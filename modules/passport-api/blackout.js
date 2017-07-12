@@ -31,12 +31,13 @@ exports.newBlackout = function(date, periods, userId, message, done) {
     //add the moment js checker
 
     //check array
-    if(!Array.isArray(periods)) {
+    if(!Array.isArray(periods) || periods.length <= 0) {
         var err = new Error("periods Not A Valid Array")
         err.status = 400; //bad request
         return done(err);  //callback error 
     }
-    if(userId) {
+    //check userId
+    if(!userId) {
         var err = new Error("userId not present")
         err.status = 400; //bad request
         return done(err);  //callback error 
