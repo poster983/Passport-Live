@@ -18,6 +18,9 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
+/**
+* @module blackoutRESTAPI
+*/
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -36,8 +39,22 @@ function serializeUser(req, res, done) {
     req.user = utils.cleanUser(req.user);
     done();
 };
-
-router.post('/', function(req, res, next) {
+/**
+    * Returns all blackouts by the user ID
+    * @function newBlackout
+    * @api POST /api/blackout/
+    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
+    * @apibody {none}
+    * @example 
+    * <caption>Body Structure (application/json): </caption>
+    * {
+    *    "date": "2017-07-11",
+    *    "periods": "["a", "b". "c"]",
+    *    "userId": "1fgsdfdsg879f6f879d79f98d7g8",
+    *    "message": "I am sick."
+    * }
+    */
+router.post('/', function newBlackout(req, res, next) {
     var date = req.body.date;
     var periods = req.body.periods;
     var userId = req.body.userId;
@@ -51,8 +68,14 @@ router.post('/', function(req, res, next) {
     }) 
 })
 
-//select by USER ID 
-router.get('/user/:userId', function(req, res, next) {
+/**
+    * Returns all blackouts by the user ID
+    * @function getBlackoutByUserId
+    * @api POST /api/blackout/user/:userId
+    * @apiparam {string} userId - The ID corresponding to an account 
+    * @returns {json} - blackout row
+    */
+router.get('/user/:userId', function getBlackoutByUserId(req, res, next) {
     api.getBlackoutByUserId(req.params.userId, function(err, doc) {
         if(err) {
             return next(err);

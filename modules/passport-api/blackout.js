@@ -18,12 +18,30 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
+/**
+* @module blackoutAPI
+*/
+
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require("config");
 var moment = require("moment");
 
 exports.newBlackout = function(date, periods, userId, message, done) {
+    //add the moment js checker
+
+    //check array
+    if(!Array.isArray(periods)) {
+        var err = new Error("periods Not A Valid Array")
+        err.status = 400; //bad request
+        return done(err);  //callback error 
+    }
+    if(userId) {
+        var err = new Error("userId not present")
+        err.status = 400; //bad request
+        return done(err);  //callback error 
+    }
+    
     r.table("blackouts").insert({
         date: date,
         periods: periods,
