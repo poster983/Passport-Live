@@ -193,17 +193,7 @@ email: hi@josephhassell.com
                     <span class="card-title">Get A Pass</span>
 
                       <form id="passForm" method="post">
-                          <div id="from" class="section">
-                            <h6>Leaving From:</h6>
-
-                            <!--Select My Teachers-->
-                            <div id="selectMyTeachersDiv" class="input-field col s12">
-                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" onchange="onSelectMyTeachersChange(this)">
-                                <option value="" disabled selected>Choose A Person</option>
-                              </select>
-                              <label>Select a Person</label>
-                            </div>
-                          </div>
+                          
                           <div id="to" class="section">
                             <h6>Going To:</h6>
 
@@ -243,6 +233,18 @@ email: hi@josephhassell.com
                             
                           </div>
 
+                          <!--SELECT TEACHER W/ PERIOD-->
+                          <div id="from" class="section">
+                            <h6>Leaving From:</h6>
+
+                            <!--Select My Teachers-->
+                            <div id="selectMyTeachersDiv" class="input-field col s12">
+                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" onchange="onSelectMyTeachersChange(this)">
+                                <option value="" disabled selected>Choose A Person</option>
+                              </select>
+                              <label>Select a Person</label>
+                            </div>
+                          </div>
                          
                         <!--Advanced-->
                       <div>
@@ -314,7 +316,7 @@ email: hi@josephhassell.com
                 //temp
                 $('#fullAjaxLoadingScreen').removeClass("loading");
                 
-                $.when(setPassGroupSelect(), checkDebugModeCookies()).done(function(a1, a2){
+                $.when(setPassGroupSelect(), checkDebugModeCookies()).done(function(a1, a2, a3){
                   $('#fullAjaxLoadingScreen').removeClass("loading");
                 });
                 
@@ -354,7 +356,7 @@ email: hi@josephhassell.com
               }
 
               /** Fill My Teachers **/
-
+              /*
               function getMyTeachers() {
                 $.ajax({
                   type: "get",
@@ -362,18 +364,23 @@ email: hi@josephhassell.com
                   dataType: "json",
                   beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                   success: function(data) {
-
+                    if(data && data.schedule) {
+                      var keys = Object.keys(data.schedule);
+                      for(var i = 0; i < keys.length; i++) {
+                        $("#selectMyTeachers").append("<option value=\"" + data.schedule[keys].teacher  + "\" disabled selected>Choose A Person</option>")
+                      }
+                    } else {
+                      var err = new Error("data.schedule not defined" )
+                      errorHand(err)
+                    }
                   },
                   error: function(jqXHR) {
                     errorHand(jqXHR)
                   }                      
                 });
-              }
+              }*/
 
-              function onSelectMyTeachersChange(select) {
-                "dsfsdf"
-              }
-
+             //STAGE 1//
               /**Fill Pass Groups**/
 
               function getPassGroups(done) {
@@ -406,8 +413,6 @@ email: hi@josephhassell.com
                   }
                 })
               }
-
-
               function onPassGroupSelectChange(select) {
                 console.log(select)
                 //delete all dchildern
@@ -427,6 +432,8 @@ email: hi@josephhassell.com
                   $("#selectPeopleDiv").show();
                 }
               }
+
+              //STAGE 2.A//
               function preparePeopleSelect(userGroup) {
                  $.ajax({
                     type: "get",
@@ -450,9 +457,7 @@ email: hi@josephhassell.com
                     }                      
                   });
               }
-
               //when the people select changes 
-
               function onSelectPeopleChange(select) {
                 //get full account data 
                 searchAccountsByID(select.value, function(err, data) {
@@ -470,7 +475,20 @@ email: hi@josephhassell.com
 
                 })
               }
+              function searchAccountsByID(id, done) {
+                    if(id == "") {
+                      return done(null, null);
+                    }
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/id/"+id,
+                    dataType: "json",
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                }
 
+              //STAGE 2.B//
                 /**Autocomplete Accounts**/
                 function initAutocompleteAccounts(data) {
                   $('input.autocomplete').autocomplete({
@@ -481,10 +499,6 @@ email: hi@josephhassell.com
                     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                   });
                 }
-
-
-                
-                    
                 $("#autocomplete-account").keyup(function() {
                   searchAccounts(currGroup, $("#autocomplete-account").val(), function(err, data) {
                     if(err) {
@@ -513,8 +527,7 @@ email: hi@josephhassell.com
                   });
                   console.log($("#autocomplete-account").val())
                 })
-              
-              
+             
                 function searchAccounts(userGroup, query, done) {
                     if(!query|| userGroup == "") {
                       return done(null, null);
@@ -526,30 +539,8 @@ email: hi@josephhassell.com
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      
                   });
-                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
-                    if(err) {
-                      console.error(err);
-                    } else {
-                      return data;
-                    }
-
-                  });*/
                 }
-
-                function searchAccountsByID(id, done) {
-                    if(id == "") {
-                      return done(null, null);
-                    }
-                   $.ajax({
-                    type: "get",
-                    url: "/api/account/id/"+id,
-                    dataType: "json",
-                    success: function(data) {done(null, data)},
-                    error: function(jqXHR) {done(jqXHR)}                      
-                  });
-                }
-
-
+                //STAGE 3//
                 /* Date Things */
 
                 function setupDatePicker(max, disable) {
@@ -572,7 +563,7 @@ email: hi@josephhassell.com
                 }
 
                 /* Periods */
-
+                /*
                 function setupPeriods() {
                   if(dayToCome == "") {
                     return false;
@@ -616,7 +607,12 @@ email: hi@josephhassell.com
                     error: function(jqXHR) {errorHand(jqXHR)}                      
                   });
                 } 
+                */
 
+                //TEACHER-PERIODS//
+                 function onSelectMyTeachersChange(select) {
+
+                }
 
                 
 
