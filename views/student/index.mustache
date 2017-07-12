@@ -355,7 +355,24 @@ email: hi@josephhassell.com
 
               /** Fill My Teachers **/
 
+              function getMyTeachers() {
+                $.ajax({
+                  type: "get",
+                  url: "/api/account/schedule/student/id/" + idOfUser,
+                  dataType: "json",
+                  beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                  success: function(data) {
+                    
+                  },
+                  error: function(jqXHR) {
+                    errorHand(jqXHR)
+                  }                      
+                });
+              }
 
+              function onSelectMyTeachersChange(select) {
+
+              }
 
               /**Fill Pass Groups**/
 
