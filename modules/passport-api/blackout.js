@@ -23,9 +23,9 @@ var db = require('../../modules/db/index.js');
 var config = require("config");
 var moment = require("moment");
 
-exports.newBlackout = function(day, periods, userId, message, done) {
+exports.newBlackout = function(date, periods, userId, message, done) {
     r.table("blackouts").insert({
-        day: day,
+        date: date,
         periods: periods,
         userId: userId,
         message: message
@@ -62,7 +62,7 @@ exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
         return done(err);  //callback error 
     }
     var date = moment(date).format("Y-MM-DD"); //get date in format {string}
-    
+    console.log(userId)
     r.table('blackouts').filter({
         userId: userId,
         date: date

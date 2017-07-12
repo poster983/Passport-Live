@@ -38,12 +38,12 @@ function serializeUser(req, res, done) {
 };
 
 router.post('/', function(req, res, next) {
-    var day = req.body.day;
+    var date = req.body.date;
     var periods = req.body.periods;
     var userId = req.body.userId;
     var message = req.body.message;
 
-    api.newBlackout(day, periods, userId, message, function(err, trans) {
+    api.newBlackout(date, periods, userId, message, function(err, trans) {
         if (err) {
             return next(err);
         }
@@ -52,7 +52,7 @@ router.post('/', function(req, res, next) {
 })
 
 //select by USER ID 
-router.get('/:userId', function(req, res, next) {
+router.get('/user/:userId', function(req, res, next) {
     api.getBlackoutByUserId(req.params.userId, function(err, doc) {
         if(err) {
             return next(err);
@@ -62,8 +62,8 @@ router.get('/:userId', function(req, res, next) {
 })
 
 //select by USER ID AND Day
-router.get('/:userId/:day', function(req, res, next) {
-    api.getBlackoutByUserIdAndDate(req.params.userId, req.params.day, function(err, doc) {
+router.get('/user/:userId/date/:date', function(req, res, next) {
+    api.getBlackoutByUserIdAndDate(req.params.userId, req.params.date, function(err, doc) {
         if (err) {
             return next(err);
         }
