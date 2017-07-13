@@ -303,6 +303,7 @@ email: hi@josephhassell.com
         <!--<script src="js/PICS.js"></script>-->
         <script>
               /*Vars*/
+              var idOfUser = "{{user.id}}";
               var currGroup = "";
               var toPerson = "";
               var dayToCome = "";
@@ -559,7 +560,8 @@ email: hi@josephhassell.com
                 function onDateChange(date) {
                   //get hidden date vfalue
                   dayToCome = $('[name=dayToCome]').val();
-                  setupPeriods();
+                  //setupPeriods();
+                  setupMyTeachers();
                 }
 
                 /* Periods */
@@ -608,11 +610,135 @@ email: hi@josephhassell.com
                   });
                 } 
                 */
-
+                //STAGE 4//
                 //TEACHER-PERIODS//
+                function getDaySchedule(day, done) {
+                  $.ajax({
+                    type: "get",
+                    url: "/api/schedule/for/"+dayToCome,
+                    dataType: "json",
+                    success: function(data) {
+                      done(null, data)
+                    },  
+                    error: function(jqXHR) {return done(jqXHR)}
+                  })
+                }
+
+                function getMySchedules(done) {
+                   $.ajax({
+                      type: "get",
+                      url: "/api/account/schedule/student/id/" + idOfUser,
+                      dataType: "json",
+                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                      success: function(data) {done(null, data)},
+                      error: function(jqXHR) {done(jqXHR)}                      
+                    });
+                 }
+
+                 function parseTodaysSchedule(day, done) {
+                  getDaySchedule(day, function(err, schedule) {
+                    if(err) {
+                      return done(err)
+                    }
+                    //multiple periods
+                      if(schedule.length > 0 ) {
+                        //most important schedule
+                        //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+                        var mIS;
+                        for(var i = 0; i < schedule.length; i++) {
+                          if(i==0) {
+                            mIS = schedule[i];
+                          }
+                          if(schedule[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
+                            mIS = schedule[i]
+                          }
+                          //console.log(mIS)
+                          //end
+                          if(i >= schedule.length-1 ) {
+                            return done(null, mIS)
+                          }
+                        }
+                      } else {
+                        var err = new Error("No Schedule Defined Today");
+                        return done(err)
+                      }
+                  })
+                 }
+
+                 function orderMyScheduleByTodaysSchedule(mySchedule, todaysSchedule, done) {
+                  
+                  console.log(todaysSchedule)
+                 }
+                 function setMyTeachersSelect(mySchedule) {
+                  //Would Check for blackouts in here 
+                 }
+
+                function setupMyTeachers() {
+
+                  if(dayToCome == "") {
+                    return false;
+                  }
+                  //first get the current period schedule 
+                  parseTodaysSchedule(dayToCome, function(err, schedule) {
+                    if(err) {
+                      return errorHand(err);
+                    }
+                    var validFromTeachers = {};
+                    //console.log(schedule);
+
+                    if(!schedule || !schedule.scheduleDefinition || !schedule.scheduleDefinition.scheduleData) {
+                      var err = new Error("Schedule not defined");
+                      return errorHand(err);
+                    }
+
+                    //get user's schedule 
+                    getMySchedules(function(err, userSchedule) {
+                      if(err) {
+                        return errorHand(err);
+                      }
+
+                      if(!userSchedule || !userSchedule.schedule) {
+                        var err = new Error("User Schedule not defined");
+                        return errorHand(err);
+                      }
+                      var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
+                      // add only the enabled periods to validFromTeachers
+                      for(var x = 0; x < dayScheduleKeys.length; x++ ) {
+                        //check if user has one of the periods for today
+                        if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
+
+                          validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
+                          //check if done
+                          if(x >= dayScheduleKeys.length - 1) {
+                            orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
+                              if(err) {
+                                return errorHand(err)
+                              }
+                              setMyTeachersSelect(orderedArr);
+                            })
+                          }
+                        }
+                      }
+                    });
+                  });
+                  /*
+                  getMySchedules(function(err, data) {
+                    if(err) {
+                      return errorHand(err);
+                    }
+                    console.log(data)
+                    //check if valid
+                    if(data && data.schedule) {
+
+                    }
+                  })*/
+                }
+
                  function onSelectMyTeachersChange(select) {
 
                 }
+
+                
 
                 
 
