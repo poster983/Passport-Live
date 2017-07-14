@@ -305,11 +305,11 @@ email: hi@josephhassell.com
         <script>
               /*Vars*/
               var idOfUser = "{{user.id}}";
-              var currGroup = "";
-              var toPerson = "";
-              var dayToCome = "";
-              var onPeriod = "";
-              var fromPerson = "";
+              var currGroup = null;
+              var toPerson = null;
+              var dayToCome = null;
+              var onPeriod = null;
+              var fromPerson = null;
 
               $(document).ready(function(){
                 // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -418,7 +418,12 @@ email: hi@josephhassell.com
                 })
               }
               function onPassGroupSelectChange(select) {
+                toPerson = null;
                 dayToCome = null;
+                onPeriod = null;
+                fromPerson = null;
+
+                readyTheSubmit()
                 console.log(select)
                 //delete all dchildern
                  $('#selectPeople').empty();
@@ -465,6 +470,10 @@ email: hi@josephhassell.com
               //when the people select changes 
               function onSelectPeopleChange(select) {
                 dayToCome = null;
+                onPeriod = null;
+                fromPerson = null;
+
+                readyTheSubmit()
                 //get full account data 
                 searchAccountsByID(select.value, function(err, data) {
                   if(err) {
@@ -504,7 +513,12 @@ email: hi@josephhassell.com
                   $('input.autocomplete').autocomplete({
                     data: data,
                     onAutocomplete: function(val) {
-                      toPerson = val;
+                      console.log(val)
+                      dayToCome = null;
+                      onPeriod = null;
+                      fromPerson = null;
+
+                      readyTheSubmit()
                     },
                     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                   });
@@ -579,7 +593,12 @@ email: hi@josephhassell.com
                   dayToCome = $('[name=dayToCome]').val();
                   //setupPeriods();
                   $("#selectMyTeachers").attr("disabled", false)
+                  onPeriod = null;
+                  fromPerson = null;
+
+                  readyTheSubmit()
                   setupMyTeachers();
+
                 }
 
                 /* Periods */
@@ -810,11 +829,16 @@ email: hi@josephhassell.com
                   console.log(onPeriod)
                   fromPerson = $(select).find(':selected').attr("data-teacherId");
                   console.log(fromPerson)
+                  readyTheSubmit();
                 }
 
                 
                 function readyTheSubmit() {
-                  $("#submitPass").removeClass("disabled").attr("onclick", "submitPass()");
+                  if(fromPerson && toPerson && onPeriod && dayToCome) {
+                    $("#submitPass").removeClass("disabled").attr("onclick", "submitPass()");
+                  } else {
+                    $("#submitPass").addClass("disabled").attr("onclick", "");
+                  }
                 }
                 
                 function submitPass() {
