@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>mediaRESTAPI - Documentation</title>
+    <title>blackoutRESTAPI - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">mediaRESTAPI</h1>
+    <h1 class="page-title">blackoutRESTAPI</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: mediaRESTAPI</h2>
+      <h2>Module: blackoutRESTAPI</h2>
         
     
 
@@ -59,9 +59,13 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#generateBackdrop">generateBackdrop</a></li>
+            <li><a href="#getBlackoutByDate">getBlackoutByDate</a></li>
             
-            <li><a href="#getIdenticon">getIdenticon</a></li>
+            <li><a href="#getBlackoutByUserId">getBlackoutByUserId</a></li>
+            
+            <li><a href="#getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li>
+            
+            <li><a href="#newBlackout">newBlackout</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -101,7 +105,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line45">45</a>
+    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line87">87</a>
   </code>
 </div>
 
@@ -112,8 +116,8 @@
 
     
 
-    <h4 class="name" id="~generateBackdrop">
-      <a href="#params-generateBackdrop"><span class="type-signature">(async, inner) </span>generateBackdrop</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~getBlackoutByDate">
+      <a href="#params-getBlackoutByDate"><span class="type-signature">(inner) </span>getBlackoutByDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
 
     </h4>
 
@@ -123,20 +127,20 @@
 
 
 
-      <a href="#api-generateBackdrop">
-        <span class="label label-api">API: GET /api/media/background/:id.svg</span>
+      <a href="#api-getBlackoutByDate">
+        <span class="label label-api">API: POST /api/blackout/date/:date</span>
       </a>
     
 
 
 
-<span class="label label-default">Async</span>
+
 
 
 
 
 <div class="description">
-    <p>Generates a unique backdrop for each user</p>
+    <p>Returns all blackouts by the date</p>
 </div>
 
 
@@ -146,7 +150,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-generateBackdrop">
+<div class="collapse_" id="methodCollapse-getBlackoutByDate">
 
   
 
@@ -190,111 +194,56 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
     <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
+<li>blackout row</li>
+</ul>
+</div>
 
 
 
-
-
-
-  <div id="params-generateBackdrop" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">json</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
+    </dd>
+</dl>
 
     
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
+</div>
+  
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-generateBackdrop">
+  <div class="bs-callout bs-callout-api" id="api-getBlackoutByDate">
     <h5>
       API Route:
-      GET /api/media/background/:id.svg
+      POST /api/blackout/date/:date
     </h5>
 
     
@@ -324,7 +273,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>date</code></td>
             
 
             <td class="type">
@@ -340,7 +289,7 @@
 
             
 
-            <td class="description last">ID of the user.</td>
+            <td class="description last">The date of the blackout</td>
         </tr>
 
     
@@ -354,27 +303,6 @@
     
 
     
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returnes the unique svg image
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">image/svg\u002Bxml</span>
-
-
-    </dd>
-</dl>
-
-    
   </div>
 
 
@@ -385,7 +313,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Generates a unique backdrop for each user\n* @function generateBackdrop\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/background/:id.svg\n* @apiparam {string} id ID of the user.\n* @apiresponse {image/svg\\u002Bxml} Returnes the unique svg image\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Generates a unique backdrop for each user</p>","kind":"function","name":"generateBackdrop","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/background/:id.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the unique svg image"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~generateBackdrop","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000410","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~generateBackdrop","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Returns all blackouts by the date\n    * @function getBlackoutByDate\n    * @api POST /api/blackout/date/:date\n    * @apiparam {string} date - The date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":87,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the date</p>","kind":"function","name":"getBlackoutByDate","route":"POST /api/blackout/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - The date of the blackout","value":{"type":{"names":["string"]},"description":"The date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R000393","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
 </pre>
 -->
 </div>
@@ -402,7 +330,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line79">79</a>
+    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line71">71</a>
   </code>
 </div>
 
@@ -413,8 +341,8 @@
 
     
 
-    <h4 class="name" id="~getIdenticon">
-      <a href="#params-getIdenticon"><span class="type-signature">(async, inner) </span>getIdenticon</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~getBlackoutByUserId">
+      <a href="#params-getBlackoutByUserId"><span class="type-signature">(inner) </span>getBlackoutByUserId</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
 
     </h4>
 
@@ -424,20 +352,20 @@
 
 
 
-      <a href="#api-getIdenticon">
-        <span class="label label-api">API: GET /api/media/avatar/:id/:size.svg</span>
+      <a href="#api-getBlackoutByUserId">
+        <span class="label label-api">API: POST /api/blackout/user/:userId</span>
       </a>
     
 
 
 
-<span class="label label-default">Async</span>
+
 
 
 
 
 <div class="description">
-    <p>Gets an avatar for the user</p>
+    <p>Returns all blackouts by the user ID</p>
 </div>
 
 
@@ -447,7 +375,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getIdenticon">
+<div class="collapse_" id="methodCollapse-getBlackoutByUserId">
 
   
 
@@ -491,111 +419,56 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
     <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
+<li>blackout row</li>
+</ul>
+</div>
 
 
 
-
-
-
-  <div id="params-getIdenticon" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">json</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
+    </dd>
+</dl>
 
     
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
+</div>
+  
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-getIdenticon">
+  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserId">
     <h5>
       API Route:
-      GET /api/media/avatar/:id/:size.svg
+      POST /api/blackout/user/:userId
     </h5>
 
     
@@ -625,7 +498,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>userId</code></td>
             
 
             <td class="type">
@@ -641,30 +514,7 @@
 
             
 
-            <td class="description last">ID of the user.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">How big the svg should be</td>
+            <td class="description last">The ID corresponding to an account</td>
         </tr>
 
     
@@ -678,10 +528,147 @@
     
 
     
-        <h6>Response</h6>
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function getBlackoutByUserId\n    * @api POST /api/blackout/user/:userId\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":71,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"getBlackoutByUserId","route":"POST /api/blackout/user/:userId","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserId","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R000392","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserId","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line103">103</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getBlackoutByUserIdAndDate">
+      <a href="#params-getBlackoutByUserIdAndDate"><span class="type-signature">(inner) </span>getBlackoutByUserIdAndDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-getBlackoutByUserIdAndDate">
+        <span class="label label-api">API: POST /api/blackout/user/:userId/date/:date</span>
+      </a>
+    
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Returns all blackouts by the user ID and date</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getBlackoutByUserIdAndDate">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
         
 <div class="param-desc">
-    Returnes the avatar png
+    <ul>
+<li>blackout row</li>
+</ul>
 </div>
 
 
@@ -692,11 +679,101 @@
     </dt>
     <dd>
         
-<span class="param-type">image/svg\u002Bxml</span>
+<span class="param-type">json</span>
 
 
     </dd>
 </dl>
+
+    
+</div>
+  
+
+
+  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserIdAndDate">
+    <h5>
+      API Route:
+      POST /api/blackout/user/:userId/date/:date
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID corresponding to an account</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the date of the blackout</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
 
     
   </div>
@@ -709,7 +786,234 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Gets an avatar for the user\n* @function getIdenticon\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/avatar/:id/:size.svg\n* @apiparam {string} id ID of the user.\n* @apiparam {string} size How big the svg should be\n* @apiresponse {image/svg\\u002Bxml} Returnes the avatar png\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":79,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Gets an avatar for the user</p>","kind":"function","name":"getIdenticon","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/avatar/:id/:size.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} size How big the svg should be","value":{"type":{"names":["string"]},"description":"How big the svg should be","name":"size"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the avatar png"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~getIdenticon","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000416","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getIdenticon","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Returns all blackouts by the user ID and date\n    * @function getBlackoutByUserIdAndDate\n    * @api POST /api/blackout/user/:userId/date/:date\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @apiparam {string} date - the date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID and date</p>","kind":"function","name":"getBlackoutByUserIdAndDate","route":"POST /api/blackout/user/:userId/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - the date of the blackout","value":{"type":{"names":["string"]},"description":"the date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserIdAndDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R000394","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserIdAndDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line42">42</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newBlackout">
+      <a href="#params-newBlackout"><span class="type-signature">(inner) </span>newBlackout</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-newBlackout">
+        <span class="label label-api">API: POST /api/blackout/</span>
+      </a>
+    
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Returns all blackouts by the user ID</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+        <p class="code-caption">Body Structure (application/json): </p>
+    
+    <pre class="prettyprint"><code>{
+   "date": "2017-07-11",
+   "periods": ["a", "b". "c"],
+   "userId": "1fgsdfdsg879f6f879d79f98d7g8",
+   "message": "I am sick."
+}</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newBlackout">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-newBlackout">
+    <h5>
+      API Route:
+      POST /api/blackout/
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#userGroup">userGroup</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A Usergroup constant defined in the config</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+        <h6>Body</h6>
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">none</span>
+
+
+    </dd>
+</dl>
+
+    
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function newBlackout\n    * @api POST /api/blackout/\n    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config\n    * @apibody {none}\n    * @example \n    * <caption>Body Structure (application/json): </caption>\n    * {\n    *    \"date\": \"2017-07-11\",\n    *    \"periods\": [\"a\", \"b\". \"c\"],\n    *    \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n    *    \"message\": \"I am sick.\"\n    * }\n    */","meta":{"filename":"blackout.js","lineno":42,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"newBlackout","route":"POST /api/blackout/","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{userGroup} userGroup - A Usergroup constant defined in the config","value":{"type":{"names":["userGroup"]},"description":"A Usergroup constant defined in the config","name":"userGroup"}}],"body":{"type":{"names":["none"]}},"examples":[{"caption":"Body Structure (application/json): ","code":"{\n   \"date\": \"2017-07-11\",\n   \"periods\": [\"a\", \"b\". \"c\"],\n   \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n   \"message\": \"I am sick.\"\n}"}],"longname":"module:blackoutRESTAPI~newBlackout","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R000387","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newBlackout","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
 </pre>
 -->
 </div>
