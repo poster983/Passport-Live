@@ -29,6 +29,8 @@ var api = require('../../modules/passport-api/accounts.js'); //("jdsfak");
 var passport = require('passport');
 var config = require('config');
 
+var miscApi = require("../../modules/passport-api/index.js");
+
 
 //var for backwards compadability.  neads to be removed later 
 
@@ -92,7 +94,7 @@ function handleNewAccount(req, res, next) {
                     err.status = 403;
                     reject(err);
             }
-            api.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
+            miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
                 if(err) {
                     reject(err);
                 } 

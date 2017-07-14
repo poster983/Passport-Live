@@ -84,7 +84,30 @@ router.get('/user/:userId', function getBlackoutByUserId(req, res, next) {
     })
 })
 
-//select by USER ID AND Day
+/**
+    * Returns all blackouts by the date
+    * @function getBlackoutByDate
+    * @api POST /api/blackout/date/:date
+    * @apiparam {string} date - The date of the blackout
+    * @returns {json} - blackout row
+    */
+router.get('/date/:date', function(req, res, next) {
+    api.getBlackoutByDate(req.params.date, function(err, doc) {
+        if (err) {
+            return next(err);
+        }
+        res.json(doc);
+    })
+})
+
+/**
+    * Returns all blackouts by the user ID and date
+    * @function getBlackoutByUserIdAndDate
+    * @api POST /api/blackout/user/:userId/date/:date
+    * @apiparam {string} userId - The ID corresponding to an account 
+    * @apiparam {string} date - the date of the blackout
+    * @returns {json} - blackout row
+    */
 router.get('/user/:userId/date/:date', function(req, res, next) {
     api.getBlackoutByUserIdAndDate(req.params.userId, req.params.date, function(err, doc) {
         if (err) {

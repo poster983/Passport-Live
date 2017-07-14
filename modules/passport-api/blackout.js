@@ -101,3 +101,25 @@ exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
     //do your thing...
 }
 
+exports.getBlackoutByDate = function(date, done) {
+    if (!moment(date).isValid()) {
+        var err = new Error("Date is not valid")
+        err.status = 400; //bad request
+        return done(err); //callback error
+    }
+    var date = moment(date).format("Y-MM-DD"); //get date in format {string}
+    r.table('blackouts').filter({
+        date: date
+    }).run(db.conn(), function(err, curDoc) {
+          if (err) {
+            return done(err);
+        }
+        curDoc.toArray(function(err, doc) {
+            if (err) {
+                return done(err);
+            }
+            return done(null, doc);
+        })
+    });
+}
+
