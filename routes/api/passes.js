@@ -72,7 +72,12 @@ router.post("/dashboard/student/", passport.authenticate('jwt', { session: false
     var period = req.body.period;
     var date = req.body.date;
 
-    
+    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, function(err, trans) {
+        if(err) {
+            return next(err);
+        }
+        res.status(201).json(trans);
+    })
 });
 
 

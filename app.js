@@ -47,6 +47,7 @@ var administrator = require('./routes/administrator');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
 var apiAuth = require('./routes/api/auth');
+var apiPasses = require('./routes/api/passes');
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -132,6 +133,8 @@ app.use('/administrator', administrator)
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
 app.use('/api/auth', apiAuth)
+app.use('/api/passes', apiPasses)
+
 //app.use('/users', users);
 
 if(Raven) {

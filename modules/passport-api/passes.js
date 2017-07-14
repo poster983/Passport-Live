@@ -22,8 +22,8 @@ email: hi@josephhassell.com
 */
 
 var r = require("rethinkdb")
-var db = require("../modules/db/index.js");
-var utils = require("../modules/passport-utils/index.js");
+var db = require("../db/index.js");
+var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 
 

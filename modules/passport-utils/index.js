@@ -90,7 +90,7 @@ module.exports = {
         */
     checkPeriod: function(period, done) {
         var periodConst = config.get("schedule.periods");
-        if(periodConst.includes(periods)) {
+        if(periodConst.includes(period)) {
             return done(null, true);
         } else {
             return done(null, false);
