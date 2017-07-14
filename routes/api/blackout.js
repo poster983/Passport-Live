@@ -98,7 +98,7 @@ router.get('/date/:date', function getBlackoutByDate(req, res, next) {
         }
         res.json(doc);
     })
-})
+}) 
 
 /**
     * Returns all blackouts by the user ID and date
