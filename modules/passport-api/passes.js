@@ -76,6 +76,11 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         period: period,
         date: date,
         status: "pending"
+    }).run(db.conn(), function(err, trans) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, trans)
     })
 
 }
