@@ -468,6 +468,10 @@ exports.getStudentSchedule = function(userID, done) {
                 });
                 
             })
+        } else {
+            var err = new Error("Account has no schedule linked");
+                    err.status = 500;
+                    return done(err)
         }
         
     })

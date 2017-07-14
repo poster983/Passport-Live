@@ -331,11 +331,12 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
         err.status = 400;
         return next(err)
     }
+    //console.log("HIIIIIIIIIIIIIIIIIii")
     api.getStudentSchedule(req.params.id, function(err, data) {
         if(err) {
             return next(err);
         }
-    
+        
         res.send(data)
     })
 });

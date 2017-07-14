@@ -30,22 +30,22 @@ var moment = require("moment");
 
 exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, done) {
     //validate
-    if(!toPerson) {
+    /*if(!toPerson || typeof toPerson != "string") {
         var err = new Error("toPerson Not Valid");
             err.status = 400;
             return done(err)
     }
-    if (!fromPerson) {
+    if (!fromPerson || typeof fromPerson != "string") {
         var err = new Error("fromPerson Not Valid");
             err.status = 400;
             return done(err)
     }
-    if(!migrator) {
+    if(!migrator || typeof migrator != "string") {
         var err = new Error("Migrator Not Valid");
             err.status = 400;
             return done(err)
     }
-    if(!requester) {
+    if(!requester || typeof requester != "string") {
         var err = new Error("Requester Not Valid");
             err.status = 400;
             return done(err)
@@ -66,7 +66,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             return done(err)
     } else {
         date = moment(date).format("Y-MM-DD");
-    }
+    }*/
 
     r.table("passes").insert({
         toPerson: toPerson,

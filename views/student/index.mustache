@@ -194,7 +194,7 @@ email: hi@josephhassell.com
                   <div class="card-content white-text">
                     <span class="card-title">Get A Pass</span>
 
-                      <form id="passForm" method="post">
+                      <div id="passForm">
                           
                           <div id="to" class="section">
                             <h6>Going To:</h6>
@@ -222,10 +222,9 @@ email: hi@josephhassell.com
                           </div>
                           <!--Pick a Date -->
                           <div id="time" class="section">
-                            <h6>Time:</h6>
-                            <div id="dayToCome" class="input-field col s12" style="display: none;">
+                            <div id="dayToCome" class="input-field col s12">
 
-                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" onchange="onDateChange(this)">
+                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" disabled onchange="onDateChange(this)">
                               <label for="datepicker">Day To Come</label>
                             </div>
                           </div>
@@ -237,14 +236,14 @@ email: hi@josephhassell.com
 
                           <!--SELECT TEACHER W/ PERIOD-->
                           <div id="from" class="section">
-                            <h6>Leaving From:</h6>
+                            <!--<h6>Leaving From:</h6>-->
 
                             <!--Select My Teachers-->
                             <div id="selectMyTeachersDiv" class="input-field col s12">
-                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" onchange="onSelectMyTeachersChange(this)">
+                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" disabled onchange="onSelectMyTeachersChange(this)">
                                 <option value="" disabled selected>Choose A Person</option>
                               </select>
-                              <label>Select a Person</label>
+                              <label>Leaving From</label>
                             </div>
                           </div>
                          
@@ -263,7 +262,7 @@ email: hi@josephhassell.com
                         <a class="waves-effect waves-light btn-large red disabled" id="submitPass">Submit Pass<span id="subPassAdv"><i class='material-icons right'>send</i></span></a>
                         <span id="debugSubmit"></span>
                       </div>
-                    </form>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -326,7 +325,7 @@ email: hi@josephhassell.com
                 });
                 
                 initAutocompleteAccounts({"none": null});
-                
+                $('#datepicker').pickadate();
               });
 
               function debugMode() {
@@ -419,6 +418,7 @@ email: hi@josephhassell.com
                 })
               }
               function onPassGroupSelectChange(select) {
+                dayToCome = null;
                 console.log(select)
                 //delete all dchildern
                  $('#selectPeople').empty();
@@ -464,6 +464,7 @@ email: hi@josephhassell.com
               }
               //when the people select changes 
               function onSelectPeopleChange(select) {
+                dayToCome = null;
                 //get full account data 
                 searchAccountsByID(select.value, function(err, data) {
                   if(err) {
@@ -553,7 +554,15 @@ email: hi@josephhassell.com
                 /* Date Things */
 
                 function setupDatePicker(max, disable) {
-                  $('#dayToCome').show();
+                   
+                  $('#datepicker').attr("disabled", false);
+                  
+                  //reset date picker 
+                  $("#dayToCome").empty();
+                  $("#dayToCome").append("<input type=\"date\" id=\"datepicker\" name=\"dayToCome\" class=\"datepicker\" onchange=\"onDateChange(this)\">");
+                  $("#dayToCome").append("<label for=\"datepicker\">Day To Come</label>");
+                             
+
                   $('#datepicker').pickadate({
                     selectMonths: true, // Creates a dropdown to control month
                     selectYears: 2, // Creates a dropdown of 15 years to control year
@@ -569,6 +578,7 @@ email: hi@josephhassell.com
                   //get hidden date vfalue
                   dayToCome = $('[name=dayToCome]').val();
                   //setupPeriods();
+                  $("#selectMyTeachers").attr("disabled", false)
                   setupMyTeachers();
                 }
 
@@ -731,7 +741,7 @@ email: hi@josephhassell.com
                  }
 
                 function setupMyTeachers() {
-
+                  console.log("hi")
                   if(dayToCome == "") {
                     return false;
                   }
@@ -751,15 +761,17 @@ email: hi@josephhassell.com
                     //get user's schedule 
                     getMySchedules(function(err, userSchedule) {
                       if(err) {
+
                         return errorHand(err);
                       }
-
+                     
                       if(!userSchedule || !userSchedule.schedule) {
                         var err = new Error("User Schedule not defined");
                         return errorHand(err);
                       }
                       var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
                       // add only the enabled periods to validFromTeachers
+
                       for(var x = 0; x < dayScheduleKeys.length; x++ ) {
                         //check if user has one of the periods for today
                         if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
@@ -772,6 +784,7 @@ email: hi@josephhassell.com
                               if(err) {
                                 return errorHand(err)
                               }
+                              
                               setMyTeachersSelect(orderedArr);
                             })
                           }
@@ -805,8 +818,33 @@ email: hi@josephhassell.com
                 }
                 
                 function submitPass() {
-                  console.log("I Wish")
+                  if(fromPerson && toPerson && onPeriod && dayToCome) {
+                    $.ajax({
+                      type: "post",
+                      url: "/api/passes/dashboard/student/",
+                      data: {fromPerson: fromPerson, toPerson: toPerson.id, period: onPeriod, date: dayToCome},
+                      dataType: "json",
+                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                      success: function(data) {
+                        if(data.inserted > 0) {
+                          //confirm pass
+                          console.log(data)
+                        } else {
+                          var err = new Error("Unknown Error");
+                          console.log(data)
+                          errorHand(err);
+                        }
+                      },  
+                      error: function(jqXHR) {
+                        return errorHand(jqXHR) 
+                      }
+                    })
+                  } else {
+                    var err = new Error("Undefined Values")
+                    errorHand(err);
+                  }
                 }
+
 
                  $("#sao").change(function() {
                   if(this.checked) {

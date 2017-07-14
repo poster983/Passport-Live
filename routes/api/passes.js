@@ -44,6 +44,7 @@ function serializeUser(req, res, done) {
 
 /**
     * Creates a new Pass from/for the student dashboard.
+    * This one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves 
     * REQUIRES JWT Authorization in headers.
     * @todo Account must have student db permissions
     * @function newPassStudent
@@ -68,7 +69,7 @@ function serializeUser(req, res, done) {
 router.post("/dashboard/student/", passport.authenticate('jwt', { session: false}), function newPassStudent(req, res, next) {
     var fromPerson = req.body.fromPerson;
     var toPerson = req.body.toPerson;
-    var migrator = req.body.migrator;
+    var migrator = req.user.id;
     var period = req.body.period;
     var date = req.body.date;
 
