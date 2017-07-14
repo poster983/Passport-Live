@@ -42,9 +42,37 @@ function serializeUser(req, res, done) {
     done();
 };
 
-
+/**
+    * Creates a new Pass from/for the student dashboard.
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have student db permissions
+    * @function newPassStudent
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api POST /api/passes/dashboard/student/
+    * @apibody {json} See Example
+    * @example
+    * <caption>Body Structure (application/json): </caption>
+    * {
+    *    "fromPerson": (id Of Account)
+    *    "toPerson": (id Of Account)
+    *    "migrator"; (id of account)
+    *    "period": (a period constant)
+    *    "date": (an date in iso standered)
+    * }
+    *
+    * @apiresponse {json} Returns rethink db action summery
+    */
 router.post("/dashboard/student/", passport.authenticate('jwt', { session: false}), function newPassStudent(req, res, next) {
+    var fromPerson = req.body.fromPerson;
+    var toPerson = req.body.toPerson;
+    var migrator = req.body.migrator;
+    var period = req.body.period;
+    var date = req.body.date;
 
+    
 });
 
 

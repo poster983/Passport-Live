@@ -78,6 +78,23 @@ module.exports = {
             return next();
         }
         
+    },
+
+     /**
+        * Checks if period is a period constant  
+        * @function checkPeriod
+        * @link module:utils
+        * @param {string} period - a single period to check against the configs. 
+        * @param {function} done - callback. 
+        * @returns {done} Includes error, and a boolean.  True for valid period, false for not
+        */
+    checkPeriod: function(period, done) {
+        var periodConst = config.get("schedule.periods");
+        if(periodConst.includes(periods)) {
+            return done(null, true);
+        } else {
+            return done(null, false);
+        }
     }
     
 }

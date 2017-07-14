@@ -21,4 +21,61 @@ email: hi@josephhassell.com
 * @module passportPassApi
 */
 
-var db = require("../../modules/db/index.js");
+var r = require("rethinkdb")
+var db = require("../modules/db/index.js");
+var utils = require("../modules/passport-utils/index.js");
+var moment = require("moment");
+
+
+
+exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, done) {
+    //validate
+    if(!toPerson) {
+        var err = new Error("toPerson Not Valid");
+            err.status = 400;
+            return done(err)
+    }
+    if (!fromPerson) {
+        var err = new Error("fromPerson Not Valid");
+            err.status = 400;
+            return done(err)
+    }
+    if(!migrator) {
+        var err = new Error("Migrator Not Valid");
+            err.status = 400;
+            return done(err)
+    }
+    if(!requester) {
+        var err = new Error("Requester Not Valid");
+            err.status = 400;
+            return done(err)
+    }
+    utils.checkPeriod(period, function(err, bool) {
+        if(err) {
+            return done(err);
+        }
+        if(!bool) {
+            err = new Error("Period Not Valid");
+            err.status = 400;
+            return done(err)
+        }
+    });
+    if(!moment(date, "Y-MM-DD", true).isValid()) {
+        var err = new Error("Date Not Valid");
+            err.status = 400;
+            return done(err)
+    } else {
+        date = moment(date).format("Y-MM-DD");
+    }
+
+    r.table("passes").insert({
+        toPerson: toPerson,
+        fromPerson: fromPerson,
+        migrator: migrator,
+        requester: requester,
+        period: period,
+        date: date,
+        status: "pending"
+    })
+
+}
