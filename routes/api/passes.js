@@ -43,16 +43,16 @@ function serializeUser(req, res, done) {
 };
 
 /**
-    * Creates a new Pass from/for the student dashboard.
+    * Creates a new Pass from/for currently logged in account.
     * This one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves 
     * REQUIRES JWT Authorization in headers.
     * @todo Account must have student db permissions
-    * @function newPassStudent
+    * @function newPassForMe
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api POST /api/passes/dashboard/student/
+    * @api POST /api/passes/me/
     * @apibody {json} See Example
     * @example
     * <caption>Body Structure (application/json): </caption>
@@ -66,7 +66,7 @@ function serializeUser(req, res, done) {
     *
     * @apiresponse {json} Returns rethink db action summery
     */
-router.post("/dashboard/student/", passport.authenticate('jwt', { session: false}), function newPassStudent(req, res, next) {
+router.post("/me/", passport.authenticate('jwt', { session: false}), function newPassForMe(req, res, next) {
     var fromPerson = req.body.fromPerson;
     var toPerson = req.body.toPerson;
     var migrator = req.user.id;
@@ -80,6 +80,23 @@ router.post("/dashboard/student/", passport.authenticate('jwt', { session: false
         res.status(201).json(trans);
     })
 });
+/**
+    * Gets all upcomeing Passes from/for currently logged in account.
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have student db permissions
+    * @function getPassForMe
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/passes/me/upcomeing/
+    * @apiresponse {json} Returns rethink db action summery
+    */
+router.get("/me/upcomeing", passport.authenticate('jwt', { session: false}), function getPassForMe(req, res, next) {
+    res.sendStatus(501);
+});
+
+
 
 
 module.exports = router;

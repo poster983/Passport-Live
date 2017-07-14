@@ -854,7 +854,7 @@ email: hi@josephhassell.com
                   if(fromPerson && toPerson && onPeriod && dayToCome) {
                     $.ajax({
                       type: "post",
-                      url: "/api/passes/dashboard/student/",
+                      url: "/api/passes/me/",
                       data: {fromPerson: fromPerson, toPerson: toPerson.id, period: onPeriod, date: dayToCome},
                       dataType: "json",
                       beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
