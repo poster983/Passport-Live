@@ -91,7 +91,7 @@ router.get('/user/:userId', function getBlackoutByUserId(req, res, next) {
     * @apiparam {string} date - The date of the blackout
     * @returns {json} - blackout row
     */
-router.get('/date/:date', function(req, res, next) {
+router.get('/date/:date', function getBlackoutByDate(req, res, next) {
     api.getBlackoutByDate(req.params.date, function(err, doc) {
         if (err) {
             return next(err);
@@ -108,7 +108,7 @@ router.get('/date/:date', function(req, res, next) {
     * @apiparam {string} date - the date of the blackout
     * @returns {json} - blackout row
     */
-router.get('/user/:userId/date/:date', function(req, res, next) {
+router.get('/user/:userId/date/:date', function getBlackoutByUserIdAndDate(req, res, next) {
     api.getBlackoutByUserIdAndDate(req.params.userId, req.params.date, function(err, doc) {
         if (err) {
             return next(err);
