@@ -66,7 +66,7 @@ function serializeUser(req, res, done) {
     *
     * @apiresponse {json} Returns rethink db action summery
     */
-router.post("/me/", passport.authenticate('jwt', { session: false}), function newPassForMe(req, res, next) {
+router.post("/me", passport.authenticate('jwt', { session: false}), function newPassForMe(req, res, next) {
     var fromPerson = req.body.fromPerson;
     var toPerson = req.body.toPerson;
     var migrator = req.user.id;
@@ -81,22 +81,39 @@ router.post("/me/", passport.authenticate('jwt', { session: false}), function ne
     })
 });
 /**
-    * Gets all upcomeing Passes from/for currently logged in account.
+    * Gets all Passes from a day from/for currently logged in account.
     * REQUIRES JWT Authorization in headers.
     * @todo Account must have student db permissions
-    * @function getPassForMe
+    * @function getPassForMeFromDay
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/passes/me/upcomeing/
+    * @apiparam {date} fromDay - Begining of the search range
+    * @api GET /api/passes/me/from/:fromDay/
     * @apiresponse {json} Returns rethink db action summery
     */
-router.get("/me/upcomeing", passport.authenticate('jwt', { session: false}), function getPassForMe(req, res, next) {
+router.get("/me/from/:fromDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromDay(req, res, next) {
     res.sendStatus(501);
 });
 
-
+/**
+    * Gets all Passes from a day to a day from/for currently logged in account.
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have student db permissions
+    * @function getPassForMeFromToDay
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {date} fromDay - Begining of the search range
+    * @apiparam {date} toDay - End of the search range
+    * @api GET /api/passes/me/from/:fromDay/to/:toDay
+    * @apiresponse {json} Returns rethink db action summery
+    */
+router.get("/me/from/:fromDay/to/:toDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromToDay(req, res, next) {
+    res.sendStatus(501);
+});
 
 
 module.exports = router;
