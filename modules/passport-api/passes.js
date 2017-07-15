@@ -77,16 +77,17 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             err.status = 400;
             return done(err)
     } else {
-        date = moment(date).format("Y-MM-DD");
+        date = moment(date).toISOString();
     }
-
+    console.log(date)
+    
     r.table("passes").insert({
         toPerson: toPerson,
         fromPerson: fromPerson,
         migrator: migrator,
         requester: requester,
         period: period,
-        date: date,
+        date: r.ISO8601(date),
         status: "pending"
     }).run(db.conn(), function(err, trans) {
         if(err) {
@@ -102,27 +103,50 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
     * @async
     * @param {userId} id - Id of the account
     * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
-    * @param {date} fromDay - low range date to search for
+    * @param {date} fromDate - low range date to search for.  
+    * @param {date} toDate - High range date to search for.  set null for none
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
     */
-exports.flexableGetPasses = function(id, byColl, fromDate, done) {
+exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     if(!id || typeof id != "string") {
         var err = new Error("Invalid ID");
             err.status = 400;
             return done(err)
     }
-    if(!byColl || typeof byColl != "string" || byColl != "fromPerson" || byColl != "toPerson" || byColl != "migrator" || byColl != "requester" ||) {
+    if(!byColl || typeof byColl != "string" || (byColl != "fromPerson" && byColl != "toPerson" && byColl != "migrator" && byColl != "requester")) {
         var err = new Error("By Column Is Invalid");
             err.status = 400;
             return done(err)
     }
+    if(!moment(fromDate, "Y-MM-DD", true).isValid()) {
+        var err = new Error("fromDate Not Valid");
+            err.status = 400;
+            return done(err)
+    } else {
+        
+        fromDate = moment(fromDate).toISOString();
+    }
+    
+    if(!moment(toDate, "Y-MM-DD", true).isValid()) {
+        toDate = null;
+    } else {
+         
+        toDate = moment(toDate).toISOString();
+    }
 
 
-
-    r.table("passes").filter(
-        r.row(byColl).eq(id).and(r.row())
-    ).run(db.conn(), function(err, dataCur) {
+      
+    r.table("passes").filter(function(person) {
+        return person(byColl).eq(id);
+    }).filter(function(day) {
+        if(!toDate) {
+            return day("date").date().gt(r.ISO8601(fromDate).date()).or(
+                day("date").date().eq(r.ISO8601(fromDate).date()));
+        } else {
+            return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date())
+        }
+    }).run(db.conn(), function(err, dataCur) {
         if(err) {
             return done(err);
         }
