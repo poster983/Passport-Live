@@ -27,7 +27,19 @@ var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 
 
-
+/**
+    * Creates a new account
+    * @function newPass
+    * @async
+    * @param {userId} toPerson - Id of the account recieving the migrating person
+    * @param {userId} fromPerson - Id of the account releasing the migrating person
+    * @param {userId} migrator - Id of the account moving between people
+    * @param {userId} requester - Id of the account who requested the pass
+    * @param {string} period
+    * @param {date} date
+    * @param {function} done - callback
+    * @returns {done} Error, or a transaction statement 
+    */
 exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, done) {
     //validate
     if(!toPerson || typeof toPerson != "string") {
@@ -81,6 +93,45 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             return done(err);
         }
         return done(null, trans)
+    })
+}
+
+/**
+    * Gets passes with flexable id search
+    * @function flexableGetPasses
+    * @async
+    * @param {userId} id - Id of the account
+    * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
+    * @param {date} fromDay - low range date to search for
+    * @param {function} done - callback
+    * @returns {done} Error, or a transaction statement 
+    */
+exports.flexableGetPasses = function(id, byColl, fromDate, done) {
+    if(!id || typeof id != "string") {
+        var err = new Error("Invalid ID");
+            err.status = 400;
+            return done(err)
+    }
+    if(!byColl || typeof byColl != "string" || byColl != "fromPerson" || byColl != "toPerson" || byColl != "migrator" || byColl != "requester" ||) {
+        var err = new Error("By Column Is Invalid");
+            err.status = 400;
+            return done(err)
+    }
+
+
+
+    r.table("passes").filter(
+        r.row(byColl).eq(id).and(r.row())
+    ).run(db.conn(), function(err, dataCur) {
+        if(err) {
+            return done(err);
+        }
+        dataCur.toArray(function(err, data) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, data)
+        })
     })
 
 }

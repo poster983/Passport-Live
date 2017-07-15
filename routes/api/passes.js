@@ -89,12 +89,22 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
+    * @apiparam {string} idCol - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @apiparam {date} fromDay - Begining of the search range
     * @api GET /api/passes/me/from/:fromDay/
     * @apiresponse {json} Returns rethink db action summery
     */
-router.get("/me/from/:fromDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromDay(req, res, next) {
-    res.sendStatus(501);
+router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromDay(req, res, next) {
+    //res.sendStatus(501);
+    var fromDay = req.params.fromDay;
+    var idCol = req.params.idCol;
+
+    api.flexableGetPasses(req.user.id, idCol, fromDay, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data);
+    })
 });
 
 /**
@@ -106,12 +116,13 @@ router.get("/me/from/:fromDay", passport.authenticate('jwt', { session: false}),
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
+    * @apiparam {string} idCol - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @apiparam {date} fromDay - Begining of the search range
     * @apiparam {date} toDay - End of the search range
     * @api GET /api/passes/me/from/:fromDay/to/:toDay
     * @apiresponse {json} Returns rethink db action summery
     */
-router.get("/me/from/:fromDay/to/:toDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromToDay(req, res, next) {
+router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromToDay(req, res, next) {
     res.sendStatus(501);
 });
 
