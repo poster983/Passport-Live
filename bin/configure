@@ -56,9 +56,11 @@ p.then(function(conn) {
     });
      r.db('passport').tableCreate('blackouts').run(conn, function(res) {
       console.log(res); 
+    });
+    r.db('passport').tableCreate('passes').run(conn, function(res) {
+      console.log(res); 
       process.exit();
     });
-
 
 
 //secondary index

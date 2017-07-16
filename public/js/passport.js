@@ -183,7 +183,149 @@ function navMorph(obj) {
 
 } 
 
+function circleRes(icon, colorClass) {
+  switch(colorClass){
+    case "success": 
+      colorClass = "green accent-3";
+      break;
+  }
+    //setup green grow
+    if(icon == "check") {
+      $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
+        //Check marks 
+      $('#Cleft').addClass('Cleft CleftIn');
+      $('#Cright').addClass('Cright CrightIn');
+    }
+    $("#circleThingContainer").addClass("circleThingContainer");
+    $("#circleThing").removeClass().addClass("circleThing circleGrow");
+    //addcolor
+    $("#circleThing").addClass(colorClass);
+
+    //on circle complete 
+    $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+      console.log("GO")
+      $("#circleThingContainer").addClass(colorClass)
+      $('#circleThing').removeClass().addClass('circleThing');
+      //wait for 1 second
+      setTimeout(function() {
+        if(icon == "check") {
+          $('#checkmarkContainer').removeClass('checkmarkContainerIn').addClass('checkmarkContainerOut');
+          $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
+          $('#Cright').removeClass('CrightIn').addClass("CrightOut");
+        }
+        
+        $('#circleThing').removeClass().addClass('circleThing circleGrow');
+        $('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+        //when final one ends
+        $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+          $("#circleThingContainer").removeClass(colorClass)
+          setTimeout(function() {
+          
+            $('#Cleft').removeClass();
+            $('#Cright').removeClass();
+            $('#checkmarkContainer').removeClass();
+          }, 500);
+        });
+      }, 1000);
+    });
+}
+
+function visResponse(action) {
+          $("#responseAni").append("<div class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
+          if (action == "success") {
+
+            $('#checkmarkContainer').addClass(' active checkmarkContainer checkmarkContainerIn');
+            $('#Cleft').addClass('Cleft CleftIn');
+            $('#Cright').addClass('Cright CrightIn');
+            $('#circleThing').removeClass().addClass('circleThing circleGrow green accent-3');
+            $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+              function(e) {
+                $('body').addClass('green accent-3');
+                $('#circleThing').removeClass().addClass('circleThing');
+                setTimeout(function() {
+                  $('#Cleft').removeClass('CleftIn');
+                  $('#Cright').removeClass('CrightIn');
+                  $('#checkmarkContainer').removeClass('checkmarkContainerIn');
+
+                  $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+
+                  $('#checkmarkContainer').addClass('checkmarkContainerOut');
+                  $('#Cleft').addClass('CleftOut');
+                  $('#Cright').addClass('CrightOut');
+
+                  $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                    function(e) {
+
+                      $('body').removeClass('green accent-3');
+                      $('#circleThing').removeClass().addClass('circleThing');
+                      setTimeout(function() {
+                        $('#Cleft').removeClass();
+                        $('#Cright').removeClass();
+                        $('#checkmarkContainer').removeClass();
+                        $("#responseAni").empty()
+                      }, 500);
+                  });
+                }, 1000);
+            });
+
+          } else if (action == "error") {
+            $('#stuIDForm').css('opacity', '0');
+            $('#Xleft').addClass('Xleft XleftIn');
+            $('#Xright').addClass('Xright XrightIn');
+            $('#circleThing').removeClass().addClass('circleThing circleGrow red accent-4');
+            $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+              function(e) {
+                $('body').addClass('red accent-4');
+                $('#circleThing').removeClass().addClass('circleThing');
+
+                setTimeout(function() {
+                  $('#Xleft').removeClass('XleftIn');
+                  $('#Xright').removeClass('XrightIn');
+
+                  $('#Xleft').addClass('XleftOut');
+                  $('#Xright').addClass('XrightOut');
+
+                  $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+
+                  $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                    function(e) {
+                      $('body').removeClass('red accent-4');
+                      $('#circleThing').removeClass().addClass('circleThing');
+                        setTimeout(function() {
+                          $('#Xleft').removeClass();
+                          $('#Xright').removeClass();
+                          $("#responseAni").empty();
+                        }, 500);
+                  });
+
+                  $('#stuIDForm').css('opacity', '1');
+                }, 1000);
+            });
+          } else {
+
+            $('#stuIDForm').css('opacity', '0');
+
+            $('#circleThing').removeClass().addClass('circleThing circleGrow orange accent-4');
+            $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+              function(e) {
+                $('body').addClass('orange accent-4');
+                $('#circleThing').removeClass().addClass('circleThing');
+                setTimeout(function() {
+                  $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+
+                  $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                    function(e) {
+                      $('body').removeClass('orange accent-4');
+                      $('#circleThing').removeClass().addClass('circleThing');
+                      $("#responseAni").empty()
+                  });
+                }, 1000);
+            });
+          }
+        };
+
 function errorHand(err) {
   //Do more Later
   console.error(err);
 }
+

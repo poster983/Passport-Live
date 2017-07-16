@@ -20,6 +20,15 @@ email: hi@josephhassell.com
 -->
 
 <body class="grey darken-4">
+        <!-- RESPONCE ANIMATION -->
+      
+          <div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
+            <span id="Xleft"></span>
+            <span id="Xright"></span>
+            <div id="checkmarkContainer" class="">
+              <span id="Cleft" class=""></span>
+              <span id="Cright" class=""></span>
+            </div>
 
         <!--Loading Screen-->
         <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
@@ -65,7 +74,7 @@ email: hi@josephhassell.com
             <span class="nav-right">{{passportVersion}}</span>
         </div>
     </nav>
-
+<!--
     <div id="confirmOver" class="overlay-full">
       <div class="overlay-content">
       <div id="checkmarkAnimationfull">
@@ -75,7 +84,7 @@ email: hi@josephhassell.com
       <h1 id="ConfirmOverlayWords" class="center white-text">Pass Requested</h1>
       <a href="javascript:void(0)" class="closebtn-overlay" onclick="closeFullOverlay('confirmOver', 0)">&times;</a>
     </div>
-  </div>
+  </div>-->
     <!--FEEDBACK FAB-->
 
 
@@ -173,7 +182,9 @@ email: hi@josephhassell.com
 
     <!-- System Message-->
         <div id="ajaxAllStudentMess"></div>
+
         <!--login Message-->
+        <!--
        <div class='row'>
             <div class='col s12'>
               <div class='card-panel teal'>
@@ -181,7 +192,7 @@ email: hi@josephhassell.com
                 <h3>{{passport_LoginMessage}}</h3>
               </div>
             </div>
-          </div>
+          </div>-->
 
         <div class="container">
           <div class="section">
@@ -192,18 +203,8 @@ email: hi@josephhassell.com
                   <div class="card-content white-text">
                     <span class="card-title">Get A Pass</span>
 
-                      <form id="passForm" method="post">
-                          <div id="from" class="section">
-                            <h6>Leaving From:</h6>
-
-                            <!--Select My Teachers-->
-                            <div id="selectMyTeachersDiv" class="input-field col s12">
-                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" onchange="onSelectMyTeachersChange(this)">
-                                <option value="" disabled selected>Choose A Person</option>
-                              </select>
-                              <label>Select a Person</label>
-                            </div>
-                          </div>
+                      <div id="passForm">
+                          
                           <div id="to" class="section">
                             <h6>Going To:</h6>
 
@@ -230,10 +231,9 @@ email: hi@josephhassell.com
                           </div>
                           <!--Pick a Date -->
                           <div id="time" class="section">
-                            <h6>Time:</h6>
-                            <div id="dayToCome" class="input-field col s12" style="display: none;">
+                            <div id="dayToCome" class="input-field col s12">
 
-                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" onchange="onDateChange(this)">
+                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" disabled onchange="onDateChange(this)">
                               <label for="datepicker">Day To Come</label>
                             </div>
                           </div>
@@ -243,6 +243,18 @@ email: hi@josephhassell.com
                             
                           </div>
 
+                          <!--SELECT TEACHER W/ PERIOD-->
+                          <div id="from" class="section">
+                            <!--<h6>Leaving From:</h6>-->
+
+                            <!--Select My Teachers-->
+                            <div id="selectMyTeachersDiv" class="input-field col s12">
+                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" disabled onchange="onSelectMyTeachersChange(this)">
+                                <option value="" disabled selected>Choose A Person</option>
+                              </select>
+                              <label>Leaving From</label>
+                            </div>
+                          </div>
                          
                         <!--Advanced-->
                       <div>
@@ -256,23 +268,67 @@ email: hi@josephhassell.com
                         <p class="center white-text">Nothing Here Yet.</p>
                       </div>
                       <div class="section">
-                        <a class="waves-effect waves-light btn-large red" id="submitPass" disabled onclick="submitPass(<?php echo $_SESSION['studentAccID'] ?>, 0);">Submit Pass<span id="subPassAdv"><i class='material-icons right'>send</i></span></a>
+                        <a class="waves-effect waves-light btn-large red disabled" id="submitPass">Submit Pass<span id="subPassAdv"><i class='material-icons right'>send</i></span></a>
                         <span id="debugSubmit"></span>
                       </div>
-                    </form>
+                    </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <h1> GET LEAVING FROM WITH NO TEACHER WORKING </h1>
             <!-- MyPasses-->
             <div class="section">
               <div class="row">
                 <div class="col s12">
                   <div id="MyPassesCard" class="card grey darken-3 hoverable">
-                    <div class="card-content white-text">
-                      <span class="card-title">My Passes<sup>Beta</sup></span>
-                      <div id="myPassesReturn"></div>
+                    <div class="card-content ">
+                      <span class="card-title white-text">My Passes</span>
+                      <ul class="collection">
+                        <div id="myPassesReturn">
+                          <li class="collection-item avatar">
+                            
+                            <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
+                            <span class="right">&nbsp;</span>
+                            <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
+
+                            <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
+                            
+                            <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
+                            <p>Date: <strong>07/14/2017</strong></p>
+                            <p>Period: <strong>B</strong></p>
+                            <span class="new badge" data-badge-caption="Pending"></span>
+                            <p>Leaving From: <strong>Hunter Youngblood</strong></p>
+                            <p>Requester: <strong>Student McStudent</strong></p>
+                            <span> Viewed</span>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle">folder</i>
+                            <span class="title">Title</span>
+                            <p>First Line <br>
+                               Second Line
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle green">insert_chart</i>
+                            <span class="title">Title</span>
+                            <p>First Line <br>
+                               Second Line
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle red">play_arrow</i>
+                            <span class="title">Title</span>
+                            <p>First Line <br>
+                               Second Line
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+                          </li>
+                        </div>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -297,13 +353,19 @@ email: hi@josephhassell.com
         <!-- Compiled and minified JavaScript -->
         <script src="/js/materialize.js"></script>
         <script src="/js/passport.js"></script>
+        <script src="/moment/min/moment-with-locales.min.js"></script>
         <script src="/sw.js"></script>
         <!--<script src="js/PICS.js"></script>-->
         <script>
+              
+              
               /*Vars*/
-              var currGroup = "";
-              var toPerson = "";
-              var dayToCome = "";
+              var idOfUser = "{{user.id}}";
+              var currGroup = null;
+              var toPerson = null;
+              var dayToCome = null;
+              var onPeriod = null;
+              var fromPerson = null;
 
               $(document).ready(function(){
                 // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -314,12 +376,12 @@ email: hi@josephhassell.com
                 //temp
                 $('#fullAjaxLoadingScreen').removeClass("loading");
                 
-                $.when(setPassGroupSelect(), checkDebugModeCookies()).done(function(a1, a2){
+                $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function(a1, a2, a3){
                   $('#fullAjaxLoadingScreen').removeClass("loading");
                 });
                 
                 initAutocompleteAccounts({"none": null});
-                
+                $('#datepicker').pickadate();
               });
 
               function debugMode() {
@@ -354,9 +416,31 @@ email: hi@josephhassell.com
               }
 
               /** Fill My Teachers **/
+              /*
+              function getMyTeachers() {
+                $.ajax({
+                  type: "get",
+                  url: "/api/account/schedule/student/id/" + idOfUser,
+                  dataType: "json",
+                  beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                  success: function(data) {
+                    if(data && data.schedule) {
+                      var keys = Object.keys(data.schedule);
+                      for(var i = 0; i < keys.length; i++) {
+                        $("#selectMyTeachers").append("<option value=\"" + data.schedule[keys].teacher  + "\" disabled selected>Choose A Person</option>")
+                      }
+                    } else {
+                      var err = new Error("data.schedule not defined" )
+                      errorHand(err)
+                    }
+                  },
+                  error: function(jqXHR) {
+                    errorHand(jqXHR)
+                  }                      
+                });
+              }*/
 
-
-
+             //STAGE 1//
               /**Fill Pass Groups**/
 
               function getPassGroups(done) {
@@ -389,9 +473,13 @@ email: hi@josephhassell.com
                   }
                 })
               }
-
-
               function onPassGroupSelectChange(select) {
+                toPerson = null;
+                dayToCome = null;
+                onPeriod = null;
+                fromPerson = null;
+
+                readyTheSubmit()
                 console.log(select)
                 //delete all dchildern
                  $('#selectPeople').empty();
@@ -410,6 +498,8 @@ email: hi@josephhassell.com
                   $("#selectPeopleDiv").show();
                 }
               }
+
+              //STAGE 2.A//
               function preparePeopleSelect(userGroup) {
                  $.ajax({
                     type: "get",
@@ -433,10 +523,13 @@ email: hi@josephhassell.com
                     }                      
                   });
               }
-
               //when the people select changes 
-
               function onSelectPeopleChange(select) {
+                dayToCome = null;
+                onPeriod = null;
+                fromPerson = null;
+
+                readyTheSubmit()
                 //get full account data 
                 searchAccountsByID(select.value, function(err, data) {
                   if(err) {
@@ -444,7 +537,11 @@ email: hi@josephhassell.com
                   } else {
                     toPerson = data;
                     //check date settings set by teacher dash 
-                    var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+                    var advance = 7;
+                    if(toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings && toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
+                      var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+                    }
+                    
                     var endDate = new Date();
                     endDate.setDate(endDate.getDate() + advance)
                     console.log(endDate.toString())
@@ -453,21 +550,35 @@ email: hi@josephhassell.com
 
                 })
               }
+              function searchAccountsByID(id, done) {
+                    if(id == "") {
+                      return done(null, null);
+                    }
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/id/"+id,
+                    dataType: "json",
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                }
 
+              //STAGE 2.B//
                 /**Autocomplete Accounts**/
                 function initAutocompleteAccounts(data) {
                   $('input.autocomplete').autocomplete({
                     data: data,
                     onAutocomplete: function(val) {
-                      toPerson = val;
+                      console.log(val)
+                      dayToCome = null;
+                      onPeriod = null;
+                      fromPerson = null;
+
+                      readyTheSubmit()
                     },
                     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                   });
                 }
-
-
-                
-                    
                 $("#autocomplete-account").keyup(function() {
                   searchAccounts(currGroup, $("#autocomplete-account").val(), function(err, data) {
                     if(err) {
@@ -496,8 +607,7 @@ email: hi@josephhassell.com
                   });
                   console.log($("#autocomplete-account").val())
                 })
-              
-              
+             
                 function searchAccounts(userGroup, query, done) {
                     if(!query|| userGroup == "") {
                       return done(null, null);
@@ -509,34 +619,20 @@ email: hi@josephhassell.com
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      
                   });
-                  /*sendAPI("/api/account/"+userGroup+"/"+query, "get", null, 123, function(err, data) {
-                    if(err) {
-                      console.error(err);
-                    } else {
-                      return data;
-                    }
-
-                  });*/
                 }
-
-                function searchAccountsByID(id, done) {
-                    if(id == "") {
-                      return done(null, null);
-                    }
-                   $.ajax({
-                    type: "get",
-                    url: "/api/account/id/"+id,
-                    dataType: "json",
-                    success: function(data) {done(null, data)},
-                    error: function(jqXHR) {done(jqXHR)}                      
-                  });
-                }
-
-
+                //STAGE 3//
                 /* Date Things */
 
                 function setupDatePicker(max, disable) {
-                  $('#dayToCome').show();
+                   
+                  $('#datepicker').attr("disabled", false);
+                  
+                  //reset date picker 
+                  $("#dayToCome").empty();
+                  $("#dayToCome").append("<input type=\"date\" id=\"datepicker\" name=\"dayToCome\" class=\"datepicker\" onchange=\"onDateChange(this)\">");
+                  $("#dayToCome").append("<label for=\"datepicker\">Day To Come</label>");
+                             
+
                   $('#datepicker').pickadate({
                     selectMonths: true, // Creates a dropdown to control month
                     selectYears: 2, // Creates a dropdown of 15 years to control year
@@ -551,11 +647,18 @@ email: hi@josephhassell.com
                 function onDateChange(date) {
                   //get hidden date vfalue
                   dayToCome = $('[name=dayToCome]').val();
-                  setupPeriods();
+                  //setupPeriods();
+                  $("#selectMyTeachers").attr("disabled", false)
+                  onPeriod = null;
+                  fromPerson = null;
+
+                  readyTheSubmit()
+                  setupMyTeachers();
+
                 }
 
                 /* Periods */
-
+                /*
                 function setupPeriods() {
                   if(dayToCome == "") {
                     return false;
@@ -599,9 +702,233 @@ email: hi@josephhassell.com
                     error: function(jqXHR) {errorHand(jqXHR)}                      
                   });
                 } 
+                */
+                //STAGE 4//
+                //TEACHER-PERIODS//
+                function getDaySchedule(day, done) {
+                  $.ajax({
+                    type: "get",
+                    url: "/api/schedule/for/"+dayToCome,
+                    dataType: "json",
+                    success: function(data) {
+                      done(null, data)
+                    },  
+                    error: function(jqXHR) {return done(jqXHR)}
+                  })
+                }
 
+                function getMySchedules(done) {
+                   $.ajax({
+                      type: "get",
+                      url: "/api/account/schedule/student/id/" + idOfUser,
+                      dataType: "json",
+                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                      success: function(data) {done(null, data)},
+                      error: function(jqXHR) {done(jqXHR)}                      
+                    });
+                 }
+
+                 function parseTodaysSchedule(day, done) {
+                    getDaySchedule(day, function(err, schedule) {
+                      if(err) {
+                        return done(err)
+                      }
+                      //multiple periods
+                        if(schedule.length > 0 ) {
+                          //most important schedule
+                          //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+                          var mIS;
+                          for(var i = 0; i < schedule.length; i++) {
+                            if(i==0) {
+                              mIS = schedule[i];
+                            }
+                            if(schedule[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
+                              mIS = schedule[i]
+                            }
+                            //console.log(mIS)
+                            //end
+                            if(i >= schedule.length-1 ) {
+                              return done(null, mIS)
+                            }
+                          }
+                        } else {
+                          var err = new Error("No Schedule Defined Today");
+                          return done(err)
+                        }
+                    })
+                 }
+                /* //SORT SCHEDULES
+                 function sortScheduleDef(scheduleDef, done) {
+                  var sorted = [];
+                  //first find out the order of todays schedule and put the keys into an erray
+                  if(scheduleDef && scheduleDef.scheduleDefinition && scheduleDef.scheduleDefinition.scheduleData) {
+                    var schedule = scheduleDef.scheduleDefinition.scheduleData;
+                    var unsortedPeriods = Object.keys(scheduleDef.scheduleDefinition.scheduleData);
+                    for(var x = 0; x < unsortedPeriods.length; x++) {
+                      schedule[unsortedPeriods[x]].start
+                    }
+                  }
+
+                 }
+                */
+                 function orderMyScheduleByTodaysSchedule(mySchedule, scheduleDef, done) {
+                   //For now, we just turn mySchedule into an array 
+                   var mySortedSchedule = [];  //again not sorted rn
+                   var myScheduleKeys = Object.keys(mySchedule);
+                   //console.log(mySchedule)
+                   for(var x = 0; x < myScheduleKeys.length; x++) {
+                    mySchedule[myScheduleKeys[x]].period = myScheduleKeys[x]
+                    mySortedSchedule.push(mySchedule[myScheduleKeys[x]]);
+                    console.log("loop")
+                    //check done
+                    if(x >= myScheduleKeys.length -1) {
+                      console.log("loop done")
+                      return done(null, mySortedSchedule)
+                    }
+                   }
+                 }
+                
+                 function setMyTeachersSelect(myScheduleArray) {
+                  //Would Check for blackouts in here 
+
+                  //clear it 
+                  $('#selectMyTeachers').empty();
+
+                  //set default
+                   $("#selectMyTeachers").append("<option value=\"\" disabled selected>Choose a Person</option>");
+
+                  console.log(myScheduleArray);
+                  for(var i = 0; i < myScheduleArray.length; i++) {
+                    //bad code
+                    if(!myScheduleArray[i].className) {
+                      myScheduleArray[i].className = "";
+                    }
+                    if(myScheduleArray[i].teacher) {
+                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + " - " + myScheduleArray[i].className + "</option>")
+                    } else {
+                       $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " - " + myScheduleArray[i].className + "</option>");
+                    }
+                    if(i >= myScheduleArray.length-1) {
+                      $('#selectMyTeachers').material_select();
+                    }
+                  }
+                  
+                 }
+
+                function setupMyTeachers() {
+                  console.log("hi")
+                  if(dayToCome == "") {
+                    return false;
+                  }
+                  //first get the current period schedule 
+                  parseTodaysSchedule(dayToCome, function(err, schedule) {
+                    if(err) {
+                      return errorHand(err);
+                    }
+                    var validFromTeachers = {};
+                    //console.log(schedule);
+
+                    if(!schedule || !schedule.scheduleDefinition || !schedule.scheduleDefinition.scheduleData) {
+                      var err = new Error("Schedule not defined");
+                      return errorHand(err);
+                    }
+
+                    //get user's schedule 
+                    getMySchedules(function(err, userSchedule) {
+                      if(err) {
+
+                        return errorHand(err);
+                      }
+                     
+                      if(!userSchedule || !userSchedule.schedule) {
+                        var err = new Error("User Schedule not defined");
+                        return errorHand(err);
+                      }
+                      var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
+                      // add only the enabled periods to validFromTeachers
+
+                      for(var x = 0; x < dayScheduleKeys.length; x++ ) {
+                        //check if user has one of the periods for today
+                        if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
+
+                          validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
+                          //check if done
+                          if(x >= dayScheduleKeys.length - 1) {
+                            
+                            orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
+                              if(err) {
+                                return errorHand(err)
+                              }
+                              
+                              setMyTeachersSelect(orderedArr);
+                            })
+                          }
+                        }
+                      }
+                    });
+                  });
+                  /*
+                  getMySchedules(function(err, data) {
+                    if(err) {
+                      return errorHand(err);
+                    }
+                    console.log(data)
+                    //check if valid
+                    if(data && data.schedule) {
+
+                    }
+                  })*/
+                }
+
+                function onSelectMyTeachersChange(select) {
+                  onPeriod = $(select).find(':selected').attr("data-period");
+                  console.log(onPeriod)
+                  fromPerson = $(select).find(':selected').attr("data-teacherId");
+                  if(!fromPerson) {
+                      fromPerson = "";
+                  }
+                  console.log(fromPerson)
+                  readyTheSubmit();
+                }
 
                 
+                function readyTheSubmit() {
+                  if((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
+                    $("#submitPass").removeClass("disabled").attr("onclick", "submitPass()");
+                  } else {
+                    $("#submitPass").addClass("disabled").attr("onclick", "");
+                  }
+                }
+                
+                function submitPass() {
+                  if((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
+                    
+                    $.ajax({
+                      type: "post",
+                      url: "/api/passes/me/",
+                      data: {fromPerson: fromPerson, toPerson: toPerson.id, period: onPeriod, date: dayToCome},
+                      dataType: "json",
+                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                      success: function(data) {
+                        if(data.inserted > 0) {
+                          //confirm pass
+                          console.log(data)
+                        } else {
+                          var err = new Error("Unknown Error");
+                          console.log(data)
+                          errorHand(err);
+                        }
+                      },  
+                      error: function(jqXHR) {
+                        return errorHand(jqXHR) 
+                      }
+                    })
+                  } else {
+                    var err = new Error("Undefined Values")
+                    errorHand(err);
+                  }
+                }
+
 
                  $("#sao").change(function() {
                   if(this.checked) {
@@ -618,6 +945,149 @@ email: hi@josephhassell.com
                   }
               });
 
+
+                 ////MY PASSES CARD////
+                 
+                 function getMyUpcomeingPasses(done) {
+                  $.ajax({
+                      type: "get",
+                      url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
+                      dataType: "json",
+                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                      success: function(data) {done(null, data)},
+                      error: function(jqXHR) {done(jqXHR)}                      
+                    });
+                 }
+                 
+                 function setMyPasses() {
+                  getMyUpcomeingPasses(function(err, myPasses) {
+                    if(err) {
+                      return errorHand(err)
+                    }
+                    console.log(myPasses)
+                    $myPasses = $('#myPassesReturn')
+                    for(var i = 0; i < myPasses.length; i++) {
+                      console.log(myPasses[i])
+                      var checkNo = $("<span/>")
+                                      .addClass("right")
+                                      .append(
+                                          $("<a/>")
+                                            .addClass("btn-floating waves-effect waves-light red tooltipped")
+                                            .attr("data-position", "right")
+                                            .attr("data-delay", "50")
+                                            .attr("data-tooltip", "Cancel This Pass")
+                                            .append(
+                                                $("<i/>")
+                                                  .addClass("material-icons")
+                                                  .text("not_interested")
+                                              )
+                                        )
+
+                      var checkYes = $("<span/>")
+                                      .addClass("right")
+                                      .append(
+                                          $("<a/>")
+                                            .addClass("btn-floating waves-effect waves-light green tooltipped")
+                                            .attr("data-position", "left")
+                                            .attr("data-delay", "50")
+                                            .attr("data-tooltip", "Confirm This Pass")
+                                            .append(
+                                                $("<i/>")
+                                                  .addClass("material-icons")
+                                                  .text("check")
+                                              )
+                                        )
+                      var avatarEl = $("<img/>")
+                                      .addClass("passport-avatar circle")
+                                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+                                      .attr("alt", "Avatar")
+
+                      var titleEl = $("<span/>")
+                                      .addClass("title")
+                                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+
+                      titleEl.prepend(
+                            $("<i/>")
+                              .addClass("material-icons")
+                              .text("remove_red_eye")
+                        )
+
+                      var dateEl = $("<p/>")
+                                      .text("Date: ")
+                                      .append(
+                                        $("<strong/>")
+                                        .text(moment(myPasses[i].date).format("dddd, LL"))
+                                      )
+
+                      var periodEl = $("<p/>")
+                                      .text("Period: ")
+                                      .append(
+                                        $("<strong/>")
+                                        .text(myPasses[i].period.toUpperCase())
+                                      )
+                      
+                      var statusEl = $("<span/>")
+                                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                                      .addClass("new badge")
+
+                      var leavingFromEl = $("<p/>")
+                                      .text("Leaving From: ")
+                                      .append(
+                                        $("<strong/>")
+                                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+                                      )
+
+                      var requesterEl = $("<p/>")
+                                      .text("Requester: ")
+                                      .append(
+                                        $("<strong/>")
+                                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+                                      )
+                                       
+
+                      //set final holder
+                      var li = $("<li/>")
+                                  .addClass("collection-item avatar")
+                                  .append(checkNo)
+                                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+                                  .append(checkYes)
+                                  .append(avatarEl)
+                                  .append(titleEl)
+                                  .append(dateEl)
+                                  .append(periodEl)
+                                  .append(statusEl)
+                                  .append(leavingFromEl)
+                                  .append(requesterEl)
+                                  
+                      $myPasses.append(li)
+                      $('.tooltipped').tooltip({delay: 50});
+
+                    }
+                  })
+                 }
+
+                 /*
+
+
+
+                 <li class="collection-item avatar">
+                            
+                            <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
+                            <span class="right">&nbsp;</span>
+                            <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
+
+                            <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
+                            
+                            <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
+                            <p>Date: <strong>07/14/2017</strong></p>
+                            <p>Period: <strong>B</strong></p>
+                            <span class="new badge" data-badge-caption="Pending"></span>
+                            <p>Leaving From: <strong>Hunter Youngblood</strong></p>
+                            <p>Requester: <strong>Student McStudent</strong></p>
+                            <span> Viewed</span>
+                          </li>
+
+                          */
               </script>
 
   </body>

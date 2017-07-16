@@ -835,3 +835,281 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     border-radius: 50%;
     background-color: #e0e0e0;
   }
+
+
+  /* MATERIAL RESPONCE GROW ANIMATION */
+  @keyframes cirGrow {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(3);
+      }
+    }
+    .circleThing {
+      position: absolute;
+      display: inline-block;
+      opacity: 0;
+      top: 0%;
+      left: 0%;
+      width: 100vw;
+      height: 100vw;
+      border-radius: 50%;
+      z-index: 5; //-5
+      animation-duration: 0.5s;
+      animation-fill-mode: forwards;
+    }
+    .circleThingContainer{
+      position: absolute;
+      display: inline-block;
+      top: 0%;
+      left: 0%;
+      width:100vw;
+      height: 100%;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .circleGrow {
+      animation-name: cirGrow;
+      opacity: 1;
+      animation-timing-function: ease-in;
+
+    }
+    /*fail "x" animation */
+    @keyframes XleftIn {
+      0% {
+        top: 40%;
+        opacity: 0;
+        transform: rotate(20deg);
+      }
+      100% {
+        top: 30%;
+        opacity: 1;
+        transform: rotate(45deg);
+      }
+    }
+    @keyframes XleftOut {
+      0% {
+        top: 30%;
+        opacity: 1;
+        transform: rotate(45deg);
+      }
+      100% {
+        top: 15%;
+        opacity: 0;
+        transform: rotate(75deg);
+      }
+    }
+
+
+    @keyframes XrightIn {
+      0% {
+        top: 40%;
+        opacity: 0;
+        transform: rotate(-20deg);
+      }
+      100% {
+        top: 30%;
+        opacity: 1;
+        transform: rotate(-45deg);
+      }
+    }
+    @keyframes XrightOut {
+      0% {
+        top: 30%;
+        opacity: 1;
+        transform: rotate(-45deg);
+      }
+      100% {
+        top: 15%;
+        opacity: 0;
+        transform: rotate(-75deg);
+      }
+    }
+
+    .Xleft {
+      position: absolute;
+      display: inline-block;
+      top: 30%;
+      left: 50%;
+      opacity: 1;
+      width: 20px;
+      height: 250px;
+      transform: rotate(45deg);
+      background-color: white;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+    }
+    .Xright {
+      position: absolute;
+      display: inline-block;
+      top: 30%;
+      left: 50%;
+      opacity: 1;
+      width: 20px;
+      height: 250px;
+      transform: rotate(-45deg);
+      background-color: white;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+
+
+    }
+    .Xleft.XleftIn {
+      animation-name: XleftIn;
+      animation-timing-function: ease-out;
+    }
+    .Xright.XrightIn {
+      animation-name: XrightIn;
+      animation-timing-function: ease-out;
+    }
+    .Xleft.XleftOut {
+      animation-name: XleftOut;
+      animation-timing-function: ease-out;
+    }
+    .Xright.XrightOut {
+      animation-name: XrightOut;
+      animation-timing-function: ease-out;
+    }
+
+    /*success animation*/
+    @keyframes CleftIn {
+      0% {
+        transform: rotate(15deg);
+        left: 15px;
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(20deg);
+        left: 30px;
+      }
+    }
+    @keyframes CleftOut {
+      0% {
+        transform: rotate(20deg);
+        left: 30px;
+
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(70deg);
+        left: 90px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes CrightIn {
+      0% {
+        transform: rotate(15deg);
+        left: 0px;
+        top: 95px;
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-50deg);
+        left: -65px;
+        top: 115px;
+      }
+    }
+    @keyframes CrightOut {
+      0% {
+        transform: rotate(-50deg);
+        left: -65px;
+        top: 115px;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-70deg);
+        opacity: 0;
+        left: -80px;
+        top: 65px;
+      }
+    }
+ @keyframes checkMarkUpIn {
+   0% {
+     top: 35%;
+   }
+   100% {
+     top: 30%;
+   }
+ }
+ @keyframes checkMarkUpOut {
+   0% {
+     top: 30%;
+   }
+   100% {
+     top: 25%;
+   }
+ }
+      .checkmarkContainer{
+        position: relative;
+        display: run-in;
+        top: 30%;
+        left: 50%;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        z-index: 10;
+      }
+    .Cleft {
+      position: absolute;
+      display: inline-block !important;
+      top: 30%;
+      left: 30px;
+      opacity: 1;
+      width: 20px;
+      height: 250px;
+      transform: rotate(20deg);
+      background-color: white;
+      border-bottom-right-radius: 1em;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+    }
+    .Cright {
+      position: absolute;
+      display: inline-block !important;
+      top: 115px;
+      left: -65px;
+      opacity: 1;
+      width: 20px;
+      height: 150px;
+      transform: rotate(-50deg);
+      background-color: white;
+      border-bottom-left-radius: 1em;
+      border-bottom-right-radius: 1em;
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+    }
+    .Cleft.CleftIn {
+      animation-name: CleftIn;
+      animation-timing-function: ease-in-out;
+    }
+    .Cleft.CleftOut {
+      animation-name: CleftOut;
+      animation-timing-function: ease-in-out;
+    }
+    .Cright.CrightIn {
+      animation-name: CrightIn;
+      animation-timing-function: ease-in-out;
+    }
+    .Cright.CrightOut {
+      animation-name: CrightOut;
+      animation-timing-function: ease-in-out;
+    }
+    .checkmarkContainer.checkmarkContainerIn {
+      animation-name: checkMarkUpIn;
+      animation-timing-function: ease-in-out;
+    }
+    .checkmarkContainer.checkmarkContainerOut {
+      animation-name: checkMarkUpOut;
+      animation-timing-function: ease-in-out;
+    }

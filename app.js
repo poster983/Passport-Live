@@ -47,6 +47,7 @@ var administrator = require('./routes/administrator');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
 var apiAuth = require('./routes/api/auth');
+var apiPasses = require('./routes/api/passes');
 var apiBlackouts = require('./routes/api/blackout');
 var app = express();
 
@@ -120,7 +121,7 @@ app.use(require('node-sass-middleware')({
   indentedSyntax: false,
   sourceMap: false
 }));
-app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', rootLevel);
@@ -134,6 +135,8 @@ app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
 app.use('/api/auth', apiAuth)
 app.use('/api/blackout', apiBlackouts)
+app.use('/api/passes', apiPasses)
+
 //app.use('/users', users);
 
 if(Raven) {
