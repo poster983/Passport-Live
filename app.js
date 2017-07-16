@@ -120,7 +120,7 @@ app.use(require('node-sass-middleware')({
   indentedSyntax: false,
   sourceMap: false
 }));
-app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 app.use(express.static(path.join(__dirname, 'public')));
 // TOP LEVEL ROUTE
 app.use('/', rootLevel);

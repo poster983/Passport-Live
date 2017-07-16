@@ -88,7 +88,15 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         requester: requester,
         period: period,
         date: r.ISO8601(date),
-        status: "pending"
+        status: {
+            state: "pending",
+            byUser: null,
+            msg: null
+        },
+        seen: {
+            email: false,
+            web: false
+        }
     }).run(db.conn(), function(err, trans) {
         if(err) {
             return done(err);
@@ -136,17 +144,87 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     }
 
 
-      
-    r.table("passes").filter(function(person) {
+    
+    r.table("passes")
+
+    .filter(function(person) {
         return person(byColl).eq(id);
-    }).filter(function(day) {
+    })
+    .filter(function(day) {
         if(!toDate) {
             return day("date").date().gt(r.ISO8601(fromDate).date()).or(
                 day("date").date().eq(r.ISO8601(fromDate).date()));
         } else {
             return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date())
         }
-    }).run(db.conn(), function(err, dataCur) {
+    })
+    
+    //man join from person
+    .eqJoin("fromPerson", r.table("accounts"))
+    //merge out the left 
+    .map(r.row.merge (function(ro) {
+        return ro("left")
+    }))
+    .without("left")
+    //merge in the from person 
+    .map(r.row.merge (function(ro) {
+        return {
+
+                "fromPerson": ro("right").pluck("id", "name", "email", "schedules")
+
+        }
+    }))
+    .without("right")
+    //_______
+    //merge toPerson
+    
+    .eqJoin("toPerson", r.table("accounts"))
+    //remove left
+    .map(r.row.merge (function(ro) {
+        return ro("left")
+    }))
+    .without("left")
+    .map(r.row.merge (function(ro) {
+        return {
+            "toPerson": ro("right").pluck("id", "name", "email", "schedules")
+        }
+    }))
+    .without("right")
+    //___________
+    //merge Requester
+
+    .eqJoin("requester", r.table("accounts"))
+    //remove left
+    .map(r.row.merge (function(ro) {
+        return ro("left")
+    }))
+    .without("left")
+    //merge correct values
+    .map(r.row.merge (function(ro) {
+        return {
+            "requester": ro("right").pluck("id", "name", "email", "schedules")
+        }
+    }))
+    .without("right")
+
+    //___________
+    //migrator Requester
+
+    .eqJoin("migrator", r.table("accounts"))
+    //remove left
+    .map(r.row.merge (function(ro) {
+        return ro("left")
+    }))
+    .without("left")
+    //merge correct values
+    .map(r.row.merge (function(ro) {
+        return {
+            "migrator": ro("right").pluck("id", "name", "email", "schedules")
+        }
+    }))
+    .without("right")
+
+    .run(db.conn(), function(err, dataCur) {
         if(err) {
             return done(err);
         }
@@ -159,3 +237,9 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     })
 
 }
+
+/*
+
+*/
+
+/*.pluck("name", "email", "schedules")*/
