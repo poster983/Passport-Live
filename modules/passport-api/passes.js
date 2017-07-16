@@ -90,7 +90,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         date: r.ISO8601(date),
         status: {
             state: "pending",
-            byUser: null,
+            setByUser: null,
             msg: null
         },
         seen: {
