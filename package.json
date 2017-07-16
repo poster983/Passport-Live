@@ -32,7 +32,6 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.2",
-    "browserify": "^14.4.0",
     "config": "latest",
     "connect-ensure-login": "latest",
     "connect-flash": "~0.1.1",
