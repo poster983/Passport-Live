@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>mediaRESTAPI - Documentation</title>
+    <title>passRESTApi - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">mediaRESTAPI</h1>
+    <h1 class="page-title">passRESTApi</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: mediaRESTAPI</h2>
+      <h2>Module: passRESTApi</h2>
         
     
 
@@ -59,9 +59,11 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#generateBackdrop">generateBackdrop</a></li>
+            <li><a href="#getPassForMeFromDay">getPassForMeFromDay</a></li>
             
-            <li><a href="#getIdenticon">getIdenticon</a></li>
+            <li><a href="#getPassForMeFromToDay">getPassForMeFromToDay</a></li>
+            
+            <li><a href="#newPassForMe">newPassForMe</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -101,7 +103,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line45">45</a>
+    <a href="routes_api_passes.js.html">passes.js</a>:<a href="routes_api_passes.js.html#line83">83</a>
   </code>
 </div>
 
@@ -112,8 +114,8 @@
 
     
 
-    <h4 class="name" id="~generateBackdrop">
-      <a href="#params-generateBackdrop"><span class="type-signature">(async, inner) </span>generateBackdrop</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~getPassForMeFromDay">
+      <a href="#params-getPassForMeFromDay"><span class="type-signature">(async, inner) </span>getPassForMeFromDay</a><span class="signature">(req, res, next)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -123,8 +125,8 @@
 
 
 
-      <a href="#api-generateBackdrop">
-        <span class="label label-api">API: GET /api/media/background/:id.svg</span>
+      <a href="#api-getPassForMeFromDay">
+        <span class="label label-api">API: GET /api/passes/me/from/:fromDay/</span>
       </a>
     
 
@@ -136,7 +138,8 @@
 
 
 <div class="description">
-    <p>Generates a unique backdrop for each user</p>
+    <p>Gets all Passes from a day from/for currently logged in account.
+REQUIRES JWT Authorization in headers.</p>
 </div>
 
 
@@ -146,7 +149,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-generateBackdrop">
+<div class="collapse_" id="methodCollapse-getPassForMeFromDay">
 
   
 
@@ -193,7 +196,7 @@
   <div class="bs-callout bs-callout-default">
     <h5>To Do</h5>
     <ul>
-        <li>move rethink db to passport-api module</li>
+        <li>Account must have student db permissions</li>
     </ul>
   </div>
 
@@ -202,7 +205,7 @@
 
 
 
-  <div id="params-generateBackdrop" class="bs-callout bs-callout-primary">
+  <div id="params-getPassForMeFromDay" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -272,6 +275,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -291,10 +317,10 @@
 
 
 
-  <div class="bs-callout bs-callout-api" id="api-generateBackdrop">
+  <div class="bs-callout bs-callout-api" id="api-getPassForMeFromDay">
     <h5>
       API Route:
-      GET /api/media/background/:id.svg
+      GET /api/passes/me/from/:fromDay/
     </h5>
 
     
@@ -324,7 +350,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>idCol</code></td>
             
 
             <td class="type">
@@ -340,7 +366,30 @@
 
             
 
-            <td class="description last">ID of the user.</td>
+            <td class="description last">Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromDay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Begining of the search range</td>
         </tr>
 
     
@@ -357,7 +406,7 @@
         <h6>Response</h6>
         
 <div class="param-desc">
-    Returnes the unique svg image
+    Returns rethink db action summery
 </div>
 
 
@@ -368,7 +417,7 @@
     </dt>
     <dd>
         
-<span class="param-type">image/svg\u002Bxml</span>
+<span class="param-type">json</span>
 
 
     </dd>
@@ -385,7 +434,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Generates a unique backdrop for each user\n* @function generateBackdrop\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/background/:id.svg\n* @apiparam {string} id ID of the user.\n* @apiresponse {image/svg\\u002Bxml} Returnes the unique svg image\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Generates a unique backdrop for each user</p>","kind":"function","name":"generateBackdrop","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/background/:id.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the unique svg image"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~generateBackdrop","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000463","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~generateBackdrop","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Gets all Passes from a day from/for currently logged in account.\n    * REQUIRES JWT Authorization in headers.\n    * @todo Account must have student db permissions\n    * @function getPassForMeFromDay\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @param {nextCallback} next\n    * @apiparam {string} idCol - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"\n    * @apiparam {date} fromDay - Begining of the search range\n    * @api GET /api/passes/me/from/:fromDay/\n    * @apiresponse {json} Returns rethink db action summery\n    */","meta":{"filename":"passes.js","lineno":83,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/passes.js"},"description":"<p>Gets all Passes from a day from/for currently logged in account.\nREQUIRES JWT Authorization in headers.</p>","todo":["Account must have student db permissions"],"kind":"function","name":"getPassForMeFromDay","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} idCol - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"","value":{"type":{"names":["string"]},"description":"Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"","name":"idCol"}},{"originalTitle":"apiparam","title":"apiparam","text":"{date} fromDay - Begining of the search range","value":{"type":{"names":["date"]},"description":"Begining of the search range","name":"fromDay"}}],"route":"GET /api/passes/me/from/:fromDay/","response":{"type":{"names":["json"]},"description":"Returns rethink db action summery"},"longname":"module:passRESTApi~getPassForMeFromDay","scope":"inner","memberof":"module:passRESTApi","___id":"T000002R000496","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getPassForMeFromDay","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passRESTApi.html\">passRESTApi</a>~"]}
 </pre>
 -->
 </div>
@@ -402,7 +451,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line79">79</a>
+    <a href="routes_api_passes.js.html">passes.js</a>:<a href="routes_api_passes.js.html#line110">110</a>
   </code>
 </div>
 
@@ -413,8 +462,8 @@
 
     
 
-    <h4 class="name" id="~getIdenticon">
-      <a href="#params-getIdenticon"><span class="type-signature">(async, inner) </span>getIdenticon</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~getPassForMeFromToDay">
+      <a href="#params-getPassForMeFromToDay"><span class="type-signature">(async, inner) </span>getPassForMeFromToDay</a><span class="signature">(req, res, next)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -424,8 +473,8 @@
 
 
 
-      <a href="#api-getIdenticon">
-        <span class="label label-api">API: GET /api/media/avatar/:id/:size.svg</span>
+      <a href="#api-getPassForMeFromToDay">
+        <span class="label label-api">API: GET /api/passes/me/from/:fromDay/to/:toDay</span>
       </a>
     
 
@@ -437,7 +486,8 @@
 
 
 <div class="description">
-    <p>Gets an avatar for the user</p>
+    <p>Gets all Passes from a day to a day from/for currently logged in account.
+REQUIRES JWT Authorization in headers.</p>
 </div>
 
 
@@ -447,7 +497,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getIdenticon">
+<div class="collapse_" id="methodCollapse-getPassForMeFromToDay">
 
   
 
@@ -494,7 +544,7 @@
   <div class="bs-callout bs-callout-default">
     <h5>To Do</h5>
     <ul>
-        <li>move rethink db to passport-api module</li>
+        <li>Account must have student db permissions</li>
     </ul>
   </div>
 
@@ -503,7 +553,7 @@
 
 
 
-  <div id="params-getIdenticon" class="bs-callout bs-callout-primary">
+  <div id="params-getPassForMeFromToDay" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -573,6 +623,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -592,10 +665,10 @@
 
 
 
-  <div class="bs-callout bs-callout-api" id="api-getIdenticon">
+  <div class="bs-callout bs-callout-api" id="api-getPassForMeFromToDay">
     <h5>
       API Route:
-      GET /api/media/avatar/:id/:size.svg
+      GET /api/passes/me/from/:fromDay/to/:toDay
     </h5>
 
     
@@ -625,7 +698,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>idCol</code></td>
             
 
             <td class="type">
@@ -641,20 +714,20 @@
 
             
 
-            <td class="description last">ID of the user.</td>
+            <td class="description last">Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>size</code></td>
+                <td class="name"><code>fromDay</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">date</span>
 
 
             
@@ -664,7 +737,30 @@
 
             
 
-            <td class="description last">How big the svg should be</td>
+            <td class="description last">Begining of the search range</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toDay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">End of the search range</td>
         </tr>
 
     
@@ -681,7 +777,7 @@
         <h6>Response</h6>
         
 <div class="param-desc">
-    Returnes the avatar png
+    Returns rethink db action summery
 </div>
 
 
@@ -692,7 +788,7 @@
     </dt>
     <dd>
         
-<span class="param-type">image/svg\u002Bxml</span>
+<span class="param-type">json</span>
 
 
     </dd>
@@ -709,7 +805,317 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Gets an avatar for the user\n* @function getIdenticon\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/avatar/:id/:size.svg\n* @apiparam {string} id ID of the user.\n* @apiparam {string} size How big the svg should be\n* @apiresponse {image/svg\\u002Bxml} Returnes the avatar png\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":79,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Gets an avatar for the user</p>","kind":"function","name":"getIdenticon","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/avatar/:id/:size.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} size How big the svg should be","value":{"type":{"names":["string"]},"description":"How big the svg should be","name":"size"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the avatar png"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~getIdenticon","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000469","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getIdenticon","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Gets all Passes from a day to a day from/for currently logged in account.\n    * REQUIRES JWT Authorization in headers.\n    * @todo Account must have student db permissions\n    * @function getPassForMeFromToDay\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @param {nextCallback} next\n    * @apiparam {string} idCol - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"\n    * @apiparam {date} fromDay - Begining of the search range\n    * @apiparam {date} toDay - End of the search range\n    * @api GET /api/passes/me/from/:fromDay/to/:toDay\n    * @apiresponse {json} Returns rethink db action summery\n    */","meta":{"filename":"passes.js","lineno":110,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/passes.js"},"description":"<p>Gets all Passes from a day to a day from/for currently logged in account.\nREQUIRES JWT Authorization in headers.</p>","todo":["Account must have student db permissions"],"kind":"function","name":"getPassForMeFromToDay","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} idCol - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"","value":{"type":{"names":["string"]},"description":"Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"","name":"idCol"}},{"originalTitle":"apiparam","title":"apiparam","text":"{date} fromDay - Begining of the search range","value":{"type":{"names":["date"]},"description":"Begining of the search range","name":"fromDay"}},{"originalTitle":"apiparam","title":"apiparam","text":"{date} toDay - End of the search range","value":{"type":{"names":["date"]},"description":"End of the search range","name":"toDay"}}],"route":"GET /api/passes/me/from/:fromDay/to/:toDay","response":{"type":{"names":["json"]},"description":"Returns rethink db action summery"},"longname":"module:passRESTApi~getPassForMeFromToDay","scope":"inner","memberof":"module:passRESTApi","___id":"T000002R000500","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getPassForMeFromToDay","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passRESTApi.html\">passRESTApi</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_passes.js.html">passes.js</a>:<a href="routes_api_passes.js.html#line45">45</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newPassForMe">
+      <a href="#params-newPassForMe"><span class="type-signature">(async, inner) </span>newPassForMe</a><span class="signature">(req, res, next)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-newPassForMe">
+        <span class="label label-api">API: POST /api/passes/me/</span>
+      </a>
+    
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Creates a new Pass from/for currently logged in account.
+This one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves 
+REQUIRES JWT Authorization in headers.</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+        <p class="code-caption">Body Structure (application/json): </p>
+    
+    <pre class="prettyprint"><code>{
+   "fromPerson": (id Of Account)
+   "toPerson": (id Of Account)
+   "migrator"; (id of account)
+   "period": (a period constant)
+   "date": (an date in iso standered)
+}</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newPassForMe">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
+    <ul>
+        <li>Account must have student db permissions</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-newPassForMe" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-newPassForMe">
+    <h5>
+      API Route:
+      POST /api/passes/me/
+    </h5>
+
+    
+
+    
+
+    
+        <h6>Body</h6>
+        
+<div class="param-desc">
+    See Example
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returns rethink db action summery
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Creates a new Pass from/for currently logged in account.\n    * This one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves \n    * REQUIRES JWT Authorization in headers.\n    * @todo Account must have student db permissions\n    * @function newPassForMe\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @param {nextCallback} next\n    * @api POST /api/passes/me/\n    * @apibody {json} See Example\n    * @example\n    * <caption>Body Structure (application/json): </caption>\n    * {\n    *    \"fromPerson\": (id Of Account)\n    *    \"toPerson\": (id Of Account)\n    *    \"migrator\"; (id of account)\n    *    \"period\": (a period constant)\n    *    \"date\": (an date in iso standered)\n    * }\n    *\n    * @apiresponse {json} Returns rethink db action summery\n    */","meta":{"filename":"passes.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/passes.js"},"description":"<p>Creates a new Pass from/for currently logged in account.\nThis one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves \nREQUIRES JWT Authorization in headers.</p>","todo":["Account must have student db permissions"],"kind":"function","name":"newPassForMe","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"POST /api/passes/me/","body":{"type":{"names":["json"]},"description":"See Example"},"examples":[{"caption":"Body Structure (application/json): ","code":"{\n   \"fromPerson\": (id Of Account)\n   \"toPerson\": (id Of Account)\n   \"migrator\"; (id of account)\n   \"period\": (a period constant)\n   \"date\": (an date in iso standered)\n}"}],"response":{"type":{"names":["json"]},"description":"Returns rethink db action summery"},"longname":"module:passRESTApi~newPassForMe","scope":"inner","memberof":"module:passRESTApi","___id":"T000002R000489","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newPassForMe","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-passRESTApi.html\">passRESTApi</a>~"]}
 </pre>
 -->
 </div>

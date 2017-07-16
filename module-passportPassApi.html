@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>mediaRESTAPI - Documentation</title>
+    <title>passportPassApi - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">mediaRESTAPI</h1>
+    <h1 class="page-title">passportPassApi</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: mediaRESTAPI</h2>
+      <h2>Module: passportPassApi</h2>
         
     
 
@@ -59,9 +59,9 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#generateBackdrop">generateBackdrop</a></li>
+            <li><a href="#flexableGetPasses">flexableGetPasses</a></li>
             
-            <li><a href="#getIdenticon">getIdenticon</a></li>
+            <li><a href="#newPass">newPass</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -101,7 +101,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line45">45</a>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line108">108</a>
   </code>
 </div>
 
@@ -112,8 +112,8 @@
 
     
 
-    <h4 class="name" id="~generateBackdrop">
-      <a href="#params-generateBackdrop"><span class="type-signature">(async, inner) </span>generateBackdrop</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~flexableGetPasses">
+      <a href="#params-flexableGetPasses"><span class="type-signature">(async, inner) </span>flexableGetPasses</a><span class="signature">(id, byColl, fromDate, toDate, done)</span><span class="type-signature"> &rarr; {done}</span>
 
     </h4>
 
@@ -123,10 +123,6 @@
 
 
 
-      <a href="#api-generateBackdrop">
-        <span class="label label-api">API: GET /api/media/background/:id.svg</span>
-      </a>
-    
 
 
 
@@ -136,7 +132,7 @@
 
 
 <div class="description">
-    <p>Generates a unique backdrop for each user</p>
+    <p>Gets passes with flexable id search</p>
 </div>
 
 
@@ -146,7 +142,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-generateBackdrop">
+<div class="collapse_" id="methodCollapse-flexableGetPasses">
 
   
 
@@ -190,116 +186,14 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
 
 
 
 
 
-
-  <div id="params-generateBackdrop" class="bs-callout bs-callout-primary">
+  <div id="params-flexableGetPasses" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-generateBackdrop">
-    <h5>
-      API Route:
-      GET /api/media/background/:id.svg
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -330,6 +224,29 @@
             <td class="type">
             
                 
+<span class="param-type">userId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>byColl</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">string</span>
 
 
@@ -340,24 +257,102 @@
 
             
 
-            <td class="description last">ID of the user.</td>
+            <td class="description last"><p>Where to search for the id.  Possible values: &quot;fromPerson&quot;, &quot;toPerson&quot;, &quot;migrator&quot;, &quot;requester&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>low range date to search for.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>High range date to search for.  set null for none</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>callback</p></td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
+  </div>
 
-    
 
-    
 
-    
-        <h6>Response</h6>
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
         
 <div class="param-desc">
-    Returnes the unique svg image
+    <p>Error, or a transaction statement</p>
 </div>
 
 
@@ -368,14 +363,16 @@
     </dt>
     <dd>
         
-<span class="param-type">image/svg\u002Bxml</span>
+<span class="param-type">done</span>
 
 
     </dd>
 </dl>
 
     
-  </div>
+</div>
+  
+
 
 
 
@@ -385,7 +382,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Generates a unique backdrop for each user\n* @function generateBackdrop\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/background/:id.svg\n* @apiparam {string} id ID of the user.\n* @apiresponse {image/svg\\u002Bxml} Returnes the unique svg image\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Generates a unique backdrop for each user</p>","kind":"function","name":"generateBackdrop","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/background/:id.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the unique svg image"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~generateBackdrop","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000463","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~generateBackdrop","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Gets passes with flexable id search\n    * @function flexableGetPasses\n    * @async\n    * @param {userId} id - Id of the account\n    * @param {string} byColl - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"\n    * @param {date} fromDate - low range date to search for.  \n    * @param {date} toDate - High range date to search for.  set null for none\n    * @param {function} done - callback\n    * @returns {done} Error, or a transaction statement \n    */","meta":{"filename":"passes.js","lineno":108,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Gets passes with flexable id search</p>","kind":"function","name":"flexableGetPasses","async":true,"params":[{"type":{"names":["userId"]},"description":"<p>Id of the account</p>","name":"id"},{"type":{"names":["string"]},"description":"<p>Where to search for the id.  Possible values: &quot;fromPerson&quot;, &quot;toPerson&quot;, &quot;migrator&quot;, &quot;requester&quot;</p>","name":"byColl"},{"type":{"names":["date"]},"description":"<p>low range date to search for.</p>","name":"fromDate"},{"type":{"names":["date"]},"description":"<p>High range date to search for.  set null for none</p>","name":"toDate"},{"type":{"names":["function"]},"description":"<p>callback</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Error, or a transaction statement</p>"}],"longname":"module:passportPassApi~flexableGetPasses","scope":"inner","memberof":"module:passportPassApi","___id":"T000002R000262","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~flexableGetPasses","signature":"<span class=\"signature\">(id, byColl, fromDate, toDate, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-passportPassApi.html\">passportPassApi</a>~"]}
 </pre>
 -->
 </div>
@@ -402,7 +399,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line79">79</a>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line30">30</a>
   </code>
 </div>
 
@@ -413,8 +410,8 @@
 
     
 
-    <h4 class="name" id="~getIdenticon">
-      <a href="#params-getIdenticon"><span class="type-signature">(async, inner) </span>getIdenticon</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~newPass">
+      <a href="#params-newPass"><span class="type-signature">(async, inner) </span>newPass</a><span class="signature">(toPerson, fromPerson, migrator, requester, period, date, done)</span><span class="type-signature"> &rarr; {done}</span>
 
     </h4>
 
@@ -424,10 +421,6 @@
 
 
 
-      <a href="#api-getIdenticon">
-        <span class="label label-api">API: GET /api/media/avatar/:id/:size.svg</span>
-      </a>
-    
 
 
 
@@ -437,7 +430,7 @@
 
 
 <div class="description">
-    <p>Gets an avatar for the user</p>
+    <p>Creates a new account</p>
 </div>
 
 
@@ -447,7 +440,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getIdenticon">
+<div class="collapse_" id="methodCollapse-newPass">
 
   
 
@@ -491,19 +484,12 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
 
 
 
 
 
-
-  <div id="params-getIdenticon" class="bs-callout bs-callout-primary">
+  <div id="params-newPass" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -530,13 +516,105 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>toPerson</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">userId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account recieving the migrating person</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromPerson</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">userId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account releasing the migrating person</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>migrator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">userId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account moving between people</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>requester</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">userId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account who requested the pass</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>period</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
             
@@ -553,13 +631,13 @@
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>date</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#response">response</a></span>
+<span class="param-type">date</span>
 
 
             
@@ -570,6 +648,29 @@
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>callback</p></td>
         </tr>
 
     
@@ -590,98 +691,12 @@
 
 
 
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
 
-
-  <div class="bs-callout bs-callout-api" id="api-getIdenticon">
-    <h5>
-      API Route:
-      GET /api/media/avatar/:id/:size.svg
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ID of the user.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">How big the svg should be</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-        <h6>Response</h6>
         
 <div class="param-desc">
-    Returnes the avatar png
+    <p>Error, or a transaction statement</p>
 </div>
 
 
@@ -692,14 +707,16 @@
     </dt>
     <dd>
         
-<span class="param-type">image/svg\u002Bxml</span>
+<span class="param-type">done</span>
 
 
     </dd>
 </dl>
 
     
-  </div>
+</div>
+  
+
 
 
 
@@ -709,7 +726,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Gets an avatar for the user\n* @function getIdenticon\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/avatar/:id/:size.svg\n* @apiparam {string} id ID of the user.\n* @apiparam {string} size How big the svg should be\n* @apiresponse {image/svg\\u002Bxml} Returnes the avatar png\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":79,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Gets an avatar for the user</p>","kind":"function","name":"getIdenticon","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/avatar/:id/:size.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} size How big the svg should be","value":{"type":{"names":["string"]},"description":"How big the svg should be","name":"size"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the avatar png"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~getIdenticon","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R000469","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getIdenticon","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n    * Creates a new account\n    * @function newPass\n    * @async\n    * @param {userId} toPerson - Id of the account recieving the migrating person\n    * @param {userId} fromPerson - Id of the account releasing the migrating person\n    * @param {userId} migrator - Id of the account moving between people\n    * @param {userId} requester - Id of the account who requested the pass\n    * @param {string} period\n    * @param {date} date\n    * @param {function} done - callback\n    * @returns {done} Error, or a transaction statement \n    */","meta":{"filename":"passes.js","lineno":30,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Creates a new account</p>","kind":"function","name":"newPass","async":true,"params":[{"type":{"names":["userId"]},"description":"<p>Id of the account recieving the migrating person</p>","name":"toPerson"},{"type":{"names":["userId"]},"description":"<p>Id of the account releasing the migrating person</p>","name":"fromPerson"},{"type":{"names":["userId"]},"description":"<p>Id of the account moving between people</p>","name":"migrator"},{"type":{"names":["userId"]},"description":"<p>Id of the account who requested the pass</p>","name":"requester"},{"type":{"names":["string"]},"name":"period"},{"type":{"names":["date"]},"name":"date"},{"type":{"names":["function"]},"description":"<p>callback</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Error, or a transaction statement</p>"}],"longname":"module:passportPassApi~newPass","scope":"inner","memberof":"module:passportPassApi","___id":"T000002R000234","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~newPass","signature":"<span class=\"signature\">(toPerson, fromPerson, migrator, requester, period, date, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-passportPassApi.html\">passportPassApi</a>~"]}
 </pre>
 -->
 </div>
