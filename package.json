@@ -16,6 +16,7 @@
     "node": "nodemon ./bin/www",
     "db": "rethinkdb serve",
     "start:dbEdit": "chateau",
+    "debug": "echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
     "configure:db": "node ./bin/configure",
     "test": "export NODE_ENV=tests && nyc mocha",
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",

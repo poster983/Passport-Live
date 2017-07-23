@@ -373,8 +373,7 @@ email: hi@josephhassell.com
                 $(".button-collapse").sideNav();
                 $('.tooltipped').tooltip({delay: 50});
                 $('select').material_select();
-                //temp
-                $('#fullAjaxLoadingScreen').removeClass("loading");
+                
                 
                 $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function(a1, a2, a3){
                   $('#fullAjaxLoadingScreen').removeClass("loading");

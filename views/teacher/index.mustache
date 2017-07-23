@@ -19,6 +19,19 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 -->
 <body class="grey darken-4">
+ <!--Loading Screen-->
+        <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
+
+
+            <div class="vCenter">
+
+              {{>mixens/logoLoader}}
+
+            </div>
+
+<!--342x470-->
+        </section>
+
   <!-- Dropdown Structure -->
   <ul id="threeDot" class="dropdown-content">
     <li><a href="account.php">Account</a></li> 
@@ -186,7 +199,7 @@ email: hi@josephhassell.com
                 <div class="col s12">
                   <div id="MyPassesCard" class="card grey darken-3 hoverable">
                     <div class="card-content ">
-                      <span class="card-title white-text">My Passes</span>
+                      <span class="card-title white-text">Students Leaving</span>
                       <ul class="collection">
                         <div id="studentsLeavingReturn">
                         </div>
@@ -203,7 +216,7 @@ email: hi@josephhassell.com
                 <div class="col s12">
                   <div id="MyPassesCard" class="card grey darken-3 hoverable">
                     <div class="card-content ">
-                      <span class="card-title white-text">My Passes</span>
+                      <span class="card-title white-text">Students Arriving</span>
                       <ul class="collection">
                         <div id="studentsArrivingReturn">
                         </div>
@@ -266,7 +279,7 @@ email: hi@josephhassell.com
   <script src="js/materialize.js"></script>
   <script src="js/passport.js"></script>
   <script src="js/materialize.clockpicker.js"></script>
-
+  <script src="/moment/min/moment-with-locales.min.js"></script>
 
 <script>
 $(document).ready(function(){
@@ -280,38 +293,15 @@ $(document).ready(function(){
       default: 'now',
       vibrate: true,
     });
-  checkForUrlHash();
+  
+  $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
+    $('#fullAjaxLoadingScreen').removeClass("loading");
+  });
 });
 
 // Pass Avatar Button
   //hover Effect 
   
-
-
-//Get Students Leaving
-function getStudentsLeaving(teacher) {
-  $('#studentsLeavingReturn').html("<div class=\"hCenter\">\r\n                <div class=\"preloader-wrapper big active\">\r\n                 <div class=\"spinner-layer spinner-blue\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-red\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-yellow\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n\r\n                 <div class=\"spinner-layer spinner-green\">\r\n                   <div class=\"circle-clipper left\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"gap-patch\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div><div class=\"circle-clipper right\">\r\n                     <div class=\"circle\"><\/div>\r\n                   <\/div>\r\n                 <\/div>\r\n               <\/div>\r\n              <\/div> <br> <br> <h5 class='center'>Checking for Passes</h5>");
-  $.ajax({
-url: 'teacherAJAX/getStudentData.php',
-data: {'whatToDo':"getStudentsLeaving",'teacher':teacher},
-type: 'post',
-success: function(data) {
-  var returnPICS = PICS(data);
-  if (returnPICS.result == false) {
-    Materialize.toast(returnPICS.text, 15000);
-  }
-$('#studentsLeavingReturn').html(data.html);
-
-},
-error: function(xhr, desc, err) {
-  console.warn("Passport Info Code System: Returned with code \"1001\"-AJAX Error");
-  console.log(xhr);
-  console.error("Details: " + desc + "\nError:" + err);
-  console.warn(xhr.responseText)
-  Materialize.toast("There was an error, check console.", 15000);
-  $('#studentsLeavingReturn').html("");
-}
-})};
 
 //Get Messages
 function getMessages(){
@@ -324,245 +314,245 @@ function checkForUrlHash() {
   }
 }
 
-  ////MY PASSES CARD////
-                 
-                 function getstudentsLeaving(done) {
-                  $.ajax({
-                      type: "get",
-                      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD"),
-                      dataType: "json",
-                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                      success: function(data) {done(null, data)},
-                      error: function(jqXHR) {done(jqXHR)}                      
-                    });
-                 }
-                 
-                 function setMyPasses() {
-                  getMyUpcomeingPasses(function(err, myPasses) {
-                    if(err) {
-                      return errorHand(err)
-                    }
-                    console.log(myPasses)
-                    $myPasses = $('#studentsLeavingReturn')
-                    for(var i = 0; i < myPasses.length; i++) {
-                      console.log(myPasses[i])
-                      var checkNo = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                                            .attr("data-position", "right")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Cancel This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("not_interested")
-                                              )
-                                        )
-
-                      var checkYes = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                                            .attr("data-position", "left")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Confirm This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("check")
-                                              )
-                                        )
-                      var avatarEl = $("<img/>")
-                                      .addClass("passport-avatar circle")
-                                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
-                                      .attr("alt", "Avatar")
-
-                      var titleEl = $("<span/>")
-                                      .addClass("title")
-                                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
-
-                      titleEl.prepend(
-                            $("<i/>")
-                              .addClass("material-icons")
-                              .text("remove_red_eye")
+  ////MY Leaving CARD////
+ 
+ function getstudentsLeaving(done) {
+  $.ajax({
+      type: "get",
+      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD"),
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+ }
+ 
+ function setLeaving() {
+  getstudentsLeaving(function(err, myPasses) {
+    if(err) {
+      return errorHand(err)
+    }
+    console.log(myPasses)
+    $myPasses = $('#studentsLeavingReturn')
+    for(var i = 0; i < myPasses.length; i++) {
+      console.log(myPasses[i])
+      var checkNo = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light red tooltipped")
+                            .attr("data-position", "right")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Cancel This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("not_interested")
+                              )
                         )
 
-                      var dateEl = $("<p/>")
-                                      .text("Date: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                                      )
+      var checkYes = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light green tooltipped")
+                            .attr("data-position", "left")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Confirm This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("check")
+                              )
+                        )
+      var avatarEl = $("<img/>")
+                      .addClass("passport-avatar circle")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+                      .attr("alt", "Avatar")
 
-                      var periodEl = $("<p/>")
-                                      .text("Period: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].period.toUpperCase())
-                                      )
-                      
-                      var statusEl = $("<span/>")
-                                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
-                                      .addClass("new badge")
+      var titleEl = $("<span/>")
+                      .addClass("title")
+                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
 
-                      var leavingFromEl = $("<p/>")
-                                      .text("Leaving From: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                                      )
+      titleEl.prepend(
+            $("<i/>")
+              .addClass("material-icons")
+              .text("remove_red_eye")
+        )
 
-                      var requesterEl = $("<p/>")
-                                      .text("Requester: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                                      )
-                                       
+      var dateEl = $("<p/>")
+                      .text("Date: ")
+                      .append(
+                        $("<strong/>")
+                        .text(moment(myPasses[i].date).format("dddd, LL"))
+                      )
 
-                      //set final holder
-                      var li = $("<li/>")
-                                  .addClass("collection-item avatar")
-                                  .append(checkNo)
-                                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                                  .append(checkYes)
-                                  .append(avatarEl)
-                                  .append(titleEl)
-                                  .append(dateEl)
-                                  .append(periodEl)
-                                  .append(statusEl)
-                                  .append(leavingFromEl)
-                                  .append(requesterEl)
-                                  
-                      $myPasses.append(li)
-                      $('.tooltipped').tooltip({delay: 50});
+      var periodEl = $("<p/>")
+                      .text("Period: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].period.toUpperCase())
+                      )
+      
+      var statusEl = $("<span/>")
+                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                      .addClass("new badge")
 
-                    }
-                  })
-                 }
+      var leavingFromEl = $("<p/>")
+                      .text("Leaving From: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+                      )
 
-  ////MY PASSES CARD////
-                 
-                 function getStudentsArriving(done) {
-                  $.ajax({
-                      type: "get",
-                      url: "/api/passes/me/by/toPerson/from/" + moment().format("Y-MM-DD"),
-                      dataType: "json",
-                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                      success: function(data) {done(null, data)},
-                      error: function(jqXHR) {done(jqXHR)}                      
-                    });
-                 }
-                 
-                 function setMyPasses() {
-                  getMyUpcomeingPasses(function(err, myPasses) {
-                    if(err) {
-                      return errorHand(err)
-                    }
-                    console.log(myPasses)
-                    $myPasses = $('#studentsArrivingReturn')
-                    for(var i = 0; i < myPasses.length; i++) {
-                      console.log(myPasses[i])
-                      var checkNo = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                                            .attr("data-position", "right")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Cancel This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("not_interested")
-                                              )
-                                        )
+      var requesterEl = $("<p/>")
+                      .text("Requester: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+                      )
+                       
 
-                      var checkYes = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                                            .attr("data-position", "left")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Confirm This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("check")
-                                              )
-                                        )
-                      var avatarEl = $("<img/>")
-                                      .addClass("passport-avatar circle")
-                                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
-                                      .attr("alt", "Avatar")
+      //set final holder
+      var li = $("<li/>")
+                  .addClass("collection-item avatar")
+                  .append(checkNo)
+                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+                  .append(checkYes)
+                  .append(avatarEl)
+                  .append(titleEl)
+                  .append(dateEl)
+                  .append(periodEl)
+                  .append(statusEl)
+                  .append(leavingFromEl)
+                  .append(requesterEl)
+                  
+      $myPasses.append(li)
+      $('.tooltipped').tooltip({delay: 50});
 
-                      var titleEl = $("<span/>")
-                                      .addClass("title")
-                                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+    }
+  })
+ }
 
-                      titleEl.prepend(
-                            $("<i/>")
-                              .addClass("material-icons")
-                              .text("remove_red_eye")
+////MY Arriving CARD////
+ 
+ function getStudentsArriving(done) {
+  $.ajax({
+      type: "get",
+      url: "/api/passes/me/by/toPerson/from/" + moment().format("Y-MM-DD"),
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+ }
+ 
+ function setArriving() {
+  getStudentsArriving(function(err, myPasses) {
+    if(err) {
+      return errorHand(err)
+    }
+    console.log(myPasses)
+    $myPasses = $('#studentsArrivingReturn')
+    for(var i = 0; i < myPasses.length; i++) {
+      console.log(myPasses[i])
+      var checkNo = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light red tooltipped")
+                            .attr("data-position", "right")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Cancel This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("not_interested")
+                              )
                         )
 
-                      var dateEl = $("<p/>")
-                                      .text("Date: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                                      )
+      var checkYes = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light green tooltipped")
+                            .attr("data-position", "left")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Confirm This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("check")
+                              )
+                        )
+      var avatarEl = $("<img/>")
+                      .addClass("passport-avatar circle")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+                      .attr("alt", "Avatar")
 
-                      var periodEl = $("<p/>")
-                                      .text("Period: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].period.toUpperCase())
-                                      )
-                      
-                      var statusEl = $("<span/>")
-                                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
-                                      .addClass("new badge")
+      var titleEl = $("<span/>")
+                      .addClass("title")
+                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
 
-                      var leavingFromEl = $("<p/>")
-                                      .text("Leaving From: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                                      )
+      titleEl.prepend(
+            $("<i/>")
+              .addClass("material-icons")
+              .text("remove_red_eye")
+        )
 
-                      var requesterEl = $("<p/>")
-                                      .text("Requester: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                                      )
-                                       
+      var dateEl = $("<p/>")
+                      .text("Date: ")
+                      .append(
+                        $("<strong/>")
+                        .text(moment(myPasses[i].date).format("dddd, LL"))
+                      )
 
-                      //set final holder
-                      var li = $("<li/>")
-                                  .addClass("collection-item avatar")
-                                  .append(checkNo)
-                                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                                  .append(checkYes)
-                                  .append(avatarEl)
-                                  .append(titleEl)
-                                  .append(dateEl)
-                                  .append(periodEl)
-                                  .append(statusEl)
-                                  .append(leavingFromEl)
-                                  .append(requesterEl)
-                                  
-                      $myPasses.append(li)
-                      $('.tooltipped').tooltip({delay: 50});
+      var periodEl = $("<p/>")
+                      .text("Period: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].period.toUpperCase())
+                      )
+      
+      var statusEl = $("<span/>")
+                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                      .addClass("new badge")
 
-                    }
-                  })
-                 }
+      var leavingFromEl = $("<p/>")
+                      .text("Leaving From: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+                      )
+
+      var requesterEl = $("<p/>")
+                      .text("Requester: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+                      )
+                       
+
+      //set final holder
+      var li = $("<li/>")
+                  .addClass("collection-item avatar")
+                  .append(checkNo)
+                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+                  .append(checkYes)
+                  .append(avatarEl)
+                  .append(titleEl)
+                  .append(dateEl)
+                  .append(periodEl)
+                  .append(statusEl)
+                  .append(leavingFromEl)
+                  .append(requesterEl)
+                  
+      $myPasses.append(li)
+      $('.tooltipped').tooltip({delay: 50});
+
+    }
+  })
+ }
 
 </script>
 </body>
