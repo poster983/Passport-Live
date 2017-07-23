@@ -44,7 +44,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev"
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('student/index', { doc_Title: 'Passport-Student', user, passportVersion: process.env.npm_package_version});
+    res.render('student/index', { doc_Title: 'Passport-Student', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 //Student Account Page
@@ -54,7 +54,7 @@ router.get('/account', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student"
     user.email = req.user.email;
     user.id = req.user.id;
 
-    res.render('student/account', { doc_Title: 'Your Account Passport-Student', user, passportVersion: process.env.npm_package_version});
+    res.render('student/account', { doc_Title: 'Your Account Passport-Student', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 module.exports = router;

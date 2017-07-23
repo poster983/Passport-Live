@@ -36,12 +36,12 @@ email: hi@josephhassell.com
   <ul id="threeDot" class="dropdown-content">
     <li><a href="account.php">Account</a></li> 
     <li class="divider"></li>
-    <li><a href="logout.php">Logout<i class="material-icons right">lock</i></a></li>
+    <li><a href="/auth/logout">Logout<i class="material-icons right">lock</i></a></li>
   </ul>
   <!-- Nav Bar-->
   <nav class="nav-extended">
     <div class="nav-wrapper">
-      <a href="#" class="nav-left brand-logo">Teachers</a>
+      <a href="#" class="nav-left brand-logo">Passport</a>
       <ul id="nav-mobile" class="right">
         <!--<li class="right"><a href="logout.php">Logout<i class="material-icons right">lock</i></a></li>-->
         <li><a id="threeDotButton" class="dropdown-button" href="#!" data-activates="threeDot">	&nbsp; &nbsp; &nbsp;	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="material-icons left">more_vert</i> </a></li>
@@ -63,7 +63,7 @@ email: hi@josephhassell.com
 
       <form method="get" action="">
         <div class="input-field">
-          <input  id="t-Search" name="teacherName" type="search" placeholder="Search by Email" value="{{account_email}}">
+          <input  id="t-Search" name="teacherName" type="search" placeholder="Search by Email" value="{{user.email}}">
           <label class="label-icon" for="t-Search"><i class="material-icons">search</i></label>
           <i class="material-icons">close</i>
 
@@ -256,9 +256,9 @@ email: hi@josephhassell.com
   <footer class="page-footer grey darken-3">
 <div class="footer-copyright">
   <div class="container">
-      <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-2017 Joseph Hassell</a> &nbsp &nbsp
-      <a class="black-text right" href="https://github.com/poster983/passport/blob/master/LICENSE">License </a> &nbsp &nbsp
-      <a class="black-text right" href="https://poster983.github.io/passport/">Project Page &nbsp &nbsp</a>&nbsp &nbsp
+      <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
+      <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
+      <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
   </div>
 </div>
 </footer>
@@ -319,7 +319,7 @@ function checkForUrlHash() {
  function getstudentsLeaving(done) {
   $.ajax({
       type: "get",
-      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD"),
+      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD") + "/to/" + moment().add(1, "days").format("Y-MM-DD"),
       dataType: "json",
       beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
       success: function(data) {done(null, data)},
@@ -367,12 +367,12 @@ function checkForUrlHash() {
                         )
       var avatarEl = $("<img/>")
                       .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
                       .attr("alt", "Avatar")
 
       var titleEl = $("<span/>")
                       .addClass("title")
-                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
 
       titleEl.prepend(
             $("<i/>")
@@ -395,7 +395,7 @@ function checkForUrlHash() {
                       )
       
       var statusEl = $("<span/>")
-                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                      .attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
                       .addClass("new badge")
 
       var leavingFromEl = $("<p/>")
@@ -426,6 +426,7 @@ function checkForUrlHash() {
                   .append(statusEl)
                   .append(leavingFromEl)
                   .append(requesterEl)
+                  .attr("id", myPasses[i].id)
                   
       $myPasses.append(li)
       $('.tooltipped').tooltip({delay: 50});
@@ -487,12 +488,12 @@ function checkForUrlHash() {
                         )
       var avatarEl = $("<img/>")
                       .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
                       .attr("alt", "Avatar")
 
       var titleEl = $("<span/>")
                       .addClass("title")
-                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
 
       titleEl.prepend(
             $("<i/>")
@@ -513,10 +514,22 @@ function checkForUrlHash() {
                         $("<strong/>")
                         .text(myPasses[i].period.toUpperCase())
                       )
-      
+
       var statusEl = $("<span/>")
-                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                      .attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
                       .addClass("new badge")
+      
+      switch(myPasses[i].status.confirmation.state) {
+        case "pending":
+            break;
+        case "accepted":
+              statusEl.addClass("green");
+            break;
+        case "canceled":
+        case "denied":
+            statusEl.addClass("red");
+            break;
+      }
 
       var leavingFromEl = $("<p/>")
                       .text("Leaving From: ")
@@ -546,13 +559,15 @@ function checkForUrlHash() {
                   .append(statusEl)
                   .append(leavingFromEl)
                   .append(requesterEl)
-                  
+                  .attr("data-passId", myPasses[i].id)
       $myPasses.append(li)
       $('.tooltipped').tooltip({delay: 50});
 
     }
   })
  }
+
+
 
 </script>
 </body>

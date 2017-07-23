@@ -337,6 +337,15 @@ email: hi@josephhassell.com
           </div>
 
 
+        <footer class="page-footer grey darken-3">
+          <div class="footer-copyright">
+            <div class="container">
+                <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
+                <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
+                <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
+            </div>
+          </div>
+         </footer>
 
         <!-- Scripts -->
         <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
@@ -1026,7 +1035,7 @@ email: hi@josephhassell.com
                                       )
                       
                       var statusEl = $("<span/>")
-                                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
+                                      .attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
                                       .addClass("new badge")
 
                       var leavingFromEl = $("<p/>")

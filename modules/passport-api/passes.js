@@ -89,9 +89,16 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         period: period,
         date: r.ISO8601(date),
         status: {
-            state: "pending",
-            setByUser: null,
-            msg: null
+            confirmation: {
+                state: "pending",
+                setByUser: null,
+                msg: null
+            },
+            migration: {
+                excused: false,
+                time: null,
+                inLimbo: false
+            }
         },
         seen: {
             email: false,
@@ -141,6 +148,7 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     } else {
          
         toDate = moment(toDate).toISOString();
+
     }
 
 
