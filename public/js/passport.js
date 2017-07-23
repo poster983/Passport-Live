@@ -183,12 +183,21 @@ function navMorph(obj) {
 
 } 
 
-function circleRes(icon, colorClass) {
+function materialResponse(icon, colorClass) {
   switch(colorClass){
     case "success": 
       colorClass = "green accent-3";
       break;
+     case "error": 
+      colorClass = "red accent-4";
+      break;
+    case "warning": 
+      colorClass = "orange accent-4";
+      break;
   }
+
+  //Set the elements 
+  $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
     //setup green grow
     if(icon == "check") {
       $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
@@ -196,14 +205,19 @@ function circleRes(icon, colorClass) {
       $('#Cleft').addClass('Cleft CleftIn');
       $('#Cright').addClass('Cright CrightIn');
     }
-    $("#circleThingContainer").addClass("circleThingContainer");
+    if(icon == "cancel") {
+        //X marks 
+      $('#Xleft').addClass('Xleft XleftIn');
+      $('#Xright').addClass('Xright XrightIn');
+    }
+
     $("#circleThing").removeClass().addClass("circleThing circleGrow");
     //addcolor
     $("#circleThing").addClass(colorClass);
 
     //on circle complete 
     $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
-      console.log("GO")
+      
       $("#circleThingContainer").addClass(colorClass)
       $('#circleThing').removeClass().addClass('circleThing');
       //wait for 1 second
@@ -213,23 +227,35 @@ function circleRes(icon, colorClass) {
           $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
           $('#Cright').removeClass('CrightIn').addClass("CrightOut");
         }
-        
-        $('#circleThing').removeClass().addClass('circleThing circleGrow');
-        $('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+        if(icon == "cancel") {
+            //X marks 
+          $('#Xleft').removeClass('XleftIn').addClass("XLeftOut");
+          $('#Xright').removeClass('XrightIn').addClass("XrightOut");
+        }
+
+        $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+        //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
         //when final one ends
         $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
-          $("#circleThingContainer").removeClass(colorClass)
+          $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4")
           setTimeout(function() {
-          
-            $('#Cleft').removeClass();
-            $('#Cright').removeClass();
-            $('#checkmarkContainer').removeClass();
+            $('#Xleft').remove();
+            $('#Xright').remove();
+            $('#Cleft').remove();
+            $('#Cright').remove();
+            $('#checkmarkContainer').remove();
+            $("#circleThingContainer").fadeOut("fast", function() {
+              $("#circleThingContainer").remove();
+            });
+            $("#circleThing").remove();
+
           }, 500);
         });
       }, 1000);
     });
 }
 
+/*
 function visResponse(action) {
           $("#responseAni").append("<div class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
           if (action == "success") {
@@ -323,7 +349,7 @@ function visResponse(action) {
             });
           }
         };
-
+*/
 function errorHand(err) {
   //Do more Later
   console.error(err);

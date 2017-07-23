@@ -22,13 +22,13 @@ email: hi@josephhassell.com
 <body class="grey darken-4">
         <!-- RESPONCE ANIMATION -->
       
-          <div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
-            <span id="Xleft"></span>
+          <!--<div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
+            <span id="Xleft" class="Xleft XleftIn"></span>
             <span id="Xright"></span>
             <div id="checkmarkContainer" class="">
               <span id="Cleft" class=""></span>
               <span id="Cright" class=""></span>
-            </div>
+            </div>-->
 
         <!--Loading Screen-->
         <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
@@ -921,17 +921,21 @@ email: hi@josephhassell.com
                         if(data.inserted > 0) {
                           //confirm pass
                           console.log(data)
+                          materialResponse("check", "success");
                         } else {
                           var err = new Error("Unknown Error");
                           console.log(data)
+                          materialResponse("cancel", "error");
                           errorHand(err);
                         }
                       },  
                       error: function(jqXHR) {
+                        materialResponse("cancel", "error");
                         return errorHand(jqXHR) 
                       }
                     })
                   } else {
+                    materialResponse("cancel", "warning");
                     var err = new Error("Undefined Values")
                     errorHand(err);
                   }

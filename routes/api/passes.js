@@ -73,7 +73,7 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     var period = req.body.period;
     var date = req.body.date;
 
-    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, function(err, trans) {
+    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, true, function(err, trans) {
         if(err) {
             return next(err);
         }

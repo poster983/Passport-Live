@@ -358,7 +358,7 @@ function checkForUrlHash() {
                             .addClass("btn-floating waves-effect waves-light green tooltipped")
                             .attr("data-position", "left")
                             .attr("data-delay", "50")
-                            .attr("data-tooltip", "Confirm This Pass")
+                            .attr("data-tooltip", "console.log(this);")
                             .append(
                                 $("<i/>")
                                   .addClass("material-icons")
@@ -397,6 +397,17 @@ function checkForUrlHash() {
       var statusEl = $("<span/>")
                       .attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
                       .addClass("new badge")
+      switch(myPasses[i].status.confirmation.state) {
+        case "pending":
+            break;
+        case "accepted":
+              statusEl.addClass("green");
+            break;
+        case "canceled":
+        case "denied":
+            statusEl.addClass("red");
+            break;
+      }
 
       var leavingFromEl = $("<p/>")
                       .text("Leaving From: ")
@@ -434,6 +445,7 @@ function checkForUrlHash() {
     }
   })
  }
+
 
 ////MY Arriving CARD////
  

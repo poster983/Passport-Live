@@ -37,10 +37,11 @@ var moment = require("moment");
     * @param {userId} requester - Id of the account who requested the pass
     * @param {string} period
     * @param {date} date
+    * @param {boolean} checkDupe - Sheck if there is an identical pass in the system already.
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
     */
-exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, done) {
+exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, checkDupe, done) {
     //validate
     if(!toPerson || typeof toPerson != "string") {
         var err = new Error("toPerson Not Valid");
@@ -80,36 +81,72 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         date = moment(date).toISOString();
     }
     console.log(date)
-    
-    r.table("passes").insert({
-        toPerson: toPerson,
-        fromPerson: fromPerson,
-        migrator: migrator,
-        requester: requester,
-        period: period,
-        date: r.ISO8601(date),
-        status: {
-            confirmation: {
-                state: "pending",
-                setByUser: null,
-                msg: null
+    //check for dupe 
+    var promise = new Promise(function(resolve, reject) {
+        if(checkDupe) {
+            r.table("passes").filter({
+                toPerson: toPerson,
+                fromPerson: fromPerson,
+                migrator: migrator,
+                requester: requester,
+                period: period,
+                date: r.ISO8601(date)
+            }).run(db.conn(), function(err, cur) {
+                if(err) {
+                    return done(err);
+                }
+                cur.toArray(function(err, data) {
+                    if(err) {
+                        return done(err);
+                    }
+                    if(data.length > 0) {
+                        var err = new Error("Duplicate Pass Found.  Aborting.");
+                        err.status = 409
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                })
+            })
+        } else {
+            resolve();
+        }
+    });
+
+    //resolve promice
+    promise.then(function(result) {
+        r.table("passes").insert({
+            toPerson: toPerson,
+            fromPerson: fromPerson,
+            migrator: migrator,
+            requester: requester,
+            period: period,
+            date: r.ISO8601(date),
+            status: {
+                confirmation: {
+                    state: "pending",
+                    setByUser: null,
+                    msg: null
+                },
+                migration: {
+                    excused: false,
+                    time: null,
+                    inLimbo: false
+                }
             },
-            migration: {
-                excused: false,
-                time: null,
-                inLimbo: false
+            seen: {
+                email: [],
+                web: []
             }
-        },
-        seen: {
-            email: false,
-            web: false
-        }
-    }).run(db.conn(), function(err, trans) {
-        if(err) {
-            return done(err);
-        }
-        return done(null, trans)
-    })
+        }).run(db.conn(), function(err, trans) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, trans)
+        })
+    }, function(err) {
+        return done(err);
+    });
 }
 
 /**
