@@ -654,6 +654,24 @@ function releaseButtonsChanger(passId, isRelease) {
   })
  }
 
+function arrivingButtonActions(passLI, action) {
+  passLI = $(passLI);
+  setPassStatus(passLI.attr("data-passId-arriving"), action, function(err, transaction) {
+    
+  })
+}
+
+function setPassStatus(passId, status, done) {
+  $.ajax({
+      type: "patch",
+      url: "/api/passes/status/" + passId + "/status/" + status,
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
  function setArrivingButtonsAndState(passId, stateJSON) {
   var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");

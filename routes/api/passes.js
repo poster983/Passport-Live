@@ -218,6 +218,7 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
     * @apiparam {string} state - the state constant to set (pending, accepted, denied, canceled)
     * @api PATCH /api/passes/status/:passId/state/:state
     * @apiresponse {json} Returns rethink db action summery
+    * @todo Make this code not look like I wrote it at 3 in the morning 
     */
 router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
     var userId = req.user.id;
@@ -236,18 +237,52 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
         if(err) {
             return next(err);
         }
-        //set rules for who requested it
+       //makesure only people involved can change stuff
+       if(userId != pass.toPerson && userId != pass.fromPerson && userId != pass.migrator && userId != pass.requester) {
+        var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+       }
 
-        //pending rules 
-        if(state == "pending") {
-            if(userId == pass.migrator && userId == pass.requester) {
-                
+        if(pass.status.confirmation.state == "denied" || pass.status.confirmation.state == "canceled") {
+            if(pass.status.confirmation.setByUser != userId) {
+                var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
             }
         }
+
+        //makesure that as the requester, you are not accepting your own pass
+        if(userId == pass.requester && state == "accepted") {
+            if(pass.status.confirmation.state == "pending") {
+                var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+            }
+        }
+
+        //compile doc for updating
+        var updateDoc = {
+            status: {
+                confirmation: {
+                    setByUser: userId,
+                    state: state
+                }
+            }
+        };
+
+        api.updatePass(passId, updateDoc, function(err, trans) {
+            if(err) {
+                return next(err)
+            }
+            res.json(trans)
+        })
+
     });
     
 
 
 })
+
 
 module.exports = router;
