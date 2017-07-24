@@ -236,7 +236,7 @@ email: hi@josephhassell.com
               <div class="card-content white-text">
                 <span class="card-title">Request A Student</span>
                 <div id="requestAStudentReturn">
-
+                  
                 </div>
               </div>
             </div>
@@ -646,16 +646,59 @@ function releaseButtonsChanger(passId, isRelease) {
                   .append(requesterEl)
                   .attr("data-passId-arriving", myPasses[i].id)
       $myPasses.append(li)
+
+      setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status);
       $('.tooltipped').tooltip({delay: 50});
 
     }
   })
  }
 
- function setArrivingButtonsState(passId, state) {
+ function setArrivingButtonsAndState(passId, stateJSON) {
   var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
-  
+  var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+
+  switch(stateJSON.confirmation.state){
+    case "pending": 
+      releaseBtn.attr("disabled", false);
+      releaseBtn.attr("onclick", "console.log('accepted')");
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("data-tooltip", "Deny This Pass Request");
+      undoBtn.attr("onclick", "console.log('denied')");
+      badge.removeClass().addClass("new badge");
+      break;
+    case "accepted": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("data-tooltip", "Cancel This Pass");
+      undoBtn.attr("onclick", "console.log('canceled')");
+      badge.removeClass().addClass("new badge green");
+      break;
+    case "denied":
+    case "canceled":
+      releaseBtn.attr("disabled", false);
+      releaseBtn.attr("data-tooltip", "Reaccept This Pass");
+      releaseBtn.attr("onclick", "console.log('accepted')");
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge red");
+      break;
+    case "enroute": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge green accent-4");
+      break;
+    default:
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge black");
+  }
  }
 
 

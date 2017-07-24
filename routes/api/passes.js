@@ -204,4 +204,50 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
 
 });
 
+/**
+    * Sets Pass Status
+    * Can be set by toPerson and Migrator
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have teacher db permissions
+    * @function updatePassState
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {UUID} passId - The id of the Pass
+    * @apiparam {string} state - the state constant to set (pending, accepted, denied, canceled)
+    * @api PATCH /api/passes/status/:passId/state/:state
+    * @apiresponse {json} Returns rethink db action summery
+    */
+router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
+    var userId = req.user.id;
+    var passId = req.params.passId;
+    var state = req.params.state;
+
+    //check user input
+    if(state != "pending" && state != "accepted" && state != "denied" && state != "canceled") {
+        var err = new Error("Unknown state value: " + state);
+        err.status = 400;
+        return next(err);
+    }
+
+
+    api.getPass(passId, function(err, pass) {
+        if(err) {
+            return next(err);
+        }
+        //set rules for who requested it
+
+        //pending rules 
+        if(state == "pending") {
+            if(userId == pass.migrator && userId == pass.requester) {
+                
+            }
+        }
+    });
+    
+
+
+})
+
 module.exports = router;
