@@ -28,11 +28,11 @@ email: hi@josephhassell.com
          <ul id="slide-out" class="side-nav">
           <li><div class="user-view">
             <div class="background">
-              <img src="images/office.jpg">
+              <img src="/images/stunav.jpg">
             </div>
-            <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
-            <a href="#!name"><span class="white-text name">John Doe</span></a>
-            <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
+            <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
+            <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
           </div></li>
           <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
           <li><a href="#!">Second Link</a></li>
@@ -74,8 +74,8 @@ email: hi@josephhassell.com
       <div id="cal"> 
         <div class="row">
           <div class="col s12">
-            <div class="card grey darken-3">
-              <div class="card-content white-text">
+            <div class="card">
+              <div class="card-content">
                 <span class="card-title">Schedules</span>
                 <input id="ScheduleDate" type="date" class="datepicker">
                 <label for="ScheduleDate">View Date</label>
@@ -122,7 +122,7 @@ email: hi@josephhassell.com
             $('.timepicker').pickatime({
               default: 'now', // Set default time
               fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-              twelvehour: false, // Use AM/PM or 24-hour format
+              twelvehour: true, // Use AM/PM or 24-hour format
               donetext: 'OK', // text for done-button
               cleartext: 'Clear', // text for clear-button
               canceltext: 'Cancel', // Text for cancel-button

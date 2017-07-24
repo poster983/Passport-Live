@@ -286,7 +286,18 @@ router.get('/schedule/for/:date', function(req, res, next) {
 SERVER
 **/
 
-router.get('/server/config/schedule/', function(req, res, next) {
+/**
+    * GETs pass groups defined in the config
+    * @function getScheduleConstants
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/server/config/schedule/
+    * @apiresponse {object} Returns Array with all constants
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */ 
+router.get('/server/config/schedule/', function getScheduleConstants(req, res, next) {
     try {
         res.json(config.get('schedule'));
     } catch (e) {

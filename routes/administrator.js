@@ -27,7 +27,11 @@ var checkAuth = require('connect-ensure-login');
 var ssarv = require('ssarv');
 
 router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
-    res.render('administrator/index', { doc_Title: 'Passport-Administrator', account_name: req.user.name, account_email: req.user.email});
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    res.render('administrator/index', { doc_Title: 'Passport-Administrator', user: user});
 });
 
 module.exports = router;
