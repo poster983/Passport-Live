@@ -1051,10 +1051,12 @@ function setMyPasses() {
             } else {
               setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
             }
+        } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
+          
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
         } else {
           setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
         }
-        
       }
       
       
@@ -1107,8 +1109,13 @@ function setPassStatus(passId, status, done) {
 console.log(state)
   switch(state){
     case "pending": 
-      releaseBtn.attr("disabled", false);
-      releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
       undoBtn.attr("disabled", false);
       undoBtn.attr("data-tooltip", "Deny This Pass Request");
       undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");

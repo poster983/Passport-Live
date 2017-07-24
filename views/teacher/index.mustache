@@ -283,6 +283,7 @@ email: hi@josephhassell.com
   <script src="/moment/min/moment-with-locales.min.js"></script>
 
 <script>
+var idOfUser = "{{user.id}}";
 $(document).ready(function(){
    $('.unclosable').modal({
     dismissible: false
@@ -335,6 +336,10 @@ function checkForUrlHash() {
     }
     console.log(myPasses)
     $myPasses = $('#studentsLeavingReturn')
+    myPasses.sort(function(a, b) {
+        //return parseFloat(a.period) - parseFloat(b.period);
+        return a.period.localeCompare(b.period)
+    });
     for(var i = 0; i < myPasses.length; i++) {
       console.log(myPasses[i])
       var checkNo = $("<span/>")
@@ -397,19 +402,8 @@ function checkForUrlHash() {
                       )
       
       var statusEl = $("<span/>")
-                      .attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
+                      
                       .addClass("new badge")
-      switch(myPasses[i].status.confirmation.state) {
-        case "pending":
-            break;
-        case "accepted":
-              statusEl.addClass("green");
-            break;
-        case "canceled":
-        case "denied":
-            statusEl.addClass("red");
-            break;
-      }
 
       var leavingFromEl = $("<p/>")
                       .text("Leaving From: ")
@@ -447,18 +441,18 @@ function checkForUrlHash() {
 
       //check if migrator has been released 
       if(myPasses[i].status.migration.arrivedTime) {
-        releaseButtonsChanger(myPasses[i].id, "arrived")
+        setLeavingButtonsAndState(myPasses[i].id, "arrived")
       } else if(myPasses[i].status.migration.excusedTime){
-        releaseButtonsChanger(myPasses[i].id, "true")
+        setLeavingButtonsAndState(myPasses[i].id, "enroute")
       } else {
-        releaseButtonsChanger(myPasses[i].id, "false")
+        setLeavingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state)
       }
 
     }
   })
  }
  //Check Off migrator for students leaving 
- function releaseMigratorActions(passLI, isMigrating) {
+ function releaseMigratorActions(passLI, isMigrating, status) {
   var passLI = $(passLI);
   console.log(isMigrating)
   setMigrationStatus(passLI.attr("data-passId-leaving"), isMigrating, function(err, trans) {
@@ -473,7 +467,7 @@ function checkForUrlHash() {
       } else {
         Materialize.toast('Undone Release', 4000) 
       }
-      releaseButtonsChanger(passLI.attr("data-passId-leaving"), isMigrating);
+      setLeavingButtonsAndState(passLI.attr("data-passId-leaving"), status);
     } else {
       materialResponse("warning", "error");
     }
@@ -493,32 +487,80 @@ function setMigrationStatus(passId, status, done) {
     });
 }
 
-
-function releaseButtonsChanger(passId, isRelease) {
+function setLeavingButtonsAndState(passId, state, cantAccept) {
   var releaseBtn = $("*[data-passId-leaving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-leaving=" + passId + "]").find("a.red.btn-floating");
-  switch(isRelease) {
-    case "false": 
-      releaseBtn.attr("disabled", false);
-      releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+  var badge = $("*[data-passId-leaving=" + passId + "]").find("span.new.badge");
+//releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+console.log(state)
+  switch(state){
+    case "pending": 
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
+      releaseBtn.attr("data-tooltip", "Release Student");
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("data-tooltip", "Undo Release");
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge");
+      
+      break;
+    case "accepted": 
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
+      releaseBtn.attr("data-tooltip", "Release Student");
       undoBtn.attr("disabled", true);
       undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge green");
+      
       break;
-    case "true": 
+    case "denied":
+    case "canceled":
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge red");
+      
+      break;
+    case "enroute": 
       releaseBtn.attr("disabled", true);
       releaseBtn.attr("onclick", false);
       undoBtn.attr("disabled", false);
-      undoBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"false\");");
+      undoBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"false\", \"pending\");");
+      undoBtn.attr("data-tooltip", "Revert Release");
+      badge.removeClass().addClass("new badge light-blue accent-4");
+
       break;
-    case "arrived":
+    case "arrived": 
       releaseBtn.attr("disabled", true);
       releaseBtn.attr("onclick", false);
       undoBtn.attr("disabled", true);
       undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge green accent-4");
+      break;
+
+    default:
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge black");
+
       break;
   }
-}
-
+  badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
+  $('.tooltipped').tooltip({delay: 50});
+ }
 
 
 ////MY Arriving CARD////
@@ -541,6 +583,10 @@ function releaseButtonsChanger(passId, isRelease) {
     }
     console.log(myPasses)
     $myPasses = $('#studentsArrivingReturn')
+    myPasses.sort(function(a, b) {
+        //return parseFloat(a.period) - parseFloat(b.period);
+        return a.date.localeCompare(b.date)
+    });
     for(var i = 0; i < myPasses.length; i++) {
       console.log(myPasses[i])
       var checkNo = $("<span/>")
@@ -658,7 +704,18 @@ function releaseButtonsChanger(passId, isRelease) {
       } else if(myPasses[i].status.migration.excusedTime) {
         setArrivingButtonsAndState(myPasses[i].id, "enroute");
       } else {
-        setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+        if(myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state == "canceled") {
+            if(myPasses[i].status.confirmation.setByUser != idOfUser) {
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+            } else {
+              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+            }
+        } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
+          
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+        } else {
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+        }
       }
       
       
@@ -727,7 +784,7 @@ function checkInButtons(passLI, isCheckedIn) {
       errorHand(err);
     }
     if(transaction && transaction.replaced == 1) {
-      Materialize.toast('Successfully Checked In', 4000) 
+      Materialize.toast('Successfully Updated Status', 4000) 
       setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
     } else {
       console.log("Warning checking maybe failed")
@@ -736,7 +793,7 @@ function checkInButtons(passLI, isCheckedIn) {
   })
 }
 
- function setArrivingButtonsAndState(passId, state) {
+ function setArrivingButtonsAndState(passId, state, cantAccept) {
   var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
   var checkInBtn = $("*[data-passId-arriving=" + passId + "]").find("a.cyan.btn-floating");
@@ -745,8 +802,13 @@ function checkInButtons(passLI, isCheckedIn) {
 console.log(state)
   switch(state){
     case "pending": 
-      releaseBtn.attr("disabled", false);
-      releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
       undoBtn.attr("disabled", false);
       undoBtn.attr("data-tooltip", "Deny This Pass Request");
       undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
@@ -772,9 +834,14 @@ console.log(state)
       break;
     case "denied":
     case "canceled":
-      releaseBtn.attr("disabled", false);
-      releaseBtn.attr("data-tooltip", "Reaccept This Pass");
-      releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("data-tooltip", "Reaccept This Pass");
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
       undoBtn.attr("disabled", true);
       undoBtn.attr("onclick", false);
       checkInBtn.attr("disabled", true);
@@ -790,10 +857,10 @@ console.log(state)
       undoBtn.attr("disabled", true);
       undoBtn.attr("onclick", false);
       checkInBtn.attr("disabled", false);
-      checkInBtn.attr("onclick", false);
+      checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
       checkInBtn.attr("title", false);
       checkInBtn.attr("data-tooltip", "Check Student In");
-      badge.removeClass().addClass("new badge green accent-4");
+      badge.removeClass().addClass("new badge light-blue accent-4");
 
       break;
     case "arrived": 
