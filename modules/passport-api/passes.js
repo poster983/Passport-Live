@@ -25,7 +25,7 @@ var r = require("rethinkdb")
 var db = require("../db/index.js");
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
-
+var validator = require("validator");
 
 /**
     * Creates a new account
@@ -129,9 +129,9 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
                     msg: null
                 },
                 migration: {
-                    excused: false,
-                    time: null,
-                    inLimbo: false
+                    excusedTime: null,
+                    inLimbo: false,
+                    arrivedTime: null
                 }
             },
             seen: {
@@ -283,8 +283,50 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
 
 }
 
-/*
 
-*/
+exports.getPass = function(passId, done) {
+     if(!validator.isUUID(passId)) {
+        var err = new Error("Not a valid passId");
+        err.status = 400;
+        return done(err);
+    }
 
-/*.pluck("name", "email", "schedules")*/
+     r.table("passes").get(passId).run(db.conn(), function(err, pass) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, pass);
+     })
+
+}
+
+/**
+    * Updates pass fields
+    * @function updatePass
+    * @async
+    * @param {UUID} passId - Id of the Pass
+    * @param {json} doc - Json object to update / insert into the db 
+    * @param {function} done - callback
+    * @returns {done} Error, or a transaction statement 
+    */
+
+exports.updatePass = function(passId, doc, done) {
+    if(!validator.isUUID(passId)) {
+        var err = new Error("Not a valid passId");
+        err.status = 400;
+        return done(err);
+    }
+    if(!doc || typeof doc != "object" ) {
+        var err = new Error("Invalid Doc");
+        err.status = 400;
+        return done(err);
+    }
+
+
+    r.table("passes").get(passId).update(doc).run(db.conn(), function(err, trans) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, trans);
+    })
+}

@@ -343,11 +343,11 @@ function checkForUrlHash() {
                             .addClass("btn-floating waves-effect waves-light red tooltipped")
                             .attr("data-position", "right")
                             .attr("data-delay", "50")
-                            .attr("data-tooltip", "Cancel This Pass")
+                            .attr("data-tooltip", "Undo Checkout")
                             .append(
                                 $("<i/>")
                                   .addClass("material-icons")
-                                  .text("not_interested")
+                                  .text("undo")
                               )
                         )
 
@@ -358,7 +358,8 @@ function checkForUrlHash() {
                             .addClass("btn-floating waves-effect waves-light green tooltipped")
                             .attr("data-position", "left")
                             .attr("data-delay", "50")
-                            .attr("data-tooltip", "console.log(this);")
+                            .attr("data-tooltip", "Checkout Migrator")
+                            
                             .append(
                                 $("<i/>")
                                   .addClass("material-icons")
@@ -437,14 +438,86 @@ function checkForUrlHash() {
                   .append(statusEl)
                   .append(leavingFromEl)
                   .append(requesterEl)
-                  .attr("id", myPasses[i].id)
+                  .attr("data-passId-leaving", myPasses[i].id)
                   
       $myPasses.append(li)
+      //code to fire after element has been set 
       $('.tooltipped').tooltip({delay: 50});
+
+      //check if migrator has been released 
+      if(myPasses[i].status.migration.arrivedTime) {
+        releaseButtonsChanger(myPasses[i].id, "arrived")
+      } else if(myPasses[i].status.migration.excusedTime){
+        releaseButtonsChanger(myPasses[i].id, "true")
+      } else {
+        releaseButtonsChanger(myPasses[i].id, "false")
+      }
 
     }
   })
  }
+ //Check Off migrator for students leaving 
+ function releaseMigratorActions(passLI, isMigrating) {
+  var passLI = $(passLI);
+  console.log(isMigrating)
+  setMigrationStatus(passLI.attr("data-passId-leaving"), isMigrating, function(err, trans) {
+    if(err) {
+      errorHand(err);
+      console.log("Error")
+      materialResponse("cancel", "error");
+    }
+    if(trans && trans.replaced == 1) {
+      if(isMigrating == "true") {
+        Materialize.toast('Successfully Released Student', 4000) 
+      } else {
+        Materialize.toast('Undone Release', 4000) 
+      }
+      releaseButtonsChanger(passLI.attr("data-passId-leaving"), isMigrating);
+    } else {
+      materialResponse("warning", "error");
+    }
+  }) 
+
+  
+ }
+
+function setMigrationStatus(passId, status, done) {
+  $.ajax({
+      type: "patch",
+      url: "/api/passes/status/" + passId + "/isMigrating/" + status,
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
+
+function releaseButtonsChanger(passId, isRelease) {
+  var releaseBtn = $("*[data-passId-leaving=" + passId + "]").find("a.green.btn-floating");
+  var undoBtn = $("*[data-passId-leaving=" + passId + "]").find("a.red.btn-floating");
+  switch(isRelease) {
+    case "false": 
+      releaseBtn.attr("disabled", false);
+      releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      break;
+    case "true": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"false\");");
+      break;
+    case "arrived":
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      break;
+  }
+}
+
 
 
 ////MY Arriving CARD////
@@ -571,7 +644,7 @@ function checkForUrlHash() {
                   .append(statusEl)
                   .append(leavingFromEl)
                   .append(requesterEl)
-                  .attr("data-passId", myPasses[i].id)
+                  .attr("data-passId-arriving", myPasses[i].id)
       $myPasses.append(li)
       $('.tooltipped').tooltip({delay: 50});
 
@@ -579,6 +652,11 @@ function checkForUrlHash() {
   })
  }
 
+ function setArrivingButtonsState(passId, state) {
+  var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
+  var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
+  
+ }
 
 
 </script>
