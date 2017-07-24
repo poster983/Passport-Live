@@ -22,13 +22,13 @@ email: hi@josephhassell.com
 <body class="grey darken-4">
         <!-- RESPONCE ANIMATION -->
       
-          <div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
-            <span id="Xleft"></span>
+          <!--<div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
+            <span id="Xleft" class="Xleft XleftIn"></span>
             <span id="Xright"></span>
             <div id="checkmarkContainer" class="">
               <span id="Cleft" class=""></span>
               <span id="Cright" class=""></span>
-            </div>
+            </div>-->
 
         <!--Loading Screen-->
         <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
@@ -287,46 +287,7 @@ email: hi@josephhassell.com
                       <span class="card-title white-text">My Passes</span>
                       <ul class="collection">
                         <div id="myPassesReturn">
-                          <li class="collection-item avatar">
-                            
-                            <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
-                            <span class="right">&nbsp;</span>
-                            <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
-
-                            <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
-                            
-                            <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
-                            <p>Date: <strong>07/14/2017</strong></p>
-                            <p>Period: <strong>B</strong></p>
-                            <span class="new badge" data-badge-caption="Pending"></span>
-                            <p>Leaving From: <strong>Hunter Youngblood</strong></p>
-                            <p>Requester: <strong>Student McStudent</strong></p>
-                            <span> Viewed</span>
-                          </li>
-                          <li class="collection-item avatar">
-                            <i class="material-icons circle">folder</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br>
-                               Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                          </li>
-                          <li class="collection-item avatar">
-                            <i class="material-icons circle green">insert_chart</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br>
-                               Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                          </li>
-                          <li class="collection-item avatar">
-                            <i class="material-icons circle red">play_arrow</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br>
-                               Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                          </li>
+                         
                         </div>
                       </ul>
                     </div>
@@ -337,6 +298,15 @@ email: hi@josephhassell.com
           </div>
 
 
+        <footer class="page-footer grey darken-3">
+          <div class="footer-copyright">
+            <div class="container">
+                <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
+                <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
+                <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
+            </div>
+          </div>
+         </footer>
 
         <!-- Scripts -->
         <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
@@ -373,8 +343,7 @@ email: hi@josephhassell.com
                 $(".button-collapse").sideNav();
                 $('.tooltipped').tooltip({delay: 50});
                 $('select').material_select();
-                //temp
-                $('#fullAjaxLoadingScreen').removeClass("loading");
+                
                 
                 $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function(a1, a2, a3){
                   $('#fullAjaxLoadingScreen').removeClass("loading");
@@ -913,21 +882,27 @@ email: hi@josephhassell.com
                         if(data.inserted > 0) {
                           //confirm pass
                           console.log(data)
+                          materialResponse("check", "success");
                         } else {
                           var err = new Error("Unknown Error");
                           console.log(data)
+                          materialResponse("cancel", "error");
                           errorHand(err);
                         }
                       },  
                       error: function(jqXHR) {
+                        materialResponse("cancel", "error");
                         return errorHand(jqXHR) 
                       }
                     })
                   } else {
+                    materialResponse("cancel", "warning");
                     var err = new Error("Undefined Values")
                     errorHand(err);
                   }
                 }
+
+                //reset all fields 
 
 
                  $("#sao").change(function() {
@@ -946,125 +921,261 @@ email: hi@josephhassell.com
               });
 
 
-                 ////MY PASSES CARD////
+////MY PASSES CARD////
+
+function getMyUpcomeingPasses(done) {
+$.ajax({
+    type: "get",
+    url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
+    dataType: "json",
+    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+    success: function(data) {done(null, data)},
+    error: function(jqXHR) {done(jqXHR)}                      
+  });
+}
                  
-                 function getMyUpcomeingPasses(done) {
-                  $.ajax({
-                      type: "get",
-                      url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
-                      dataType: "json",
-                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                      success: function(data) {done(null, data)},
-                      error: function(jqXHR) {done(jqXHR)}                      
-                    });
-                 }
-                 
-                 function setMyPasses() {
-                  getMyUpcomeingPasses(function(err, myPasses) {
-                    if(err) {
-                      return errorHand(err)
-                    }
-                    console.log(myPasses)
-                    $myPasses = $('#myPassesReturn')
-                    for(var i = 0; i < myPasses.length; i++) {
-                      console.log(myPasses[i])
-                      var checkNo = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                                            .attr("data-position", "right")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Cancel This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("not_interested")
-                                              )
-                                        )
 
-                      var checkYes = $("<span/>")
-                                      .addClass("right")
-                                      .append(
-                                          $("<a/>")
-                                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                                            .attr("data-position", "left")
-                                            .attr("data-delay", "50")
-                                            .attr("data-tooltip", "Confirm This Pass")
-                                            .append(
-                                                $("<i/>")
-                                                  .addClass("material-icons")
-                                                  .text("check")
-                                              )
-                                        )
-                      var avatarEl = $("<img/>")
-                                      .addClass("passport-avatar circle")
-                                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
-                                      .attr("alt", "Avatar")
 
-                      var titleEl = $("<span/>")
-                                      .addClass("title")
-                                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
 
-                      titleEl.prepend(
-                            $("<i/>")
-                              .addClass("material-icons")
-                              .text("remove_red_eye")
+function setMyPasses() {
+  getMyUpcomeingPasses(function(err, myPasses) {
+    if(err) {
+      return errorHand(err)
+    }
+    console.log(myPasses)
+    $myPasses = $('#myPassesReturn')
+    for(var i = 0; i < myPasses.length; i++) {
+      console.log(myPasses[i])
+      var checkNo = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light red tooltipped")
+                            .attr("data-position", "right")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Cancel This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("not_interested")
+                              )
                         )
 
-                      var dateEl = $("<p/>")
-                                      .text("Date: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                                      )
+      var checkYes = $("<span/>")
+                      .addClass("right")
+                      .append(
+                          $("<a/>")
+                            .addClass("btn-floating waves-effect waves-light green tooltipped")
+                            .attr("data-position", "left")
+                            .attr("data-delay", "50")
+                            .attr("data-tooltip", "Confirm This Pass")
+                            .append(
+                                $("<i/>")
+                                  .addClass("material-icons")
+                                  .text("check")
+                              )
+                        )
 
-                      var periodEl = $("<p/>")
-                                      .text("Period: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].period.toUpperCase())
-                                      )
-                      
-                      var statusEl = $("<span/>")
-                                      .attr("data-badge-caption", myPasses[i].status.state.charAt(0).toUpperCase() + myPasses[i].status.state.slice(1))
-                                      .addClass("new badge")
+      var avatarEl = $("<img/>")
+                      .addClass("passport-avatar circle")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
+                      .attr("alt", "Avatar")
 
-                      var leavingFromEl = $("<p/>")
-                                      .text("Leaving From: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                                      )
+      var titleEl = $("<span/>")
+                      .addClass("title")
+                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
 
-                      var requesterEl = $("<p/>")
-                                      .text("Requester: ")
-                                      .append(
-                                        $("<strong/>")
-                                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                                      )
-                                       
+      titleEl.prepend(
+            $("<i/>")
+              .addClass("material-icons")
+              .text("remove_red_eye")
+        )
 
-                      //set final holder
-                      var li = $("<li/>")
-                                  .addClass("collection-item avatar")
-                                  .append(checkNo)
-                                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                                  .append(checkYes)
-                                  .append(avatarEl)
-                                  .append(titleEl)
-                                  .append(dateEl)
-                                  .append(periodEl)
-                                  .append(statusEl)
-                                  .append(leavingFromEl)
-                                  .append(requesterEl)
-                                  
-                      $myPasses.append(li)
-                      $('.tooltipped').tooltip({delay: 50});
+      var dateEl = $("<p/>")
+                      .text("Date: ")
+                      .append(
+                        $("<strong/>")
+                        .text(moment(myPasses[i].date).format("dddd, LL"))
+                      )
 
-                    }
-                  })
-                 }
+      var periodEl = $("<p/>")
+                      .text("Period: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].period.toUpperCase())
+                      )
+
+      var statusEl = $("<span/>")
+                      //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
+                      .addClass("new badge")
+      
+
+      var leavingFromEl = $("<p/>")
+                      .text("Leaving From: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+                      )
+
+      var requesterEl = $("<p/>")
+                      .text("Requester: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+                      )
+                       
+
+      //set final holder
+      var li = $("<li/>")
+                  .addClass("collection-item avatar")
+                  .append(checkNo)
+                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+                  .append(checkYes)
+                  .append(avatarEl)
+                  .append(titleEl)
+                  .append(dateEl)
+                  .append(periodEl)
+                  .append(statusEl)
+                  .append(leavingFromEl)
+                  .append(requesterEl)
+                  .attr("data-passId-arriving", myPasses[i].id)
+      $myPasses.append(li)
+      if(myPasses[i].status.migration.arrivedTime) {
+        setArrivingButtonsAndState(myPasses[i].id, "arrived");
+      } else if(myPasses[i].status.migration.excusedTime) {
+        setArrivingButtonsAndState(myPasses[i].id, "enroute");
+      } else {
+        if(myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state == "canceled") {
+            if(myPasses[i].status.confirmation.setByUser != idOfUser) {
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+            } else {
+              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+            }
+        } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
+          
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+        } else {
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+        }
+      }
+      
+      
+
+    }
+  })
+ }
+
+function arrivingButtonActions(passLI, action) {
+  passLI = $(passLI);
+  setPassStatus(passLI.attr("data-passId-arriving"), action, function(err, transaction) {
+    
+    if(err && err.status == 403) {
+      Materialize.toast('Action Forbidden', 4000);
+      console.log("Forbidden");
+      materialResponse("cancel", "warning");
+    } else if(err) {
+      console.log("Error");
+      materialResponse("cancel", "error");
+      errorHand(err);
+    }
+
+    if(transaction && transaction.replaced == 1) {
+      Materialize.toast('Successfully Updated State', 4000) 
+      setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+    } else {
+      materialResponse("cancel", "warning");
+    }
+
+  })
+}
+
+function setPassStatus(passId, status, done) {
+  $.ajax({
+      type: "patch",
+      url: "/api/passes/status/" + passId + "/state/" + status,
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
+
+ function setArrivingButtonsAndState(passId, state, cantAccept) {
+  var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
+  var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
+  var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+//releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+console.log(state)
+  switch(state){
+    case "pending": 
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("data-tooltip", "Deny This Pass Request");
+      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+      badge.removeClass().addClass("new badge");
+      
+      break;
+    case "accepted": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("data-tooltip", "Cancel This Pass");
+      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+      badge.removeClass().addClass("new badge green");
+      
+      break;
+    case "denied":
+    case "canceled":
+      if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("data-tooltip", "Reaccept This Pass");
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+      }
+      
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge red");
+      
+      break;
+    case "enroute": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge green accent-4");
+
+      break;
+    case "arrived": 
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("data-tooltip", "Undo Check In");
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge green accent-4");
+      break;
+
+    default:
+      releaseBtn.attr("disabled", true);
+      releaseBtn.attr("onclick", false);
+      undoBtn.attr("disabled", true);
+      undoBtn.attr("onclick", false);
+      badge.removeClass().addClass("new badge black");
+
+      break;
+  }
+  badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
+  $('.tooltipped').tooltip({delay: 50});
+ }
 
                  /*
 

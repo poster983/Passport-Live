@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -16,6 +16,7 @@
     "node": "nodemon ./bin/www",
     "db": "rethinkdb serve",
     "start:dbEdit": "chateau",
+    "debug": "echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
     "configure:db": "node ./bin/configure",
     "test": "export NODE_ENV=tests && nyc mocha",
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",

@@ -26,8 +26,12 @@ var passport = require('passport')
 var checkAuth = require('connect-ensure-login');
 var ssarv = require('ssarv');
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
-    res.render('teacher/index', { doc_Title: 'Passport-Teacher', account_name: req.user.name, account_email: req.user.email});
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    res.render('teacher/index', { doc_Title: 'Passport-Teacher', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 module.exports = router;

@@ -846,6 +846,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
         transform: scale(3);
       }
     }
+
     .circleThing {
       position: absolute;
       display: inline-block;
@@ -873,7 +874,11 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
       animation-name: cirGrow;
       opacity: 1;
       animation-timing-function: ease-in;
-
+    }
+    .circleGrow.out {
+      animation-name: cirGrowOut;
+      opacity: 1;
+      animation-timing-function: ease-in;
     }
     /*fail "x" animation */
     @keyframes XleftIn {
@@ -939,6 +944,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
       background-color: white;
       animation-duration: 1s;
       animation-fill-mode: forwards;
+      z-index: 10;
     }
     .Xright {
       position: absolute;
@@ -952,7 +958,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
       background-color: white;
       animation-duration: 1s;
       animation-fill-mode: forwards;
-
+      z-index: 10;
 
     }
     .Xleft.XleftIn {

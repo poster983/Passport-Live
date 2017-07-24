@@ -81,7 +81,9 @@ exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, 
                   email: email,
                   password: hash,
                   userGroup: userGroup, // should be same as a usergroup in config/default.json
-                  groupFields: groupFields
+                  groupFields: groupFields,
+                  isArchived: false,
+                  verified: false
                 }).run(dbConn);
                 promice.then(function(conn) {
                     return done(null);

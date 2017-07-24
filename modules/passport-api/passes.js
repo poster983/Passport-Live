@@ -25,7 +25,7 @@ var r = require("rethinkdb")
 var db = require("../db/index.js");
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
-
+var validator = require("validator");
 
 /**
     * Creates a new account
@@ -37,10 +37,11 @@ var moment = require("moment");
     * @param {userId} requester - Id of the account who requested the pass
     * @param {string} period
     * @param {date} date
+    * @param {boolean} checkDupe - Sheck if there is an identical pass in the system already.
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
     */
-exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, done) {
+exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, checkDupe, done) {
     //validate
     if(!toPerson || typeof toPerson != "string") {
         var err = new Error("toPerson Not Valid");
@@ -80,29 +81,72 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
         date = moment(date).toISOString();
     }
     console.log(date)
-    
-    r.table("passes").insert({
-        toPerson: toPerson,
-        fromPerson: fromPerson,
-        migrator: migrator,
-        requester: requester,
-        period: period,
-        date: r.ISO8601(date),
-        status: {
-            state: "pending",
-            setByUser: null,
-            msg: null
-        },
-        seen: {
-            email: false,
-            web: false
+    //check for dupe 
+    var promise = new Promise(function(resolve, reject) {
+        if(checkDupe) {
+            r.table("passes").filter({
+                toPerson: toPerson,
+                fromPerson: fromPerson,
+                migrator: migrator,
+                requester: requester,
+                period: period,
+                date: r.ISO8601(date)
+            }).run(db.conn(), function(err, cur) {
+                if(err) {
+                    return done(err);
+                }
+                cur.toArray(function(err, data) {
+                    if(err) {
+                        return done(err);
+                    }
+                    if(data.length > 0) {
+                        var err = new Error("Duplicate Pass Found.  Aborting.");
+                        err.status = 409
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                })
+            })
+        } else {
+            resolve();
         }
-    }).run(db.conn(), function(err, trans) {
-        if(err) {
-            return done(err);
-        }
-        return done(null, trans)
-    })
+    });
+
+    //resolve promice
+    promise.then(function(result) {
+        r.table("passes").insert({
+            toPerson: toPerson,
+            fromPerson: fromPerson,
+            migrator: migrator,
+            requester: requester,
+            period: period,
+            date: r.ISO8601(date),
+            status: {
+                confirmation: {
+                    state: "pending",
+                    setByUser: null,
+                    msg: null
+                },
+                migration: {
+                    excusedTime: null,
+                    inLimbo: false,
+                    arrivedTime: null
+                }
+            },
+            seen: {
+                email: [],
+                web: []
+            }
+        }).run(db.conn(), function(err, trans) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, trans)
+        })
+    }, function(err) {
+        return done(err);
+    });
 }
 
 /**
@@ -141,6 +185,7 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     } else {
          
         toDate = moment(toDate).toISOString();
+
     }
 
 
@@ -238,8 +283,50 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
 
 }
 
-/*
 
-*/
+exports.getPass = function(passId, done) {
+     if(!validator.isUUID(passId)) {
+        var err = new Error("Not a valid passId");
+        err.status = 400;
+        return done(err);
+    }
 
-/*.pluck("name", "email", "schedules")*/
+     r.table("passes").get(passId).run(db.conn(), function(err, pass) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, pass);
+     })
+
+}
+
+/**
+    * Updates pass fields
+    * @function updatePass
+    * @async
+    * @param {UUID} passId - Id of the Pass
+    * @param {json} doc - Json object to update / insert into the db 
+    * @param {function} done - callback
+    * @returns {done} Error, or a transaction statement 
+    */
+
+exports.updatePass = function(passId, doc, done) {
+    if(!validator.isUUID(passId)) {
+        var err = new Error("Not a valid passId");
+        err.status = 400;
+        return done(err);
+    }
+    if(!doc || typeof doc != "object" ) {
+        var err = new Error("Invalid Doc");
+        err.status = 400;
+        return done(err);
+    }
+
+
+    r.table("passes").get(passId).update(doc).run(db.conn(), function(err, trans) {
+        if(err) {
+            return done(err);
+        }
+        return done(null, trans);
+    })
+}

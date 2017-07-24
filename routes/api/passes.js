@@ -29,6 +29,8 @@ var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
 var config = require("config");
+var validator = require("validator");
+var moment = require("moment");
 
 router.use(cors());
 router.options('*', cors())
@@ -73,7 +75,7 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     var period = req.body.period;
     var date = req.body.date;
 
-    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, function(err, trans) {
+    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, true, function(err, trans) {
         if(err) {
             return next(err);
         }
@@ -134,6 +136,219 @@ router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt',
         res.send(data);
     })
 });
+
+/**
+    * Sets migration Status
+    * Can only be set by fromPerson
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have teacher db permissions
+    * @function updateMigrationStatus
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {UUID} passId - The id of the Pass
+    * @apiparam {boolean} state
+    * @api PATCH /api/passes/status/:passId/isMigrating/:state
+    * @apiresponse {json} Returns rethink db action summery
+    */
+router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', { session: false}), function updateMigrationStatus(req, res, next) {
+    var userId = req.user.id;
+    var passId = req.params.passId;
+    var state = req.params.state;
+    //check user Input 
+    if(state != "true" && state != "false") {
+        var err = new Error("Type should be boolean for :state");
+        err.status = 400;
+        return next(err);
+    }
+
+    api.getPass(passId, function(err, pass) {
+        if(userId != pass.fromPerson) {
+            console.log(pass.fromPerson)
+            console.log(userId)
+            var err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+            
+        }
+        //update logic 
+        var updateDoc = {};
+        if(state == "true") {
+             updateDoc = {
+                status: {
+                    migration: {
+                        excusedTime: r.get().ISO8601(moment().toISOString())
+                    }
+                }
+             }
+        } else if(state == "false") {
+            updateDoc = {
+                status: {
+                    migration: {
+                        excusedTime: null,
+                        inLimbo: false
+                    }
+                }
+             }
+        }
+        
+        api.updatePass(passId, updateDoc, function(err, trans) {
+            if(err) {
+                return next(err)
+            }
+            res.json(trans)
+        })
+    })
+
+});
+
+/**
+    * Sets arrived Status
+    * Can only be set by fromPerson
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have teacher db permissions
+    * @function updateArrivedStatus
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {UUID} passId - The id of the Pass
+    * @apiparam {boolean} state
+    * @api PATCH /api/passes/status/:passId/isMigrating/:state
+    * @apiresponse {json} Returns rethink db action summery
+    */
+
+router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', { session: false}), function updateArrivedStatus(req, res, next) {
+    var userId = req.user.id;
+    var passId = req.params.passId;
+    var state = req.params.state;
+    //check user Input 
+    if(state != "true" && state != "false") {
+        var err = new Error("Type should be boolean for :state");
+        err.status = 400;
+        return next(err);
+    }
+
+    api.getPass(passId, function(err, pass) {
+        if(userId != pass.toPerson) {
+            console.log(pass.toPerson)
+            console.log(userId)
+            var err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+            
+        }
+        //update logic 
+        var updateDoc = {};
+        if(state == "true") {
+             updateDoc = {
+                status: {
+                    migration: {
+                        arrivedTime: r.get().ISO8601(moment().toISOString())
+                    }
+                }
+             }
+        } else if(state == "false") {
+            updateDoc = {
+                status: {
+                    migration: {
+                        inLimbo: false,
+                        arrivedTime: null
+                    }
+                }
+             }
+        }
+        
+        api.updatePass(passId, updateDoc, function(err, trans) {
+            if(err) {
+                return next(err)
+            }
+            res.json(trans)
+        })
+    })
+
+});
+
+/**
+    * Sets Pass Status
+    * Can be set by toPerson and Migrator
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have teacher db permissions
+    * @function updatePassState
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {UUID} passId - The id of the Pass
+    * @apiparam {string} state - the state constant to set (pending, accepted, denied, canceled)
+    * @api PATCH /api/passes/status/:passId/state/:state
+    * @apiresponse {json} Returns rethink db action summery
+    * @todo Make this code not look like I wrote it at 3 in the morning 
+    */
+router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
+    var userId = req.user.id;
+    var passId = req.params.passId;
+    var state = req.params.state;
+
+    //check user input
+    if(state != "pending" && state != "accepted" && state != "denied" && state != "canceled") {
+        var err = new Error("Unknown state value: " + state);
+        err.status = 400;
+        return next(err);
+    }
+
+
+    api.getPass(passId, function(err, pass) {
+        if(err) {
+            return next(err);
+        }
+       //makesure only people involved can change stuff
+       if(userId != pass.toPerson && userId != pass.fromPerson && userId != pass.migrator && userId != pass.requester) {
+        var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+       }
+
+        if(pass.status.confirmation.state == "denied" || pass.status.confirmation.state == "canceled") {
+            if(pass.status.confirmation.setByUser != userId) {
+                var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+            }
+        }
+
+        //makesure that as the requester, you are not accepting your own pass
+        if(userId == pass.requester && state == "accepted") {
+            if(pass.status.confirmation.state == "pending") {
+                var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+            }
+        }
+
+        //compile doc for updating
+        var updateDoc = {
+            status: {
+                confirmation: {
+                    setByUser: userId,
+                    state: state
+                }
+            }
+        };
+
+        api.updatePass(passId, updateDoc, function(err, trans) {
+            if(err) {
+                return next(err)
+            }
+            res.json(trans)
+        })
+
+    });
+    
+
+
+})
 
 
 module.exports = router;
