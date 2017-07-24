@@ -187,6 +187,72 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
                 status: {
                     migration: {
                         excusedTime: null,
+                        inLimbo: false
+                    }
+                }
+             }
+        }
+        
+        api.updatePass(passId, updateDoc, function(err, trans) {
+            if(err) {
+                return next(err)
+            }
+            res.json(trans)
+        })
+    })
+
+});
+
+/**
+    * Sets arrived Status
+    * Can only be set by fromPerson
+    * REQUIRES JWT Authorization in headers.
+    * @todo Account must have teacher db permissions
+    * @function updateArrivedStatus
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {UUID} passId - The id of the Pass
+    * @apiparam {boolean} state
+    * @api PATCH /api/passes/status/:passId/isMigrating/:state
+    * @apiresponse {json} Returns rethink db action summery
+    */
+
+router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', { session: false}), function updateArrivedStatus(req, res, next) {
+    var userId = req.user.id;
+    var passId = req.params.passId;
+    var state = req.params.state;
+    //check user Input 
+    if(state != "true" && state != "false") {
+        var err = new Error("Type should be boolean for :state");
+        err.status = 400;
+        return next(err);
+    }
+
+    api.getPass(passId, function(err, pass) {
+        if(userId != pass.toPerson) {
+            console.log(pass.toPerson)
+            console.log(userId)
+            var err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+            
+        }
+        //update logic 
+        var updateDoc = {};
+        if(state == "true") {
+             updateDoc = {
+                status: {
+                    migration: {
+                        arrivedTime: r.get().ISO8601(moment().toISOString())
+                    }
+                }
+             }
+        } else if(state == "false") {
+            updateDoc = {
+                status: {
+                    migration: {
                         inLimbo: false,
                         arrivedTime: null
                     }
