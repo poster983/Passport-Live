@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo right">Schedule Editor</a>
-      <a href="#" onclick="closePage('scheduleEditor')"><i class=" left-allign nav-sandwich material-icons">arrow_back</i></a>
+      <a href="#" onclick="closePage('scheduleEditor'); se.clear();"><i class=" left-allign nav-sandwich material-icons">arrow_back</i></a>
     </div>
 </nav>
 <div class="container">
@@ -40,17 +40,7 @@ email: hi@josephhassell.com
                     </tr>
                 </thead>
                 <tbody id="scheduleEditorBody">
-                    <tr>
-                        <td>
-                            A
-                        </td>
-                        <td>
-                            <input type="text" class="timepicker">
-                        </td>
-                        <td>
-                            <input type="text" class="timepicker">
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
           </div>
@@ -83,8 +73,57 @@ se.initNewSchedule = function() {
       return errorHand(err);
     }
     for(var x = 0; x < periods.periods.length; x++) {
-      $("#scheduleEditorBody").append("HIIIII")
+      
+      var per = $("<td/>")
+                    .html(periods.periods[x])
+                    .attr("data-period", periods.periods[x]);
+
+      var startTimeID = uuidv4();
+      var startTime = $("<td/>").append($("<input/>")
+                          .attr("type", "text")
+                          .attr("data-startTime-period", periods.periods[x])
+                          .attr("id", startTimeID)
+                          .addClass("timepicker")).append(
+                                  $("<label/>")
+                                      .attr("for", startTimeID)
+                                      .html("Start Time")
+                          );
+      var endTimeID = uuidv4();
+      var endTime = $("<td/>").append($("<input/>")
+                          .attr("type", "text")
+                          .attr("data-endTime-period", periods.periods[x])
+                          .attr("id", endTimeID)
+                          .addClass("timepicker")).append(
+                                  $("<label/>")
+                                      .attr("for", endTimeID)
+                                      .html("End Time")
+                          );
+
+      var tr = $("<tr/>")
+                    .append(per)
+                    .append(startTime)
+                    .append(endTime)
+      $("#scheduleEditorBody").append(tr);
+
+      //on done
+      if(x >= periods.periods.length -1) {
+        $('.timepicker').pickatime({
+              default: 'now', // Set default time
+              fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+              twelvehour: true, // Use AM/PM or 24-hour format
+              donetext: 'OK', // text for done-button
+              cleartext: 'Clear', // text for clear-button
+              canceltext: 'Cancel', // Text for cancel-button
+              autoclose: false, // automatic close timepicker
+              ampmclickable: true, // make AM PM clickable
+              aftershow: function(){} //Function for after opening timepicker  
+            });
+      }
     }
   })
+}
+
+se.clear = function() {
+  $("#scheduleEditorBody").empty();
 }
 </script>
