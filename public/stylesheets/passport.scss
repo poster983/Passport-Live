@@ -40,11 +40,12 @@ email: hi@josephhassell.com
 
 .mustacheMixen.page {
   overflow: scroll;
+  height: 0;
   position: fixed;
   top:100%;
   left:0;
   opacity: 0;
-  z-index: 1000;
+  z-index: 0;
   width: 100%;
   height: 100%;
   border-radius: 2px;
@@ -54,9 +55,11 @@ email: hi@josephhassell.com
   transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 .mustacheMixen.page.active {
+  z-index: 1000;
   top:0%;
   opacity: 1;
   transition: all 0.375s;
+  transition-property: opacity, top;
   transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 

@@ -59,7 +59,7 @@ email: hi@josephhassell.com
    
 
      <div class="fixed-action-btn">
-      <a onclick="openPage('scheduleEditor'); se.initNewSchedule();" class="btn-floating btn-large red waves-effect waves-light">
+      <a onclick="se.openPage();" class="btn-floating btn-large waves-effect waves-light">
         <i class="large material-icons">mode_edit</i>
       </a>
       <!--<ul>
@@ -133,7 +133,10 @@ email: hi@josephhassell.com
             $('select').material_select();
           });
 
-          
+          /*$(window).on("popstate", function (event, state) {
+             console.log(event);
+             console.log(state);
+          });*/
         </script>
 </body>
 </html>
