@@ -21,13 +21,13 @@ email: hi@josephhassell.com
 <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo right">Schedule Editor</a>
-      <a href="#" onclick="closePage('scheduleEditor'); se.clear();"><i class=" left-allign nav-sandwich material-icons">arrow_back</i></a>
+      <a href="#" onclick="se.promptAndCheckForUnsavedWork();"><i class=" left-allign nav-sandwich material-icons" id="mixenSEBack">arrow_back</i></a>
     </div>
 </nav>
 
 <!--THe FAB-->
-<div class="fixed-action-btn" id="mixenSESave">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse">
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave">
       <i class="large material-icons">save</i>
     </a>
   </div>
@@ -54,9 +54,6 @@ email: hi@josephhassell.com
                 </tbody>
             </table>
           </div>
-          <div class="card-action">
-            <a href="#">Save</a>
-          </div>
         </div>
       </div>
     </div>
@@ -69,7 +66,7 @@ email: hi@josephhassell.com
   <div class="tap-target" id="unsaveConfirm" data-activates="mixenSESave">
     <div class="tap-target-content">
       <h5>You have unsaved work</h5>
-      <p>A bunch of text</p>
+      <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
     </div>
   </div>
 
@@ -136,7 +133,12 @@ se.initNewSchedule = function() {
               canceltext: 'Cancel', // Text for cancel-button
               autoclose: false, // automatic close timepicker
               ampmclickable: true, // make AM PM clickable
-              aftershow: function(){} //Function for after opening timepicker  
+              aftershow: function(){
+                console.log("hi")
+                se.checkForUnsavedWork(function(hasValues) {
+                  console.log(se.canDiscard)
+                })
+              } 
             });
       }
     }
@@ -145,6 +147,8 @@ se.initNewSchedule = function() {
 
 se.clear = function() {
   $("#scheduleEditorBody").empty();
+  se.canDiscard = false;
+  se.iconChange(false);
 }
 
 se.openPage = function() {
@@ -153,9 +157,55 @@ se.openPage = function() {
   openPage('scheduleEditor');
   //$("#mixenSESave").show();
 }
-
+se.canDiscard = false;
 //checks if 
-se.checkForUnsavedWork = function() {
-  $('#mixenSESave').tapTarget('open');
+se.checkForUnsavedWork = function(done) {
+  se.canDiscard = false;
+  var length = $("#scheduleEditorBody").find("tr td :input(value='*')").length;
+  $("#scheduleEditorBody").find("tr td :input(value='*')").each(function() {
+      if($(this).val() != "" && !se.canDiscard) {
+        //value exists
+        se.iconChange(true);
+        return done(true)
+      }
+      length--;
+      if(length <= 0) {
+        se.iconChange(false);
+        return done(false)
+      }
+  })
 }
+
+se.promptAndCheckForUnsavedWork = function() {
+  if(se.canDiscard == true) {
+    console.log("Can Discard")
+    return se.discard();
+   }
+    se.checkForUnsavedWork(function(bool) {
+      if(bool) {
+        
+        se.canDiscard = true;
+        $('#unsaveConfirm').tapTarget('open');
+      } else {
+        se.canDiscard = false;
+        se.discard();
+      }
+      console.log(se.canDiscard);
+    })
+}
+se.iconChange = function(isUnsaved) {
+  if(isUnsaved) {
+    $("#mixenSEBack").html("backspace");
+  } else {
+    $("#mixenSEBack").html("arrow_back");
+  }
+  
+}
+
+se.discard = function() {
+  closePage('scheduleEditor'); 
+  se.clear();
+}
+
+
 </script>
