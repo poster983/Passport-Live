@@ -79,9 +79,7 @@ exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, 
         return done(err);
     }
     if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
-        var err = new Error("groupFields Undefined");
-        err.status = 400;
-        return done(err);
+        groupFields = {};
     }
     bcrypt.hash(password, null, null, function(err, hash) {
         if(err) {
