@@ -17,20 +17,35 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 -->
+<!--The NAv-->
 <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo right">Schedule Editor</a>
-      <a href="#" onclick="closePage('scheduleEditor')"><i class=" left-allign nav-sandwich material-icons">arrow_back</i></a>
+      <a href="#" onclick="se.promptAndCheckForUnsavedWork();"><i class=" left-allign nav-sandwich material-icons" id="mixenSEBack">arrow_back</i></a>
     </div>
 </nav>
+
+<!--THe FAB-->
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="se.save();">
+      <i class="large material-icons">save</i>
+    </a>
+  </div>
+
+<!-- THe page -->
 <div class="container">
   <div id="cal"> 
     <div class="row">
       <div class="col s12">
-        <div class="card grey darken-3">
-          <div class="card-content white-text">
+        <div class="card">
+          <div class="card-content">
             <span class="card-title">New Schedule</span>
-           
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="scheduleName" type="text" class="validate">
+                <label for="scheduleName">Schedule Name</label>
+              </div>
+            </div>
             <table class="striped">
                 <thead>
                     <tr>
@@ -39,34 +54,238 @@ email: hi@josephhassell.com
                         <th>End Time</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="input-field col s12">
-                                <select>
-                                  <option value="" disabled selected>Choose your option</option>
-                                  <option value="1">Option 1</option>
-                                  <option value="2">Option 2</option>
-                                  <option value="3">Option 3</option>
-                                </select>
-                                <label>Materialize Select</label>
-                            </div>
-                        </td>
-                        <td>
-                            <input type="date" class="timepicker">
-                        </td>
-                        <td>
-                            <input type="date" class="timepicker">
-                        </td>
-                    </tr>
+                <tbody id="scheduleEditorBody">
+                    
                 </tbody>
             </table>
-          </div>
-          <div class="card-action">
-            <a href="#">Save</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<!--Feature Disc -->
+
+  <div class="tap-target" id="unsaveConfirm" data-activates="mixenSESave">
+    <div class="tap-target-content">
+      <h5>You have unsaved work</h5>
+      <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
+    </div>
+  </div>
+
+<script type="text/javascript">
+
+var se = {}
+se.getPeriodConstants = function(done) {
+    $.ajax({
+      type: "get",
+      url: "/api/server/config/schedule/",
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
+se.initNewSchedule = function() {
+  se.getPeriodConstants(function(err, periods) {
+    if(err) {
+      return errorHand(err);
+    }
+    for(var x = 0; x < periods.periods.length; x++) {
+      
+      var per = $("<td/>")
+                    .html(periods.periods[x])
+                    .attr("data-period", periods.periods[x]);
+
+      var startTimeID = uuidv4();
+      var startTime = $("<td/>").append($("<input/>")
+                          .attr("type", "text")
+                          .attr("data-startTime-period", periods.periods[x])
+                          .attr("id", startTimeID)
+                          .attr("name", startTimeID)
+                          .addClass("timepicker")).append(
+                                  $("<label/>")
+                                      .attr("for", startTimeID)
+                                      .html("Start Time")
+                          );
+      var endTimeID = uuidv4();
+      var endTime = $("<td/>").append($("<input/>")
+                          .attr("type", "text")
+                          .attr("data-endTime-period", periods.periods[x])
+                          .attr("id", endTimeID)
+                          .attr("name", endTimeID)
+                          .addClass("timepicker")).append(
+                                  $("<label/>")
+                                      .attr("for", endTimeID)
+                                      .html("End Time")
+                          );
+
+      var tr = $("<tr/>")
+                    .append(per)
+                    .append(startTime)
+                    .append(endTime)
+      $("#scheduleEditorBody").append(tr);
+
+      //on done
+      if(x >= periods.periods.length -1) {
+        $('.timepicker').pickatime({
+              default: 'now', // Set default time
+              fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+              twelvehour: true, // Use AM/PM or 24-hour format
+              donetext: 'OK', // text for done-button
+              cleartext: 'Clear', // text for clear-button
+              canceltext: 'Cancel', // Text for cancel-button
+              autoclose: false, // automatic close timepicker
+              ampmclickable: true, // make AM PM clickable
+              aftershow: function(){
+                console.log("hi")
+                se.checkForUnsavedWork(function(hasValues) {
+                  console.log(se.canDiscard)
+                })
+              } 
+            });
+      }
+    }
+  })
+}
+
+se.clear = function() {
+  $("#scheduleEditorBody").empty();
+  se.canDiscard = false;
+  se.iconChange(false);
+}
+
+se.openPage = function() {
+  //history.pushState({hi: "there"}, null, window.location.href);
+  se.initNewSchedule();
+  openPage('scheduleEditor');
+  //$("#mixenSESave").show();
+}
+se.canDiscard = false;
+//checks if 
+se.checkForUnsavedWork = function(done) {
+  se.canDiscard = false;
+  var length = $("#scheduleEditorBody").find("tr td :input(value='*')").length;
+  $("#scheduleEditorBody").find("tr td :input(value='*')").each(function() {
+      if($(this).val() != "" && !se.canDiscard) {
+        //value exists
+        se.iconChange(true);
+        return done(true)
+      }
+      length--;
+      if(length <= 0) {
+        se.iconChange(false);
+        return done(false)
+      }
+  })
+}
+
+se.promptAndCheckForUnsavedWork = function() {
+  if(se.canDiscard == true) {
+    console.log("Can Discard")
+    return se.discard();
+   }
+    se.checkForUnsavedWork(function(bool) {
+      if(bool) {
+        
+        se.canDiscard = true;
+        $('#unsaveConfirm').tapTarget('open');
+      } else {
+        se.canDiscard = false;
+        se.discard();
+      }
+      console.log(se.canDiscard);
+    })
+}
+se.iconChange = function(isUnsaved) {
+  if(isUnsaved) {
+    $("#mixenSEBack").html("backspace");
+  } else {
+    $("#mixenSEBack").html("arrow_back");
+  }
+  
+}
+
+se.discard = function() {
+  closePage('scheduleEditor'); 
+  se.clear();
+}
+
+se.compileIntoPassportSchedule = function(done) {
+  var periodJSON = {};
+  se.getPeriodConstants(function(err, schedule) {
+    if(err) {
+      errorHand(err);
+    }
+    schedule.periods.length
+    for(var x = 0; x < schedule.periods.length; x++) {
+      console.log($("#scheduleEditorBody").find("input[data-starttime-period='" + schedule.periods[x] + "']").val())
+      var period = schedule.periods[x];
+      var startTime = $("#scheduleEditorBody").find("input[data-starttime-period='" + period + "']")
+      var endTime = $("#scheduleEditorBody").find("input[data-endtime-period='" + period + "']")
+
+      if(startTime.val() && endTime.val() == "") {
+        //incomplete
+         endTime.addClass("validate invalid")
+         Materialize.toast('End time invalid', 4000)
+         return done(null);
+      } else if (endTime.val() && startTime.val() == "") {
+        //incomplete 
+         startTime.addClass("validate invalid")
+         Materialize.toast('Start time invalid', 4000)
+         return done(null);
+      } else if (endTime.val() && startTime.val()){
+        //complete 
+        periodJSON[period] = {
+          start: moment(startTime.val(), ["h:mmA"]).format("HH:mm"),
+          end: moment(endTime.val(), ["h:mmA"]).format("HH:mm")
+        }
+      } else {
+        //skip
+        console.log("skp ")
+      }
+      if(x >= schedule.periods.length -1) {
+        console.log(periodJSON);
+        return done(periodJSON);
+      }
+    }
+  });
+}
+
+se.postNewSchedule = function(name, scheduleData, done) {
+  $.ajax({
+      type: "post",
+      url: "/api/schedule/definition/",
+      data: {name: name, scheduleData: scheduleData},
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+} 
+
+se.save = function() {
+  if($("#scheduleName").val() == "") {
+   Materialize.toast('Schedule Needs A Name', 4000);
+   $("#scheduleName").addClass("validate invalid")
+   return false;
+  }
+  se.compileIntoPassportSchedule(function(json) {
+    if(json) {
+      se.postNewSchedule($("#scheduleName").val(), json, function(err, data) {
+        if(err) {
+          errorHand(err);
+        }
+        console.log(data)
+      })
+    }
+  })
+}
+
+
+
+
+</script>
