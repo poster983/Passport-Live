@@ -53,6 +53,36 @@ const util = require('util')
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
 exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
+    if(!userGroup) {
+        var err = new Error("Usergroup Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(!firstName) {
+        var err = new Error("firstName Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(!lastName) {
+        var err = new Error("lastName Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(!email) {
+        var err = new Error("email Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(!password) {
+        var err = new Error("password Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
+        var err = new Error("groupFields Undefined");
+        err.status = 400;
+        return done(err);
+    }
     bcrypt.hash(password, null, null, function(err, hash) {
         if(err) {
             console.error(err);
