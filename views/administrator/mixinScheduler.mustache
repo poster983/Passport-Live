@@ -280,6 +280,8 @@ se.save = function() {
           errorHand(err);
         }
         console.log(data)
+        materialResponse("check", "success")
+        se.discard();
       })
     }
   })
