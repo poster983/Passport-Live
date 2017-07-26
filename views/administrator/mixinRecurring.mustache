@@ -1,0 +1,165 @@
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+<!--The NAv-->
+<nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo right">Recurring Editor</a>
+      <a href="#" onclick=""><i class=" left-allign nav-sandwich material-icons" id="mixenREBack">arrow_back</i></a>
+    </div>
+</nav>
+
+<!--THe FAB-->
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenRESave" onclick="">
+      <i class="large material-icons">save</i>
+    </a>
+  </div>
+
+<!-- THe page -->
+<div class="container">
+  <div id="RECards"> 
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title" id="REname">Recurring Schedule Editor</span>
+
+              <div class="input-field col m10 s12">
+                <select id="SDRESelect">
+                  <option value="" disabled selected>Choose your Definition</option>
+                  
+                </select>
+                <label>Select a Schedule Definition</label>
+              </div>
+              <div class="col m2 s12">
+                <input name="recurringType" type="radio" checked="checked" value="weekly" id="weekly" />
+                <label for="weekly">Weekly</label>
+                <p>&nbsp;</p>
+                <input name="recurringType" type="radio" disabled value="daily" id="daily" />
+                <label for="daily">Daily</label>
+              </div>
+              <div class="col s12">
+                <input id="startsOn" type="date" placeholder="Starts On" class="datepicker">
+              </div>
+              <div class="col s12">
+                <input type="checkbox" name="REDays" value="monday" id="REMonday" />
+                <label for="REMonday">Monday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="tuesday" id="RETuesday" />
+                <label for="RETuesday">Tuesday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="wednesday" id="REWednesday" />
+                <label for="REWednesday">Wednesday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="thursday" id="REThursday" />
+                <label for="REThursday">Thursday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="friday" id="REFriday" />
+                <label for="REFriday">Friday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="saturday" id="RESaturday" />
+                <label for="RESaturday">Saturday</label>
+                <span>&nbsp;</span>
+                <input type="checkbox" name="REDays" value="sunday" id="RESunday" />
+                <label for="RESunday">Sunday</label>
+              </div>
+              <h1>&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Feature Disc -->
+
+  <div class="tap-target" id="unsaveREConfirm" data-activates="mixenRESave">
+    <div class="tap-target-content">
+      <h5>You have unsaved work</h5>
+      <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
+    </div>
+  </div>
+
+<script type="text/javascript">
+var re = {};
+re.scheduleDefs = {};
+re.getScheduleDefinition = function(done) {
+   $.ajax({
+      type: "get",
+      url: "/api/schedule/definition/",
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
+
+re.fillScheduleDefinitions = function(done) {
+  var sD = re.scheduleDefs;
+  console.log(sD)
+
+  for(var i = 0; i < sD.length; i++) {
+    var option = $("<option/>")
+                    .attr("data-scheduleid", sD[i].id)
+                    .html(sD[i].name)
+    $("#SDRESelect").append(option);
+    if(i >= sD.length-1) {
+      return done(null)
+    }
+  }
+}
+
+
+re.setup = function() {
+  re.getScheduleDefinition(function(err, scheduleDefs) {
+    if(err) {
+      return errorHand(err);
+    }
+    re.scheduleDefs = scheduleDefs;
+    re.fillScheduleDefinitions(function(err) {
+      if(err) {
+        return errorHand(err);
+      }
+       $('select').material_select();
+    })
+  })
+}
+
+re.compile = function() {
+  var returner = {}
+  returner.repeatingRule = {} 
+  returner.repeatingRule.on = [];
+  var length = $("input:checkbox[name=REDays]:checked").length;
+  $("input:checkbox[name=REDays]:checked").each(function(){
+      returner.repeatingRule.on.push($(this).val());
+      
+      length--;
+      if(length <= 0) { 
+        console.log(returner.repeatingRule.on)
+        console.log($("#SDRESelect").find(":selected").attr("data-scheduleid"))
+      }
+  });
+
+}
+
+
+</script>

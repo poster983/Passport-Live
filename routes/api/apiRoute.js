@@ -31,6 +31,7 @@ var config = require('config');
 var utils = require('../../modules/passport-utils/index.js');
 var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
 var cors = require('cors');
+var ssarv = require("ssarv");
 
 router.use(cors());
 router.options('*', cors())
@@ -215,7 +216,7 @@ function handleNewApiKey(req, res, next) {
 schedule
 **/
 //new Schedule Definition 
-router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), ssarv(["administrator"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
     var name=req.body.name;
     var scheduleData=req.body.scheduleData;
 
@@ -226,6 +227,18 @@ router.post('/schedule/definition', passport.authenticate('jwt', { session: fals
         res.status(201).json(data);
     });
 })
+//get All Schedule Definition
+//ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup"}), 
+router.get('/schedule/definition', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+
+    api.getScheduleDefinition(connection, null, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.json(data);
+    });
+})
+
 //get Schedule Definition
 router.get('/schedule/definition/:id', function(req, res, next) {
     var id=req.params.id;

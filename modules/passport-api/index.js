@@ -94,16 +94,32 @@ module.exports = {
     * @async
     * @returns {callback} Data of the row
     * @param {object} dbConn - RethinkDB Connection Object.
-    * @param {string} id - Id of the row
+    * @param {string} id - Id of the row.  in null, gets all
     * @param {function} done - Callback
     */
     getScheduleDefinition: function(dbConn, id, done) {
-        r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
-            if(err) {
-                return done(err);
-            }
-            return done(null, data)
-        });
+        if(id) {
+            r.table('scheduleDefinitions').get(id).run(dbConn, function(err, data) {
+                if(err) {
+                    return done(err);
+                }
+                return done(null, data)
+            });
+        } else {
+            r.table('scheduleDefinitions').run(dbConn, function(err, data) {
+                if(err) {
+                    return done(err);
+                }
+                data.toArray(function(err, data) {
+                    if(err) {
+                        return done(err);
+                    }
+                    return done(null, data)
+                })
+                
+            });
+        }
+        
     },
 
     /** 
@@ -137,8 +153,8 @@ module.exports = {
     },
 
     /** 
-    * Schedules a date for a Schedule Definition
-    * @function scheduleSingleScheduleDefinition
+    * Schedules a Repeating date for a Schedule Definition
+    * @function scheduleRepeatingScheduleDefinition
     * @link module:passportApi
     * @async
     * @returns {callback} Data of the action
