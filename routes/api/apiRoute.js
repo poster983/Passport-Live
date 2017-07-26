@@ -215,7 +215,7 @@ function handleNewApiKey(req, res, next) {
 schedule
 **/
 //new Schedule Definition 
-router.post('/schedule/definition', function(req, res, next) {
+router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), function(req, res, next) {
     var name=req.body.name;
     var scheduleData=req.body.scheduleData;
 

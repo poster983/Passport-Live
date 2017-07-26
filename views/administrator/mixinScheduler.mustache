@@ -27,7 +27,7 @@ email: hi@josephhassell.com
 
 <!--THe FAB-->
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="se.save();">
       <i class="large material-icons">save</i>
     </a>
   </div>
@@ -40,7 +40,12 @@ email: hi@josephhassell.com
         <div class="card">
           <div class="card-content">
             <span class="card-title">New Schedule</span>
-           
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="scheduleName" type="text" class="validate">
+                <label for="scheduleName">Schedule Name</label>
+              </div>
+            </div>
             <table class="striped">
                 <thead>
                     <tr>
@@ -100,6 +105,7 @@ se.initNewSchedule = function() {
                           .attr("type", "text")
                           .attr("data-startTime-period", periods.periods[x])
                           .attr("id", startTimeID)
+                          .attr("name", startTimeID)
                           .addClass("timepicker")).append(
                                   $("<label/>")
                                       .attr("for", startTimeID)
@@ -110,6 +116,7 @@ se.initNewSchedule = function() {
                           .attr("type", "text")
                           .attr("data-endTime-period", periods.periods[x])
                           .attr("id", endTimeID)
+                          .attr("name", endTimeID)
                           .addClass("timepicker")).append(
                                   $("<label/>")
                                       .attr("for", endTimeID)
@@ -206,6 +213,79 @@ se.discard = function() {
   closePage('scheduleEditor'); 
   se.clear();
 }
+
+se.compileIntoPassportSchedule = function(done) {
+  var periodJSON = {};
+  se.getPeriodConstants(function(err, schedule) {
+    if(err) {
+      errorHand(err);
+    }
+    schedule.periods.length
+    for(var x = 0; x < schedule.periods.length; x++) {
+      console.log($("#scheduleEditorBody").find("input[data-starttime-period='" + schedule.periods[x] + "']").val())
+      var period = schedule.periods[x];
+      var startTime = $("#scheduleEditorBody").find("input[data-starttime-period='" + period + "']")
+      var endTime = $("#scheduleEditorBody").find("input[data-endtime-period='" + period + "']")
+
+      if(startTime.val() && endTime.val() == "") {
+        //incomplete
+         endTime.addClass("validate invalid")
+         Materialize.toast('End time invalid', 4000)
+         return done(null);
+      } else if (endTime.val() && startTime.val() == "") {
+        //incomplete 
+         startTime.addClass("validate invalid")
+         Materialize.toast('Start time invalid', 4000)
+         return done(null);
+      } else if (endTime.val() && startTime.val()){
+        //complete 
+        periodJSON[period] = {
+          start: moment(startTime.val(), ["h:mmA"]).format("HH:mm"),
+          end: moment(endTime.val(), ["h:mmA"]).format("HH:mm")
+        }
+      } else {
+        //skip
+        console.log("skp ")
+      }
+      if(x >= schedule.periods.length -1) {
+        console.log(periodJSON);
+        return done(periodJSON);
+      }
+    }
+  });
+}
+
+se.postNewSchedule = function(name, scheduleData, done) {
+  $.ajax({
+      type: "post",
+      url: "/api/schedule/definition/",
+      data: {name: name, scheduleData: scheduleData},
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+} 
+
+se.save = function() {
+  if($("#scheduleName").val() == "") {
+   Materialize.toast('Schedule Needs A Name', 4000);
+   $("#scheduleName").addClass("validate invalid")
+   return false;
+  }
+  se.compileIntoPassportSchedule(function(json) {
+    if(json) {
+      se.postNewSchedule($("#scheduleName").val(), json, function(err, data) {
+        if(err) {
+          errorHand(err);
+        }
+        console.log(data)
+      })
+    }
+  })
+}
+
+
 
 
 </script>
