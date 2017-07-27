@@ -27,7 +27,7 @@ email: hi@josephhassell.com
 
 <!--THe FAB-->
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenRESave" onclick="">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenRESave" onclick="re.checkFieldsAndSubmit();">
       <i class="large material-icons">save</i>
     </a>
   </div>
@@ -187,6 +187,11 @@ re.clear = function() {
   $("#RECards").find(":input").removeAttr("value");
 }
 
+re.discard = function() {
+  re.clear();
+  closePage('recurringEditor');
+}
+
 //place holder 
 re.checkFields = function(done) {
   return done(true);
@@ -206,7 +211,8 @@ re.checkFieldsAndSubmit = function() {
             return errorHand(err)
           }
           Materialize.toast('Successfully set recurring rule', 4000)
-          $('.input').attr('value','Email Adress');
+          re.discard();
+          materialResponse("check", "success")
         })
       })
     } else {
