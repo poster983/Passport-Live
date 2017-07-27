@@ -21,7 +21,7 @@ email: hi@josephhassell.com
 <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo right">Recurring Editor</a>
-      <a href="#" onclick=""><i class=" left-allign nav-sandwich material-icons" id="mixenREBack">arrow_back</i></a>
+      <a href="/administrator"><i class=" left-allign nav-sandwich material-icons" id="mixenREBack">arrow_back</i></a>
     </div>
 </nav>
 
@@ -80,7 +80,23 @@ email: hi@josephhassell.com
                 <input type="checkbox" name="REDays" value="sunday" id="RESunday" />
                 <label for="RESunday">Sunday</label>
               </div>
-              <h1>&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+                <div class="row">
+                  <div class="col s12">
+                    Every:
+                    <div class="input-field inline">
+                      <input id="REevery" type="number" class="validate">
+                      <label for="REevery">Recurring Occurence </label>
+                    </div>
+                  Days/Weeks
+                </div>
+                <div class="col s12">
+                    <div class="input-field inline">
+                      <input id="REImportance" type="number" class="validate">
+                      <label for="REImportance">Importance Rating </label>
+                    </div>
+                  If there is a conflict, the highest number will be the final decider.
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -144,7 +160,7 @@ re.setup = function() {
   })
 }
 
-re.compile = function() {
+re.compile = function(done) {
   var returner = {}
   returner.repeatingRule = {} 
   returner.repeatingRule.on = [];
@@ -155,10 +171,60 @@ re.compile = function() {
       length--;
       if(length <= 0) { 
         console.log(returner.repeatingRule.on)
-        console.log($("#SDRESelect").find(":selected").attr("data-scheduleid"))
+        returner.ScheduleDefinitionID = $("#SDRESelect").find(":selected").attr("data-scheduleid");
+        returner.repeatingRule.every = parseInt($("#REevery").val());
+        returner.repeatingRule.startsOn = $("#startsOn").val();
+        returner.repeatingRule.importance = parseInt($("#REImportance").val());
+        returner.repeatingRule.repeats = $("input[name=recurringType]:checked").val()
+        //console.log(typeof parseInt($("#REImportance").val()))
+        return done(null, returner)
       }
   });
 
+}
+
+re.clear = function() {
+  $("#RECards").find(":input").removeAttr("value");
+}
+
+//place holder 
+re.checkFields = function(done) {
+  return done(true);
+}
+
+re.checkFieldsAndSubmit = function() {
+  re.checkFields(function(res) {
+    if(res) {
+      re.compile(function(err, doc) {
+        if(err) {
+          Materialize.toast('Unexpected Error', 4000)
+          return errorHand(err)
+        }
+        re.postNewRESchedule(doc, function(err) {
+          if(err) {
+            Materialize.toast('Unexpected Error', 4000)
+            return errorHand(err)
+          }
+          Materialize.toast('Successfully set recurring rule', 4000)
+          $('.input').attr('value','Email Adress');
+        })
+      })
+    } else {
+      Materialize.toast('Missing Fields', 4000)
+    }
+  })
+}
+
+re.postNewRESchedule = function(doc, done) {
+  $.ajax({
+      type: "post",
+      url: "/api/schedule/repeat/",
+      data: doc,
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
 }
 
 

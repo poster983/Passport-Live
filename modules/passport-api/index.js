@@ -177,7 +177,15 @@ module.exports = {
                 return done(err); 
             }
         } else if(repeatingRule.repeats == "weekly") {
-            if(!Number.isInteger(repeatingRule.every)) {
+            //if(!Number.isInteger(repeatingRule.every)) {
+            if(isNaN(parseInt(repeatingRule.every))) {
+                if(typeof repeatingRule.every == "string") {
+                    if(isNaN(parseInt(repeatingRule.every))) {
+                        var err = new Error("repeatingRule.every expected a number");
+                        err.status = 400;
+                        return done(err); 
+                    }
+                }
                 var err = new Error("repeatingRule.every expected a number");
                 err.status = 400;
                 return done(err); 
