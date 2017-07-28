@@ -28,6 +28,7 @@ var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
 var passport = require("passport");
 var config = require("config");
+var ssarv = require("ssarv")
 
 var miscApi = require("../../modules/passport-api/index.js");
 
@@ -343,6 +344,21 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
     })
 });
 
+/** Checks if an accuunt is missing required fields by that dashboard  
+    * @function studentCheckIfIncomplete
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/incomplete/dashboard/studen
+    * @apiresponse {json} Returns missing fields
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo SSARV
+*/
+router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
+    //todo 
+});
+getUserByID
 
 module.exports = router;
 
