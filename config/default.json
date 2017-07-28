@@ -74,8 +74,8 @@
 		"password": "" //Dont Change.  Use local.json
 	},
 	"server": {
-		"httpPort": 3000,
-		"httpsPort": 8443
+		"httpPort": 3000, //set in production config file, 8080
+		"httpsPort": 3443 //set in production config file, 8443
 	},
 	"schedule": { 
 		"periods": ["a", "b", "c", "d", "e1", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed durring school year
@@ -90,6 +90,6 @@
 		}
 	},
 	"misc": {
-		"storeSessionToDisc": true
+		"storeSessionToDisc": true //set in production config file, false
 	}
 }

@@ -24,7 +24,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var forever = require('forever-monitor');
 var mustacheExpress = require('mustache-express');
 var passport = require('passport')
 var config = require('config');
@@ -62,20 +61,7 @@ if(Raven) {
   var RavenUber = new Raven.Client(config.get('secrets.loggingDSN'));
   app.use(Raven.requestHandler());
 }
-//Forever - MEMORY LEAK
-/*
-  var foreverChild = new (forever.Monitor)('app.js', {
-    max: 3,
-    silent: true,
-    args: []
-  });
 
-  foreverChild.on('exit', function () {
-    console.log('app.js has exited after 3 restarts');
-  });
-
-  foreverChild.start();
-  */
 // view engine setup
 app.engine('mustache', mustacheExpress());
 app.set('views', path.join(__dirname, 'views'));
@@ -87,8 +73,13 @@ app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
 
 
 //config 
-app.use(require('morgan')('combined'));
-app.use(logger('dev'));
+console.log(process.env.NODE_ENV)
+if(process.env.NODE_ENV == "production") {
+  app.use(logger('dev'));
+} else {
+  app.use(logger('combined'));
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.get('secrets.cookie-secret')));
