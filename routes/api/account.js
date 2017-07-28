@@ -358,7 +358,7 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
 router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
     //todo 
 });
-getUserByID
+//getUserByID
 
 module.exports = router;
 
