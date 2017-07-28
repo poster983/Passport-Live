@@ -9,5 +9,8 @@
 		"OAuth": {
 			"yourKeyHere": "12345"
 		}
+	},
+	"rethinkdb": {
+		"password": "" //leave blank for no password
 	}
 }

@@ -14,7 +14,7 @@
   "scripts": {
     "start": "nodemon ./bin/www -e js,mustache",
     "node": "nodemon ./bin/www",
-    "db": "rethinkdb serve",
+    "db": "rethinkdb serve --bind-http localhost",
     "start:dbEdit": "chateau",
     "debug": "echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
     "configure:db": "node ./bin/configure",

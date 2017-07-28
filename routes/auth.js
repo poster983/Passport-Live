@@ -36,7 +36,7 @@ var api = require('../modules/passport-api/index.js');
 
   // Rethink db connection
 var connection = null;
-        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database')}, function(err, conn) {
+        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
             if (err) throw err;
             connection = conn;
         });

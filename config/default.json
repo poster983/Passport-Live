@@ -70,7 +70,12 @@
 	"rethinkdb": {
 		"host": "localhost",
 		"port": 28015,
-		"database": "passport"
+		"database": "passport",
+		"password": "" //Dont Change.  Use local.json
+	},
+	"server": {
+		"httpPort": 3000,
+		"httpsPort": 8443
 	},
 	"schedule": { 
 		"periods": ["a", "b", "c", "d", "e1", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed durring school year
