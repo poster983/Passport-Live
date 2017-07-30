@@ -199,6 +199,31 @@ exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) {
 }
 
 /** 
+    * Searches by email the account database 
+    * @function getAccountByEmail
+    * @link module:passportApi
+    * @async
+    * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
+    * @param {string} email - The user's Email
+    * @param {function} done - Callback
+    */
+exports.getAccountByEmail = function(email, done) { 
+     r.table("accounts").filter({
+        email: email
+     }).run(db.conn(), function(err, document) {
+        if(err) {
+            return done(err);
+        }
+        document.toArray(function(err, arr) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, arr);
+        });
+     })
+}
+
+/** 
     * Searches by id in the account database 
     * @function getUserByID
     * @link module:passportApi

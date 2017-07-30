@@ -352,6 +352,7 @@ function visResponse(action) {
 */
 function errorHand(err) {
   //Do more Later
+  console.log(err.message)
   console.error(err);
 }
 

@@ -277,7 +277,7 @@ email: hi@josephhassell.com
                 </div>
               </div>
             </div>
-            <h1> GET LEAVING FROM WITH NO TEACHER WORKING </h1>
+            
             <!-- MyPasses-->
             <div class="section">
               <div class="row">
@@ -534,6 +534,7 @@ email: hi@josephhassell.com
 
               //STAGE 2.B//
                 /**Autocomplete Accounts**/
+                var autocompleteLocker = false;
                 function initAutocompleteAccounts(data) {
                   $('input.autocomplete').autocomplete({
                     data: data,
@@ -544,12 +545,33 @@ email: hi@josephhassell.com
                       fromPerson = null;
 
                       readyTheSubmit()
+                      if(!autocompleteLocker) {
+                        autocompleteLocker = true;
+                        var person = val.substring(val.indexOf(" --- ") +5);
+                        searchAccountsByEmail(person, function(err, userArr) {
+                          if(err) {
+                            return errorHand(err);
+                          }
+                          if(userArr.length > 1 ) {
+                            err = new Error("Conflicting Emails");
+                            return errorHand(err);
+                          }
+                          if(userArr.length == 0 ) {
+                            err = new Error("No Data");
+                            return errorHand(err);
+                          }
+                          toPerson = userArr[0];
+                          autocompleteLocker = false;
+                          initDatePicker();
+                        })
+                      }
+                      console.log(val.substring(val.indexOf(" --- ")))
                     },
                     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                   });
                 }
                 $("#autocomplete-account").keyup(function() {
-                  searchAccounts(currGroup, $("#autocomplete-account").val(), function(err, data) {
+                  searchAccountsByName(currGroup, $("#autocomplete-account").val(), function(err, data) {
                     if(err) {
                       console.error(err);
                     }
@@ -560,11 +582,11 @@ email: hi@josephhassell.com
                       console.log(data)
                       for(var x = 0; x < data.length; x++) {
                         if(data[x].name.salutation) {
-                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last] = null;
+                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
                         } else if(data[x].name.salutation && data[x].name.first) {
-                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last] = null;
+                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
                         } else {
-                          newDataAuto[data[x].name.first + ' ' + data[x].name.last] = null;
+                          newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
                         }
 
                       }
@@ -577,7 +599,7 @@ email: hi@josephhassell.com
                   console.log($("#autocomplete-account").val())
                 })
              
-                function searchAccounts(userGroup, query, done) {
+                function searchAccountsByName(userGroup, query, done) {
                     if(!query|| userGroup == "") {
                       return done(null, null);
                     }
@@ -585,13 +607,38 @@ email: hi@josephhassell.com
                     type: "get",
                     url: "/api/account/usergroup/"+userGroup+"/name/"+query,
                     dataType: "json",
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                    success: function(data) {done(null, data)},
+                    error: function(jqXHR) {done(jqXHR)}                      
+                  });
+                }
+                function searchAccountsByEmail(email, done) {
+                  if(!email) {
+                    var err = new Error("No Email")
+                      return done(err, null);
+                    }
+                   $.ajax({
+                    type: "get",
+                    url: "/api/account/email/" + email,
+                    dataType: "json",
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      
                   });
                 }
                 //STAGE 3//
                 /* Date Things */
-
+                function initDatePicker() {
+                  var advance = 7;
+                  if(toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings && toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
+                    var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+                  }
+                  
+                  var endDate = new Date();
+                  endDate.setDate(endDate.getDate() + advance)
+                  console.log(endDate.toString())
+                  setupDatePicker(endDate, [])
+                }
                 function setupDatePicker(max, disable) {
                    
                   $('#datepicker').attr("disabled", false);
@@ -978,12 +1025,12 @@ function setMyPasses() {
 
       var avatarEl = $("<img/>")
                       .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
+                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
                       .attr("alt", "Avatar")
 
       var titleEl = $("<span/>")
                       .addClass("title")
-                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
+                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
 
       titleEl.prepend(
             $("<i/>")
@@ -1117,7 +1164,7 @@ console.log(state)
         releaseBtn.attr("onclick", false);
       }
       undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Deny This Pass Request");
+      undoBtn.attr("data-tooltip", "Cancel This Pass");
       undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
       badge.removeClass().addClass("new badge");
       

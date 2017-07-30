@@ -140,7 +140,7 @@ function serializeUser(req, res, done) {
     * @param {response} res
     * @param {nextCallback} next
     * @api GET /api/account/id/:id
-    * @apiparam {userGroup} id - The id of the user
+    * @apiparam {uuid} id - The id of the user
     * @apiresponse {json} Returnes the safe info
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
@@ -152,6 +152,36 @@ router.get("/id/:id/", function handleGetAccountsById(req, res, next) {
             return next(err) 
         }
         res.json(utils.cleanUser(data));
+    })
+});
+
+/**
+    * GETs accounts by email
+    * @function getAccountsByEmail
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/email/:email/
+    * @apiparam {string} email - The Email of the user
+    * @apiresponse {json} Returnes the safe info
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo KILL OFF WHEN AUTOCOMPLETE WITH IDs ARE ADDED.  PRIVACY RISK!
+    */
+router.get("/email/:email/", passport.authenticate('jwt', { session: false}), function getAccountsByEmail(req, res, next) {
+    var email = req.params.email;
+    api.getAccountByEmail(email, function(err, data) {
+        if(err) {
+            return next(err) 
+        }
+        var resp = [];
+        for(var x = 0; x < data.length; x++) {
+            resp.push(utils.cleanUser(data[x]));
+            if(x >= data.length-1) {
+                res.json(resp);
+            }
+        }
+        
     })
 });
 
