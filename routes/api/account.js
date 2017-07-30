@@ -263,6 +263,20 @@ router.get("/userGroup/:userGroup/name/:name", function handleGetAccountsByName(
     }); 
 });
 
+/**
+    * GETs accounts That have hasClasses option set to true in the configs
+    * @function getAccountsWithClasses
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/hasClasses
+    * @apiresponse {json} Returns in a json object from the database, the full account
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+router.get("/hasClasses/", function getAccountsWithClasses(req, res, next) {
+});
+
 //Special dashboard specific gets//
 
 

@@ -1,0 +1,171 @@
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+<!--The NAv-->
+<nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo right">My Schedule</a>
+      <a href=""><i class=" left-allign nav-sandwich material-icons" id="mixenSEBack">arrow_back</i></a>
+    </div>
+</nav>
+
+<!--THe FAB-->
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="">
+      <i class="large material-icons">save</i>
+    </a>
+  </div>
+
+<!-- THe page -->
+<div class="container">
+  <div id="SETable"> 
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">My Schedule</span>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Period Name</th>
+                        <th>Teacher</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleEditorBody">
+                    
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Feature Disc -->
+
+  <div class="tap-target" id="unsaveConfirm" data-activates="mixenSESave">
+    <div class="tap-target-content">
+      <h5>You have unsaved work</h5>
+      <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
+    </div>
+  </div>
+
+<script type="text/javascript">
+var se = {};
+
+se.getPeriodConstants = function(done) {
+    $.ajax({
+      type: "get",
+      url: "/api/server/config/schedule/",
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+
+se.initSchedulePage = function() {
+  se.getPeriodConstants(function(err, periods) {
+    if(err) {
+      return errorHand(err);
+    }
+    for(var x = 0; x < periods.periods.length; x++) {
+      
+      var per = $("<td/>")
+                    .html(periods.periods[x])
+                    .attr("data-period", periods.periods[x]);
+
+      var teacherTID = uuidv4() + "autoCompleteSE";
+      var teacher = $("<td/>").append($("<div/>").addClass("input-field")
+                          .append($("<input/>")
+                          .attr("type", "text")
+                          .attr("scheduleEditor", true)
+                          .attr("data-teacher-period", periods.periods[x])
+                          .attr("id", teacherTID)
+                          .attr("name", teacherTID)
+                          .addClass("autocomplete")).append(
+                                  $("<label/>")
+                                      .attr("for", teacherTID)
+                                      .html("Search Teachers")
+                          ));
+
+      var tr = $("<tr/>")
+                    .append(per)
+                    .append(teacher)
+                    .append("")
+      $("#scheduleEditorBody").append(tr);
+
+      //on done
+      if(x >= periods.periods.length -1) {
+        se.initAutocomplete([]);
+      }
+    }
+  })
+}
+
+se.initAutocomplete = function() {
+
+  $('input.autocomplete[scheduleEditor=true]').autocomplete({
+    data: {
+      "Apple": null,
+      "Microsoft": null,
+      "Google": 'https://placehold.it/250x250'
+    },
+    limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+    onAutocomplete: function(val) {
+      // Callback function when value is autcompleted.
+    },
+    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+  });
+}
+
+
+/*
+$("input.autocomplete[scheduleEditor=true]").keyup(function() {
+  searchAccountsByName(currGroup, $("#autocomplete-account").val(), function(err, data) {
+    if(err) {
+      console.error(err);
+    }
+    else if(data) {
+      var newDataAuto = {};
+      //initAutocompleteAccounts({"joey": null});
+
+      console.log(data)
+      for(var x = 0; x < data.length; x++) {
+        if(data[x].name.salutation) {
+          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
+        } else if(data[x].name.salutation && data[x].name.first) {
+          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
+        } else {
+          newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
+        }
+
+      }
+      console.log(newDataAuto)
+      initAutocompleteAccounts(newDataAuto);
+      //autocompleteAccounts.resultCache = newDataAuto;
+      //autocompleteAccounts.setValue(newDataAuto);
+    } 
+  });
+  console.log($("#autocomplete-account").val())
+})*/
+</script>
