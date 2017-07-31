@@ -123,49 +123,54 @@ se.initSchedulePage = function() {
 }
 
 se.initAutocomplete = function() {
+  se.getTeacheingTeachers(function(err, teachers) {
+    if(err) {
+      return errorHand(err)
+    }
+    var newDataAuto = {};
 
-  $('input.autocomplete[scheduleEditor=true]').autocomplete({
-    data: {
-      "Apple": null,
-      "Microsoft": null,
-      "Google": 'https://placehold.it/250x250'
-    },
-    limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
-    onAutocomplete: function(val) {
-      // Callback function when value is autcompleted.
-    },
-    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+    console.log(teachers)
+    for(var x = 0; x < teachers.length; x++) {
+      if(teachers[x].name.salutation) {
+        newDataAuto[teachers[x].name.salutation + ' ' + teachers[x].name.last + ' --- ' + teachers[x].email] = null;
+      } else if(teachers[x].name.salutation && teachers[x].name.first) {
+        newDataAuto[teachers[x].name.salutation + ' ' + teachers[x].name.first + ' ' + teachers[x].name.last + ' --- ' + teachers[x].email] = null;
+      } else {
+        newDataAuto[teachers[x].name.first + ' ' + teachers[x].name.last + ' --- ' + teachers[x].email] = null;
+      }
+      if(x >= teachers.length-1) {
+        $('input.autocomplete[scheduleEditor=true]').autocomplete({
+          data: newDataAuto,
+          limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+          onAutocomplete: function(val) {
+            // Callback function when value is autcompleted.
+          },
+          minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+        });
+      }
+    }
+
+    
   });
+  
 }
 
-
-/*
-$("input.autocomplete[scheduleEditor=true]").keyup(function() {
-  searchAccountsByName(currGroup, $("#autocomplete-account").val(), function(err, data) {
+se.getTeacheingTeachers = function(done) {
+  $.ajax({
+      type: "get",
+      url: "/api/account/hasClasses",
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+}
+se.setMySchedule = function() {
+  getMySchedules(function(err, sch) {
     if(err) {
-      console.error(err);
+      return errorHand(err)
     }
-    else if(data) {
-      var newDataAuto = {};
-      //initAutocompleteAccounts({"joey": null});
+  })
+}
 
-      console.log(data)
-      for(var x = 0; x < data.length; x++) {
-        if(data[x].name.salutation) {
-          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-        } else if(data[x].name.salutation && data[x].name.first) {
-          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-        } else {
-          newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-        }
-
-      }
-      console.log(newDataAuto)
-      initAutocompleteAccounts(newDataAuto);
-      //autocompleteAccounts.resultCache = newDataAuto;
-      //autocompleteAccounts.setValue(newDataAuto);
-    } 
-  });
-  console.log($("#autocomplete-account").val())
-})*/
 </script>

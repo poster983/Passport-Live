@@ -274,8 +274,50 @@ router.get("/userGroup/:userGroup/name/:name", function handleGetAccountsByName(
     * @apiresponse {json} Returns in a json object from the database, the full account
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/hasClasses/", function getAccountsWithClasses(req, res, next) {
+router.get("/hasClasses/", passport.authenticate('jwt', { session: false}), function getAccountsWithClasses(req, res, next) {
+    var uG = config.get('userGroups');
+    var valKeys = [];
+        var i = 0;
+        for (var key in uG) {
+
+            
+            console.log(i)
+            if (uG.hasOwnProperty(key) && config.has('userGroups.' + key + '.hasClasses') && config.get('userGroups.' + key + '.hasClasses') == true) {
+               
+               valKeys.push(key);
+            } 
+            
+            if(i >= Object.keys(uG).length-1) {
+                recurrConcatHasClass(valKeys, [], function(err, finalArr) {
+                    if(err) {
+                        return next(err);
+                    }
+                    return res.json(finalArr)
+                })                
+            }
+            i++;
+        }
 });
+
+function recurrConcatHasClass(keys, finalArr, done) {
+    if(keys.length <= 0) {
+        return done(null, finalArr);
+    }
+    api.getUserGroupAccountByUserGroup(r.conn(), keys[0], function(err, acc) {
+        if(err) {
+            return done(err);
+        }
+        var clean = [];
+        for(var x = 0; x < acc.length; x++) {
+            clean.push(utils.cleanUser(acc[x]));
+            if(x >= acc.length-1) {
+                finalArr = finalArr.concat(clean);
+                return recurrConcatHasClass(keys.slice(1), finalArr, done);
+            }
+        }
+        
+    });
+}
 
 //Special dashboard specific gets//
 

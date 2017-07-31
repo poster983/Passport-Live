@@ -45,6 +45,7 @@
 				"preferSearch": false, //tells programs via api that inorder to find the person, they must use a search.  Otherwise a select is used(if implemented)
 				"viewName": "Counselors" //friendly name
 			},
+			"hasClasses": true, //Means that students COULD leave from their period.  
 			"allowedEmailDomains": ["@gmail.com", "@outlook.com"], //User must signup with these domain endings OR put false if you want to allow any domain.
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
