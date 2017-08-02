@@ -26,3 +26,5 @@ public/stylesheets/materialize\.clockpicker\.css
 public/stylesheets/materialize\.css
 
 public/stylesheets/passport\.css
+
+config/local\.json
