@@ -792,15 +792,32 @@ email: hi@josephhassell.com
                    var mySortedSchedule = [];  //again not sorted rn
                    var myScheduleKeys = Object.keys(mySchedule);
                    //console.log(mySchedule)
+
                    for(var x = 0; x < myScheduleKeys.length; x++) {
-                    mySchedule[myScheduleKeys[x]].period = myScheduleKeys[x]
-                    mySortedSchedule.push(mySchedule[myScheduleKeys[x]]);
-                    console.log("loop")
-                    //check done
-                    if(x >= myScheduleKeys.length -1) {
-                      console.log("loop done")
-                      return done(null, mySortedSchedule)
+                    console.log(mySchedule[myScheduleKeys[x]], myScheduleKeys[x])
+                    if(mySchedule[myScheduleKeys[x]]) {
+                      console.log("athing")
+                      mySchedule[myScheduleKeys[x]].period = myScheduleKeys[x]
+                      mySortedSchedule.push(mySchedule[myScheduleKeys[x]]);
+                         console.log(mySortedSchedule)
+                        //check done
+                      if(x >= myScheduleKeys.length -1) {
+                        console.log("loop done")
+                        console.log(mySortedSchedule)
+                        return done(null, mySortedSchedule)
+                      }
+                    } else {
+                      console.log("else", myScheduleKeys[x])
+                      //check done
+                      if(x >= myScheduleKeys.length -1) {
+                        console.log("loop done")
+                        console.log(mySortedSchedule)
+                        return done(null, mySortedSchedule)
+                      }
                     }
+                    
+                    console.log("loop")
+                    
                    }
                  }
                 

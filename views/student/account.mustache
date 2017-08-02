@@ -169,7 +169,10 @@ email: hi@josephhassell.com
        function loadMySchedules() {
         getMySchedules(function(err, data) {
           if(err) {
-            se.hasExistingSchedule = false;
+            if(err.status == 404) {
+              se.hasExistingSchedule = false;
+            }
+            
             return errorHand(err);
           }
           if(data && data.schedule) {
@@ -177,42 +180,56 @@ email: hi@josephhassell.com
             console.log(data)
             var keys = Object.keys(data.schedule);
             for(var i = 0; i < keys.length; i++) {
-              var tr = document.createElement("TR");
-              //create elements
-              var idEl = document.createElement("TD");
-              var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+              //set defaults 
+              /*
+              if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
+                data.schedule = {
+                  [keys[i]]: {
+                    className: undefined
+                  }
+                }
+              }*/
+              if(data.schedule[keys[i]]) {
+                var tr = document.createElement("TR");
+                //create elements
+                var idEl = document.createElement("TD");
+                var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
 
-              var classEl = document.createElement("TD");
-              if(data.schedule[keys[i]].className) {
-                var classElText = document.createTextNode(data.schedule[keys[i]].className);
-              } else {
-                var classElText = document.createTextNode(" ");
+                var classEl = document.createElement("TD");
+                if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
+                  var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                } else {
+                  var classElText = document.createTextNode(" ");
+                }
+
+                var teacherEl = document.createElement("TD");
+                if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
+                  var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+                } else {
+                  var teacherElText = document.createTextNode(" ");
+                }
+                var roomEl = document.createElement("TD");
+                if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
+                  var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+                } else {
+                  var roomElText = document.createTextNode(" ");
+                }
+                //append
+                idEl.appendChild(idElText);
+                tr.appendChild(idEl);
+
+                classEl.appendChild(classElText);
+                tr.appendChild(classEl);
+
+                teacherEl.appendChild(teacherElText);
+                tr.appendChild(teacherEl);
+
+                roomEl.appendChild(roomElText);
+                tr.appendChild(roomEl);
+
+                //set
+                $('#scheduleBody').append(tr);
               }
-
-              var teacherEl = document.createElement("TD");
-              if(data.schedule[keys[i]].teacher) {
-                var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
-              } else {
-                var teacherElText = document.createTextNode(" ");
-              }
-              var roomEl = document.createElement("TD");
-              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
-
-              //append
-              idEl.appendChild(idElText);
-              tr.appendChild(idEl);
-
-              classEl.appendChild(classElText);
-              tr.appendChild(classEl);
-
-              teacherEl.appendChild(teacherElText);
-              tr.appendChild(teacherEl);
-
-              roomEl.appendChild(roomElText);
-              tr.appendChild(roomEl);
-
-              //set
-              $('#scheduleBody').append(tr);
             }
 
           } else {

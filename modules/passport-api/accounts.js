@@ -349,43 +349,67 @@ exports.getSchedulesForStudentDash = function(id, done) {
 function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x < givenPeriods.length; x++) {
-        if(_.has(schedule[givenPeriods[x]])) {
+        //make "" null 
+        console.log(schedule[givenPeriods[x]], "vsc")
+        if(schedule[givenPeriods[x]].teacherID == '') {
+            console.log("isDumb")
+            schedule[givenPeriods[x]].teacherID = null
+        }
+        if(schedule[givenPeriods[x]] == "true") {
+            schedule[givenPeriods[x]] = true;
+        } else if(schedule[givenPeriods[x]] == "false"){
+            schedule[givenPeriods[x]] = false;
+        }
 
+        if(x >= givenPeriods.length-1 ) {
+            return done(null, schedule)
         }
     }
 }
 function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
-    switch(dashboard) {
-        case "student": 
-
-            break;
-        case "teacher":
-
-            break;
-        default: 
-            var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
-            err.status = 400;
-            return done(err);
-    }
-
-    //check if there are extra periods
-    var requiredPeriods = config.get('schedule.periods');
-    var givenPeriods = Object.keys(schedule_UIN);
-    for(var x = 0; x < givenPeriods.length; x++) {
-        if(!requiredPeriods.includes(givenPeriods[x])) {
-            var err = new Error("Unknown Period: \"" + givenPeriods[x] + "\"")
-            err.status = 400;
-            return done(err);
+    var promise = new Promise(function(resolve, reject) {
+        switch(dashboard) {
+            case "student": 
+                verifyStudentSchedule(schedule, function(err, nSch) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    schedule = nSch
+                    resolve();
+                })
+                break;
+            case "teacher":
+                resolve();
+                break;
+            default: 
+                var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
+                err.status = 400;
+                return reject(err);
         }
-    }
-    
+    });
+    promise.then(function(result) {
+        console.log(schedule)
+        //check if there are extra periods
+        var requiredPeriods = config.get('schedule.periods');
+        var givenPeriods = Object.keys(schedule);
+        for(var x = 0; x < givenPeriods.length; x++) {
+            if(!requiredPeriods.includes(givenPeriods[x])) {
+                var err = new Error("Unknown Period: \"" + givenPeriods[x] + "\"")
+                err.status = 400;
+                return done(err);
+            }
+        }
+        
 
-    var toDB = {
-        "dashboard": dashboard,
-        "schedule": schedule
-    }
-    return done(null, toDB)
+        var toDB = {
+            "dashboard": dashboard,
+            "schedule": schedule
+        }
+        return done(null, toDB)
+    }, function(err) {
+        return done(err)
+    });
 }
 
 /** 
@@ -401,6 +425,7 @@ function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
     */
 exports.updateUserSchedule = function(id, dashboard, schedule_UIN, done) {
     //param checks
+    
      verifyUserSchedule(id, dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err)
@@ -530,8 +555,9 @@ function recursiveStudentScheduleJoin(keys, student, done) {
     }
     //console.log(student.schedule);
     //console.log(keys[0])
-    try{ 
-        if(student.schedule[keys[0]].teacherID) {
+    
+    if(student.schedule[keys[0]] && student.schedule[keys[0]].teacherID) {
+        try{ 
             r.table('accounts').get(student.schedule[keys[0]].teacherID).pluck({
                 "schedules": {
                     "teacher": true
@@ -539,37 +565,49 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                 "name": true
             }).run(db.conn(), function(err, teacherAccount) {
                 //console.log(teacherAccount.schedules.teacher)
-                
-                r.table('userSchedules').get(teacherAccount.schedules.teacher).run(db.conn(), function(err, teacher) {
-                    if(err) {
-                        return done(err);
-                    }
-                    //console.log(teacher)
-                    if(!teacher || !teacher.schedule || !teacher.userId) {
-                        var err = new Error("teacher is not set in the db");
-                        err.status = 500;
-                        return done(err)
-                    }
-                    //check if teacher has the period key 
-                    if(teacher.schedule.hasOwnProperty(keys[0])) {
-                        //start joining
-                        student.schedule[keys[0]] = teacher.schedule[keys[0]];
-                        student.schedule[keys[0]].scheduleID = teacher.id;
-                        student.schedule[keys[0]].teacher = {};
-                        student.schedule[keys[0]].teacher.id = teacher.userId;
-                        student.schedule[keys[0]].teacher.name = teacherAccount.name;
-                        return recursiveStudentScheduleJoin(keys.slice(1), student, done)
-                    } else {
-                        var err = new Error("Teacher has not defined a period that the student has. Period: " + keys[0]);
-                        err.status = 500;
-                        return done(err)
-                    }
-                        
+                if(!teacherAccount.schedules || !teacherAccount.schedules.teacher) {
+                    student.schedule[keys[0]] = {};
+                    student.schedule[keys[0]].teacher = {};
+                    student.schedule[keys[0]].teacher.id = student.schedule[keys[0]].teacherID;
+                    student.schedule[keys[0]].teacher.name = teacherAccount.name;
+                    student.schedule[keys[0]].teacher.scheduleID = null;
+                    return recursiveStudentScheduleJoin(keys.slice(1), student, done)
+                } else {
+                    try{ 
+                        r.table('userSchedules').get(teacherAccount.schedules.teacher).run(db.conn(), function(err, teacher) {
+                            if(err) {
+                                return done(err);
+                            }
+                            //console.log(teacher)
+                            if(!teacher || !teacher.schedule || !teacher.userId) {
+                                var err = new Error("teacher is not set in the db");
+                                err.status = 500;
+                                return done(err)
+                            }
+                            //check if teacher has the period key 
+                            if(teacher.schedule.hasOwnProperty(keys[0]) && teacher.schedule[keys[0]]) {
+                                //start joining
+                                console.log(teacher.schedule[keys[0]])
+                                student.schedule[keys[0]] = teacher.schedule[keys[0]];
+                                student.schedule[keys[0]].teacher = {};
+                                student.schedule[keys[0]].teacher.id = teacher.userId;
+                                student.schedule[keys[0]].teacher.name = teacherAccount.name;
+                                student.schedule[keys[0]].teacher.scheduleID = teacher.id;
+                                return recursiveStudentScheduleJoin(keys.slice(1), student, done)
+                            } else {
+                                var err = new Error("Teacher has not defined a period that the student has. Period: " + keys[0]);
+                                err.status = 500;
+                                return done(err)
+                            }
+                                
 
-                        
+                                
 
-                })
-            
+                        })
+                    } catch(e) {
+                        return done(e)
+                    }
+                }
             });
         } catch(e) {
             return done(e)
@@ -577,4 +615,5 @@ function recursiveStudentScheduleJoin(keys, student, done) {
     } else {
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }
+
 }
