@@ -352,7 +352,14 @@ function visResponse(action) {
 */
 function errorHand(err) {
   //Do more Later
-  console.log(err.message)
+  if(err.status) {
+    var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + err.getResponseHeader("errormessage") + "</strong> </span>"))
+  } else if(err.message) {
+    var $toastHTML = $("<span> ERROR: " + err.message + "</span>")
+  } else {
+    var $toastHTML = $("<span> ERROR! Check The Console For More Details.</span>")
+  }
+  Materialize.toast($toastHTML, 4000)
   console.error(err);
 }
 

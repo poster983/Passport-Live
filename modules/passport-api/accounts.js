@@ -27,6 +27,7 @@ var db = require('../../modules/db/index.js');
 var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
 var human = require('humanparser');
+var _ = require("underscore");
 const util = require('util')
 
 /** 
@@ -345,6 +346,14 @@ exports.getSchedulesForStudentDash = function(id, done) {
 
 //USER schedules//
 //private
+function verifyStudentSchedule(schedule, done) {
+    var givenPeriods = Object.keys(schedule);
+    for(var x = 0; x < givenPeriods.length; x++) {
+        if(_.has(schedule[givenPeriods[x]])) {
+
+        }
+    }
+}
 function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     switch(dashboard) {
@@ -384,14 +393,6 @@ function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
     * @function updateUserSchedule
     * @link module:passportAccountsApi
     * @async
-    * @example
-    * api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
-    *   if(err) {
-    *     //do something with error
-    *   } else {
-    *     //Created
-    *   }
-    * });
     * @param {string} id - ID of Schedule.
     * @param {constant} dashboard - may be either "student" or "teacher"
     * @param {json} schedule_UIN  - The schedule.
@@ -419,14 +420,6 @@ exports.updateUserSchedule = function(id, dashboard, schedule_UIN, done) {
     * @function newUserSchedule
     * @link module:passportAccountsApi
     * @async
-    * @example
-    * api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
-    *   if(err) {
-    *     //do something with error
-    *   } else {
-    *     //Created
-    *   }
-    * });
     * @param {string} userID - ID of User.
     * @param {constant} dashboard - may be either "student" or "teacher"
     * @param {json} schedule_UIN  - The schedule.
@@ -435,7 +428,7 @@ exports.updateUserSchedule = function(id, dashboard, schedule_UIN, done) {
     */
 exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
     //makesure no extra periods were left out 
-    /*var requiredPeriods = config.get('schedule.periods');
+    var requiredPeriods = config.get('schedule.periods');
     var givenPeriods = Object.keys(schedule_UIN);
     for(var x = 0; x < requiredPeriods.length; x++) {
         if(!givenPeriods.includes(requiredPeriods[x])) {
@@ -443,7 +436,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
             err.status = 400;
             return done(err);
         }
-    }*/
+    }
     verifyUserSchedule(userID, dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err);
@@ -537,44 +530,50 @@ function recursiveStudentScheduleJoin(keys, student, done) {
     }
     //console.log(student.schedule);
     //console.log(keys[0])
-    if(student.schedule[keys[0]].teacherID) {
-        r.table('accounts').get(student.schedule[keys[0]].teacherID).pluck({
-            "schedules": {
-                "teacher": true
-            }, 
-            "name": true
-        }).run(db.conn(), function(err, teacherAccount) {
-            //console.log(teacherAccount.schedules.teacher)
-            r.table('userSchedules').get(teacherAccount.schedules.teacher).run(db.conn(), function(err, teacher) {
-                if(err) {
-                    return done(err);
-                }
-                //console.log(teacher)
-                if(!teacher || !teacher.schedule || !teacher.userId) {
-                    var err = new Error("teacher is not set in the db");
-                    err.status = 500;
-                    return done(err)
-                }
-                //check if teacher has the period key 
-                if(teacher.schedule.hasOwnProperty(keys[0])) {
-                    //start joining
-                    student.schedule[keys[0]] = teacher.schedule[keys[0]];
-                    student.schedule[keys[0]].scheduleID = teacher.id;
-                    student.schedule[keys[0]].teacher = {};
-                    student.schedule[keys[0]].teacher.id = teacher.userId;
-                    student.schedule[keys[0]].teacher.name = teacherAccount.name;
-                    return recursiveStudentScheduleJoin(keys.slice(1), student, done)
-                } else {
-                    var err = new Error("Teacher has not defined a period that the student has. Period: " + keys[0]);
-                    err.status = 500;
-                    return done(err)
-                }
-                    
+    try{ 
+        if(student.schedule[keys[0]].teacherID) {
+            r.table('accounts').get(student.schedule[keys[0]].teacherID).pluck({
+                "schedules": {
+                    "teacher": true
+                }, 
+                "name": true
+            }).run(db.conn(), function(err, teacherAccount) {
+                //console.log(teacherAccount.schedules.teacher)
+                
+                r.table('userSchedules').get(teacherAccount.schedules.teacher).run(db.conn(), function(err, teacher) {
+                    if(err) {
+                        return done(err);
+                    }
+                    //console.log(teacher)
+                    if(!teacher || !teacher.schedule || !teacher.userId) {
+                        var err = new Error("teacher is not set in the db");
+                        err.status = 500;
+                        return done(err)
+                    }
+                    //check if teacher has the period key 
+                    if(teacher.schedule.hasOwnProperty(keys[0])) {
+                        //start joining
+                        student.schedule[keys[0]] = teacher.schedule[keys[0]];
+                        student.schedule[keys[0]].scheduleID = teacher.id;
+                        student.schedule[keys[0]].teacher = {};
+                        student.schedule[keys[0]].teacher.id = teacher.userId;
+                        student.schedule[keys[0]].teacher.name = teacherAccount.name;
+                        return recursiveStudentScheduleJoin(keys.slice(1), student, done)
+                    } else {
+                        var err = new Error("Teacher has not defined a period that the student has. Period: " + keys[0]);
+                        err.status = 500;
+                        return done(err)
+                    }
+                        
 
-                    
+                        
 
-            })
-        });
+                })
+            
+            });
+        } catch(e) {
+            return done(e)
+        }
     } else {
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }

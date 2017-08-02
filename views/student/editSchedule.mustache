@@ -27,7 +27,7 @@ email: hi@josephhassell.com
 
 <!--THe FAB-->
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="se.submit();">
       <i class="large material-icons">save</i>
     </a>
   </div>
@@ -40,11 +40,12 @@ email: hi@josephhassell.com
         <div class="card">
           <div class="card-content">
             <span class="card-title">My Schedule</span>
+
             <table class="striped">
                 <thead>
                     <tr>
                         <th>Period Name</th>
-                        <th>Teacher</th>
+                        <th>Scheduled Teacher</th>
                         <th>Notes</th>
                     </tr>
                 </thead>
@@ -62,7 +63,7 @@ email: hi@josephhassell.com
 
 <!--Feature Disc -->
 
-  <div class="tap-target" id="unsaveConfirm" data-activates="mixenSESave">
+  <div class="tap-target" id="unsaveConfirm"  data-activates="mixenSESave">
     <div class="tap-target-content">
       <h5>You have unsaved work</h5>
       <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
@@ -71,7 +72,7 @@ email: hi@josephhassell.com
 
 <script type="text/javascript">
 var se = {};
-
+se.hasExistingSchedule = true;
 se.getPeriodConstants = function(done) {
     $.ajax({
       type: "get",
@@ -89,23 +90,43 @@ se.initSchedulePage = function() {
       return errorHand(err);
     }
     for(var x = 0; x < periods.periods.length; x++) {
-      
-      var per = $("<td/>")
+      var perTID = uuidv4() + "disablePeriod";
+      var per = $("<td/>").append($("<div/>").addClass(" col m3 s12")
                     .html(periods.periods[x])
-                    .attr("data-period", periods.periods[x]);
+                    .attr("data-period", periods.periods[x])
+                    ).append($("<div/>").addClass(" col m9 s12").append($("<input/>")
+                                      .attr("type", "checkbox")
+                                      .addClass("filled-in")
+                                      .attr("data-period-disable", periods.periods[x])
+                                      .attr("id", perTID)
+                                      .attr("value", true)
+
+                          ).append($("<label/>")
+                                      .attr("for", perTID)
+                                      .html("No Period")
+                          ));
 
       var teacherTID = uuidv4() + "autoCompleteSE";
-      var teacher = $("<td/>").append($("<div/>").addClass("input-field")
+      var teacher = $("<td/>").append($("<div/>").addClass("input-field col m9 s12")
                           .append($("<input/>")
                           .attr("type", "text")
                           .attr("scheduleEditor", true)
                           .attr("data-teacher-period", periods.periods[x])
                           .attr("id", teacherTID)
                           .attr("name", teacherTID)
-                          .addClass("autocomplete")).append(
+                          .addClass("autocomplete validate")).append(
                                   $("<label/>")
                                       .attr("for", teacherTID)
                                       .html("Search Teachers")
+                          )).append($("<div/>").addClass(" col m3 s12").append($("<input/>")
+                                      .attr("type", "checkbox")
+                                      .addClass("filled-in")
+                                      .attr("data-teacher-none-period", periods.periods[x])
+                                      .attr("id", teacherTID+"None")
+                                      .attr("value", true)
+                          ).append($("<label/>")
+                                      .attr("for", teacherTID+"None")
+                                      .html("No Teacher")
                           ));
 
       var tr = $("<tr/>")
@@ -144,6 +165,7 @@ se.initAutocomplete = function() {
           limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
           onAutocomplete: function(val) {
             // Callback function when value is autcompleted.
+            
           },
           minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
         });
@@ -173,4 +195,136 @@ se.setMySchedule = function() {
   })
 }
 
+se.searchAccountsByEmail = function(email, done) {
+  if(!email) {
+    var err = new Error("No Email")
+      return done(err, null);
+    }
+   $.ajax({
+    type: "get",
+    url: "/api/account/email/" + email,
+    dataType: "json",
+    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+    success: function(data) {done(null, data)},
+    error: function(jqXHR) {done(jqXHR)}                      
+  });
+}
+
+se.updateSchedule = function(scheduleBody, done) {
+  if(!scheduleBody) {
+    var err = new Error("scheduleBody Not Compiled")
+      return done(err, null);
+    }
+   $.ajax({
+    type: "patch",
+    url: "/api/account/schedule/student",
+    data: scheduleBody,
+    dataType: "json",
+    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+    success: function(data) {done(null, data)},
+    error: function(jqXHR) {done(jqXHR)}                      
+  });
+}
+
+se.newSchedule = function(scheduleBody, done) {
+  if(!scheduleBody) {
+    var err = new Error("scheduleBody Not Compiled")
+      return done(err, null);
+    }
+   $.ajax({
+    type: "post",
+    url: "/api/account/schedule/student",
+    data: scheduleBody,
+    dataType: "json",
+    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+    success: function(data) {done(null, data)},
+    error: function(jqXHR) {done(jqXHR)}                      
+  });
+}
+
+se.submit = function() {
+  se.compileForm(function(err, comSchedule) {
+    if(err) {
+      return errorHand(err);
+    }
+    if(se.hasExistingSchedule) {
+      se.updateSchedule(comSchedule, function(err, sum) {
+        if(err) {
+          return errorHand(err);
+        }
+        console.log(sum);
+      })
+    } else {
+      se.newSchedule(comSchedule, function(err, sum) {
+        if(err) {
+          return errorHand(err);
+        }
+        console.log(sum);
+      })
+    }
+  })
+  
+}
+
+se.compileForm = function(done) {
+  se.getPeriodConstants(function(err, periods) {
+    if(err) {
+      return done(err)
+    }
+    se.compileFormRec(periods.periods, {}, function(err, comSchedule) {
+      if(err) {
+        return done(err);
+      }
+      console.log(comSchedule)
+      return done(null, comSchedule)
+    })
+    
+  })
+}
+
+se.compileFormRec = function(periods, comSchedule, done) {
+  if(periods.length <= 0) {
+    return done(null, comSchedule);
+  }
+  if($("input:checkbox[data-period-disable='" + periods[0] + "']:checked").val() == "true") {
+    comSchedule[periods[0]] = false;
+    return se.compileFormRec(periods.slice(1), comSchedule, done);
+  } else if($("input:checkbox[data-teacher-none-period='" + periods[0] + "']:checked").val() == "true") {
+    console.log("No Teacher")
+    comSchedule[periods[0]] = {
+      teacherID: null
+    }
+    return se.compileFormRec(periods.slice(1), comSchedule, done);
+  } else {
+    var val = $("input[data-teacher-period='" + periods[0] + "']").val()
+    if (val.indexOf(" --- ") == -1) {
+      var err = new Error("Period \"" + periods[0].toUpperCase() + "\" teacher field invalid.  Please use the autocomplete function");
+      $("input[data-teacher-period='" + periods[0] + "']").removeClass("valid").addClass("invalid");
+      return done(err);
+    }
+    var person = val.substring(val.indexOf(" --- ") +5);
+    se.searchAccountsByEmail(person, function(err, idArr) {
+      console.log(err)
+      console.log(idArr)
+      if(err) {
+        return done(err);
+      }
+      if(idArr.length > 1 ) {
+        err = new Error("Conflicting Emails for period \"" + periods[0].toUpperCase() + "\"");
+        return done(err);
+      }
+      if(idArr.length == 0 ) {
+        err = new Error("No Emails Found for period \"" + periods[0].toUpperCase() + "\"");
+        return done(err);
+      }
+
+      comSchedule[periods[0]] = {
+        teacherID: idArr[0].id
+      }
+
+      return se.compileFormRec(periods.slice(1), comSchedule, done);
+    })
+  }
+
+}
 </script>

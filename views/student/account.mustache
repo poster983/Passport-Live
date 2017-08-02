@@ -169,6 +169,7 @@ email: hi@josephhassell.com
        function loadMySchedules() {
         getMySchedules(function(err, data) {
           if(err) {
+            se.hasExistingSchedule = false;
             return errorHand(err);
           }
           if(data && data.schedule) {

@@ -175,6 +175,9 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
             return next(err) 
         }
         var resp = [];
+        if(data.length <=0) {
+            res.json(resp);
+        }
         for(var x = 0; x < data.length; x++) {
             resp.push(utils.cleanUser(data[x]));
             if(x >= data.length-1) {
@@ -372,6 +375,26 @@ router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), f
     })
 });
 
+/** Sets a user schedule for a dashboard
+    * @function setUserSchedule
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api POST /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+
 router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
@@ -383,8 +406,26 @@ router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: fals
         res.send(data)
     })
 });
-
-router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+/** Updates the user's schedule for a dashboard
+    * @function updateUserSchedule
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     if(!req.user.schedules || !req.user.schedules[dashboard]) {
