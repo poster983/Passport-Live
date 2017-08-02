@@ -311,6 +311,10 @@ function recurrConcatHasClass(keys, finalArr, done) {
             return done(err);
         }
         var clean = [];
+        //skip usergroup
+        if(acc.length <= 0) {
+            return recurrConcatHasClass(keys.slice(1), finalArr, done);
+        }
         for(var x = 0; x < acc.length; x++) {
             clean.push(utils.cleanUser(acc[x]));
             if(x >= acc.length-1) {
