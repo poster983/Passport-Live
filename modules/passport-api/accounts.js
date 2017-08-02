@@ -562,15 +562,18 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                 "schedules": {
                     "teacher": true
                 }, 
-                "name": true
+                "name": true, 
+                "id": true
             }).run(db.conn(), function(err, teacherAccount) {
                 //console.log(teacherAccount.schedules.teacher)
                 if(!teacherAccount.schedules || !teacherAccount.schedules.teacher) {
                     student.schedule[keys[0]] = {};
                     student.schedule[keys[0]].teacher = {};
-                    student.schedule[keys[0]].teacher.id = student.schedule[keys[0]].teacherID;
+                    student.schedule[keys[0]].teacher.id = teacherAccount.id;
                     student.schedule[keys[0]].teacher.name = teacherAccount.name;
                     student.schedule[keys[0]].teacher.scheduleID = null;
+                    console.log(keys[0], "teacherid is Null")
+
                     return recursiveStudentScheduleJoin(keys.slice(1), student, done)
                 } else {
                     try{ 
@@ -585,9 +588,10 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                                 return done(err)
                             }
                             //check if teacher has the period key 
+
                             if(teacher.schedule.hasOwnProperty(keys[0]) && teacher.schedule[keys[0]]) {
                                 //start joining
-                                console.log(teacher.schedule[keys[0]])
+                                console.log(teacher.schedule[keys[0]], keys[0])
                                 student.schedule[keys[0]] = teacher.schedule[keys[0]];
                                 student.schedule[keys[0]].teacher = {};
                                 student.schedule[keys[0]].teacher.id = teacher.userId;
@@ -613,6 +617,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
             return done(e)
         }
     } else {
+        console.log(keys[0], "skipped")
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }
 

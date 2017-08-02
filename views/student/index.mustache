@@ -476,7 +476,7 @@ email: hi@josephhassell.com
                     //dataType: "json",
                     success: function(data) {
                       //set data
-                      console.log(data)
+                      console.log(data, "people Select")
                       for(var i = 0; i < data.length; i++ ) {
                         $('#selectPeople').append("<option value=\'" + data[i].id + "\'>" + data[i].name.first + " " + data[i].name.last + "</option>");
                         console.log(data[i].id)

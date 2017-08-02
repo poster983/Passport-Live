@@ -31,23 +31,30 @@ email: hi@josephhassell.com
 
 <!--342x470-->
         </section>
-
-  <!-- Dropdown Structure -->
-  <ul id="threeDot" class="dropdown-content">
-    <li><a href="account.php">Account</a></li> 
-    <li class="divider"></li>
-    <li><a href="/auth/logout">Logout<i class="material-icons right">lock</i></a></li>
-  </ul>
   <!-- Nav Bar-->
   <nav class="nav-extended">
     <div class="nav-wrapper">
-      <a href="#" class="nav-left brand-logo">Passport</a>
-      <ul id="nav-mobile" class="right">
-        <!--<li class="right"><a href="logout.php">Logout<i class="material-icons right">lock</i></a></li>-->
-        <li><a id="threeDotButton" class="dropdown-button" href="#!" data-activates="threeDot">	&nbsp; &nbsp; &nbsp;	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="material-icons left">more_vert</i> </a></li>
-        <li><a href=""></a></li>
-      </ul>
-    </div>
+      
+      <ul id="slide-out" class="side-nav">
+       <li><div class="userView">
+         <div class="background">
+           <img alt="Side-Nav Background" src="/images/stunav.jpg">
+         </div>
+         <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
+         <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
+         <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
+       </div></li>
+       <li><a class="waves-effect active" href="#!">Home</a></li>
+       <li><a class="waves-effect" href="/student/account">Your Account</a></li>
+       <li><div class="divider"></div></li>
+       <!--<li><a class="subheader">Subheader</a></li>-->
+       <li><a class="waves-effect" href="auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
+
+     </ul>
+     <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
+     <a href="#" class="brand-logo center">Passport</a>
+     <span class="nav-right">{{passportVersion}}</span>
+  </div>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
         <li class="tab"><a class="active" href="#studentsArriving">Students Arriving</a></li>
@@ -295,7 +302,7 @@ $(document).ready(function(){
       default: 'now',
       vibrate: true,
     });
-  
+  $(".button-collapse").sideNav();
   $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
     $('#fullAjaxLoadingScreen').removeClass("loading");
   });
@@ -411,6 +418,12 @@ function checkForUrlHash() {
                         $("<strong/>")
                         .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
                       )
+      var goingToEl = $("<p/>")
+                      .text("Going To: ")
+                      .append(
+                        $("<strong/>")
+                        .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+                      )
 
       var requesterEl = $("<p/>")
                       .text("Requester: ")
@@ -432,6 +445,7 @@ function checkForUrlHash() {
                   .append(periodEl)
                   .append(statusEl)
                   .append(leavingFromEl)
+                  .append(goingToEl)
                   .append(requesterEl)
                   .attr("data-passId-leaving", myPasses[i].id)
                   
