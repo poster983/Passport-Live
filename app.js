@@ -31,6 +31,7 @@ var flash = require('connect-flash');
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var session = require('express-session')
+var cookieSession = require('cookie-session')
 var FileStore = require('session-file-store')(session);
 var optional = require('optional');
 var Raven = optional('raven');
@@ -91,11 +92,19 @@ if(config.get('misc.storeSessionToDisc')) {
     saveUninitialized: false 
   }));
 } else {
+  /*
   app.use(session({ 
     secret: config.get('secrets.session-key'), 
     resave: false, 
     saveUninitialized: false 
-  }));
+  }));*/
+  app.use(cookieSession({
+    name: 'session',
+    secret: config.get('secrets.session-key'), 
+    
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }))
 }
 //dscm protection
 app.use(utils.dscm)
