@@ -155,15 +155,18 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  if(Raven) {
-    var extra = {};
-    extra.level = err.level
-    console.log(extra)
-    RavenUber.captureException(err, extra);
-  }
+
 
   if(!err.status){
     err.status = 500;
+  }
+  if(Raven) {
+    if(err.status != 404) {
+      var extra = {};
+      extra.level = err.level
+      console.log(extra)
+      RavenUber.captureException(err, extra);
+    }
   }
   res.locals.message = err.message;
    if(config.has('secrets.loggingDSN') && Raven){
