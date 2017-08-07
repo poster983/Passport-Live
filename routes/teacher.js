@@ -34,4 +34,12 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "coun
     res.render('teacher/index', { doc_Title: 'Passport-Teacher', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
+router.get('/blackout', checkAuth.ensureLoggedIn('/auth/login'), function(req,res,next) {
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    res.render('teacher/blackout', {doc_Title: 'Blackouts -- Passport-Teacher', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()}); //doc_Title: 'Passport-Teacher', user, passportVersion: process.env.npm_package_version,
+});
+
 module.exports = router;
