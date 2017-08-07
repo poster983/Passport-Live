@@ -68,6 +68,10 @@ router.post('/', function newBlackout(req, res, next) {
     }) 
 })
 
+router.get('/', function(req,res,next) {
+    res.render('teacher/blackout', {currentYear: new Date().getFullYear()}); //doc_Title: 'Passport-Teacher', user, passportVersion: process.env.npm_package_version,
+})
+
 /**
     * Returns all blackouts by the user ID
     * @function getBlackoutByUserId
