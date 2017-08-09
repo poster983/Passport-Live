@@ -390,20 +390,7 @@ function checkForUrlHash() {
   }
 }
 
-  ////MY Leaving CARD////
- 
- function getstudentsLeaving(done) {
-  $.ajax({
-      type: "get",
-      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD") + "/to/" + moment().add(1, "days").format("Y-MM-DD"),
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
- }
-
- function setBlackout(done) {
+function setBlackout(done) {
   var newBlackoutDate = document.getElementById("blackoutDate").value;
 
   <!-- is there a way to make this neater? -->
@@ -444,6 +431,20 @@ function checkForUrlHash() {
     });
     alert("Blackout Set");
  }
+
+  ////MY Leaving CARD////
+ 
+ function getstudentsLeaving(done) {
+  $.ajax({
+      type: "get",
+      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD") + "/to/" + moment().add(1, "days").format("Y-MM-DD"),
+      dataType: "json",
+      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+      success: function(data) {done(null, data)},
+      error: function(jqXHR) {done(jqXHR)}                      
+    });
+ }
+
  
  function setLeaving() {
   getstudentsLeaving(function(err, myPasses) {
