@@ -331,6 +331,15 @@ $(document).ready(function(){
       default: 'now',
       vibrate: true,
     });
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year,
+    today: 'Today',
+    clear: 'Clear',
+    close: 'Ok',
+    closeOnSelect: false // Close upon selecting a date,
+  });
+       
   $(".button-collapse").sideNav();
   $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
     $('#fullAjaxLoadingScreen').removeClass("loading");
@@ -362,7 +371,27 @@ function setBlackout(done) { //You will want a wrapper function that checks if t
   What you did here works, its just longer.  Just FYI 
   */
   var newBlackoutDate = document.getElementById("blackoutDate").value;
-  var newBlackoutPeriodsArray = document.getElementById("blackoutPeriod").value.split(','); //we can figure out the period thing later 
+
+  //<!-- is there a way to make this neater? -->
+  var periodArray = [];
+    if($('#a').is(":checked")) {
+    periodArray.push('a');
+    }if($('#b').is(":checked")) {
+    periodArray.push('b');
+    }if($('#c').is(":checked")) {
+    periodArray.push('c');
+    }if($('#d').is(":checked")) {
+    periodArray.push('d');
+    }if($('#e').is(":checked")) {
+    periodArray.push('e');
+    }if($('#f').is(":checked")) {
+    periodArray.push('f');
+    }if($('#g').is(":checked")) {
+    periodArray.push('g');
+    }if($('#h').is(":checked")) {
+    periodArray.push('h');
+    }
+
   var newBlackoutMessage = document.getElementById("blackoutMessage").value;
 
   var bodyData = {
