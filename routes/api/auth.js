@@ -74,7 +74,8 @@ router.post('/login', passport.authenticate('local-login', {
             return next(err);
         }
         res.status(200).json({
-            token: "JWT " + jwt
+            token: "JWT " + jwt,
+            user: req.user.id
         });
     });
 });
@@ -105,7 +106,9 @@ router.post('/login/dscm', passport.authenticate('local-login', {
         }
         res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
         res.cookie('XSRF-TOKEN', jwtData.dscm);
-        res.sendStatus(200);
+        res.status(200).json({
+            user: req.user.id
+        });
     })
 });
 
