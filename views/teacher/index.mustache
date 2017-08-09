@@ -252,25 +252,29 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
-  </div>
 
-      <div id="blackout" class="col s12">
+    <div id="blackout" class="col s12">
       <div class="section">
         <div class="row">
           <div class="col s12">
             <div id="blackoutCard" class="card grey darken-3 hoverable">
               <div class="card-content white-text">
                 <span class="card-title">Set A Blackout</span>
-                <div id="blackoutReturn">
-                  <p>
-                    <form action="" onsubmit="setBlackout()">
-                      Date: (yyyy-mm-dd) <input type="text" id="blackoutDate"><br>
-                      Periods: (letter period separated by a comma (a,b,...,) <input type="text" id="blackoutPeriod"><br>
-                      Message: <input type="text" id="blackoutMessage"><br>
-                      <input type="submit" value="Submit">
-                    </form>
-                  </p>
-                </div>
+                <form action="" onsubmit="setBlackout()"><!--this won't work properly i think you should move it to the submitbutton. -->
+                  <div class="input-field col s12">
+                    <input type="text" id="blackoutDate"><!--Should use materialize date picker (once you do this text me about the date formatter)-->
+                    <label for="blackoutDate"> Date: (yyyy-mm-dd)</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input type="text" id="blackoutPeriod">
+                    <label for="blackoutPeriod"> Periods: (letter period separated by a comma (a,b,...,)</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input type="text" id="blackoutMessage">
+                    <label for="blackoutMessage">Message</label>
+                  </div>
+                    <a class="waves-effect waves-light btn" onclick="console.log('Call Some Wrapper Function');"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
+                </form>
               </div>
             </div>
           </div>
@@ -348,26 +352,39 @@ function checkForUrlHash() {
   }
 }
 
-function setBlackout(done) {
+////BLACKOUT CARD////
+
+function setBlackout(done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
+  //we are using Jquery.  A better way to do this would be to:
+  /*
+  var newBlackoutDate = $("#blackoutDate").val();
+  ect.. 
+  What you did here works, its just longer.  Just FYI 
+  */
   var newBlackoutDate = document.getElementById("blackoutDate").value;
-  var newBlackoutPeriodsArray = document.getElementById("blackoutPeriod").value.split(',');
+  var newBlackoutPeriodsArray = document.getElementById("blackoutPeriod").value.split(','); //we can figure out the period thing later 
   var newBlackoutMessage = document.getElementById("blackoutMessage").value;
 
   var bodyData = {
     "date": newBlackoutDate,
-    "periods": newBlackoutPeriodsArray,
-    "userId": "bb12bc9e-3ee8-4a14-86cf-5092df4a04c4", <!-- HOW DO I ACCESS USERID OF CURRENT USER HERE? -->
+    "periods": newBlackoutPeriodsArray, //removed ID BC it now just knows.  MAGIC!!! JK.  it pulls from the currently logged in user on the server
     "message": newBlackoutMessage
   }
   $.ajax({
-        data: JSON.stringify(bodyData),
+        data: bodyData, //you dont need to stringiy
+        dataType: "json",
         type: "post",
-        url: "api/blackout",
-        processData: false,
-        contentType: "application/json",
-                            
+        url: "/api/blackout",
+        beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},  // this line prepares the call for auth
+        /*processData: false,
+        contentType: "application/json",*/ //You don't need this
+        success: function(data) {done(null, data)}, //this runs when the api goes thru.  
+        error: function(jqXHR) {done(jqXHR)}// this calles if errored
+        /* In the wrapper function, if the callback errors, run "materialResponse("cancel", "error"); errorHand(err);"  
+        if the callback succeed, run "materialResponse("check", "success");"
+        */
     });
-    alert("Blackout Set");
+    
  }
 
   ////MY Leaving CARD////
