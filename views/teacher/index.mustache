@@ -244,7 +244,7 @@ email: hi@josephhassell.com
               <div class="card-content white-text">
                 <span class="card-title">Request A Student</span>
                 <div id="requestAStudentReturn">
-                  <p>Coming Soon</p>
+                  <p>Comfing Soon</p>
                 </div>
               </div>
             </div>
@@ -263,8 +263,12 @@ email: hi@josephhassell.com
                 <span class="card-title">Set A Blackout</span>
                 <div id="blackoutReturn">
                   <p>
-                    <!-- temporary button to see if function works. -->
-                    <button onclick="setBlackout()">Set Blackout Here</button>
+                    <form action="" onsubmit="setBlackout()">
+                      Date: (yyyy-mm-dd) <input type="text" id="blackoutDate"><br>
+                      Periods: <input type="text" id="blackoutPeriod"><br>
+                      Message: <input type="text" id="blackoutMessage"><br>
+                      <input type="submit" value="Submit">
+                    </form>
                   </p>
                 </div>
               </div>
@@ -357,16 +361,26 @@ function checkForUrlHash() {
     });
  }
 
-//copied from getstudentsLeaving function above. IDK if it works
  function setBlackout(done) {
- $.ajax({
-      type: "post",
-      url: "api/blackout",
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-  });
+  var newBlackoutDate = document.getElementById("blackoutDate").value;
+  var newBlackoutPeriodsArray = document.getElementById("blackoutPeriod").value.split(',');
+  var newBlackoutMessage = document.getElementById("blackoutMessage").value;
+
+  var bodyData = {
+    "date": newBlackoutDate,
+    "periods": newBlackoutPeriodsArray,
+    "userId": "bb12bc9e-3ee8-4a14-86cf-5092df4a04c4", <!-- HOW DO I ACCESS USERID OF CURRENT USER HERE? -->
+    "message": newBlackoutMessage
+  }
+  $.ajax({
+        data: JSON.stringify(bodyData),
+        type: "post",
+        url: "api/blackout",
+        processData: false,
+        contentType: "application/json",
+                            
+    });
+    alert("Blackout Set");
  }
  
  function setLeaving() {
