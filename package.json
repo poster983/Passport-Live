@@ -48,6 +48,7 @@
     "jdenticon": "^1.6.0",
     "jquery.stellar": "^0.6.2",
     "jsonwebtoken": "^7.4.1",
+    "loader-message": "^1.0.0",
     "moment": "^2.18.1",
     "morgan": "~1.8.2",
     "mustache-express": "1.2.4",
