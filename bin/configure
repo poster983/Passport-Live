@@ -19,6 +19,7 @@
 email: hi@josephhassell.com
 */
 var r = require('rethinkdb');
+var config = require("config")
   var connection = null;
 var p = r.connect( {host: 'localhost', port: 28015, password: config.get("rethinkdb.password")}, function(err, conn) {
     if (err) throw err;

@@ -63,6 +63,9 @@ passport.use('local-login', new LocalStrategy({
     r.table("accounts").filter({
         "email": email
     }).run(connection, function(err, cursor){
+      if (err) {
+        return done(err)
+      }
         cursor.toArray(function(errs, user) {
             if (err) {
               console.log(errs)
