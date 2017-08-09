@@ -264,8 +264,41 @@ email: hi@josephhassell.com
                 <div id="blackoutReturn">
                   <p>
                     <form action="" onsubmit="setBlackout()">
-                      Date: (yyyy-mm-dd) <input type="text" id="blackoutDate"><br>
-                      Periods: (letter period separated by a comma (a,b,...,) <input type="text" id="blackoutPeriod"><br>
+                      Date: <input type="text" class="datepicker" id="blackoutDate"><br>
+                      Periods: 
+                                <p>
+                                  <input type="checkbox" id="a"/>
+                                  <label for="a">A</label>
+                                </p>
+                                <p>
+                                  <input type="checkbox" id="b"/>
+                                  <label for="b">B</label>
+                                </p>
+                                <p>
+                                  <input type="checkbox" id="c"/>
+                                  <label for="c">C</label>
+                                </p>
+                                <p>
+                                  <input type="checkbox" id="d"/>
+                                  <label for="d">D</label>
+                                </p>
+                               <p>
+                                  <input type="checkbox" id="e"/>
+                                  <label for="e">E</label>
+                                </p>
+                               <p>
+                                  <input type="checkbox" id="f"/>
+                                  <label for="f">F</label>
+                                </p>
+                              <p>
+                                  <input type="checkbox" id="g"/>
+                                  <label for="g">G</label>
+                                </p>
+                              <p>
+                                  <input type="checkbox" id="h"/>
+                                  <label for="h">H</label>
+                                </p>
+
                       Message: <input type="text" id="blackoutMessage"><br>
                       <input type="submit" value="Submit">
                     </form>
@@ -327,6 +360,15 @@ $(document).ready(function(){
       default: 'now',
       vibrate: true,
     });
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year,
+    today: 'Today',
+    clear: 'Clear',
+    close: 'Ok',
+    closeOnSelect: false // Close upon selecting a date,
+  });
+       
   $(".button-collapse").sideNav();
   $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
     $('#fullAjaxLoadingScreen').removeClass("loading");
@@ -363,12 +405,32 @@ function checkForUrlHash() {
 
  function setBlackout(done) {
   var newBlackoutDate = document.getElementById("blackoutDate").value;
-  var newBlackoutPeriodsArray = document.getElementById("blackoutPeriod").value.split(',');
+
+  <!-- is there a way to make this neater? -->
+  var periodArray = [];
+    if($('#a').is(":checked")) {
+    periodArray.push('a');
+    }if($('#b').is(":checked")) {
+    periodArray.push('b');
+    }if($('#c').is(":checked")) {
+    periodArray.push('c');
+    }if($('#d').is(":checked")) {
+    periodArray.push('d');
+    }if($('#e').is(":checked")) {
+    periodArray.push('e');
+    }if($('#f').is(":checked")) {
+    periodArray.push('f');
+    }if($('#g').is(":checked")) {
+    periodArray.push('g');
+    }if($('#h').is(":checked")) {
+    periodArray.push('h');
+    }
+
   var newBlackoutMessage = document.getElementById("blackoutMessage").value;
 
   var bodyData = {
     "date": newBlackoutDate,
-    "periods": newBlackoutPeriodsArray,
+    "periods": periodArray,
     "userId": "bb12bc9e-3ee8-4a14-86cf-5092df4a04c4", <!-- HOW DO I ACCESS USERID OF CURRENT USER HERE? -->
     "message": newBlackoutMessage
   }
