@@ -253,6 +253,9 @@ email: hi@josephhassell.com
       </div>
     </div>
 
+
+    <!--Blackout-->
+
     <div id="blackout" class="col s12">
       <div class="section">
         <div class="row">
@@ -260,7 +263,7 @@ email: hi@josephhassell.com
             <div id="blackoutCard" class="card grey darken-3 hoverable">
               <div class="card-content white-text">
                 <span class="card-title">Set A Blackout</span>
-                <form action=""><!--this won't work properly i think you should move it to the submitbutton. -->
+                <form action="" id="blackoutForm"><!--this won't work properly i think you should move it to the submitbutton. -->
                   <div class="input-field col s12">
                     <input type="text" class="datepicker" name="blackoutDate" id="blackoutDate">
                     <label for="blackoutDate">Date</label>
@@ -464,7 +467,8 @@ function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessag
         if the callback succeed, run "materialResponse("check", "success");"
         */
     });
-    
+    //clears form after hitting submit
+    document.forms['blackoutForm'].reset() 
  }
 
   ////MY Leaving CARD////
