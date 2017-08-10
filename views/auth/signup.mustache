@@ -28,9 +28,6 @@ email: hi@josephhassell.com
                     <div class="input-field col s12">
                         <select id="accountType" class="required invalid">
                           <option value="" disabled selected>Choose your account type</option>
-                          <option value="1">Option 1</option>
-                          <option value="2">Option 2</option>
-                          <option value="3">Option 3</option>
                         </select>
                         <label>Account Type</label>
                     </div>
@@ -111,11 +108,16 @@ email: hi@josephhassell.com
                 type: "get",
                 url: "/api/security/key/"+pk,
                 success: function(data) {
+                    console.log(data)
                     if(data && data.permissions && data.permissions.userGroups) {
                         for(var i = 0; i < data.permissions.userGroups.length; i++) {
-                            $("accountType").append("<option/>")
+                            console.log(data)
+                            $("#accountType").append($("<option/>")
                                                         .attr("value", data.permissions.userGroups[i])
-                                                        .html(data.permissions.userGroups[i].charAt(0).toUpperCase() + data.permissions.userGroups[i].slice(1))
+                                                        .html(data.permissions.userGroups[i].charAt(0).toUpperCase() + data.permissions.userGroups[i].slice(1)));
+                            if(i >= data.permissions.userGroups.length -1) {
+                                $('select').material_select();
+                            }
                         }
                     }
                 },
