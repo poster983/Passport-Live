@@ -23,9 +23,14 @@ email: hi@josephhassell.com
         <div class="containerlogin signup-allign">
 
             <div class="card-panel animated fadeInDown">
-            <form name="form1" method="post" action="{{sendTo}}">
                 <h3 class="center">Signup For Passport</h3>
                 <div class="card-panel">
+                
+                    <div class="input-field">
+                         <input type="text" id="salutation" class="autocomplete">
+                          <label for="salutation">Salutation</label>
+                    </div>
+                    <br>
                      <div class="input-field">
                         <p>
                             <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstName">
@@ -43,13 +48,6 @@ email: hi@josephhassell.com
                         <input name="email" type="email" class="validate" id="email">
                         <label for="email">Email</label>
                     </div>
-                     <div class="input-field">
-                        <p>
-                            <input type="number" required id="studentID" autocomplete="off" class="validate" name="groupFields[studentID]">
-                            <label data-error="Must Be A Number!" for="studentID">Student ID</label>
-                        </p>
-                    </div>
-
                     <div class="input-field">
                         <input name="password" type="password" id="password">
                         <label for="password">Password</label>
@@ -63,7 +61,6 @@ email: hi@josephhassell.com
                     <i class="material-icons right">lock_open</i>
                 </button>
 								
-            </form>
             			{{#message}}
 						<h6> {{message}} </h6>
 						{{/message}}
@@ -73,6 +70,63 @@ email: hi@josephhassell.com
     <script src="/js/materialize.js"></script>
 	<script src="/js/passport.js"></script>
 
+    <script type="text/javascript">
+    $(document).ready(function() {
+         $('input.autocomplete').autocomplete({
+            data: {
+              "Mr.": null,
+              "Ms.": null,
+              "Mrs.": null,
+              "Mx.": null,
+              "Fr.": null,
+              "Dr.": null,
+              "Prof.": null,
+              "Pr.": null,
+              "Br.": null,
+              "Sr.": null
+            },
+            limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+            onAutocomplete: function(val) {
+              // Callback function when value is autcompleted.
+            },
+            minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+          });
+        
+    })
+        function login() {
+            var salutation = $("#salutation").val();
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            var email = $("#email").val();
+            var passwordVerification = $("#passwordVerification").val();
+            var password = $("#password").val();
+            $.ajax({
+                type: "post",
+                url: "/api/auth/login/dscm/",
+                data: {email: email, password: password},
+                success: function(data) {
+                    window.location.href = "/"
+                },
+                error: function(jqXHR) {
+                    if(jqXHR.status == 401) {
+                        $("#msg").html("Email or Password is incorrect");
+                    } else if(jqXHR.status == 400) {
+                        $("#msg").html("Email or Password is incorrect");
+                    } else {
+                        errorHand(jqXHR)
+                    }
+                    
+                }                      
+              });
+        }
+        //handle submit
+        $('body').keypress(function (e) {
+          if (e.which == 13) {
+            login();
+            return false;   
+          }
+        });
+    </script>
 
     </body>
 

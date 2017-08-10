@@ -138,7 +138,7 @@ exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, 
     * @async
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {object} dbConn - RethinkDB Connection Object.
-    * @param {string} name - user's name, cnd be in any format
+    * @param {string} name - user's name, can be in any format
     * @param {constant} userGroup - A usergroup defined in the config
     * @param {function} done - Callback
     */
@@ -165,11 +165,28 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
             if(err) {
                 return done(err)
             }
-            //Add Salutation for compadability
-            for (var i = 0; i < arr.length; i++) {
-                arr[i].name.salutation = nameSplit.salutation;
+            if(arr.length <= 0) {
+                return done(null, arr)
             }
-            return done(null, arr)
+            //Add Salutation for compadability
+            
+            for (var i = 0; i < arr.length; i++) {
+                if(nameSplit.salutation) {
+                    if(!arr[i].name.salutation) {
+                        arr[i].name.salutation = nameSplit.salutation;
+                    }
+                } else {
+                    if(arr[i].name.salutation) {
+                        arr[i].name.salutation = null;
+                    }
+                }
+                
+                
+                if(i >= arr.length-1) {
+                    return done(null, arr);
+                }
+            }
+            
         });
     });
 }
