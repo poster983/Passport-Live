@@ -89,7 +89,8 @@ email: hi@josephhassell.com
               "Prof.": null,
               "Pr.": null,
               "Br.": null,
-              "Sr.": null
+              "Sr.": null,
+              "Srta.": null
             },
             limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
             onAutocomplete: function(val) {
@@ -118,6 +119,25 @@ email: hi@josephhassell.com
                             if(i >= data.permissions.userGroups.length -1) {
                                 $('select').material_select();
                             }
+                        }
+                    }
+                },
+                error: function(jqXHR) {    
+                    return errorHand(jqXHR)
+                }                      
+            });
+        } else {
+            $.ajax({
+                type: "get",
+                url: "/api/server/config/userGroups",
+                success: function(data) {
+                    console.log(data)
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key) && data[key].verifyAccountCreation == false) {
+                             $("#accountType").append($("<option/>")
+                                                        .attr("value", key)
+                                                        .html(key.charAt(0).toUpperCase() + key.slice(1)));
+                             $('select').material_select();
                         }
                     }
                 },

@@ -318,6 +318,25 @@ router.get('/server/config/schedule/', function getScheduleConstants(req, res, n
     }
 })
 
+/**
+    * GETs all user groups defined in the config
+    * @function getUserGroups
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/server/config/userGroups/
+    * @apiresponse {json} All usergroup data
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */ 
+router.get('/server/config/userGroups/', function getUserGroups(req, res, next) {
+    try {
+        res.json(config.get('userGroups'));
+    } catch (e) {
+        next(e);
+    }
+})
+
 router.get('/server/config/passGroup', getPassGroups);
 /**
     * GETs pass groups defined in the config

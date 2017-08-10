@@ -63,7 +63,6 @@ router.post('/login', passport.authenticate('local-login', {
 
 //et signup
 router.get('/signup/', function(req, res, next) {
-  var permissionKey = req.query.pk;
   var msg = null;
   
   res.render('auth/signup', { doc_Title: 'Signup -- Passport', message: msg});
