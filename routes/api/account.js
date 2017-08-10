@@ -67,7 +67,7 @@ function serializeUser(req, res, done) {
     *    "password": "123abc",
     *    "passwordVerification": "123abc",
     *    "name": {
-             "salutation": "Mx.",
+    *        "salutation": "Mx.",
     *        "firstName": "Teacher",
     *        "lastName": "McTeacher Face"
     *      },

@@ -23,6 +23,7 @@ var router = express.Router();
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config');
+var apiMisc = require("../modules/passport-api/misc.js")
 /*
 var httpv = require('http').Server(router);
 var io = require('socket.io')(httpv);
@@ -62,6 +63,12 @@ router.post('/login', passport.authenticate('local-login', {
 
 //et signup
 router.get('/signup/', function(req, res, next) {
+  var permissionKey = req.query.pk;
+  if(permissionKey) {
+    apiMisc.getPermissionKeyData(permissionKey, function(err, data) {
+      
+    })
+  }
   res.render('auth/signup', { doc_Title: 'Signup -- Passport', message: req.flash('signupMessage')});
 });
 

@@ -345,7 +345,7 @@ module.exports = {
      * @returns {callback} - See: {@link #params-doneCallback|<a href="#params-createPermissionKeyCallback">Callback Definition</a>}
      */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
-        var key = shortid.generate()
+        var key = shortid.generate() + shortid.generate();
         if(timeout.time) {
             //format time to a general format
             timeout.time = moment(timeout.time).toISOString();
@@ -389,6 +389,9 @@ module.exports = {
             }
 
             document.toArray(function(err, arr) {
+                if(err) {
+                    return done(err)
+                }
                 console.log(arr)
                 //Found key
                 if(0<arr.length) {
