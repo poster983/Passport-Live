@@ -122,8 +122,8 @@ describe("MAIN PASSPORT PROGRAM", function() {
 		context("API Account Tests.  ", function() {
 			describe("Create Account ", function() {
 				context("userGroup is student", function() {
-					it("POST /api/account/student", function(done) {
-						request.post({url:base_url + 'api/account/student', form: {email:'example@gmail.com', password:'123456', passwordVerification:'123456', name: {firstName:'Testey', lastName:'McTestFace', salutation: 'Mx.'}, groupFields: {studentID:'12345'} }}, function(err, response, body){
+					it("POST /api/account/", function(done) {
+						request.post({url:base_url + 'api/account/', form: {email:'example@gmail.com', password:'123456', passwordVerification:'123456', name: {firstName:'Testey', lastName:'McTestFace', salutation: 'Mx.'}, groupFields: {studentID:'12345'} }}, function(err, response, body){
 					
 							assert.equal(response.statusCode, 201);
 							done();
