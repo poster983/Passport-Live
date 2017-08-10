@@ -401,6 +401,18 @@ function checkForUrlHash() {
 
 ////BLACKOUT CARD////
 
+function periodsEmpty() {
+  //https://stackoverflow.com/questions/14800954/how-to-check-if-all-checkboxes-are-unchecked
+  var textinputs = document.querySelectorAll('input[type=checkbox]'); 
+  var empty = [].filter.call( textinputs, function( el ) {
+  return !el.checked
+  });
+
+  if (textinputs.length == empty.length) {
+      return true;
+  }
+}
+
 function prepareSetBlackout() {
   var newBlackoutDate = $("[name='blackoutDate']").val();
   console.log(newBlackoutDate);
@@ -430,19 +442,20 @@ function prepareSetBlackout() {
   console.log(newBlackoutMessage);
 
   //DO A CHECK HERE FOR CORRECT USER INPUT, THEN...
-
-  setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function(err, res) {
-    if(err) {
-      materialResponse("cancel", "error");
-      return errorHand(err);
-    }
-    if(res.inserted > 0) {
-      materialResponse("check", "success");
-    } else {
-      materialResponse("check", "warning");
-      return errorHand(new Error("Warning: Multiple Inserts"))
-    }
-  }) 
+  if (!$("#blackoutDate").val() == '' && !periodsEmpty()) {
+    setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function(err, res) {
+      if(err) {
+        materialResponse("cancel", "error");
+        return errorHand(err);
+      }
+      if(res.inserted > 0) {
+        materialResponse("check", "success");
+      } else {
+        materialResponse("check", "warning");
+        return errorHand(new Error("Warning: Multiple Inserts"))
+      }
+    }) 
+  }
 }
 
 function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
