@@ -45,7 +45,7 @@ email: hi@josephhassell.com
          <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
        </div></li>
        <li><a class="waves-effect active" href="#!">Home</a></li>
-       <li><a class="waves-effect" href="/student/account">Your Account</a></li>
+       <li><a class="waves-effect" href="/teacher/account">Your Account</a></li>
        <li><div class="divider"></div></li>
        <!--<li><a class="subheader">Subheader</a></li>-->
        <li><a class="waves-effect" href="auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
@@ -60,6 +60,7 @@ email: hi@josephhassell.com
         <li class="tab"><a class="active" href="#studentsArriving">Students Arriving</a></li>
         <li class="tab"><a href="#studentsLeaving">Students Leaving</a></li>
         <li class="tab"><a href="#requestAStudent">Request a Student</a></li>
+        <li class="tab"><a href="#blackout">Set a Blackout</a></li>
       </ul>
     </div>
   </nav>
@@ -243,7 +244,7 @@ email: hi@josephhassell.com
               <div class="card-content white-text">
                 <span class="card-title">Request A Student</span>
                 <div id="requestAStudentReturn">
-                  <p>Comeing Soon</p>
+                  <p>Comfing Soon</p>
                 </div>
               </div>
             </div>
@@ -251,8 +252,72 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
-  </div>
 
+
+    <!--Blackout-->
+
+    <div id="blackout" class="col s12">
+      <div class="section">
+        <div class="row">
+          <div class="col s12">
+            <div id="blackoutCard" class="card grey darken-3 hoverable">
+              <div class="card-content white-text">
+                <span class="card-title">Set A Blackout</span>
+                <form action="" id="blackoutForm"><!--this won't work properly i think you should move it to the submitbutton. -->
+                  <div class="input-field col s12">
+                    <input type="text" class="datepicker" name="blackoutDate" id="blackoutDate">
+                    <label for="blackoutDate">Date</label>
+                  </div>
+                  <!--<div class="input-field col s12">
+                    <input type="text" id="blackoutPeriod">
+                    <label for="blackoutPeriod"> Periods: (letter period separated by a comma (a,b,...,)</label>
+                  </div>-->
+                   Periods:  
+                                <p> 
+                                  <input type="checkbox" id="a"/> 
+                                  <label for="a">A</label> 
+                                </p> 
+                                <p> 
+                                  <input type="checkbox" id="b"/> 
+                                  <label for="b">B</label> 
+                                </p> 
+                                <p> 
+                                  <input type="checkbox" id="c"/> 
+                                  <label for="c">C</label> 
+                                </p> 
+                                <p> 
+                                  <input type="checkbox" id="d"/> 
+                                  <label for="d">D</label> 
+                                </p> 
+                               <p> 
+                                  <input type="checkbox" id="e"/> 
+                                  <label for="e">E</label> 
+                                </p> 
+                               <p> 
+                                  <input type="checkbox" id="f"/> 
+                                  <label for="f">F</label> 
+                                </p> 
+                              <p> 
+                                  <input type="checkbox" id="g"/> 
+                                  <label for="g">G</label> 
+                                </p> 
+                              <p> 
+                                  <input type="checkbox" id="h"/> 
+                                  <label for="h">H</label> 
+                                </p> 
+                  <div class="input-field col s12">
+                    <input type="text" id="blackoutMessage">
+                    <label for="blackoutMessage">Message</label>
+                  </div>
+                    <a class="waves-effect waves-light btn" onclick="prepareSetBlackout()"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="tap-target" data-activates="threeDotButton">
     <div class="tap-target-content">
@@ -302,6 +367,17 @@ $(document).ready(function(){
       default: 'now',
       vibrate: true,
     });
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year,
+    today: 'Today',
+    clear: 'Clear',
+    formatSubmit: 'yyyy-mm-dd',
+    hiddenName: true,
+    close: 'Ok',
+    closeOnSelect: false // Close upon selecting a date,
+  });
+       
   $(".button-collapse").sideNav();
   $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
     $('#fullAjaxLoadingScreen').removeClass("loading");
@@ -323,6 +399,91 @@ function checkForUrlHash() {
   }
 }
 
+////BLACKOUT CARD////
+
+function periodsEmpty() {
+  //https://stackoverflow.com/questions/14800954/how-to-check-if-all-checkboxes-are-unchecked
+  var textinputs = document.querySelectorAll('input[type=checkbox]'); 
+  var empty = [].filter.call( textinputs, function( el ) {
+  return !el.checked
+  });
+
+  if (textinputs.length == empty.length) {
+      return true;
+  }
+}
+
+function prepareSetBlackout() {
+  var newBlackoutDate = $("[name='blackoutDate']").val();
+  console.log(newBlackoutDate);
+
+  //<!-- is there a way to make this neater? -->
+  var newBlackoutPeriodsArray = [];
+    if($('#a').is(":checked")) {
+    newBlackoutPeriodsArray.push('a');
+    }if($('#b').is(":checked")) {
+    newBlackoutPeriodsArray.push('b');
+    }if($('#c').is(":checked")) {
+    newBlackoutPeriodsArray.push('c');
+    }if($('#d').is(":checked")) {
+    newBlackoutPeriodsArray.push('d');
+    }if($('#e').is(":checked")) {
+    newBlackoutPeriodsArray.push('e');
+    }if($('#f').is(":checked")) {
+    newBlackoutPeriodsArray.push('f');
+    }if($('#g').is(":checked")) {
+    newBlackoutPeriodsArray.push('g');
+    }if($('#h').is(":checked")) {
+    newBlackoutPeriodsArray.push('h');
+    }
+    console.log(newBlackoutPeriodsArray, "arr");
+
+  var newBlackoutMessage = $("#blackoutMessage").val();
+  console.log(newBlackoutMessage);
+
+  //DO A CHECK HERE FOR CORRECT USER INPUT, THEN...
+  if (!$("#blackoutDate").val() == '' && !periodsEmpty()) {
+    setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function(err, res) {
+      if(err) {
+        materialResponse("cancel", "error");
+        return errorHand(err);
+      }
+      if(res.inserted > 0) {
+        materialResponse("check", "success");
+      } else {
+        materialResponse("check", "warning");
+        return errorHand(new Error("Warning: Multiple Inserts"))
+      }
+    }) 
+  }
+}
+
+function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
+  
+
+  var bodyData = {
+    "date": newBlackoutDate,
+    "periods": newBlackoutPeriodsArray, //removed ID BC it now just knows.  MAGIC!!! JK.  it pulls from the currently logged in user on the server
+    "message": newBlackoutMessage
+  }
+  $.ajax({
+        data: bodyData, 
+        dataType: "json",
+        type: "post",
+        url: "/api/blackout",
+        beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},  // this line prepares the call for auth
+        /*processData: false,
+        contentType: "application/json",*/ //You don't need this
+        success: function(data) {done(null, data)}, //this runs when the api goes thru.  
+        error: function(jqXHR) {done(jqXHR)}// this calles if errored
+        /* In the wrapper function, if the callback errors, run "materialResponse("cancel", "error"); errorHand(err);"  
+        if the callback succeed, run "materialResponse("check", "success");"
+        */
+    });
+    //clears form after hitting submit
+    document.forms['blackoutForm'].reset() 
+ }
+
   ////MY Leaving CARD////
  
  function getstudentsLeaving(done) {
@@ -335,6 +496,7 @@ function checkForUrlHash() {
       error: function(jqXHR) {done(jqXHR)}                      
     });
  }
+
  
  function setLeaving() {
   getstudentsLeaving(function(err, myPasses) {
