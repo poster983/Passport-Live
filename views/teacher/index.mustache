@@ -260,7 +260,7 @@ email: hi@josephhassell.com
             <div id="blackoutCard" class="card grey darken-3 hoverable">
               <div class="card-content white-text">
                 <span class="card-title">Set A Blackout</span>
-                <form action="" onsubmit="setBlackout()"><!--this won't work properly i think you should move it to the submitbutton. -->
+                <form action=""><!--this won't work properly i think you should move it to the submitbutton. -->
                   <div class="input-field col s12">
                     <input type="text" class="datepicker" id="blackoutDate">
                     <label for="blackoutDate">Date</label>
@@ -306,7 +306,7 @@ email: hi@josephhassell.com
                     <input type="text" id="blackoutMessage">
                     <label for="blackoutMessage">Message</label>
                   </div>
-                    <a class="waves-effect waves-light btn" onclick="console.log('Call Some Wrapper Function');"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
+                    <a class="waves-effect waves-light btn" onclick="setBlackout()"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
                 </form>
               </div>
             </div>
