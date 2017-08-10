@@ -66,8 +66,11 @@ function serializeUser(req, res, done) {
     *    "email": "teacher@gmail.com",
     *    "password": "123abc",
     *    "passwordVerification": "123abc",
-    *    "firstName": "Teacher",
-    *    "lastName": "McTeacher Face",
+    *    "name": {
+             "salutation": "Mx.",
+    *        "firstName": "Teacher",
+    *        "lastName": "McTeacher Face"
+    *      },
     *    "groupFields": {
     *        "teacherID": "1598753"
     *    },
@@ -80,8 +83,7 @@ function serializeUser(req, res, done) {
     var email=req.body.email;
     var password=req.body.password;
     var passwordVerification=req.body.passwordVerification;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
+    var name = req.body.name 
     var groupFields = req.body.groupFields
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;

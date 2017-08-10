@@ -36,7 +36,7 @@ const util = require('util')
     * @link module:passportApi
     * @async
     * @example
-    * api.createAccount(connection, "student", "James", "Smith", "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+    * api.createAccount(connection, "student", {firstName: "Student", lastName: "McStudentface", salutation: "Mx." } "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
     *   if(err) {
     *     //do something with error
     *   } else {
@@ -45,26 +45,33 @@ const util = require('util')
     * });
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {constant} userGroup - A usergroup defined in the config
-    * @param {string} firstName - A user's given name
-    * @param {string} lastName - A user's family name
+    * @param {json} name
+    * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
+    * @param {string} name.firstName - A user's given name
+    * @param {string} name.lastName - A user's family name
     * @param {string} email - A user's email address
     * @param {string} password - The user's password
     * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
     * @param {function} done - Callback
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
-exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, password, groupFields, done) {
+exports.createAccount = function(dbConn, userGroup, name, email, password, groupFields, done) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
         return done(err);
     }
-    if(!firstName) {
+    if(!name || !name.salutation) {
+        var err = new Error("salutation Undefined");
+        err.status = 400;
+        return done(err);
+    }
+    if(!name || !name.firstName) {
         var err = new Error("firstName Undefined");
         err.status = 400;
         return done(err);
     }
-    if(!lastName) {
+    if(!name || !name.lastName) {
         var err = new Error("lastName Undefined");
         err.status = 400;
         return done(err);
@@ -104,8 +111,9 @@ exports.createAccount = function(dbConn, userGroup, firstName, lastName, email, 
                 //insert new account
                 promice = r.table("accounts").insert({
                   name: {
-                    first: firstName,
-                    last: lastName
+                    first: name.firstName,
+                    last: name.lastName,
+                    salutation: name.salutation
                   },
                   email: email,
                   password: hash,
