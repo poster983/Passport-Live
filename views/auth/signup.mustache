@@ -101,8 +101,30 @@ email: hi@josephhassell.com
             minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
           });
          $('select').material_select();
-        
+        setupPermKeys();
     })
+
+    function setupPermKeys() {
+        var pk = getUrlParameter("pk");
+        if(pk) {
+            $.ajax({
+                type: "get",
+                url: "/api/security/key/"+pk,
+                success: function(data) {
+                    if(data && data.permissions && data.permissions.userGroups) {
+                        for(var i = 0; i < data.permissions.userGroups.length; i++) {
+                            $("accountType").append("<option/>")
+                                                        .attr("value", data.permissions.userGroups[i])
+                                                        .html(data.permissions.userGroups[i].charAt(0).toUpperCase() + data.permissions.userGroups[i].slice(1))
+                        }
+                    }
+                },
+                error: function(jqXHR) {    
+                    return errorHand(jqXHR)
+                }                      
+            });
+        }
+    }
         function login() {
             var salutation = $("#salutation").val();
             var firstname = $("#firstname").val();
