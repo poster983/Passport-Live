@@ -397,13 +397,8 @@ function checkForUrlHash() {
 ////BLACKOUT CARD////
 
 function setBlackout(done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
-  //we are using Jquery.  A better way to do this would be to:
-  /*
   var newBlackoutDate = $("#blackoutDate").val();
-  ect.. 
-  What you did here works, its just longer.  Just FYI 
-  */
-  var newBlackoutDate = document.getElementById("blackoutDate").value;
+  alert(newBlackoutDate);
 
   //<!-- is there a way to make this neater? -->
   var periodArray = [];
@@ -424,8 +419,11 @@ function setBlackout(done) { //You will want a wrapper function that checks if t
     }if($('#h').is(":checked")) {
     periodArray.push('h');
     }
+    alert(periodArray);
 
-  var newBlackoutMessage = document.getElementById("blackoutMessage").value;
+  <!--var newBlackoutMessage = document.getElementById("blackoutMessage").value;-->
+  var newBlackoutMessage = $("#blackoutMessage").val();
+  alert(newBlackoutMessage);
 
   var bodyData = {
     "date": newBlackoutDate,
