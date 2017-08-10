@@ -90,28 +90,33 @@ function serializeUser(req, res, done) {
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     var promise = new Promise(function(resolve, reject) {
-
-        if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-            if(!permissionKey) {
-                var err = new Error("Permission Key Required");
-                    err.status = 403;
-                    reject(err);
-            }
-            miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
-                if(err) {
-                    reject(err);
-                } 
-                //CHeck  if usergroup is present
-                else if(!data.permissions.userGroups.includes(userGroup)) {
-                    var err = new Error("Permission Needed");
-                    err.status = 403;
-                    reject(err);
-                } else {
-                    resolve();
+        if (config.has('userGroups.' + userGroup)) {
+            if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+                if(!permissionKey) {
+                    var err = new Error("Permission Key Required");
+                        err.status = 403;
+                        reject(err);
                 }
-            });
+                miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
+                    if(err) {
+                        reject(err);
+                    } 
+                    //CHeck  if usergroup is present
+                    else if(!data.permissions.userGroups.includes(userGroup)) {
+                        var err = new Error("Permission Needed");
+                        err.status = 403;
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            } else {
+                resolve();
+            }
         } else {
-            resolve();
+            var err = new Error("Usergroup Not Found");
+            err.status = 404;
+            reject(err);
         }
     })
 

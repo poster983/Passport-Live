@@ -26,14 +26,14 @@ email: hi@josephhassell.com
                 <h3 class="center">Signup For Passport</h3>
                 <div class="card-panel">
                     <div class="input-field col s12">
-                        <select id="accountType" class="required invalid">
+                        <select id="accountType" class="validate invalid">
                           <option value="" disabled selected>Choose your account type</option>
                         </select>
                         <label>Account Type</label>
                     </div>
                     <br>
                     <div class="input-field">
-                         <input type="text" id="salutation" class="autocomplete">
+                         <input type="text" id="salutation" class="autocomplete validate">
                           <label for="salutation">Salutation</label>
                     </div>
                     <br>
@@ -55,15 +55,15 @@ email: hi@josephhassell.com
                         <label for="email">Email</label>
                     </div>
                     <div class="input-field">
-                        <input name="password" type="password" id="password">
+                        <input name="password" type="password" class="validate" id="password">
                         <label for="password">Password</label>
                     </div>
                     <div class="input-field">
-                        <input name="passwordVerification" type="password" id="passwordVer">
+                        <input name="passwordVerification" type="password" class="validate" id="passwordVer">
                         <label for="passwordVer">Password (Again)</label>
                     </div>
                 </div>
-                <button class="btn waves-effect waves-light red darken-4" type="submit" name="Submit">Signup
+                <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
                     <i class="material-icons right">lock_open</i>
                 </button>
 								
@@ -147,36 +147,76 @@ email: hi@josephhassell.com
             });
         }
     }
-        function login() {
+        function signup() {
+            var accountType = $("#accountType").val();
             var salutation = $("#salutation").val();
             var firstname = $("#firstname").val();
             var lastname = $("#lastname").val();
             var email = $("#email").val();
-            var passwordVerification = $("#passwordVerification").val();
+            var passwordVerification = $("#passwordVer").val();
             var password = $("#password").val();
-            $.ajax({
-                type: "post",
-                url: "/api/auth/login/dscm/",
-                data: {email: email, password: password},
-                success: function(data) {
-                    window.location.href = "/"
-                },
-                error: function(jqXHR) {
-                    if(jqXHR.status == 401) {
-                        $("#msg").html("Email or Password is incorrect");
-                    } else if(jqXHR.status == 400) {
-                        $("#msg").html("Email or Password is incorrect");
-                    } else {
-                        errorHand(jqXHR)
-                    }
-                    
-                }                      
-              });
+            var errored = false;
+            console.log(accountType)
+            if(!accountType) {
+                $("#accountType").removeClass("valid").addClass("invalid")
+                Materialize.toast("Please spesify an account type", 4000)
+                errored = true;
+            }
+            if(!salutation) {
+                $("#salutation").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!firstname) {
+                $("#firstname").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!lastname) {
+                $("#lastname").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!email) {
+                $("#email").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!passwordVerification) {
+                $("#passwordVer").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!password) {
+                $("#password").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(password != passwordVerification) {
+                $("#password").removeClass("valid").addClass("invalid")
+                $("#passwordVer").removeClass("valid").addClass("invalid")
+                Materialize.toast("Passwords must match", 4000)
+                errored = true;
+            }
+            if(!errored) {
+                $.ajax({
+                    type: "post",
+                    url: "/api/account/" + accountType,
+                    data: {email: email, password: password},
+                    success: function(data) {
+                        window.location.href = "/"
+                    },
+                    error: function(jqXHR) {
+                        if(jqXHR.status == 401) {
+                            $("#msg").html("Email or Password is incorrect");
+                        } else if(jqXHR.status == 400) {
+                            $("#msg").html("Email or Password is incorrect");
+                        } else {
+                            errorHand(jqXHR)
+                        }
+                        
+                    }                      
+                  });
+            }
         }
         //handle submit
         $('body').keypress(function (e) {
           if (e.which == 13) {
-            login();
+            signup();
             return false;   
           }
         });
