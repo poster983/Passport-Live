@@ -262,7 +262,7 @@ email: hi@josephhassell.com
                 <span class="card-title">Set A Blackout</span>
                 <form action=""><!--this won't work properly i think you should move it to the submitbutton. -->
                   <div class="input-field col s12">
-                    <input type="text" class="datepicker" id="blackoutDate">
+                    <input type="text" class="datepicker" name="blackoutDate" id="blackoutDate">
                     <label for="blackoutDate">Date</label>
                   </div>
                   <!--<div class="input-field col s12">
@@ -370,6 +370,7 @@ $(document).ready(function(){
     today: 'Today',
     clear: 'Clear',
     formatSubmit: 'yyyy-mm-dd',
+    hiddenName: true,
     close: 'Ok',
     closeOnSelect: false // Close upon selecting a date,
   });
@@ -398,7 +399,7 @@ function checkForUrlHash() {
 ////BLACKOUT CARD////
 
 function prepareSetBlackout() {
-  var newBlackoutDate = $("#blackoutDate").val();
+  var newBlackoutDate = $("[name='blackoutDate']").val();
   console.log(newBlackoutDate);
 
   //<!-- is there a way to make this neater? -->
