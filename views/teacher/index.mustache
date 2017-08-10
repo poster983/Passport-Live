@@ -306,7 +306,7 @@ email: hi@josephhassell.com
                     <input type="text" id="blackoutMessage">
                     <label for="blackoutMessage">Message</label>
                   </div>
-                    <a class="waves-effect waves-light btn" onclick="setBlackout()"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
+                    <a class="waves-effect waves-light btn" onclick="prepareSetBlackout()"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
                 </form>
               </div>
             </div>
@@ -369,6 +369,7 @@ $(document).ready(function(){
     selectYears: 15, // Creates a dropdown of 15 years to control year,
     today: 'Today',
     clear: 'Clear',
+    formatSubmit: 'yyyy-mm-dd',
     close: 'Ok',
     closeOnSelect: false // Close upon selecting a date,
   });
@@ -396,34 +397,52 @@ function checkForUrlHash() {
 
 ////BLACKOUT CARD////
 
-function setBlackout(done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
+function prepareSetBlackout() {
   var newBlackoutDate = $("#blackoutDate").val();
-  alert(newBlackoutDate);
+  console.log(newBlackoutDate);
 
   //<!-- is there a way to make this neater? -->
-  var periodArray = [];
+  var newBlackoutPeriodsArray = [];
     if($('#a').is(":checked")) {
-    periodArray.push('a');
+    newBlackoutPeriodsArray.push('a');
     }if($('#b').is(":checked")) {
-    periodArray.push('b');
+    newBlackoutPeriodsArray.push('b');
     }if($('#c').is(":checked")) {
-    periodArray.push('c');
+    newBlackoutPeriodsArray.push('c');
     }if($('#d').is(":checked")) {
-    periodArray.push('d');
+    newBlackoutPeriodsArray.push('d');
     }if($('#e').is(":checked")) {
-    periodArray.push('e');
+    newBlackoutPeriodsArray.push('e');
     }if($('#f').is(":checked")) {
-    periodArray.push('f');
+    newBlackoutPeriodsArray.push('f');
     }if($('#g').is(":checked")) {
-    periodArray.push('g');
+    newBlackoutPeriodsArray.push('g');
     }if($('#h').is(":checked")) {
-    periodArray.push('h');
+    newBlackoutPeriodsArray.push('h');
     }
-    alert(periodArray);
+    console.log(newBlackoutPeriodsArray, "arr");
 
-  <!--var newBlackoutMessage = document.getElementById("blackoutMessage").value;-->
   var newBlackoutMessage = $("#blackoutMessage").val();
-  alert(newBlackoutMessage);
+  console.log(newBlackoutMessage);
+
+  //DO A CHECK HERE FOR CORRECT USER INPUT, THEN...
+
+  setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function(err, res) {
+    if(err) {
+      materialResponse("cancel", "error");
+      return errorHand(err);
+    }
+    if(res.inserted > 0) {
+      materialResponse("check", "success");
+    } else {
+      materialResponse("check", "warning");
+      return errorHand(new Error("Warning: Multiple Inserts"))
+    }
+  }) 
+}
+
+function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
+  
 
   var bodyData = {
     "date": newBlackoutDate,
@@ -431,7 +450,7 @@ function setBlackout(done) { //You will want a wrapper function that checks if t
     "message": newBlackoutMessage
   }
   $.ajax({
-        data: bodyData, //you dont need to stringiy
+        data: bodyData, 
         dataType: "json",
         type: "post",
         url: "/api/blackout",
