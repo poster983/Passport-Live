@@ -36,7 +36,7 @@ const util = require('util')
     * @link module:passportApi
     * @async
     * @example
-    * api.createAccount(connection, "student", {firstName: "Student", lastName: "McStudentface", salutation: "Mx." } "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+    * api.createAccount(connection, "student", {first: "Student", last: "McStudentface", salutation: "Mx." } "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
     *   if(err) {
     *     //do something with error
     *   } else {
@@ -47,8 +47,8 @@ const util = require('util')
     * @param {constant} userGroup - A usergroup defined in the config
     * @param {json} name
     * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
-    * @param {string} name.firstName - A user's given name
-    * @param {string} name.lastName - A user's family name
+    * @param {string} name.first - A user's given name
+    * @param {string} name.last - A user's family name
     * @param {string} email - A user's email address
     * @param {string} password - The user's password
     * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
@@ -66,12 +66,12 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
         err.status = 400;
         return done(err);
     }
-    if(!name || !name.firstName) {
+    if(!name || !name.first) {
         var err = new Error("firstName Undefined");
         err.status = 400;
         return done(err);
     }
-    if(!name || !name.lastName) {
+    if(!name || !name.last) {
         var err = new Error("lastName Undefined");
         err.status = 400;
         return done(err);
@@ -111,8 +111,8 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
                 //insert new account
                 promice = r.table("accounts").insert({
                   name: {
-                    first: name.firstName,
-                    last: name.lastName,
+                    first: name.first,
+                    last: name.last,
                     salutation: name.salutation
                   },
                   email: email,

@@ -68,8 +68,8 @@ function serializeUser(req, res, done) {
     *    "passwordVerification": "123abc",
     *    "name": {
     *        "salutation": "Mx.",
-    *        "firstName": "Teacher",
-    *        "lastName": "McTeacher Face"
+    *        "first": "Teacher",
+    *        "last": "McTeacher Face"
     *      },
     *    "groupFields": {
     *        "teacherID": "1598753"
@@ -124,7 +124,7 @@ function serializeUser(req, res, done) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
-            api.createAccount(r.conn(), userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+            api.createAccount(r.conn(), userGroup, name, email, password, groupFields, function(err, resp) {
                 if(err){
                     next(err);
                 } else {

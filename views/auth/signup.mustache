@@ -192,23 +192,18 @@ email: hi@josephhassell.com
                 Materialize.toast("Passwords must match", 4000)
                 errored = true;
             }
+            console.log(firstname)
+            console.log(lastname)
             if(!errored) {
                 $.ajax({
                     type: "post",
                     url: "/api/account/" + accountType,
-                    data: {email: email, password: password},
+                    data: {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}, },
                     success: function(data) {
                         window.location.href = "/"
                     },
                     error: function(jqXHR) {
-                        if(jqXHR.status == 401) {
-                            $("#msg").html("Email or Password is incorrect");
-                        } else if(jqXHR.status == 400) {
-                            $("#msg").html("Email or Password is incorrect");
-                        } else {
-                            errorHand(jqXHR)
-                        }
-                        
+                        errorHand(jqXHR)                        
                     }                      
                   });
             }
