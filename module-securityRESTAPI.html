@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tutorial: Configs - Documentation</title>
+    <title>securityRESTAPI - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,21 +34,422 @@
 
 <div id="main">
     
-    <h1 class="page-title">Tutorial: Configs</h1>
+    <h1 class="page-title">securityRESTAPI</h1>
     
 
-    <section class="tutorial">
+    <!--container.tmpl-->
 
-<header class="tutorial-header">
+
+
+
+
+<section>
+
+
+
+<header data-tmpl="container.tmpl">
+    
+      <h2>Module: securityRESTAPI</h2>
+        
     
 
+    
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#getPermissionKeyData">getPermissionKeyData</a></li>
+            </ul></dd></dl></div>
 </header>
 
 <article>
-    <h1>How to configure Passport</h1>
+    <div class="container-overview">
+    
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_security.js.html">security.js</a>:<a href="routes_api_security.js.html#line44">44</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getPermissionKeyData">
+      <a href="#params-getPermissionKeyData"><span class="type-signature">(async, inner) </span>getPermissionKeyData</a><span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-getPermissionKeyData">
+        <span class="label label-api">API: POST /api/security/key/:key</span>
+      </a>
+    
+
+
+
+<span class="label label-default">Async</span>
+
+
+
+
+<div class="description">
+    <p>Gets permission key data</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getPermissionKeyData">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
+    <ul>
+        <li>Rate Limit</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-getPermissionKeyData" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns (Async)</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>See: <code><a href="#params-nextCallback">Callback Definition</a></code></li>
+</ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+  <div class="bs-callout bs-callout-api" id="api-getPermissionKeyData">
+    <h5>
+      API Route:
+      POST /api/security/key/:key
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">permission key</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returns the permission key data
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\r\n    * Gets permission key data\r\n    * @function getPermissionKeyData\r\n    * @async\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api POST /api/security/key/:key\r\n    * @apiparam {string} key - permission key\r\n    * @apiresponse {json} Returns the permission key data\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n    * @todo Rate Limit\r\n    */","meta":{"filename":"security.js","lineno":44,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/security.js"},"description":"<p>Gets permission key data</p>","kind":"function","name":"getPermissionKeyData","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"POST /api/security/key/:key","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} key - permission key","value":{"type":{"names":["string"]},"description":"permission key","name":"key"}}],"response":{"type":{"names":["json"]},"description":"Returns the permission key data"},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"todo":["Rate Limit"],"longname":"module:securityRESTAPI~getPermissionKeyData","scope":"inner","memberof":"module:securityRESTAPI","___id":"T000002R000697","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getPermissionKeyData","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-securityRESTAPI.html\">securityRESTAPI</a>~"]}
+</pre>
+-->
+</div>
+
+        
+    
+
+    
+
+    
 </article>
 
 </section>
+
+
+
 
 </div>
 
