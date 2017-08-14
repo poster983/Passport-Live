@@ -44,7 +44,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
      r.table("accounts").get(id).run(connection, function(err, user) {
     done(err, user);
-    console.log("deserializeUser");
+    //console.log("deserializeUser");
 
   });
 
