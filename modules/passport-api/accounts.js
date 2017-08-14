@@ -89,49 +89,78 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
     if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
         groupFields = {};
     }
-    bcrypt.hash(password, null, null, function(err, hash) {
-        if(err) {
-            console.error(err);
-            return done(err, null);
+    //console.log(email.substring(email.indexOf("@")))
+    var emailPromise = new Promise(function(resolve, reject) {
+        if(config.has("userGroups." + userGroup + ".permissions.allowedEmailDomains")) {
+            var uGD = config.get("userGroups." + userGroup + ".permissions.allowedEmailDomains")
+            //console.log(uGD)
+            if(uGD.length > 0) {
+                for(var z = 0; z < uGD.length; z++) {
+                    //console.log(uGD[z], "email")
+                    if(email.substring(email.indexOf("@")) == uGD[z]) {
+                        resolve();
+                    }
+                    if(z >= uGD.length - 1 ) {
+                        var err = new Error("Email Domain Not Allowed.")
+                        err.status = 400;
+                        reject(err);
+                    }
+                }
+            } else {
+                resolve();
+            }
+        } else {
+            resolve();
         }
-        try {
-          // Store hash in your password DB.
-          r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+    });
+    emailPromise.then(function() {
+
+        bcrypt.hash(password, null, null, function(err, hash) {
             if(err) {
                 console.error(err);
-                return done(err);
+                return done(err, null);
             }
-            //Checks to see if there is already an email in the DB            
-            if(con){
-              //THe email has been taken
-              var err = new Error("Email Taken");
-              err.status = 409
-              return done(err);
-            } else {
-                //insert new account
-                promice = r.table("accounts").insert({
-                  name: {
-                    first: name.first,
-                    last: name.last,
-                    salutation: name.salutation
-                  },
-                  email: email,
-                  password: hash,
-                  userGroup: userGroup, // should be same as a usergroup in config/default.json
-                  groupFields: groupFields,
-                  isArchived: false,
-                  verified: false
-                }).run(dbConn);
-                promice.then(function(conn) {
-                    return done(null);
+            try {
+              // Store hash in your password DB.
+              r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+                if(err) {
+                    console.error(err);
+                    return done(err);
+                }
+                //Checks to see if there is already an email in the DB            
+                if(con){
+                  //THe email has been taken
+                  var err = new Error("Email Taken");
+                  err.status = 409
+                  return done(err);
+                } else {
+                    //insert new account
+                    promice = r.table("accounts").insert({
+                      name: {
+                        first: name.first,
+                        last: name.last,
+                        salutation: name.salutation
+                      },
+                      email: email,
+                      password: hash,
+                      userGroup: userGroup, // should be same as a usergroup in config/default.json
+                      groupFields: groupFields,
+                      isArchived: false,
+                      verified: false
+                    }).run(dbConn);
+                    promice.then(function(conn) {
+                        return done(null);
+                  });
+                }
               });
+            } catch(e) {
+                
+                return done(e);
             }
-          });
-        } catch(e) {
-            
-            return done(e);
-        }
-    });   
+        });
+    }, function(err) {
+        return done(err);
+    })
 }
 /**
     * @callback createAccountCallback

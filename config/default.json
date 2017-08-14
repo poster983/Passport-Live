@@ -1,9 +1,6 @@
 //NEEDS DOCUMENTATION https://www.gitbook.com/book/poster983/passport-developer
 
-{
-	// passGroups Needs A Rewrite
-	//only for filling the main student page
-	
+{	
 	"userGroups": { 
 		"student": {
 			"permissions": {
