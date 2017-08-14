@@ -83,6 +83,7 @@ email: hi@josephhassell.com
               "Mr.": null,
               "Ms.": null,
               "Mrs.": null,
+              "Miss.": null,
               "Mx.": null,
               "Fr.": null,
               "Dr.": null,
@@ -192,18 +193,24 @@ email: hi@josephhassell.com
                 Materialize.toast("Passwords must match", 4000)
                 errored = true;
             }
-            console.log(firstname)
-            console.log(lastname)
+            var sData = {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
+            var pk = getUrlParameter("pk");
+            if(pk) {
+                sData.permissionKey = pk;
+            }
             if(!errored) {
                 $.ajax({
                     type: "post",
                     url: "/api/account/" + accountType,
-                    data: {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}, },
+                    data: sData,
                     success: function(data) {
-                        window.location.href = "/"
+
+                        materialResponse("check", "success", function() {
+                            window.location.href = "/"
+                        })
                     },
                     error: function(jqXHR) {
-                        errorHand(jqXHR)                        
+                        errorHand(jqXHR)
                     }                      
                   });
             }

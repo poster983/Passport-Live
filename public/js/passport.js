@@ -183,7 +183,7 @@ function navMorph(obj) {
 
 } 
 
-function materialResponse(icon, colorClass) {
+function materialResponse(icon, colorClass, done) {
   switch(colorClass){
     case "success": 
       colorClass = "green accent-3";
@@ -248,7 +248,9 @@ function materialResponse(icon, colorClass) {
               $("#circleThingContainer").remove();
             });
             $("#circleThing").remove();
-
+            if(typeof done == "function") {
+              return done();
+            }
           }, 500);
         });
       }, 1000);
