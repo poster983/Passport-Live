@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -48,6 +48,7 @@
     "jdenticon": "^1.6.0",
     "jquery.stellar": "^0.6.2",
     "jsonwebtoken": "^7.4.1",
+    "loader-message": "latest",
     "moment": "^2.18.1",
     "morgan": "~1.8.2",
     "mustache-express": "1.2.4",
