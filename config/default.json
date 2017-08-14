@@ -59,7 +59,7 @@
 		},
 		"dev": {
 			"permissions": {
-				"dashboards": ["student", "teacher", "kiosk", "administration", "admin"], // what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
+				"dashboards": ["student", "teacher", "kiosk", "administration", "admin"] // what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 
 			},
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
