@@ -66,8 +66,11 @@ function serializeUser(req, res, done) {
     *    "email": "teacher@gmail.com",
     *    "password": "123abc",
     *    "passwordVerification": "123abc",
-    *    "firstName": "Teacher",
-    *    "lastName": "McTeacher Face",
+    *    "name": {
+    *        "salutation": "Mx.",
+    *        "first": "Teacher",
+    *        "last": "McTeacher Face"
+    *      },
     *    "groupFields": {
     *        "teacherID": "1598753"
     *    },
@@ -80,36 +83,40 @@ function serializeUser(req, res, done) {
     var email=req.body.email;
     var password=req.body.password;
     var passwordVerification=req.body.passwordVerification;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
+    var name = req.body.name 
     var groupFields = req.body.groupFields
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     var promise = new Promise(function(resolve, reject) {
-
-        if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
-            if(!permissionKey) {
-                var err = new Error("Permission Key Required");
-                    err.status = 403;
-                    reject(err);
-            }
-            miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
-                if(err) {
-                    reject(err);
-                } 
-                //CHeck  if usergroup is present
-                else if(!data.permissions.userGroups.includes(userGroup)) {
-                    var err = new Error("Permission Needed");
-                    err.status = 403;
-                    reject(err);
-                } else {
-                    resolve();
+        if (config.has('userGroups.' + userGroup)) {
+            if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+                if(!permissionKey) {
+                    var err = new Error("Permission Key Required");
+                        err.status = 403;
+                        reject(err);
                 }
-            });
+                miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
+                    if(err) {
+                        reject(err);
+                    } 
+                    //CHeck  if usergroup is present
+                    else if(!data.permissions.userGroups.includes(userGroup)) {
+                        var err = new Error("Permission Needed");
+                        err.status = 403;
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            } else {
+                resolve();
+            }
         } else {
-            resolve();
+            var err = new Error("Usergroup Not Found");
+            err.status = 404;
+            reject(err);
         }
     })
 
@@ -117,7 +124,7 @@ function serializeUser(req, res, done) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
-            api.createAccount(r.conn(), userGroup, firstName, lastName, email, password, groupFields, function(err, resp) {
+            api.createAccount(r.conn(), userGroup, name, email, password, groupFields, function(err, resp) {
                 if(err){
                     next(err);
                 } else {

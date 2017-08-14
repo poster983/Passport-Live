@@ -183,7 +183,7 @@ function navMorph(obj) {
 
 } 
 
-function materialResponse(icon, colorClass) {
+function materialResponse(icon, colorClass, done) {
   switch(colorClass){
     case "success": 
       colorClass = "green accent-3";
@@ -248,7 +248,9 @@ function materialResponse(icon, colorClass) {
               $("#circleThingContainer").remove();
             });
             $("#circleThing").remove();
-
+            if(typeof done == "function") {
+              return done();
+            }
           }, 500);
         });
       }, 1000);
@@ -274,3 +276,18 @@ function uuidv4() {
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   )
 }
+
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};

@@ -23,56 +23,253 @@ email: hi@josephhassell.com
         <div class="containerlogin signup-allign">
 
             <div class="card-panel animated fadeInDown">
-            <form name="form1" method="post" action="{{sendTo}}">
                 <h3 class="center">Signup For Passport</h3>
                 <div class="card-panel">
-                     <div class="input-field">
-                        <p>
-                            <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstName">
-                            <label for="firstname">First Name</label>
-                        </p>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this);">
+                              <option value="" disabled selected>Choose your account type</option>
+                            </select>
+                            <label>Account Type</label>
+                        </div>
+                        <div class="col s12 input-field">
+                             <input type="text" id="salutation" class="autocomplete validate">
+                              <label for="salutation">Salutation</label>
+                        </div>
+                         <div class="col s12 m6 input-field">
+                                <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstName">
+                                <label for="firstname">First Name</label>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                                <input type="text" required id="lastname" autocomplete="off" class="validate" name="lastName">
+                                <label for="lastname">Last Name</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="email" type="email" class="validate" id="email">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="password" type="password" class="validate" id="password">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="passwordVerification" type="password" class="validate" id="passwordVer">
+                            <label for="passwordVer">Password (Again)</label>
+                        </div>
                     </div>
-                    <div class="input-field">
-                        <p>
-                            <input type="text" required id="lastname" autocomplete="off" class="validate" name="lastName">
-                            <label for="lastname">Last Name</label>
-                        </p>
-                    </div>
-                <!--TODO: Only allow certain email domains to signup-->
-                    <div class="input-field">
-                        <input name="email" type="email" class="validate" id="email">
-                        <label for="email">Email</label>
-                    </div>
-                     <div class="input-field">
-                        <p>
-                            <input type="number" required id="studentID" autocomplete="off" class="validate" name="groupFields[studentID]">
-                            <label data-error="Must Be A Number!" for="studentID">Student ID</label>
-                        </p>
-                    </div>
-
-                    <div class="input-field">
-                        <input name="password" type="password" id="password">
-                        <label for="password">Password</label>
-                    </div>
-                    <div class="input-field">
-                        <input name="passwordVerification" type="password" id="passwordVer">
-                        <label for="passwordVer">Password (Again)</label>
-                    </div>
+                    <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
+                        <i class="material-icons right">lock_open</i>
+                    </button>
+    								
+                			{{#message}}
+    						<h6> {{message}} </h6>
+    						{{/message}}
                 </div>
-                <button class="btn waves-effect waves-light red darken-4" type="submit" name="Submit">Signup
-                    <i class="material-icons right">lock_open</i>
-                </button>
-								
-            </form>
-            			{{#message}}
-						<h6> {{message}} </h6>
-						{{/message}}
             </div>
         </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="/js/materialize.js"></script>
 	<script src="/js/passport.js"></script>
 
+    <script type="text/javascript">
+    var userGroupsData = null;
+    $(document).ready(function() {
+         $('input.autocomplete').autocomplete({
+            data: {
+              "Mr.": null,
+              "Ms.": null,
+              "Mrs.": null,
+              "Miss.": null,
+              "Mx.": null,
+              "Fr.": null,
+              "Dr.": null,
+              "Prof.": null,
+              "Pr.": null,
+              "Br.": null,
+              "Sr.": null,
+              "Srta.": null
+            },
+            limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+            onAutocomplete: function(val) {
+              // Callback function when value is autcompleted.
+            },
+            minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+          });
+         $('select').material_select();
+        
+        getUserGroups(function(err, data) {
+            if(err) {
+                return errorHand(err);
+            }
+            userGroupsData = data;
+            setupPermKeys();
+        })
+    })
+
+    function getUserGroups(done) {
+        $.ajax({
+                type: "get",
+                url: "/api/server/config/userGroups",
+                success: function(data) {
+                    return done(null, data);
+                },
+                error: function(jqXHR) {    
+                    return done(jqXHR);
+                }                      
+            });
+    }
+
+    function setEmailRules(dis) {
+        //email
+        var sel = $(dis).val();
+        var doamins = userGroupsData[sel].permissions.allowedEmailDomains;
+        var str = "";
+        if(doamins.length > 0) {
+            str = "Can only sign up with a ";
+            for(var i = 0; i < doamins.length; i++ ) {
+                str = str + doamins[i];
+                if(i >= doamins.length -1) {
+                    str = str + " domain";
+                    $("#email").attr("data-tooltip", str).attr("data-position", "bottom").addClass("tooltipped");
+                    $('.tooltipped').tooltip({delay: 50});
+                    console.log(str)
+                } else {
+                    str = str + " or a ";
+                }
+            }
+        }
+    }
+
+    function setupPermKeys() {
+        var pk = getUrlParameter("pk");
+        if(pk) {
+            $.ajax({
+                type: "get",
+                url: "/api/security/key/"+pk,
+                success: function(data) {
+                    console.log(data)
+                    if(data && data.permissions && data.permissions.userGroups) {
+                        for(var i = 0; i < data.permissions.userGroups.length; i++) {
+                            console.log(data)
+                            $("#accountType").append($("<option/>")
+                                                        .attr("value", data.permissions.userGroups[i])
+                                                        .html(data.permissions.userGroups[i].charAt(0).toUpperCase() + data.permissions.userGroups[i].slice(1)));
+                            if(i >= data.permissions.userGroups.length -1) {
+                                $('select').material_select();
+                            }
+                        }
+                    }
+                },
+                error: function(jqXHR) {    
+                    return errorHand(jqXHR)
+                }                      
+            });
+        } else {
+
+            /*$.ajax({
+                type: "get",
+                url: "/api/server/config/userGroups",
+                success: function(data) {
+                    console.log(data)
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key) && data[key].verifyAccountCreation == false) {
+                             $("#accountType").append($("<option/>")
+                                                        .attr("value", key)
+                                                        .html(key.charAt(0).toUpperCase() + key.slice(1)));
+                             $('select').material_select();
+                        }
+                    }
+                },
+                error: function(jqXHR) {    
+                    return errorHand(jqXHR)
+                }                      
+            });*/
+
+            for (var key in userGroupsData) {
+                if (userGroupsData.hasOwnProperty(key) && userGroupsData[key].verifyAccountCreation == false) {
+                     $("#accountType").append($("<option/>")
+                                                .attr("value", key)
+                                                .html(key.charAt(0).toUpperCase() + key.slice(1)));
+                     $('select').material_select();
+                }
+            }
+        }
+    }
+        function signup() {
+            var accountType = $("#accountType").val();
+            var salutation = $("#salutation").val();
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            var email = $("#email").val();
+            var passwordVerification = $("#passwordVer").val();
+            var password = $("#password").val();
+            var errored = false;
+            console.log(accountType)
+            if(!accountType) {
+                $("#accountType").removeClass("valid").addClass("invalid")
+                Materialize.toast("Please spesify an account type", 4000)
+                errored = true;
+            }
+            if(!salutation) {
+                $("#salutation").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!firstname) {
+                $("#firstname").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!lastname) {
+                $("#lastname").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!email) {
+                $("#email").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!passwordVerification) {
+                $("#passwordVer").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(!password) {
+                $("#password").removeClass("valid").addClass("invalid")
+                errored = true;
+            }
+            if(password != passwordVerification) {
+                $("#password").removeClass("valid").addClass("invalid")
+                $("#passwordVer").removeClass("valid").addClass("invalid")
+                Materialize.toast("Passwords must match", 4000)
+                errored = true;
+            }
+            var sData = {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
+            var pk = getUrlParameter("pk");
+            if(pk) {
+                sData.permissionKey = pk;
+            }
+            if(!errored) {
+                $.ajax({
+                    type: "post",
+                    url: "/api/account/" + accountType,
+                    data: sData,
+                    success: function(data) {
+
+                        materialResponse("check", "success", function() {
+                           // window.location.href = "/"
+                        })
+                    },
+                    error: function(jqXHR) {
+                        errorHand(jqXHR)
+                    }                      
+                  });
+            }
+        }
+        //handle submit
+        $('body').keypress(function (e) {
+          if (e.which == 13) {
+            signup();
+            return false;   
+          }
+        });
+    </script>
 
     </body>
 

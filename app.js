@@ -49,6 +49,7 @@ var apiAccounts = require('./routes/api/account');
 var apiAuth = require('./routes/api/auth');
 var apiPasses = require('./routes/api/passes');
 var apiBlackouts = require('./routes/api/blackout');
+var apiSecurity = require("./routes/api/security");
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -136,7 +137,7 @@ app.use('/api/account', apiAccounts)
 app.use('/api/auth', apiAuth)
 app.use('/api/blackout', apiBlackouts)
 app.use('/api/passes', apiPasses)
-
+app.use("/api/security", apiSecurity)
 //app.use('/users', users);
 
 if(Raven) {

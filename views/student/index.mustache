@@ -582,8 +582,6 @@ email: hi@josephhassell.com
                       console.log(data)
                       for(var x = 0; x < data.length; x++) {
                         if(data[x].name.salutation) {
-                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-                        } else if(data[x].name.salutation && data[x].name.first) {
                           newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
                         } else {
                           newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
