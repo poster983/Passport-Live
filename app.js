@@ -173,9 +173,9 @@ app.use(function(err, req, res, next) {
    if(config.has('secrets.loggingDSN') && Raven){
       res.locals.raven = true;
     }
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {status: err.status};
 
-  console.log(err)
+  //console.log(err)
   // render the error page
   res.append("errormessage", err.message);
   res.status(err.status);
