@@ -25,51 +25,46 @@ email: hi@josephhassell.com
             <div class="card-panel animated fadeInDown">
                 <h3 class="center">Signup For Passport</h3>
                 <div class="card-panel">
-                    <div class="input-field col s12">
-                        <select id="accountType" class="validate invalid">
-                          <option value="" disabled selected>Choose your account type</option>
-                        </select>
-                        <label>Account Type</label>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this);">
+                              <option value="" disabled selected>Choose your account type</option>
+                            </select>
+                            <label>Account Type</label>
+                        </div>
+                        <div class="col s12 input-field">
+                             <input type="text" id="salutation" class="autocomplete validate">
+                              <label for="salutation">Salutation</label>
+                        </div>
+                         <div class="col s12 m6 input-field">
+                                <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstName">
+                                <label for="firstname">First Name</label>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                                <input type="text" required id="lastname" autocomplete="off" class="validate" name="lastName">
+                                <label for="lastname">Last Name</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="email" type="email" class="validate" id="email">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="password" type="password" class="validate" id="password">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="col s12 input-field">
+                            <input name="passwordVerification" type="password" class="validate" id="passwordVer">
+                            <label for="passwordVer">Password (Again)</label>
+                        </div>
                     </div>
-                    <br>
-                    <div class="input-field">
-                         <input type="text" id="salutation" class="autocomplete validate">
-                          <label for="salutation">Salutation</label>
-                    </div>
-                    <br>
-                     <div class="input-field">
-                        <p>
-                            <input type="text" required id="firstname" autocomplete="off" class="validate" name="firstName">
-                            <label for="firstname">First Name</label>
-                        </p>
-                    </div>
-                    <div class="input-field">
-                        <p>
-                            <input type="text" required id="lastname" autocomplete="off" class="validate" name="lastName">
-                            <label for="lastname">Last Name</label>
-                        </p>
-                    </div>
-                <!--TODO: Only allow certain email domains to signup-->
-                    <div class="input-field">
-                        <input name="email" type="email" class="validate" id="email">
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-field">
-                        <input name="password" type="password" class="validate" id="password">
-                        <label for="password">Password</label>
-                    </div>
-                    <div class="input-field">
-                        <input name="passwordVerification" type="password" class="validate" id="passwordVer">
-                        <label for="passwordVer">Password (Again)</label>
-                    </div>
+                    <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
+                        <i class="material-icons right">lock_open</i>
+                    </button>
+    								
+                			{{#message}}
+    						<h6> {{message}} </h6>
+    						{{/message}}
                 </div>
-                <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
-                    <i class="material-icons right">lock_open</i>
-                </button>
-								
-            			{{#message}}
-						<h6> {{message}} </h6>
-						{{/message}}
             </div>
         </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -77,6 +72,7 @@ email: hi@josephhassell.com
 	<script src="/js/passport.js"></script>
 
     <script type="text/javascript">
+    var userGroupsData = null;
     $(document).ready(function() {
          $('input.autocomplete').autocomplete({
             data: {
@@ -100,8 +96,49 @@ email: hi@josephhassell.com
             minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
           });
          $('select').material_select();
-        setupPermKeys();
+        
+        getUserGroups(function(err, data) {
+            if(err) {
+                return errorHand(err);
+            }
+            userGroupsData = data;
+            setupPermKeys();
+        })
     })
+
+    function getUserGroups(done) {
+        $.ajax({
+                type: "get",
+                url: "/api/server/config/userGroups",
+                success: function(data) {
+                    return done(null, data);
+                },
+                error: function(jqXHR) {    
+                    return done(jqXHR);
+                }                      
+            });
+    }
+
+    function setEmailRules(dis) {
+        //email
+        var sel = $(dis).val();
+        var doamins = userGroupsData[sel].permissions.allowedEmailDomains;
+        var str = "";
+        if(doamins.length > 0) {
+            str = "Can only sign up with a ";
+            for(var i = 0; i < doamins.length; i++ ) {
+                str = str + doamins[i];
+                if(i >= doamins.length -1) {
+                    str = str + " domain";
+                    $("#email").attr("data-tooltip", str).attr("data-position", "bottom").addClass("tooltipped");
+                    $('.tooltipped').tooltip({delay: 50});
+                    console.log(str)
+                } else {
+                    str = str + " or a ";
+                }
+            }
+        }
+    }
 
     function setupPermKeys() {
         var pk = getUrlParameter("pk");
@@ -128,7 +165,8 @@ email: hi@josephhassell.com
                 }                      
             });
         } else {
-            $.ajax({
+
+            /*$.ajax({
                 type: "get",
                 url: "/api/server/config/userGroups",
                 success: function(data) {
@@ -145,7 +183,16 @@ email: hi@josephhassell.com
                 error: function(jqXHR) {    
                     return errorHand(jqXHR)
                 }                      
-            });
+            });*/
+
+            for (var key in userGroupsData) {
+                if (userGroupsData.hasOwnProperty(key) && userGroupsData[key].verifyAccountCreation == false) {
+                     $("#accountType").append($("<option/>")
+                                                .attr("value", key)
+                                                .html(key.charAt(0).toUpperCase() + key.slice(1)));
+                     $('select').material_select();
+                }
+            }
         }
     }
         function signup() {
