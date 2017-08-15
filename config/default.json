@@ -78,7 +78,11 @@
 	},
 	"server": {
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
-		"httpsPort": 3443 //set in production config file, 8443
+		//"httpsPort": 3443, //set in production config file, 8443
+		"https": {
+			"port": 3443, //set in production config file, 443
+			"email": "testEmail@example.com"
+		}
 	},
 	"schedule": { 
 		"periods": ["a", "b", "c", "d", "e1", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed durring school year
