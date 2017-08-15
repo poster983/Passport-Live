@@ -78,7 +78,6 @@
 	},
 	"server": {
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
-		//"httpsPort": 3443, //set in production config file, 8443
 		"https": {
 			"port": 3443, //set in production config file, 443
 			"email": "testEmail@example.com"
