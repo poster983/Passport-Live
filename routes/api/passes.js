@@ -32,6 +32,7 @@ var config = require("config");
 var validator = require("validator");
 var moment = require("moment");
 
+
 router.use(cors());
 router.options('*', cors())
 
@@ -346,9 +347,17 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 
     });
     
-
-
 })
 
+//tracking email
+var emailTracker = require('pixel-tracker');
+emailTracker.use(function (error, result) {
+  console.log(result)
+});
+
+router.get("/email/pixel.gif", function(req, res, next) {
+    console.log(req)
+    return next();
+}, emailTracker.middleware);
 
 module.exports = router;

@@ -103,5 +103,14 @@
 		"OAuth": {
 			"yourKeyHere": "12345"
 		}
-	}
+	},
+	"email": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used here. 
+	    "host": "smtp.example.com",
+	    "port": 465,
+	    "secure": true, // secure:true for port 465, secure:false for port 587
+	    "auth": {
+	        "user": "username@example.com",
+	        "pass": "userpass"
+	    }
+	} 
 }
