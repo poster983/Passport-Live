@@ -36,6 +36,7 @@ var FileStore = require('session-file-store')(session);
 var optional = require('optional');
 var Raven = optional('raven');
 var utils = require('./modules/passport-utils/index');
+var compression = require('compression')
 
 /*Routes*/
 var rootLevel = require('./routes/index');
@@ -120,11 +121,15 @@ app.use(require('node-sass-middleware')({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
   indentedSyntax: false,
+  outputStyle: 'compressed',
   sourceMap: false
 }));
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'node_modules')));
 app.use(express.static(path.join(__dirname, 'public')));
+
 // TOP LEVEL ROUTE
+
 app.use('/', rootLevel);
 app.use('/student', studentView);
 app.use('/teacher', teacher);

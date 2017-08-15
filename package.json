@@ -33,6 +33,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.2",
+    "compression": "^1.7.0",
     "config": "latest",
     "connect-ensure-login": "latest",
     "connect-flash": "~0.1.1",
@@ -75,7 +76,7 @@
     "codecov": "^2.2.0",
     "jsdoc": "^3.4.3",
     "loke-jsdoc-theme": "^2.1.0",
-    "mocha": "^3.4.1",
+    "mocha": "^3.5.0",
     "nyc": "^10.3.2",
     "request": "^2.81.0"
   }
