@@ -44,6 +44,7 @@
     "express-session": "latest",
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",
+    "greenlock-express": "^2.0.11",
     "humanparser": "^1.5.0",
     "jdenticon": "^1.6.0",
     "jquery.stellar": "^0.6.2",
