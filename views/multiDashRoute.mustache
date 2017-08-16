@@ -62,7 +62,7 @@ email: hi@josephhassell.com
             };
 
             function changed(val) {
-                window.location.href = window.location.href + val;
+                window.location.href = [location.protocol, '//', location.host, location.pathname].join('') + val;
             };
 
         </script>
