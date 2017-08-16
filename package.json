@@ -67,6 +67,7 @@
     "shortid": "^2.2.8",
     "socket.io": "^2.0.0",
     "ssarv": "latest",
+    "ua-parser-js": "^0.7.14",
     "underscore": "^1.8.3",
     "validator": "^8.0.0"
   },
