@@ -48,7 +48,7 @@ function serializeUser(req, res, done) {
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api POST /api/security/key/:key
+    * @api GET /api/security/key/:key
     * @apiparam {string} key - permission key
     * @apiresponse {json} Returns the permission key data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 

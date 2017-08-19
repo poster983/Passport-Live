@@ -185,8 +185,7 @@ function handleCreatePermissionKey(req, res, next) {
     
     api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
         if(err) {
-            console.error(err);
-            res.status(500)
+            return next(err)
         }
         res.status(201).send({
             key: key
