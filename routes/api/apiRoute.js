@@ -141,8 +141,8 @@ PASSES
 SECURITY 
 **/
 //WILL NEED ACCOUNT PROTECTION 
-//
-router.post('/security/key/', handleCreatePermissionKey);
+//ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}),
+router.post('/security/key/', passport.authenticate('jwt', { session: false}), ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}), handleCreatePermissionKey);
 /**
     * Creates a new permission key.
     * @function handleCreatePermissionKey
@@ -361,10 +361,10 @@ function getPassGroups(req, res, next) {
 /**
     TESTING
 **/
-
+/*
 router.post('/test', getHead, function(req, res, next) {
     res.status(200).json({});
-});
+});*/
 
 /*
 router.post('/test', getHead, passport.authenticate('jwt', { session: false}), function(req, res, next) {
@@ -373,7 +373,7 @@ router.post('/test', getHead, passport.authenticate('jwt', { session: false}), f
     });
     res.status(200).json(req.user);
 });*/
-
+/*
 router.post('/test/db', function(req, res, next) {
     /*r.table("scheduleCalendar").eqJoin("ScheduleDefinitionID", r.table("scheduleDefinitions")).map( r.row.merge({
             "c_id": r.row("id")
@@ -384,7 +384,7 @@ router.post('/test/db', function(req, res, next) {
             res.send(results);
         });
         
-    })*/
+    })*//*
     r.table("scheduleCalendar").map( r.row.merge(function(ro) {
         return {ider: r.table('scheduleDefinitions').get(ro('ScheduleDefinitionID'))}
     })).run(connection, function(err, cursor) {
@@ -395,7 +395,7 @@ router.post('/test/db', function(req, res, next) {
         });
         
     })
-});
+});*/
 
 router.get('/test/error/:error', function(req, res, next) {
     /*
@@ -411,7 +411,7 @@ router.get('/test/error/account/:error', function(req, res, next) {
     err.level = 'fatal'
     next(err);
 });
-
+/*
 router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
     api.checkPermissionKey(connection, req.params.key, function(err, document) {
@@ -422,7 +422,7 @@ router.get('/test/key/:key', function(req, res, next) {
         }
         
     });
-})
+})*/
 
 
 

@@ -152,7 +152,7 @@ function serializeUser(req, res, done) {
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 //GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
-router.get("/id/:id/", function handleGetAccountsById(req, res, next) {
+router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function handleGetAccountsById(req, res, next) {
     var id = req.params.id;
     api.getUserByID(r.conn(), id, function(err, data) {
         if(err) {
@@ -208,7 +208,7 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/", function handleGetAccountsByUserGroup(req, res, next) {
+router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: false}), function handleGetAccountsByUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
 
     
@@ -247,7 +247,7 @@ router.get("/userGroup/:userGroup/", function handleGetAccountsByUserGroup(req, 
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/name/:name", function handleGetAccountsByName(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 

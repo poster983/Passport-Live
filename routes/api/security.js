@@ -52,7 +52,7 @@ function serializeUser(req, res, done) {
     * @apiparam {string} key - permission key
     * @apiresponse {json} Returns the permission key data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Rate Limit
+    * @todo Rate Limit DONT USE JWT
     */
 
 router.get('/key/:key', function getPermissionKeyData(req, res, next) {
