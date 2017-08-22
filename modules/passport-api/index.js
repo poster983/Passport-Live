@@ -350,6 +350,9 @@ module.exports = {
             //format time to a general format
             timeout.time = moment(timeout.time).toISOString();
         }
+        if(!parms) {
+            parms = {};
+        }
         r.table("permissionKeys").insert({ 
             key: key,
             permissions: permissions,
