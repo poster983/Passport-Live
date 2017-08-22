@@ -346,9 +346,19 @@ module.exports = {
      */
     createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
         var key = shortid.generate() + shortid.generate();
+        console.log(parseInt(timeout.tally))
+        console.log(timeout.tally)
         if(timeout.time) {
             //format time to a general format
             timeout.time = moment(timeout.time).toISOString();
+        } else if(timeout.tally) {
+            if(isNaN(parseInt(timeout.tally))) {
+                var err = new Error("timeout.tally expected an int");
+                err.status = 400;
+                return done(err)
+            } else {
+                timeout.tally = parseInt(timeout.tally)
+            }
         }
         if(!parms) {
             parms = {};
