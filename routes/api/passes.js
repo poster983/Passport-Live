@@ -320,11 +320,15 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 
         //makesure that as the requester, you are not accepting your own pass
         if(userId == pass.requester && state == "accepted") {
-            if(pass.status.confirmation.state == "pending") {
+            /*if(pass.status.confirmation.state == "pending") {
                 var err = new Error("Forbidden");
                 err.status = 403;
                 return next(err);
-            }
+            }*/
+            var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+            
         }
 
         //compile doc for updating

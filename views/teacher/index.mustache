@@ -244,7 +244,7 @@ email: hi@josephhassell.com
               <div class="card-content white-text">
                 <span class="card-title">Request A Student</span>
                 <div id="requestAStudentReturn">
-                  <p>Comfing Soon</p>
+                  <p>Comeing later this calendar year.</p>
                 </div>
               </div>
             </div>
@@ -874,6 +874,7 @@ console.log(state)
                   .append(leavingFromEl)
                   .append(requesterEl)
                   .attr("data-passId-arriving", myPasses[i].id)
+                  .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
       $myPasses.append(li)
       if(myPasses[i].status.migration.arrivedTime) {
         setArrivingButtonsAndState(myPasses[i].id, "arrived");
@@ -974,23 +975,29 @@ function checkInButtons(passLI, isCheckedIn) {
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
   var checkInBtn = $("*[data-passId-arriving=" + passId + "]").find("a.cyan.btn-floating");
   var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
 //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
 console.log(state)
   switch(state){
     case "pending": 
-      if(!cantAccept) {
+      if(!cantAccept && !userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+        checkInBtn.attr("disabled", true);
+        checkInBtn.attr("onclick", false);
+        checkInBtn.attr("title", "Accept this pass first");
       } else {
         releaseBtn.attr("disabled", true);
         releaseBtn.attr("onclick", false);
+        checkInBtn.attr("disabled", false);
+        checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+        checkInBtn.attr("title", false);
+        checkInBtn.attr("data-tooltip", "Check Student In");
       }
       undoBtn.attr("disabled", false);
       undoBtn.attr("data-tooltip", "Deny This Pass Request");
       undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
-      checkInBtn.attr("disabled", true);
-      checkInBtn.attr("onclick", false);
-      checkInBtn.attr("title", "Accept this pass first");
+      
       badge.removeClass().addClass("new badge");
       
       break;
@@ -1010,10 +1017,14 @@ console.log(state)
       break;
     case "denied":
     case "canceled":
-      if(!cantAccept) {
+      if(!userIsRequester) {
         releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "Reaccept This Pass");
+        releaseBtn.attr("data-tooltip", "ReAccept Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else if(userIsRequester) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("data-tooltip", "Reopen Pass");
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
       } else {
         releaseBtn.attr("disabled", true);
         releaseBtn.attr("onclick", false);

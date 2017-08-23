@@ -1101,6 +1101,7 @@ function setMyPasses() {
                   .append(leavingFromEl)
                   .append(requesterEl)
                   .attr("data-passId-arriving", myPasses[i].id)
+                  .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
       $myPasses.append(li)
       if(myPasses[i].status.migration.arrivedTime) {
         setArrivingButtonsAndState(myPasses[i].id, "arrived");
@@ -1134,11 +1135,11 @@ function arrivingButtonActions(passLI, action) {
     if(err && err.status == 403) {
       Materialize.toast('Action Forbidden', 4000);
       console.log("Forbidden");
-      materialResponse("cancel", "warning");
+      return materialResponse("cancel", "warning");
     } else if(err) {
       console.log("Error");
       materialResponse("cancel", "error");
-      errorHand(err);
+      return errorHand(err);
     }
 
     if(transaction && transaction.replaced == 1) {
@@ -1164,14 +1165,17 @@ function setPassStatus(passId, status, done) {
 
 
  function setArrivingButtonsAndState(passId, state, cantAccept) {
+
   var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
   var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
+  console.log(typeof userIsRequester)
 //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
 console.log(state)
   switch(state){
     case "pending": 
-      if(!cantAccept) {
+      if(!cantAccept && !userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
       } else {
@@ -1195,14 +1199,23 @@ console.log(state)
       break;
     case "denied":
     case "canceled":
-      if(!cantAccept) {
+      if(!userIsRequester) {
         releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "Reaccept This Pass");
+        releaseBtn.attr("data-tooltip", "ReAccept Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+      } else if(userIsRequester) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("data-tooltip", "Reopen Pass");
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
       } else {
         releaseBtn.attr("disabled", true);
         releaseBtn.attr("onclick", false);
       }
+      /* else if(!cantAccept) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("data-tooltip", "Reopen Pass");
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
+      } */
       
       undoBtn.attr("disabled", true);
       undoBtn.attr("onclick", false);
