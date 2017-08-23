@@ -252,14 +252,16 @@ se.submit = function() {
         if(err) {
           return errorHand(err);
         }
-        console.log(sum);
+        closePage('scheduleEditor');
+        materialResponse("check", "success");
       })
     } else {
       se.newSchedule(comSchedule, function(err, sum) {
         if(err) {
           return errorHand(err);
         }
-        console.log(sum);
+        closePage('scheduleEditor');
+        materialResponse("check", "success");
       })
     }
   })
@@ -298,7 +300,7 @@ se.compileFormRec = function(periods, comSchedule, done) {
   } else {
     var val = $("input[data-teacher-period='" + periods[0] + "']").val()
     if (val.indexOf(" --- ") == -1) {
-      var err = new Error("Period \"" + periods[0].toUpperCase() + "\" teacher field invalid.  Please use the autocomplete function");
+      var err = new Error("Period \"" + periods[0].toUpperCase() + "\" teacher field invalid.  Please use the autocomplete function or check one of the checkboxes ");
       $("input[data-teacher-period='" + periods[0] + "']").removeClass("valid").addClass("invalid");
       return done(err);
     }

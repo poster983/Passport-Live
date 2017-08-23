@@ -527,6 +527,7 @@ email: hi@josephhassell.com
                     type: "get",
                     url: "/api/account/id/"+id,
                     dataType: "json",
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                     success: function(data) {done(null, data)},
                     error: function(jqXHR) {done(jqXHR)}                      
                   });
@@ -724,6 +725,7 @@ email: hi@josephhassell.com
                     type: "get",
                     url: "/api/schedule/for/"+dayToCome,
                     dataType: "json",
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                     success: function(data) {
                       done(null, data)
                     },  
@@ -944,6 +946,7 @@ email: hi@josephhassell.com
                         if(data.inserted > 0) {
                           //confirm pass
                           console.log(data)
+                          setMyPasses();
                           materialResponse("check", "success");
                         } else {
                           var err = new Error("Unknown Error");
@@ -1006,6 +1009,7 @@ function setMyPasses() {
     }
     console.log(myPasses)
     $myPasses = $('#myPassesReturn')
+    $myPasses.empty();
     for(var i = 0; i < myPasses.length; i++) {
       console.log(myPasses[i])
       var checkNo = $("<span/>")
