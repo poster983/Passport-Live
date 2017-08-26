@@ -176,6 +176,8 @@ email: hi@josephhassell.com
             return errorHand(err);
           }
           if(data && data.schedule) {
+            //clear area
+            $("#scheduleBody").empty();
             //do stuff with schedule 
             console.log(data)
             var keys = Object.keys(data.schedule);

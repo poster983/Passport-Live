@@ -227,7 +227,7 @@ email: hi@josephhassell.com
                               </select>
                               <label>Select a Person</label>
                             </div>
-
+                            
                           </div>
                           <!--Pick a Date -->
                           <div id="time" class="section">
@@ -255,6 +255,13 @@ email: hi@josephhassell.com
                               <label>Leaving From</label>
                             </div>
                           </div>
+                          <div id="toPersonClass" class="section col s12" style="display: none;"> 
+                            <div class="card-panel">
+                              <span class="black-text">{Teacher Name} has {Class Name} druing {Period} period
+                              </span>
+                            </div>
+                          </div>
+
                          
                         <!--Advanced-->
                       <div>
@@ -628,6 +635,7 @@ email: hi@josephhassell.com
                 //STAGE 3//
                 /* Date Things */
                 function initDatePicker() {
+
                   var advance = 7;
                   if(toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings && toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
                     var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
@@ -924,6 +932,10 @@ email: hi@josephhassell.com
                   readyTheSubmit();
                 }
 
+                function getToPersonSchedule() {
+
+                }
+
                 
                 function readyTheSubmit() {
                   if((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
@@ -1011,7 +1023,7 @@ function setMyPasses() {
     $myPasses = $('#myPassesReturn')
     $myPasses.empty();
     for(var i = 0; i < myPasses.length; i++) {
-      console.log(myPasses[i])
+      console.log(myPasses)
       var checkNo = $("<span/>")
                       .addClass("right")
                       .append(
@@ -1106,6 +1118,7 @@ function setMyPasses() {
                   .append(requesterEl)
                   .attr("data-passId-arriving", myPasses[i].id)
                   .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
+                  .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
       $myPasses.append(li)
       if(myPasses[i].status.migration.arrivedTime) {
         setArrivingButtonsAndState(myPasses[i].id, "arrived");
@@ -1173,10 +1186,12 @@ function setPassStatus(passId, status, done) {
   var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
   var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
   var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
-  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
+  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true";
+  var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") == "true";
+
   console.log(typeof userIsRequester)
 //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
-console.log(state)
+console.log(cantAccept)
   switch(state){
     case "pending": 
       if(!cantAccept && !userIsRequester) {
@@ -1203,11 +1218,11 @@ console.log(state)
       break;
     case "denied":
     case "canceled":
-      if(!userIsRequester) {
+      if(stateSetByCurrentUser && !userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("data-tooltip", "ReAccept Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-      } else if(userIsRequester) {
+      } else if(stateSetByCurrentUser && userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("data-tooltip", "Reopen Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");

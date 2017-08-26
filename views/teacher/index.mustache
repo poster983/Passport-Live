@@ -635,7 +635,7 @@ function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessag
     if(err) {
       errorHand(err);
       console.log("Error")
-      materialResponse("cancel", "error");
+      return materialResponse("cancel", "error");
     }
     if(trans && trans.replaced == 1) {
       if(isMigrating == "true") {
@@ -645,7 +645,7 @@ function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessag
       }
       setLeavingButtonsAndState(passLI.attr("data-passId-leaving"), status);
     } else {
-      materialResponse("warning", "error");
+      return materialResponse("warning", "error");
     }
   }) 
 
@@ -764,7 +764,7 @@ console.log(state)
         return a.date.localeCompare(b.date)
     });
     for(var i = 0; i < myPasses.length; i++) {
-      console.log(myPasses[i])
+      console.log(myPasses)
       var checkNo = $("<span/>")
                       .addClass("right")
                       .append(
@@ -908,18 +908,18 @@ function arrivingButtonActions(passLI, action) {
     if(err && err.status == 403) {
       Materialize.toast('Action Forbidden', 4000);
       console.log("Forbidden");
-      materialResponse("cancel", "warning");
+      return materialResponse("cancel", "warning");
     } else if(err) {
       console.log("Error");
       materialResponse("cancel", "error");
-      errorHand(err);
+      return errorHand(err);
     }
 
     if(transaction && transaction.replaced == 1) {
       Materialize.toast('Successfully Updated State', 4000) 
       setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
     } else {
-      materialResponse("cancel", "warning");
+      return materialResponse("cancel", "warning");
     }
 
   })

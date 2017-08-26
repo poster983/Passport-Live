@@ -312,6 +312,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 
         if(pass.status.confirmation.state == "denied" || pass.status.confirmation.state == "canceled") {
             if(pass.status.confirmation.setByUser != userId) {
+                //console.log("this")
                 var err = new Error("Forbidden");
                 err.status = 403;
                 return next(err);
@@ -319,12 +320,13 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
         }
 
         //makesure that as the requester, you are not accepting your own pass
-        if(userId == pass.requester && state == "accepted") {
+        if(userId == pass.requester && state == "accepted" && (pass.status.confirmation.state != "denied" && pass.status.confirmation.state != "canceled")) {
             /*if(pass.status.confirmation.state == "pending") {
                 var err = new Error("Forbidden");
                 err.status = 403;
                 return next(err);
             }*/
+            //console.log("this")
             var err = new Error("Forbidden");
                 err.status = 403;
                 return next(err);

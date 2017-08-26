@@ -252,6 +252,7 @@ se.submit = function() {
         if(err) {
           return errorHand(err);
         }
+        loadMySchedules()
         closePage('scheduleEditor');
         materialResponse("check", "success");
       })
@@ -260,6 +261,7 @@ se.submit = function() {
         if(err) {
           return errorHand(err);
         }
+        loadMySchedules()
         closePage('scheduleEditor');
         materialResponse("check", "success");
       })
