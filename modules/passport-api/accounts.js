@@ -190,7 +190,7 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
     }
     console.log(nameSplit)
      r.table("accounts").filter(function(doc){
-            return (doc('userGroup').match(userGroup).and(doc('name')("last").match("(?i)"+nameSplit.lastName).and(doc('name')("first").match("(?i)"+nameSplit.firstName))));
+            return (doc('userGroup').match(userGroup).and(doc('name')("last").match("(?i)"+nameSplit.lastName).or(doc('name')("first").match("(?i)"+nameSplit.firstName))));
         }).
         run(dbConn, function(err, document) {
 

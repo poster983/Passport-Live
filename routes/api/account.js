@@ -260,18 +260,15 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
         }
         console.log(acc)
         var ret = [];
-        for (var i = 0; i < acc.length; i++) {
-             var safeUser = {
-                name: acc[i].name, 
-                email: acc[i].email, 
-                userGroup: acc[i].userGroup, 
-                id: acc[i].id, 
-                groupFields: acc[i].groupFields[userGroup]
-                
-            }
-            ret.push(safeUser);
+        if(acc.length <= 0) {
+            return res.json([]);
         }
-        res.json(ret);
+        for (var i = 0; i < acc.length; i++) {
+            ret.push(utils.cleanUser(acc[i]))
+            if(i>= acc.length -1) {
+                return res.json(ret);
+            }
+        }
     }); 
 });
 
@@ -300,19 +297,16 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
         }
         console.log(acc)
         var ret = [];
-
-        for (var i = 0; i < acc.length; i++) {
-             var safeUser = {
-                name: acc[i].name, 
-                email: acc[i].email, 
-                userGroup: acc[i].userGroup, 
-                id: acc[i].id, 
-                groupFields: acc[i].groupFields[acc[i].userGroup]
-                
-            }
-            ret.push(safeUser);
+        if(acc.length <= 0) {
+            return res.json([]);
         }
-        res.json(ret);
+        for (var i = 0; i < acc.length; i++) {
+            ret.push(utils.cleanUser(acc[i]))
+            if(i>= acc.length -1) {
+                return res.json(ret);
+            }
+        }
+        
     }); 
 });
 
