@@ -519,20 +519,19 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
     })
 });
 
-/** GETs Current period regardless of dashboard
-    * @function getCurrentPeriod
+/** GETs Current Period Location regardless of dashboard
+    * @function getCurrentLocation
     * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/student/id/:id/
+    * @api GET /api/account/location/student/id/:id/
     * @apiparam {string} id - A user's ID.
-    * @apiresponse {json} Returns Joined data of the schedule
+    * @apiresponse {json} Returns Both teacher and studnet locations 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Auth
 */
 //MAKE REQ.USER SUPPLY THE ID
-router.get('/schedule/current/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentPeriod(req, res, next) {
+router.get('/location/current/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
