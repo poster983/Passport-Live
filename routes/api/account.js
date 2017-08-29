@@ -554,7 +554,7 @@ router.get('/location/current/id/:id/', passport.authenticate('jwt', { session: 
         //
         var promise = new Promise(function(resolve, reject) {
             if(data.schedules.student) {
-
+                //Make a function that gets current period, and use existing function to get schedules
             } else {
                 resolve({});
             }
