@@ -61,7 +61,7 @@ router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
             return next(err);
         } 
         if(data) {
-            var pattern = GeoPattern.generate(data.name.first + " " + data.name.last);
+            var pattern = GeoPattern.generate(data.name.first + " " + data.name.last, {baseColor: "#b71c1c"});
             var svg = pattern.toSvg();
             var color = pattern.color;
             res.status(200).send(svg);

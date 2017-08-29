@@ -519,6 +519,58 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
     })
 });
 
+/** GETs Current period regardless of dashboard
+    * @function getCurrentPeriod
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/student/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns Joined data of the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo Auth
+*/
+//MAKE REQ.USER SUPPLY THE ID
+router.get('/schedule/current/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentPeriod(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    api.getUserByID(r.conn(), req.params.id, function(err, data) {
+        if(err) {
+            return next(err)
+        } 
+        if(!data) {
+            var err = new Error("Account Not Found");
+            err.status = 404;
+            return next(err)
+        }
+        if(!data.schedules || (!data.schedules.student && !data.schedules.teacher)) {
+            var err = new Error("Account Has No Schedules Linked");
+            err.status = 404;
+            return next(err)
+        }
+        //
+        var promise = new Promise(function(resolve, reject) {
+            if(data.schedules.student) {
+
+            } else {
+                resolve({});
+            }
+        });
+
+    });
+    /*api.getStudentSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        
+        res.send(data)
+    })*/
+});
+
 /** Checks if an accuunt is missing required fields by that dashboard  
     * @function studentCheckIfIncomplete
     * @async
