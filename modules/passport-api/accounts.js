@@ -199,9 +199,11 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
         }
 
         document.toArray(function(err, arr) {
+            console.log(arr)
             if(err) {
                 return done(err)
             }
+
             if(arr.length <= 0) {
                 return done(null, arr)
             }

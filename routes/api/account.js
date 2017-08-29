@@ -235,8 +235,8 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
 
 
 /**
-    * GETs accounts by name
-    * @function handleGetAccountsByName
+    * GETs accounts by name and usergroup
+    * @function handleGetAccountsByNameAndUserGroup
     * @async
     * @param {request} req
     * @param {response} res
@@ -247,14 +247,16 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByNameAndUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
     
     api.getUserGroupAccountByName(r.conn(), name, userGroup, function(err, acc) {
         if(err) {
-            next(err);
+            return next(err);
+        } else if(acc == null) {
+            return res.json([]) 
         }
         console.log(acc)
         var ret = [];
@@ -265,6 +267,47 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
                 userGroup: acc[i].userGroup, 
                 id: acc[i].id, 
                 groupFields: acc[i].groupFields[userGroup]
+                
+            }
+            ret.push(safeUser);
+        }
+        res.json(ret);
+    }); 
+});
+
+/**
+    * GETs accounts by name
+    * @function handleGetAccountsByName
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/name/:name/
+    * @apiparam {string} name - A user's name.  Can be in any name format.
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+router.get("/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
+    var name = req.params.name;
+
+    
+    api.getUserGroupAccountByName(r.conn(), name, ".", function(err, acc) {
+
+        if(err) {
+            return next(err);
+        } else if(acc == null) {
+            return res.json([]) 
+        }
+        console.log(acc)
+        var ret = [];
+
+        for (var i = 0; i < acc.length; i++) {
+             var safeUser = {
+                name: acc[i].name, 
+                email: acc[i].email, 
+                userGroup: acc[i].userGroup, 
+                id: acc[i].id, 
+                groupFields: acc[i].groupFields[acc[i].userGroup]
                 
             }
             ret.push(safeUser);
