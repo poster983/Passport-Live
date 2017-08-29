@@ -21,8 +21,8 @@ email: hi@josephhassell.com
 
 <body class="grey darken-4">
 
+    {{>mixens/accountOverlay}}
     
-
     <nav>
       <div class="nav-wrapper">
        
@@ -166,7 +166,16 @@ email: hi@josephhassell.com
              console.log(state);
           });*/
           //change for mixen
-            
+          var accountOverlay = new AccountOverlay("febffe69-0185-46ac-a005-09c1c6de154f", function(err) {
+            if(err) {
+              return errorHand(err);
+            }
+            $("body").prepend($("<div/>").addClass("userCardBundle").append($("<div/>").addClass("row").append(accountOverlay.topCard()))
+                .append($("<div/>").addClass("row")
+                  .append(accountOverlay.universalInfoCard())
+                )
+              );
+          });
         </script>
 </body>
 </html>
