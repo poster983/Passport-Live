@@ -33,6 +33,8 @@ var api = require('../../modules/passport-api/index.js'); //("jdsfak");
 var cors = require('cors');
 var ssarv = require("ssarv");
 
+var scheduleApi = require("../../modules/passport-api/schedules.js");
+
 router.use(cors());
 router.options('*', cors())
 
@@ -397,20 +399,6 @@ router.post('/test/db', function(req, res, next) {
     })
 });*/
 
-router.get('/test/error/:error', function(req, res, next) {
-    /*
-    var err = new Error(req.params.error);
-    err.status = 400
-    next(err);*/
-    throw new Error(req.params.error);
-});
-router.get('/test/error/account/:error', function(req, res, next) {
-    
-    var err = new Error(req.params.error);
-    err.status = 400
-    err.level = 'fatal'
-    next(err);
-});
 /*
 router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
@@ -423,6 +411,15 @@ router.get('/test/key/:key', function(req, res, next) {
         
     });
 })*/
+
+router.get("/test/date/:dateTime", function(req, res, next) {
+    scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, resp) {
+        if(err) {
+            return next(err)
+        }
+        return res.send(resp)
+    })
+})
 
 
 

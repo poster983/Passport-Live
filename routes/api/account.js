@@ -26,6 +26,7 @@ var r = require("../../modules/db/index.js");
 var cors = require('cors');
 var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
+var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passport = require("passport");
 var config = require("config");
 var ssarv = require("ssarv")
@@ -532,6 +533,7 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
 */
 //MAKE REQ.USER SUPPLY THE ID
 router.get('/location/current/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
+    var promices = [];
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
@@ -552,14 +554,16 @@ router.get('/location/current/id/:id/', passport.authenticate('jwt', { session: 
             return next(err)
         }
         //
-        var promise = new Promise(function(resolve, reject) {
+        promices.push(new Promise(function(resolve, reject) {
             if(data.schedules.student) {
                 //Make a function that gets current period, and use existing function to get schedules
             } else {
                 resolve({});
             }
-        });
+        }));
 
+        Promise.all(promises).then(function(location){
+        });
     });
     /*api.getStudentSchedule(req.params.id, function(err, data) {
         if(err) {
