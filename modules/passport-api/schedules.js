@@ -56,7 +56,37 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
             if(err) {
                 return done(err);
             }
-            return done(null, schedules);
+            //return done(null, schedules);
+            if(!schedules.id) {
+                var err = new Error("No Schedule Found")
+                err.status = 404;
+                return done(err);
+            }
+            if(!schedules.scheduleDefinition || !schedules.scheduleDefinition.scheduleData) {
+                var err = new Error("Schedule Data Invalid")
+                err.status = 500;
+                return done(err);
+            }
+            var scheduleData = schedules.scheduleDefinition.scheduleData;
+            var scheduleConsts = Object.keys(scheduleData);
+            var currentPeriods = [];
+            if(scheduleConsts.length <= 0) {
+                var err = new Error("No Schedule Data Found")
+                err.status = 500;
+                return done(err);
+            }
+            for(var x = 0; x < scheduleConsts.length; x++) {
+                console.log(scheduleData[scheduleConsts[x]].start)
+                console.log(scheduleData[scheduleConsts[x]].end)
+                if(utcQuaryTime.isBetween(moment(scheduleData[scheduleConsts[x]].start, "HH:mm"), moment(scheduleData[scheduleConsts[x]].end, "HH:mm"))) {
+                    currentPeriods.push({period: scheduleConsts[x], start: scheduleData[scheduleConsts[x]].start, end: scheduleData[scheduleConsts[x]].end})
+                    
+                }
+                if(x >= scheduleConsts.length-1) {
+                    return done(null, currentPeriods);
+                }
+            }
+            
         })
     } else {
         var err = new Error("Invalid Date/Time");

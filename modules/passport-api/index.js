@@ -318,7 +318,7 @@ module.exports = {
                                     if(mIS.repeatingRule.importance < validRows[i].repeatingRule.importance) {
                                         
                                         mIS = validRows[i];
-                                        console.log(mIS)
+                                        
                                     } else if(mIS.repeatingRule.importance == validRows[i].repeatingRule.importance) {
                                         //conflicting importance fallback
                                         if(moment(mIS.repeatingRule.startsOn).isBefore(validRows[i].repeatingRule.startsOn)) {
