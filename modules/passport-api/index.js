@@ -229,14 +229,15 @@ module.exports = {
     * @function getScheduleOfADate
     * @link module:passportApi
     * @async
-    * @returns {callback} Data of the action
+    * @returns {callback} Array of schedules OR just a single schedule if checkImportance is true
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} date - Moment.js compadable date
+    * @param {boolean} checkImportance - If the function should automaticly check the importance of the schedule and only return the highest importance
     * @param {function} done - Callback
     * @todo MAKE BETTER
     */
 
-    getScheduleOfADate: function(dbConn, date, done) {
+    getScheduleOfADate: function(dbConn, date, checkImportance, done) {
          if(!moment(date).isValid()) {
 
             var err = new Error("Date not valid");
@@ -301,7 +302,44 @@ module.exports = {
                         console.log(weekDif % results[x].repeatingRule.every)
                         console.log("_________");*/
                         if(x >= results.length-1) {
-                            return done(null, validRows);
+                            //check returns nly the most important 
+                            if(checkImportance) {
+                                if(validRows.length <= 0) {
+
+                                    return done(null, null);
+                                }
+                                if(validRows.length == 1) {
+
+                                    return done(null, validRows[0]);
+                                }
+                                var mIS = validRows[0];
+                                for(var i = 1; i < validRows.length; i++) {
+
+                                    if(mIS.repeatingRule.importance < validRows[i].repeatingRule.importance) {
+                                        
+                                        mIS = validRows[i];
+                                        console.log(mIS)
+                                    } else if(mIS.repeatingRule.importance == validRows[i].repeatingRule.importance) {
+                                        //conflicting importance fallback
+                                        if(moment(mIS.repeatingRule.startsOn).isBefore(validRows[i].repeatingRule.startsOn)) {
+                                            mIS = validRows[i];
+                                        } else if(mIS.repeatingRule.startsOn == validRows[i].repeatingRule.startsOn) {
+                                            var err = new Error("Unable to resolve conflicting schedules with repeatingRule IDs of: \"" + mIS.id + "\" AND \"" + validRows[i].id + "\"");
+                                            err.status = 500;
+                                            return done(err)
+                                        }
+                                    }
+
+                                    //on done
+                                    if(i >= validRows.length-1) {
+                                        return done(null, mIS)
+                                    }
+                                }
+                            } else {
+                                return done(null, validRows);
+                            }
+                            
+                            
                         }
                     }
                     

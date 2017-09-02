@@ -40,17 +40,24 @@ var moment = require("moment");
 
 exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     if(moment(dateTime).isValid()) {
+        var utcQuaryTime = moment(moment(dateTime).utc().format("HH:mm"), "HH:mm");
+        var dateTimeUTC = moment(dateTime).utc();
         console.log(moment(dateTime).utc())
         console.log(moment.parseZone(dateTime))
         console.log(moment(moment(dateTime).utc().format("HH:mm"), "HH:mm"), "this");
 
         console.log(moment())
         console.log(moment(dateTime).utc())
-        var utcQuaryTime = moment(moment(dateTime).utc().format("HH:mm"), "HH:mm");
+        
         var startTime = "11:30"
         var endTime = "13:30"
         console.log(utcQuaryTime.isBetween(moment(startTime, "HH:mm"), moment(endTime, "HH:mm")));
-        //indexAPI.getScheduleOfADate(db.conn(), )
+        indexAPI.getScheduleOfADate(db.conn(), dateTimeUTC, true, function(err, schedules) {
+            if(err) {
+                return done(err);
+            }
+            return done(null, schedules);
+        })
     } else {
         var err = new Error("Invalid Date/Time");
         err.status = 400;

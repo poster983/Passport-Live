@@ -287,7 +287,7 @@ router.get('/schedule/repeat/:id', function(req, res, next) {
 
 router.get('/schedule/for/:date', function(req, res, next) {
     var date=req.params.date;
-    api.getScheduleOfADate(connection, date, function(err, data) {
+    api.getScheduleOfADate(connection, date, false, function(err, data) {
         if(err) {
             return next(err);
         }
