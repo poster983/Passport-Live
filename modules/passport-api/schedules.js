@@ -42,16 +42,16 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     if(moment(dateTime).isValid()) {
         var utcQuaryTime = moment(moment(dateTime).utc().format("HH:mm"), "HH:mm");
         var dateTimeUTC = moment(dateTime).utc();
-        console.log(moment(dateTime).utc())
+        /*console.log(moment(dateTime).utc())
         console.log(moment.parseZone(dateTime))
         console.log(moment(moment(dateTime).utc().format("HH:mm"), "HH:mm"), "this");
 
         console.log(moment())
         console.log(moment(dateTime).utc())
-        
+        */
         var startTime = "11:30"
         var endTime = "13:30"
-        console.log(utcQuaryTime.isBetween(moment(startTime, "HH:mm"), moment(endTime, "HH:mm")));
+        //console.log(utcQuaryTime.isBetween(moment(startTime, "HH:mm"), moment(endTime, "HH:mm")));
         indexAPI.getScheduleOfADate(db.conn(), dateTimeUTC, true, function(err, schedules) {
             if(err) {
                 return done(err);
@@ -76,8 +76,6 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
                 return done(err);
             }
             for(var x = 0; x < scheduleConsts.length; x++) {
-                console.log(scheduleData[scheduleConsts[x]].start)
-                console.log(scheduleData[scheduleConsts[x]].end)
                 if(utcQuaryTime.isBetween(moment(scheduleData[scheduleConsts[x]].start, "HH:mm"), moment(scheduleData[scheduleConsts[x]].end, "HH:mm"))) {
                     currentPeriods.push({period: scheduleConsts[x], start: scheduleData[scheduleConsts[x]].start, end: scheduleData[scheduleConsts[x]].end})
                     

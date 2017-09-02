@@ -526,45 +526,50 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/location/student/id/:id/
+    * @api GET /api/account/location/datetime/:dateTime/id/:id/
     * @apiparam {string} id - A user's ID.
+    * @apiparam {string} dateTime - An ISO dateTime string WITH timezone.
     * @apiresponse {json} Returns Both teacher and studnet locations 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-//MAKE REQ.USER SUPPLY THE ID
-router.get('/location/current/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
-    var promices = [];
+
+router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
+    var promises = [];
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
         return next(err)
     }
-    api.getUserByID(r.conn(), req.params.id, function(err, data) {
+    scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, currentSchedules) {
         if(err) {
-            return next(err)
-        } 
-        if(!data) {
-            var err = new Error("Account Not Found");
-            err.status = 404;
-            return next(err)
+            return next(err);
         }
-        if(!data.schedules || (!data.schedules.student && !data.schedules.teacher)) {
-            var err = new Error("Account Has No Schedules Linked");
-            err.status = 404;
-            return next(err)
+        if(currentSchedules.length <=0 ) {
+            return res.json({})
         }
-        //
-        promices.push(new Promise(function(resolve, reject) {
-            if(data.schedules.student) {
-                //Make a function that gets current period, and use existing function to get schedules
-            } else {
-                resolve({});
+        var forPeriods = currentSchedules.map(function(x) {
+            return x.period
+        })
+        console.log(forPeriods)
+        api.getSpecificPeriods(req.params.id, forPeriods, function(err, periodData) {
+            if(err) {
+                return next(err)
             }
-        }));
 
-        Promise.all(promises).then(function(location){
-        });
-    });
+            if(!periodData) {
+                var err = new Error("getSpecificPeriods did not return anything ");
+                err.status = 500;
+                return next(err)
+            }
+            if(periodData.student) {
+                for(var x = 0; x < periodData.student.length; x++) {
+
+                }
+            }
+            return res.json(periodData)
+        })
+    })
+   
     /*api.getStudentSchedule(req.params.id, function(err, data) {
         if(err) {
             return next(err);

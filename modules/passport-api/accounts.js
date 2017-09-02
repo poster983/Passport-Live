@@ -628,7 +628,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     student.schedule[keys[0]].teacher.id = teacherAccount.id;
                     student.schedule[keys[0]].teacher.name = teacherAccount.name;
                     student.schedule[keys[0]].teacher.scheduleID = null;
-                    console.log(keys[0], "teacherid is Null")
+                    //console.log(keys[0], "teacherid is Null")
 
                     return recursiveStudentScheduleJoin(keys.slice(1), student, done)
                 } else {
@@ -647,7 +647,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
 
                             if(teacher.schedule.hasOwnProperty(keys[0]) && teacher.schedule[keys[0]]) {
                                 //start joining
-                                console.log(teacher.schedule[keys[0]], keys[0])
+                                //console.log(teacher.schedule[keys[0]], keys[0])
                                 student.schedule[keys[0]] = teacher.schedule[keys[0]];
                                 student.schedule[keys[0]].teacher = {};
                                 student.schedule[keys[0]].teacher.id = teacher.userId;
@@ -673,8 +673,83 @@ function recursiveStudentScheduleJoin(keys, student, done) {
             return done(e)
         }
     } else {
-        console.log(keys[0], "skipped")
+        //console.log(keys[0], "skipped")
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }
 
+}
+
+/** 
+    * Gets Specific Periods based of user.  
+    * @function getSpecificPeriods
+    * @link module:passportAccountsApi
+    * @async
+    * @param {string} userID - ID of User.
+    * @param {function} done - Callback
+    * @returns {callback} Both teacher and student dashboard period info
+    */
+exports.getSpecificPeriods = function(userID, periodArray, done) {
+    var promises = [];
+    if(periodArray.length <= 0) {
+        var err = new Error("No Periods Specified");
+            err.status = 404;
+            return done(err)
+    }
+    exports.getUserByID(db.conn(), userID, function(err, userData) {
+        if(err) {
+            return done(err)
+        } 
+        if(!userData) {
+            var err = new Error("Account Not Found");
+            err.status = 404;
+            return done(err)
+        }
+        if(!userData.schedules || (!userData.schedules.student && !userData.schedules.teacher)) {
+            var err = new Error("Account Has No Schedules Linked");
+            err.status = 404;
+            return done(err)
+        }
+    
+        if(userData.schedules.student) {
+            promises.push(new Promise(function(resolve, reject) {
+                exports.getStudentSchedule(userID, function(err, studentSchedule) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(!studentSchedule.schedule) {
+                        var err = new Error("Schedule Not Found");
+                        err.status = 404;
+                        return reject(err)
+                    }
+                    var studentReturn = {student: []};
+                    for(var x = 0; x < periodArray.length; x++) {
+                        studentReturn.student.push({period: periodArray[x], periodData: studentSchedule.schedule[periodArray[x]]})
+                        if(x >= periodArray.length-1 ) {
+                            return resolve(studentReturn);                            
+                        }
+                        
+                    }
+                    
+                })
+                
+            }));
+        }
+        if(userData.schedules.teacher) {
+            promises.push(new Promise(function(resolve, reject) {
+                var teacherReturn = {teacher: []};
+                resolve(teacherReturn);
+            }));
+        }
+
+        Promise.all(promises).then(function(periods){
+            if(periods.length == 2) {
+                return done(null, Object.assign({},periods[0], periods[1]))
+            } else {
+                return done(null, periods[0])
+            }
+            
+        }).catch(function(err) {
+            return done(err)
+        });
+    });
 }
