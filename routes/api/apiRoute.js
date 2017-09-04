@@ -33,7 +33,7 @@ var api = require('../../modules/passport-api/index.js'); //("jdsfak");
 var cors = require('cors');
 var ssarv = require("ssarv");
 
-var scheduleApi = require("../../modules/passport-api/schedules.js");
+var accountApi = require("../../modules/passport-api/accounts.js");
 
 router.use(cors());
 router.options('*', cors())
@@ -411,7 +411,7 @@ router.get('/test/key/:key', function(req, res, next) {
         
     });
 })*/
-
+/*
 router.get("/test/date/:dateTime", function(req, res, next) {
     scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, resp) {
         if(err) {
@@ -419,8 +419,15 @@ router.get("/test/date/:dateTime", function(req, res, next) {
         }
         return res.send(resp)
     })
+})*/
+router.get("/test/teacherSchedule/:id", function(req, res, next) {
+    accountApi.getTeacherSchedule(req.params.id, function(err, resp) {
+        if(err) {
+            return next(err)
+        }
+        return res.send(resp)
+    })
 })
-
 
 
 //default Responce

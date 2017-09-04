@@ -26,13 +26,16 @@ var r = require("../../modules/db/index.js");
 var cors = require('cors');
 var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
-var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passport = require("passport");
 var config = require("config");
 var ssarv = require("ssarv")
 
 var miscApi = require("../../modules/passport-api/index.js");
 
+
+var scheduleApi = require("../../modules/passport-api/schedules.js");
+var passApi = require("../../modules/passport-api/passes.js");
+var moment = require("moment")
 
 //var for backwards compadability.  neads to be removed later 
 
@@ -550,16 +553,77 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
         var forPeriods = currentSchedules.map(function(x) {
             return x.period
         })
-        //console.log(forPeriods)
-        api.getSpecificPeriods(req.params.id, forPeriods, function(err, periodData) {
-            if(err) {
-                return next(err)
-            }
 
+        //get user's location 
+        promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods));
+
+        //Check for Passes 
+        promises.push(new Promise(function(doneResolve, doneReject) {
+            passApi.flexableGetPasses(req.params.id, "migrator", moment(req.params.dateTime).utc().format("Y-MM-DD"), moment(req.params.dateTime).add(1, "days").utc().format("Y-MM-DD"), function(err, passes) {
+                if(err) {
+                    return reject(err);
+                }
+                var passPromise = [];
+                if(passes.length <= 0) {
+                    return resolve([])
+                }
+                console.log(passes.length)
+                for(var x = 0; x < passes.length; x++) {
+                    if(!passes[x].toPerson || !passes[x].toPerson.schedules) {
+                        passPromise.push(new Promise(function(resolve, reject) {
+                            return resolve([])
+                        }));
+                        
+                    } else {
+                        if(!passes[x].toPerson.schedules.teacher && !passes[x].toPerson.schedules.student) {
+                        //console.log(passes[x].toPerson)
+                            passPromise.push(new Promise(function(resolve, reject) {
+                                return resolve([])
+                            }));
+                        } else {
+                            passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods));
+                        }
+                    }
+                    
+                    
+
+                    if(x >= passes.length - 1) {
+                        console.log("hello")
+                        Promise.all(passPromise).then(function(data) {
+                            console.log(data)
+                            return doneResolve(data)
+                        }).catch(function(err) {
+                            return doneReject(err)
+                        });
+                    }
+                }
+                
+
+
+                
+            });
+        }));
+
+        Promise.all(promises).then(function(data) {
+            return res.json(data)
+        }).catch(function(err) {
+            return next(err)
+        });
+    })
+});
+
+function getPeriodsInScheduleThenReformat(userID, forPeriods) {
+    return new Promise(function(doneResolve, doneReject) {
+        var promises = [];
+         api.getSpecificPeriods(userID, forPeriods, function(err, periodData) {
+            if(err) {
+                return doneReject(err)
+            }
+            //return res.json(periodData)
             if(!periodData) {
                 var err = new Error("getSpecificPeriods did not return anything ");
                 err.status = 500;
-                return next(err)
+                return doneReject(err)
             }
             //Get student.schedule return data
             var scheduleLocationReturn = {};
@@ -593,32 +657,30 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                 if(periodData.teacher) {
                     scheduleLocationReturn.teacher = {};
                     scheduleLocationReturn.teacher.schedule = [];
+                    var pT = periodData.teacher;
+
+                    for(var x = 0; x < pT.length; x++) {
+                        if(pT[x].periodData) {
+                            scheduleLocationReturn.teacher.schedule.push(Object.assign({},{period: pT[x].period}, pT[x].periodData))
+                        }
+                    }
                     return resolve();
                 } else {
                     return resolve();
                 }
             }));
 
-            
-
             Promise.all(promises).then(function(data) {
-                return res.json(scheduleLocationReturn)
+                return doneResolve(scheduleLocationReturn)
             }).catch(function(err) {
-                return next(err)
+                return doneReject(err)
             });
+        });
 
-            
-        })
-    })
-   
-    /*api.getStudentSchedule(req.params.id, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-        
-        res.send(data)
-    })*/
-});
+    });
+}
+
+/**/
 
 /** Checks if an accuunt is missing required fields by that dashboard  
     * @function studentCheckIfIncomplete

@@ -480,6 +480,7 @@ email: hi@josephhassell.com
                  $.ajax({
                     type: "get",
                     url: "/api/account/userGroup/"+userGroup,
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                     //dataType: "json",
                     success: function(data) {
                       //set data

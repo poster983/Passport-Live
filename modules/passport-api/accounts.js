@@ -551,7 +551,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
 }
 /** 
     * Gets a schedule for a student dash 
-    * @function newUserSchedule
+    * @function getStudentSchedule
     * @link module:passportAccountsApi
     * @async
     * @param {string} userID - ID of User.
@@ -680,6 +680,53 @@ function recursiveStudentScheduleJoin(keys, student, done) {
 }
 
 /** 
+    * Gets a schedule for a teacher dash 
+    * @function getTeacherSchedule
+    * @link module:passportAccountsApi
+    * @async
+    * @param {string} userID - ID of User.
+    * @param {function} done - Callback
+    * @returns {callback}
+    */
+exports.getTeacherSchedule = function(userID, done) {
+    if(!userID) {
+        var err = new Error("User ID Not Present");
+        err.status = 400;
+        return done(err)
+    }
+
+    r.table('accounts').get(userID).pluck({
+        "schedules": {
+            "teacher": true
+        }
+    }).run(db.conn(), function(err, accDoc) {
+         if(err) {
+
+            return done(err);
+        }
+        //if returned stuff
+        if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
+             r.table('userSchedules').get(accDoc.schedules.teacher).run(db.conn(), function(err, teacher) {
+                if(err) {
+                    return done(err);
+                }
+                if(!teacher || !teacher.schedule) {
+                    var err = new Error("teacher.schedule not defined");
+                    err.status = 500;
+                    return done(err)
+                }
+
+                return done(null, teacher)
+            });
+        } else {
+            var err = new Error("Account has no schedule linked");
+                    err.status = 404;
+                    return done(err)
+        }
+    });
+}
+
+/** 
     * Gets Specific Periods based of user.  
     * @function getSpecificPeriods
     * @link module:passportAccountsApi
@@ -736,8 +783,24 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
         }
         if(userData.schedules.teacher) {
             promises.push(new Promise(function(resolve, reject) {
-                var teacherReturn = {teacher: []};
-                resolve(teacherReturn);
+                exports.getTeacherSchedule(userID, function(err, teacherSchedule) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(!teacherSchedule.schedule) {
+                        var err = new Error("Schedule Not Found");
+                        err.status = 404;
+                        return reject(err)
+                    }
+                    var teacherReturn = {teacher: []};
+                    for(var x = 0; x < periodArray.length; x++) {
+                        teacherReturn.teacher.push({period: periodArray[x], periodData: teacherSchedule.schedule[periodArray[x]]})
+                        if(x >= periodArray.length-1 ) {
+                            return resolve(teacherReturn);                            
+                        }
+                        
+                    }
+                })
             }));
         }
 
