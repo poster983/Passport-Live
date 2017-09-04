@@ -550,7 +550,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
         var forPeriods = currentSchedules.map(function(x) {
             return x.period
         })
-        console.log(forPeriods)
+        //console.log(forPeriods)
         api.getSpecificPeriods(req.params.id, forPeriods, function(err, periodData) {
             if(err) {
                 return next(err)
@@ -561,12 +561,53 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                 err.status = 500;
                 return next(err)
             }
-            if(periodData.student) {
-                for(var x = 0; x < periodData.student.length; x++) {
-
+            //Get student.schedule return data
+            var scheduleLocationReturn = {};
+            promises.push(new Promise(function(resolve, reject) {
+                if(periodData.student) {
+                    scheduleLocationReturn.student = {};
+                    scheduleLocationReturn.student.schedule = [];
+                    var pS = periodData.student;
+                    for(var x = 0; x < pS.length; x++) {
+                        if(pS[x].periodData) {
+                            //check if they have a teacher or not
+                            if(pS[x].periodData.teacher) {
+                                //check if the teacer has a schedule set
+                                scheduleLocationReturn.student.schedule.push(Object.assign({},{period: pS[x].period}, pS[x].periodData))
+                            } else {
+                                scheduleLocationReturn.student.schedule.push({period: pS[x].period, teacher: null})
+                            }
+                        }
+                        //end
+                        if(x >= pS.length - 1) {
+                            return resolve();
+                        }
+                    }
+                } else {
+                    return resolve();
                 }
-            }
-            return res.json(periodData)
+            }));
+
+            //get teacher.schedule 
+            promises.push(new Promise(function(resolve, reject) {
+                if(periodData.teacher) {
+                    scheduleLocationReturn.teacher = {};
+                    scheduleLocationReturn.teacher.schedule = [];
+                    return resolve();
+                } else {
+                    return resolve();
+                }
+            }));
+
+            
+
+            Promise.all(promises).then(function(data) {
+                return res.json(scheduleLocationReturn)
+            }).catch(function(err) {
+                return next(err)
+            });
+
+            
         })
     })
    
