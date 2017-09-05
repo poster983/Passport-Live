@@ -588,7 +588,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                     
 
                     if(x >= passes.length - 1) {
-                        console.log("hello")
+                        //console.log("hello")
                         Promise.all(passPromise).then(function(data) {
                             console.log(data)
                             return doneResolve(data)
