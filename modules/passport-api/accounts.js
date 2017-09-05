@@ -696,6 +696,8 @@ exports.getTeacherSchedule = function(userID, done) {
     }
 
     r.table('accounts').get(userID).pluck({
+        "name": true,
+        "id": true,
         "schedules": {
             "teacher": true
         }
@@ -715,7 +717,7 @@ exports.getTeacherSchedule = function(userID, done) {
                     err.status = 500;
                     return done(err)
                 }
-
+                
                 return done(null, teacher)
             });
         } else {
