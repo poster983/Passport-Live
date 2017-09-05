@@ -591,27 +591,25 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                         //console.log("hello")
                         Promise.all(passPromise).then(function(data) {
                             var finalPassData = {};
-                            var studnetPassArr = [];
+                            var studentPassArr = [];
                             var teacherPassArr = [];
-                            return doneResolve(data)
+                            
                             if(data.length <= 0) {
                                 return doneResolve({});
                             }
                             for(var i = 0; i < data.length; i++) {
-                                console.log(require('util').inspect(finalPassData, {showHidden: false, depth: null}), i)
-                                //finalPassData = Object.assign({}, finalPassData, data[i]);
                                 if(data[i].pass && data[i].pass.student) {
-                                    studnetPassArr.push(data[i].pass.student)
+                                   studentPassArr= studentPassArr.concat(data[i].pass.student)
                                 }
 
                                 if(data[i].pass && data[i].pass.teacher) {
-                                    teacherPassArr.push(data[i].pass.teacher)
+                                    teacherPassArr = teacherPassArr.concat(data[i].pass.teacher);
                                 }
 
                                 if(i >= data.length -1 ) {
 
                                     console.log(finalPassData, "tru")
-                                    return doneResolve({pass: {student: studnetPassArr, teacher: teacherPassArr}})
+                                    return doneResolve({pass: {student: studentPassArr, teacher: teacherPassArr}})
                                 }
                             }
                             
@@ -628,7 +626,8 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
         }));
 
         Promise.all(promises).then(function(data) {
-            return res.json(data)
+
+            return res.json(Object.assign({}, data[0], data[1]))
         }).catch(function(err) {
             return next(err)
         });
