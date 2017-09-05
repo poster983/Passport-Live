@@ -555,7 +555,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
         })
 
         //get user's location 
-        promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods));
+        promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods, "schedule"));
 
         //Check for Passes 
         promises.push(new Promise(function(doneResolve, doneReject) {
@@ -581,7 +581,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                                 return resolve([])
                             }));
                         } else {
-                            passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods));
+                            passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods, "pass"));
                         }
                     }
                     
@@ -590,7 +590,8 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                     if(x >= passes.length - 1) {
                         //console.log("hello")
                         Promise.all(passPromise).then(function(data) {
-                            console.log(data)
+
+                            console.log(data, "tru")
                             return doneResolve(data)
                         }).catch(function(err) {
                             return doneReject(err)
@@ -612,7 +613,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
     })
 });
 
-function getPeriodsInScheduleThenReformat(userID, forPeriods) {
+function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName) {
     return new Promise(function(doneResolve, doneReject) {
         var promises = [];
          api.getSpecificPeriods(userID, forPeriods, function(err, periodData) {
@@ -630,16 +631,16 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods) {
             promises.push(new Promise(function(resolve, reject) {
                 if(periodData.student) {
                     scheduleLocationReturn.student = {};
-                    scheduleLocationReturn.student.schedule = [];
+                    scheduleLocationReturn.student[scheduleKeyName] = [];
                     var pS = periodData.student;
                     for(var x = 0; x < pS.length; x++) {
                         if(pS[x].periodData) {
                             //check if they have a teacher or not
                             if(pS[x].periodData.teacher) {
                                 //check if the teacer has a schedule set
-                                scheduleLocationReturn.student.schedule.push(Object.assign({},{period: pS[x].period}, pS[x].periodData))
+                                scheduleLocationReturn.student[scheduleKeyName].push(Object.assign({},{period: pS[x].period}, pS[x].periodData))
                             } else {
-                                scheduleLocationReturn.student.schedule.push({period: pS[x].period, teacher: null})
+                                scheduleLocationReturn.student[scheduleKeyName].push({period: pS[x].period, teacher: null})
                             }
                         }
                         //end
@@ -656,12 +657,12 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods) {
             promises.push(new Promise(function(resolve, reject) {
                 if(periodData.teacher) {
                     scheduleLocationReturn.teacher = {};
-                    scheduleLocationReturn.teacher.schedule = [];
+                    scheduleLocationReturn.teacher[scheduleKeyName] = [];
                     var pT = periodData.teacher;
 
                     for(var x = 0; x < pT.length; x++) {
                         if(pT[x].periodData) {
-                            scheduleLocationReturn.teacher.schedule.push(Object.assign({},{period: pT[x].period}, pT[x].periodData))
+                            scheduleLocationReturn.teacher[scheduleKeyName].push(Object.assign({},{period: pT[x].period}, pT[x].periodData))
                         }
                     }
                     return resolve();
