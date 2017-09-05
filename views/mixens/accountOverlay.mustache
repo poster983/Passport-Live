@@ -1,4 +1,4 @@
-<div id="accountInfo" class="accountInfoOverlay">
+<div id="accountInfo" class="accountInfoOverlay active">
   
   <div class="userCardBundle">
     <!--Top Card -->
@@ -13,7 +13,7 @@
               <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="userCardBundleAvatar" class="card-avatar circle responsive-img">
             </div>
             <br>
-            <span class="card-title black-text center">Salutation. FirstName LastName</span>
+            <span class="card-title black-text center">Salutation. FirstName LastName <i class="material-icons" title="User has verified their email">verified_user</i><i class="material-icons" title="User is archived">archive</i></span>
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
         <div class="card">
           <div class="card-content">
            <span class="card-title">Universal Info</span>
-             <span title="Account ID"><i class="material-icons">perm_identity</i> <strong>4564651asd654f56ds4564</strong></span>
+             <span title="Account ID"><i class="material-icons">assignment_ind</i> <strong>4564651asd654f56ds4564</strong></span>
              <br><br>
              <span><i class="material-icons">email</i> <strong>josephh2018@gmail.com</strong></span>
           </div>
@@ -35,8 +35,57 @@
       <div class="col s12 m12 l4 push-l2">
         <div class="card">
           <div class="card-content">
+          <span class="card-title">Current Location</span>
+            <p>This determines current location based off of pass and schedule data.</p>
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab"><a href="#passLocationDataOverlay"><i class="material-icons">receipt</i> Pass</a></li>
+              <li class="tab"><a class="active" href="#scheduleLocationDataOverlay"><i class="material-icons">today</i>Schedule</a></li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="passLocationDataOverlay">
+              <span title="Room Number"><i class="material-icons">room</i>123456</span>
+              <br><br>
+              <span title="Person With"><i class="material-icons">person_pin_circle</i>Mr. Camron Ross</span>
+              <br><br>
+              <span title="Class"><i class="material-icons">class</i>Algebra 1</span>
+
+            </div>
+            <div id="scheduleLocationDataOverlay">Test 2</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
            <span class="card-title">Current Location</span>
-             Coming Soon
+             <table class="highlight center">
+              <thead>
+                <tr>
+                  <th><i class="material-icons left">insert_photo</i></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">today</i>Schedule</a></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr title="Room Number">
+                  <td><i class="material-icons left">room</i></td>
+                  <td>123456</td>
+                  <td>123456</td>
+                </tr>
+                <tr title="Person With">
+                  <td><i class="material-icons left">person_pin_circle</i></td>
+                  <td>Mr. Camron Thomas</td>
+                  <td>Ms. Jinnafer Humtidinkle</td>
+                </tr>
+                <tr title="Class">
+                  <td><i class="material-icons left">class</i></td>
+                  <td>English</td>
+                  <td>Study Hall</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -88,20 +137,45 @@
   let AccountOverlay = (function() {
     let _userID = new WeakMap();
     let _user = new WeakMap();
+    let _location = new WeakMap();
     class AccountOverlay {
       constructor(userID, done) {
         _userID.set(this, userID);
         console.log(this)
-        $.ajax({
-          type: "get",
-          url: "/api/account/id/" + userID + "/",
-          dataType: "json",
-          beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-          success: function(data) {_user.set(this, data); done(null)}.bind(this),
-          error: function(jqXHR) {done(jqXHR)}                      
-        });
+        var prom = [];
+        prom.push(new Promise(function(resolve, reject) {
+          $.ajax({
+            type: "get",
+            url: "/api/account/id/" + userID + "/",
+            dataType: "json",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+            success: function(data) {_user.set(this, data); resolve()}.bind(this),
+            error: function(jqXHR) {reject(jqXHR)}                      
+          });
+        }.bind(this)));
+        prom.push(new Promise(function(resolve, reject) {
+          //" + new Date().toISOString() + "
+          $.ajax({
+            type: "get",
+            url: "/api/account/location/datetime/2017-09-07T10:55:30.652-05:00/id/" + userID + "/",
+            dataType: "json",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+            success: function(data) {_location.set(this, data); resolve()}.bind(this),
+            error: function(jqXHR) {reject(jqXHR)}                      
+          });
+        }.bind(this)));
+
+        Promise.all(prom).then(function(data) {
+          console.log(_location.get(this))
+          done(null)
+        }.bind(this)).catch(function(err) {
+          done(err)
+        })
       };
 
+      getLocation() {
+
+      }
       get user() {
         return _user.get(this);
       };
@@ -115,7 +189,7 @@
                         $("<img/>")
                           .attr("src", "/api/media/background/" + _user.get(this).id + ".svg")
                       )
-
+        
         var cont = $("<div/>")
                       .addClass("card-content")
                       .append(
@@ -129,16 +203,26 @@
                           )
                       ).append(
                         $("<br/>")
-                      ).append(
-                        $("<span/>")
+                      )
+        var nameThing = $("<span/>")
                         .addClass("card-title black-text center")
                         .html(_user.get(this).name.salutation + " " + _user.get(this).name.first + " " + _user.get(this).name.last)
-                      )
+        
+        if(_user.get(this).isVerified) {
+          nameThing.append(
+                $("<i/>").addClass("material-icons").attr("title", "User has verified their email").html("verified_user")
+            )
+        }
 
+        if(_user.get(this).isArchived) {
+          nameThing.append(
+                $("<i/>").addClass("material-icons").attr("title", "User is archived").html("archive")
+            )
+        }
 
         return top.append($("<div/>").addClass("card small")
                   .append(image)
-                  .append(cont)
+                  .append(cont.append(nameThing))
                 )
       }
 
@@ -146,7 +230,7 @@
         var top = $("<div/>").addClass("col s12 m12 l4 push-l2");
         var id = $("<span/>")
                         .attr("title", "Account ID") 
-                        .prepend($("<i/>").addClass("material-icons").html("perm_identity"))
+                        .prepend($("<i/>").addClass("material-icons").html("assignment_ind"))
                         .append($("<strong/>").html(_user.get(this).id))
         var email = $("<span/>")
                         .attr("title", "Email") 
@@ -164,9 +248,9 @@
             .append(cont)
           )
       }
-
-      currentLocationCard() {
-        
+      
+      currentLocationCard(done) {
+        var top = $("<div/>").addClass("col s12 m12 l4 push-l2");
       }
 
     };
