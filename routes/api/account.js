@@ -553,32 +553,32 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
         var forPeriods = currentSchedules.map(function(x) {
             return x.period
         })
-
+        console.log(forPeriods)
         //get user's location 
         promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods, "schedule"));
 
         //Check for Passes 
         promises.push(new Promise(function(doneResolve, doneReject) {
-            passApi.flexableGetPasses(req.params.id, "migrator", moment(req.params.dateTime).utc().format("Y-MM-DD"), moment(req.params.dateTime).add(1, "days").utc().format("Y-MM-DD"), function(err, passes) {
+            passApi.flexableGetPasses(req.params.id, "migrator", moment(req.params.dateTime).utc().format("Y-MM-DD"), moment(req.params.dateTime).add(1, "days").utc().format("Y-MM-DD"), forPeriods, function(err, passes) {
                 if(err) {
-                    return reject(err);
+                    return doneReject(err);
                 }
                 var passPromise = [];
                 if(passes.length <= 0) {
-                    return resolve([])
+                    return doneResolve({pass: null})
                 }
                 console.log(passes.length)
                 for(var x = 0; x < passes.length; x++) {
                     if(!passes[x].toPerson || !passes[x].toPerson.schedules) {
                         passPromise.push(new Promise(function(resolve, reject) {
-                            return resolve([])
+                            return resolve({pass: null})
                         }));
                         
                     } else {
                         if(!passes[x].toPerson.schedules.teacher && !passes[x].toPerson.schedules.student) {
                         //console.log(passes[x].toPerson)
                             passPromise.push(new Promise(function(resolve, reject) {
-                                return resolve([])
+                                return resolve({pass: null})
                             }));
                         } else {
                             passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods, "pass", {passId: passes[x].id, toPerson: passes[x].toPerson}));
@@ -593,6 +593,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                             var finalPassData = {};
                             var studnetPassArr = [];
                             var teacherPassArr = [];
+                            return doneResolve(data)
                             if(data.length <= 0) {
                                 return doneResolve({});
                             }
@@ -652,20 +653,25 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
             scheduleLocationReturn[scheduleKeyName] = {};
             promises.push(new Promise(function(resolve, reject) {
                 if(periodData.student) {
-                    scheduleLocationReturn[scheduleKeyName].student = [];
+                    //scheduleLocationReturn[scheduleKeyName].student = [];
                     var pS = periodData.student;
+                    var tS = [];
+                    if(pS.length <=0) {
+                        return resolve();
+                    }
                     for(var x = 0; x < pS.length; x++) {
                         if(pS[x].periodData) {
                             //check if they have a teacher or not
                             if(pS[x].periodData.teacher) {
                                 //check if the teacer has a schedule set
-                                scheduleLocationReturn[scheduleKeyName].student.push(Object.assign({},{period: pS[x].period}, pS[x].periodData, extraData))
+                                tS.push(Object.assign({},{period: pS[x].period}, pS[x].periodData, extraData))
                             } else {
-                                scheduleLocationReturn[scheduleKeyName].student.push(Object.assign({},{period: pS[x].period, teacher: null}, extraData))
+                                tS.push(Object.assign({},{period: pS[x].period, teacher: null}, extraData))
                             }
                         }
                         //end
                         if(x >= pS.length - 1) {
+                            scheduleLocationReturn[scheduleKeyName].student = tS
                             return resolve();
                         }
                     }
@@ -677,15 +683,22 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
             //get teacher.schedule 
             promises.push(new Promise(function(resolve, reject) {
                 if(periodData.teacher) {
-                    scheduleLocationReturn[scheduleKeyName].teacher = [];
+                    //scheduleLocationReturn[scheduleKeyName].teacher = [];
                     var pT = periodData.teacher;
-
+                    var tT = [];
+                    if(pT.length <=0) {
+                        return resolve();
+                    }
                     for(var x = 0; x < pT.length; x++) {
                         if(pT[x].periodData) {
-                            scheduleLocationReturn[scheduleKeyName].teacher.push(Object.assign({},{period: pT[x].period}, pT[x].periodData, extraData))
+                            tT.push(Object.assign({},{period: pT[x].period}, pT[x].periodData, extraData))
+                        }
+                        if(x >= pT.length-1) {
+                            scheduleLocationReturn[scheduleKeyName].teacher = tT;
+                            return resolve();
                         }
                     }
-                    return resolve();
+                    
                 } else {
                     return resolve();
                 }
