@@ -166,15 +166,39 @@ email: hi@josephhassell.com
              console.log(state);
           });*/
           //change for mixen
+          let SearchUserCard = (function() {
+            let _query = new WeakMap();
+            class SearchUserCard {
+              constructor(inputID) {
+                
+              }
+              _ajaxQuery(name) {
+                return new Promise(function(resolve, reject) {
+                  $.ajax({
+                    type: "get",
+                    url: "/api/account/location/datetime/2017-09-07T10:55:30.652-05:00/id/" + userID + "/",
+                    dataType: "json",
+                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+                    success: function(data) {_query.set(this, data); resolve(data)}.bind(this),
+                    error: function(jqXHR) {reject(jqXHR)}                      
+                  });
+                }.bind(this));
+              }
+              query(name) {
+
+              }
+              toCard() {
+
+              }
+            };
+            return SearchUserCard;
+          }());
+
           var accountOverlay = new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
             if(err) {
               return errorHand(err);
             }
-            $("body").prepend($("<div/>").addClass("userCardBundle").append($("<div/>").addClass("row").append(accountOverlay.topCard()))
-                .append($("<div/>").addClass("row")
-                  .append(accountOverlay.universalInfoCard())
-                )
-              );
+            accountOverlay.generateOverlay("overlay" + "797fe81b-cf0a-448b-8782-6e35b711e535", true)
           });
         </script>
 </body>

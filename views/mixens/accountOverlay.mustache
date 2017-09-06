@@ -1,4 +1,4 @@
-<div id="accountInfo" class="accountInfoOverlay active">
+<div id="accountInfo" class="accountInfoOverlay">
   
   <div class="userCardBundle">
     <!--Top Card -->
@@ -31,39 +31,19 @@
         </div>
       </div>
 
-    <!--Current Location Info -->
-      <div class="col s12 m12 l4 push-l2">
-        <div class="card">
-          <div class="card-content">
-          <span class="card-title">Current Location</span>
-            <p>This determines current location based off of pass and schedule data.</p>
-          </div>
-          <div class="card-tabs">
-            <ul class="tabs tabs-fixed-width">
-              <li class="tab"><a href="#passLocationDataOverlay"><i class="material-icons">receipt</i> Pass</a></li>
-              <li class="tab"><a class="active" href="#scheduleLocationDataOverlay"><i class="material-icons">today</i>Schedule</a></li>
-            </ul>
-          </div>
-          <div class="card-content grey lighten-4">
-            <div id="passLocationDataOverlay">
-              <span title="Room Number"><i class="material-icons">room</i>123456</span>
-              <br><br>
-              <span title="Person With"><i class="material-icons">person_pin_circle</i>Mr. Camron Ross</span>
-              <br><br>
-              <span title="Class"><i class="material-icons">class</i>Algebra 1</span>
-
-            </div>
-            <div id="scheduleLocationDataOverlay">Test 2</div>
-          </div>
-        </div>
+      <!--Current Location Info -->
+      <!--<div class="col s12 m12 l4 push-l2">
 
         <div class="card">
           <div class="card-content">
            <span class="card-title">Current Location</span>
-             <table class="highlight center">
+
+             <table class="highlight">
               <thead>
                 <tr>
                   <th><i class="material-icons left">insert_photo</i></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
                   <th><i class="material-icons">receipt</i>Pass</a></th>
                   <th><i class="material-icons">today</i>Schedule</a></th>
                 </tr>
@@ -73,14 +53,75 @@
                   <td><i class="material-icons left">room</i></td>
                   <td>123456</td>
                   <td>123456</td>
+                  <td>123456</td>
+                  <td>123456</td>
                 </tr>
                 <tr title="Person With">
                   <td><i class="material-icons left">person_pin_circle</i></td>
+                  <td>Mr. Camron Thomas</td>
+                  <td>Mr. Camron Thomas</td>
                   <td>Mr. Camron Thomas</td>
                   <td>Ms. Jinnafer Humtidinkle</td>
                 </tr>
                 <tr title="Class">
                   <td><i class="material-icons left">class</i></td>
+                  <td>English</td>
+                  <td>English</td>
+                  <td>English</td>
+                  <td>Study Hall</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+           <span class="card-title">Current Location</span>
+             
+          </div>
+        </div>
+      </div>-->
+
+    </div>
+    <!--Current Location Info -->
+    <div class="row">
+      
+      <div class="col s12 m12 l8 push-l2">
+
+        <div class="card">
+          <div class="card-content">
+           <span class="card-title">Current Location</span>
+
+             <table class="highlight">
+              <thead>
+                <tr>
+                  <th><i class="material-icons left">insert_photo</i></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">today</i>Schedule</a></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr title="Room Number">
+                  <td><i class="material-icons left">room</i></td>
+                  <td>123456</td>
+                  <td>123456</td>
+                  <td>123456</td>
+                  <td>123456</td>
+                </tr>
+                <tr title="Person With">
+                  <td><i class="material-icons left">person_pin_circle</i></td>
+                  <td>Mr. Camron Thomas</td>
+                  <td>Mr. Camron Thomas</td>
+                  <td>Mr. Camron Thomas</td>
+                  <td>Ms. Jinnafer Humtidinkle</td>
+                </tr>
+                <tr title="Class">
+                  <td><i class="material-icons left">class</i></td>
+                  <td>English</td>
+                  <td>English</td>
                   <td>English</td>
                   <td>Study Hall</td>
                 </tr>
@@ -90,7 +131,6 @@
         </div>
       </div>
     </div>
-
     <div class="row" >
       <div class="col s12 m12 l8 push-l2">
         <div class="card" >
@@ -248,11 +288,74 @@
             .append(cont)
           )
       }
-      
-      currentLocationCard(done) {
+      /*
+      <tr>
+                  <th><i class="material-icons left">insert_photo</i></th>
+                  <th><i class="material-icons">receipt</i>Pass</a></th>
+                  <th><i class="material-icons">today</i>Schedule</a></th>
+                </tr>
+                */
+      currentLocationCard() {
         var top = $("<div/>").addClass("col s12 m12 l4 push-l2");
+
+        var tHead = $("<thead/>").append($("<tr/>")
+                      .append($("<th/>").append($("<i/>").addClass("material-icons").html("insert_photo")))
+                      .append($("<th/>").html("Pass").prepend($("<i/>").addClass("material-icons").html("receipt")))
+                      .append($("<th/>").html("Schedule").prepend($("<i/>").addClass("material-icons").html("today")))
+        );
+
+        //var tBody = 
+
+        var cont = $("<div/>")
+                      .addClass("card-content")
+                      .append($("<span/>").addClass("card-title").html("Current Location"))
+                      .append($("<table/>").addClass("highlight").append(tHead).append("hi"))
+
+
+      return top.append($("<div/>").addClass("card")
+            .append(cont)
+          )
+
       }
 
+      generateOverlay(id, active) {
+
+        if(active) {
+          active = "active"
+        } else {
+          active = "";
+        }
+
+        if($("#"+id).length > 0) {
+          this.deleteOverlay(id)
+        }
+        
+        
+        $("body").prepend($("<div/>").attr("id", id).addClass("accountInfoOverlay " + active).prepend(
+          $("<div/>").addClass("userCardBundle").append($("<div/>").addClass("row").append(this.topCard()))
+            .append($("<div/>").addClass("row")
+              .append(this.universalInfoCard())
+              .append(this.currentLocationCard())
+          )
+        ));
+        $(window).click(function() {
+          this.closeOverlay(id)
+          
+        }.bind(this));
+        $("#"+id+" .userCardBundle").click(function(event){
+          event.stopPropagation();
+        });
+      }
+      closeOverlay(id) {
+        $("#"+id).removeClass("active")
+        
+      }
+      deleteOverlay(id) {
+        $("#"+id).remove();
+      }
+      openOverlay(id) {
+        $("#"+id).addClass("active")
+      }
     };
     return AccountOverlay;
  }());
