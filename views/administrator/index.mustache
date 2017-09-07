@@ -172,28 +172,33 @@ email: hi@josephhassell.com
               constructor(inputID) {
                 
               }
-              _ajaxQuery(name) {
+              get query() {
+                return _query.get(this); 
+              }
+              _ajaxQuery(name, time) {
                 return new Promise(function(resolve, reject) {
                   $.ajax({
                     type: "get",
                     url: "/api/account/location/datetime/2017-09-07T10:55:30.652-05:00/id/" + userID + "/",
                     dataType: "json",
                     beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {_query.set(this, data); resolve(data)}.bind(this),
+                    success: function(data) {resolve(data)}.bind(this),
                     error: function(jqXHR) {reject(jqXHR)}                      
                   });
                 }.bind(this));
               }
-              query(name) {
-
+              query(name, time) {
+                this._ajaxQuery(name, time).then(function(data) {
+                  _query.set(this, data); 
+                }.bind(this)) 
               }
               toCard() {
-
+                return "card";
               }
             };
             return SearchUserCard;
           }());
-
+          
           var accountOverlay = new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
             if(err) {
               return errorHand(err);
