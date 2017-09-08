@@ -36,11 +36,9 @@ email: hi@josephhassell.com
             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
           </div></li>
-          <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-          <li><a href="#!">Second Link</a></li>
+          <li><a href="#" class="waves-effect active"><i class="material-icons">home</i>Home</a></li>
           <li><div class="divider"></div></li>
-          <li><a class="subheader">Subheader</a></li>
-          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+          <li><a class="waves-effect" href="/auth/logout"><i class="material-icons">lock</i>Logout</a></li>
         </ul>
         <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
       </div>
@@ -49,7 +47,7 @@ email: hi@josephhassell.com
       <div class="nav-wrapper">
         <form>
           <div class="input-field">
-            <input id="search" type="search" required>
+            <input id="searchAccounts" type="search" required>
             <label class="label-icon" for="search"><i class="material-icons">search</i></label>
             <i class="material-icons">close</i>
           </div>
@@ -170,16 +168,22 @@ email: hi@josephhassell.com
             let _query = new WeakMap();
             class SearchUserCard {
               constructor(inputID) {
-                
+                this._queryDone;
+                if(inputID) {
+                  document.getElementById(inputID).addEventListener("keyup", function(e){
+                      console.log(document.getElementById(inputID).value)
+                      this.query(document.getElementById(inputID).value);
+                  }.bind(this));
+                }
               }
-              get query() {
+              get rawQuery() {
                 return _query.get(this); 
               }
-              _ajaxQuery(name, time) {
+              _ajaxQuery(name) {
                 return new Promise(function(resolve, reject) {
                   $.ajax({
                     type: "get",
-                    url: "/api/account/location/datetime/2017-09-07T10:55:30.652-05:00/id/" + userID + "/",
+                    url: "/api/account/name/" + name,
                     dataType: "json",
                     beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
                     success: function(data) {resolve(data)}.bind(this),
@@ -187,18 +191,25 @@ email: hi@josephhassell.com
                   });
                 }.bind(this));
               }
-              query(name, time) {
-                this._ajaxQuery(name, time).then(function(data) {
-                  _query.set(this, data); 
-                }.bind(this)) 
+              query(name) {
+                this._queryDone = new Promise(function(resolve, reject) {
+                  this._ajaxQuery(name).then(function(data) {
+                    _query.set(this, data); 
+                    resolve();
+                  }.bind(this)) 
+                }.bind(this));
+                return this;
               }
               toCard() {
-                return "card";
+                this._queryDone.then(function() {
+                  console.log("done")
+                }.bind(this));
+                //return _query.get(this);
               }
             };
             return SearchUserCard;
           }());
-          
+          var SearchUser = new SearchUserCard("searchAccounts");
           var accountOverlay = new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
             if(err) {
               return errorHand(err);
