@@ -167,12 +167,13 @@ email: hi@josephhassell.com
           let SearchUserCard = (function() {
             let _query = new WeakMap();
             class SearchUserCard {
-              constructor(inputID) {
+              constructor(inputID, cardContainer) {
                 this._queryDone;
                 if(inputID) {
                   document.getElementById(inputID).addEventListener("keyup", function(e){
                       console.log(document.getElementById(inputID).value)
-                      this.query(document.getElementById(inputID).value);
+                      if(cardContainer)
+                      this.query(document.getElementById(inputID).value).toCard();
                   }.bind(this));
                 }
               }
@@ -193,16 +194,18 @@ email: hi@josephhassell.com
               }
               query(name) {
                 this._queryDone = new Promise(function(resolve, reject) {
-                  this._ajaxQuery(name).then(function(data) {
-                    _query.set(this, data); 
-                    resolve();
-                  }.bind(this)) 
+                  if(name.length > 0) {
+                    this._ajaxQuery(name).then(function(data) {
+                      _query.set(this, data); 
+                      resolve();
+                    }.bind(this)) 
+                  }
                 }.bind(this));
                 return this;
               }
               toCard() {
                 this._queryDone.then(function() {
-                  console.log("done")
+                  
                 }.bind(this));
                 //return _query.get(this);
               }
