@@ -1,4 +1,4 @@
-<div id="accountInfo" class="accountInfoOverlay active">
+<div id="accountInfo" class="accountInfoOverlay">
   
   <div class="userCardBundle">
     <!--Top Card -->
@@ -226,6 +226,7 @@
   let AccountOverlay = (function() {
     let _userID = new WeakMap();
     let _user = new WeakMap();
+    let _userSchedule = new WeakMap();
     let _location = new WeakMap();
     let _accountLoaded = new WeakMap();
     class AccountOverlay {
@@ -249,11 +250,13 @@
           var prom = [];
           prom.push(this.loadUser());
           prom.push(this.loadLocation("2017-09-07T10:55:30.652-05:00"));
+          prom.push(this.loadSchedule());
   //2017-09-07T10:55:30.652-05:00
   //" + new Date().toISOString() + "
           Promise.all(prom).then(function(data) {
             _user.set(this, data[0]);
             _location.set(this, data[1]);
+            _userSchedule.set(this, data[2])
             resolve(data)
           }.bind(this)).catch(function(err) {
             
@@ -280,6 +283,18 @@
           $.ajax({
             type: "get",
             url: "/api/account/location/datetime/" + dateTime + "/id/" + _userID.get(this) + "/",
+            dataType: "json",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+            success: function(data) {resolve(data)}.bind(this),
+            error: function(jqXHR) {reject(jqXHR)}                      
+          });
+        }.bind(this))
+      }
+      loadSchedule() {
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+            type: "get",
+            url: "/api/account/schedule/id/" + _userID.get(this) + "/",
             dataType: "json",
             beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
             success: function(data) {resolve(data)}.bind(this),
@@ -316,13 +331,13 @@
                         .html(_user.get(this).name.salutation + " " + _user.get(this).name.first + " " + _user.get(this).name.last)
         
         if(_user.get(this).isVerified) {
-          nameThing.append(
+          nameThing.append(" ").append(
                 $("<i/>").addClass("material-icons").attr("title", "User has verified their email").html("verified_user")
             )
         }
 
         if(_user.get(this).isArchived) {
-          nameThing.append(
+          nameThing.append(" ").append(
                 $("<i/>").addClass("material-icons").attr("title", "User is archived").html("archive")
             )
         }
@@ -338,14 +353,17 @@
         var id = $("<span/>")
                         .attr("title", "Account ID") 
                         .prepend($("<i/>").addClass("material-icons").html("assignment_ind"))
+                        .append(" ")
                         .append($("<strong/>").html(_user.get(this).id))
         var email = $("<span/>")
                         .attr("title", "Email") 
                         .prepend($("<i/>").addClass("material-icons").html("email"))
+                        .append(" ")
                         .append($("<strong/>").html(_user.get(this).email))
         var accountType = $("<span/>")
                         .attr("title", "User Group/Account Type") 
                         .prepend($("<i/>").addClass("material-icons").html("security"))
+                        .append(" ")
                         .append($("<strong/>").html(_user.get(this).userGroup))
 
         var cont = $("<div/>")
@@ -384,7 +402,7 @@
         var cont = $("<div/>")
                       .addClass("card-content")
                       .append($("<span/>").addClass("card-title").html("Current Location"))
-                      .append($("<table/>").addClass("highlight").append(tHead).append("hi"))
+                      .append($("<table/>").addClass("highlight").append(tHead).append("Coming Soon"))
 
 
       return top.append($("<div/>").addClass("card")
@@ -398,9 +416,103 @@
 
         var cont = $("<div/>").addClass("card-content").append($("<span/>").addClass("card-title").html("Schedules"));
 
-        return top.append($("<div/>").addClass("card")
+        var teacherTable = null;
+        var studentTable = null;
+
+        if(_userSchedule.get(this).studentType) {
+          //student type schedule table element
+          var sTableHead = $("<thead/>").append($("<tr/>")
+              .append($("<th/>").html("Period"))
+              .append($("<th/>").html("Class"))
+              .append($("<th/>").html("Teacher"))
+              .append($("<th/>").html("Room"))
+            )
+          var studentSchedule = _userSchedule.get(this).studentType.schedule;
+          var studentScheduleKeys = Object.keys(studentSchedule);
+          var sTableBody = $("<tbody/>");
+          for(var s = 0; s < studentScheduleKeys.length; s++) {
+            
+            if(studentSchedule[studentScheduleKeys[s]]) {
+              var sTR = sTableBody.append($("<tr/>"));
+                sTR.append($("<td/>").html(studentScheduleKeys[s].toUpperCase()))
+
+                if(studentSchedule[studentScheduleKeys[s]].className) {
+                  sTR.append($("<td/>").html(studentSchedule[studentScheduleKeys[s]].className))
+                } else {
+                  sTR.append($("<td/>").html(" "))
+                }
+                if(studentSchedule[studentScheduleKeys[s]].teacher) {
+                  sTR.append($("<td/>").html(studentSchedule[studentScheduleKeys[s]].teacher.name.salutation + " " + studentSchedule[studentScheduleKeys[s]].teacher.name.first + " " + studentSchedule[studentScheduleKeys[s]].teacher.name.last))
+                } else {
+                  sTR.append($("<td/>").html(" "))
+                }
+                if(studentSchedule[studentScheduleKeys[s]].room) {
+                  sTR.append($("<td/>").html(studentSchedule[studentScheduleKeys[s]].room))
+                } else {
+                  sTR.append($("<td/>").html(" "))
+                }
+                
+            }
+          } 
+          studentTable = $("<table/>").addClass("highlight responsive-table").prepend(sTableHead).append(sTableBody);
+        }
+        if(_userSchedule.get(this).teacherType) {
+          //student type schedule table element
+          var tTableHead = $("<thead/>").append($("<tr/>")
+              .append($("<th/>").html("Period"))
+              .append($("<th/>").html("Class"))
+              .append($("<th/>").html("Limit"))
+              .append($("<th/>").html("Room"))
+            )
+          var teacherSchedule = _userSchedule.get(this).teacherType.schedule;
+          var teacherScheduleKeys = Object.keys(teacherSchedule);
+          var tTableBody = $("<tbody/>");
+          for(var s = 0; s < teacherScheduleKeys.length; s++) {
+           
+            if(teacherSchedule[teacherScheduleKeys[s]]) {
+              var sTR = tTableBody.append($("<tr/>"));
+                sTR.append($("<td/>").html(teacherScheduleKeys[s].toUpperCase()))
+
+                if(teacherSchedule[teacherScheduleKeys[s]].className) {
+                  sTR.append($("<td/>").html(teacherSchedule[teacherScheduleKeys[s]].className))
+                } else {
+                  sTR.append($("<td/>").html("No Class"))
+                }
+                if(teacherSchedule[teacherScheduleKeys[s]].limit) {
+                  sTR.append($("<td/>").html(teacherSchedule[teacherScheduleKeys[s]].limit))
+                } else {
+                  sTR.append($("<td/>").html("No Limit Set"))
+                }
+                if(teacherSchedule[teacherScheduleKeys[s]].room) {
+                  sTR.append($("<td/>").html(teacherSchedule[teacherScheduleKeys[s]].room))
+                } else {
+                  sTR.append($("<td/>").html(" "))
+                }
+                
+            }
+          } 
+          teacherTable = $("<table/>").addClass("highlight responsive-table").prepend(tTableHead).append(tTableBody);
+        }
+        if(studentTable && teacherTable) {
+          //Convert to tabbed card
+          var tabUUids = this._uuidv4();
+          var tabDef = $("<div/>").addClass("card-tabs").append($("<ul/>").addClass("tabs tabs-fixed-width")
+              .append($("<li/>").addClass("tab").append($("<a/>").attr("href", "#studentType"+tabUUids).html("Student Type Schedule")))
+              .append($("<li/>").addClass("tab").append($("<a/>").attr("href", "#teacherType"+tabUUids).html("Teacher Type Schedule")))
+            )
+          var tabSwitch = $("<div/>").addClass("card-content grey lighten-4").append($("<div/>").attr("id", "studentType"+tabUUids).append(studentTable)).append($("<div/>").attr("id", "teacherType"+tabUUids).append(teacherTable))
+          return top.append($("<div/>").addClass("card")
             .append(cont)
+            .append(tabDef)
+            .append(tabSwitch)
           )
+        } else {
+          return top.append($("<div/>").addClass("card")
+            .append(cont.append(studentTable || teacherTable))
+          )
+        }
+
+        
       }
       /*
       <div class="col s12 m12 l8 push-l2">
@@ -495,8 +607,10 @@
               .append($("<div/>").addClass("row")
                 .append(this.universalInfoCard())
                 .append(this.currentLocationCard())
-            )
+                
+            ).append($("<div/>").addClass("row").append(this.scheduleCard()))
           ));
+          $('ul.tabs').tabs();
           window.requestAnimationFrame(function() {
             if(active) {
               $("#"+id).addClass("active")
@@ -523,6 +637,13 @@
       openOverlay(id) {
         $("#"+id).addClass("active")
       }
+
+      _uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        )
+      }
+
     };
     return AccountOverlay;
  }());
