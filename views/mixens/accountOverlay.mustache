@@ -178,38 +178,13 @@
     let _userID = new WeakMap();
     let _user = new WeakMap();
     let _location = new WeakMap();
+    let _accountLoaded = new WeakMap();
     class AccountOverlay {
-      constructor(userID, done) {
+      constructor(userID, errorCallback) {
         _userID.set(this, userID);
         console.log(this)
-        var prom = [];
-        prom.push(new Promise(function(resolve, reject) {
-          $.ajax({
-            type: "get",
-            url: "/api/account/id/" + userID + "/",
-            dataType: "json",
-            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-            success: function(data) {_user.set(this, data); resolve()}.bind(this),
-            error: function(jqXHR) {reject(jqXHR)}                      
-          });
-        }.bind(this)));
-        prom.push(new Promise(function(resolve, reject) {
-          //" + new Date().toISOString() + "
-          $.ajax({
-            type: "get",
-            url: "/api/account/location/datetime/2017-09-07T10:55:30.652-05:00/id/" + userID + "/",
-            dataType: "json",
-            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-            success: function(data) {_location.set(this, data); resolve()}.bind(this),
-            error: function(jqXHR) {reject(jqXHR)}                      
-          });
-        }.bind(this)));
-
-        Promise.all(prom).then(function(data) {
-          console.log(_location.get(this))
-          done(null)
-        }.bind(this)).catch(function(err) {
-          done(err)
+        this.loadData().catch(function(err) {
+          errorCallback(err);
         })
       };
 
@@ -217,7 +192,47 @@
         return _user.get(this);
       };
       loadData() {
-        
+        var promise = new Promise(function(resolve, reject) {
+          var prom = [];
+          prom.push(this.loadUser());
+          prom.push(this.loadLocation("2017-09-07T10:55:30.652-05:00"));
+  //2017-09-07T10:55:30.652-05:00
+  //" + new Date().toISOString() + "
+          Promise.all(prom).then(function(data) {
+            _user.set(this, data[0]);
+            _location.set(this, data[1]);
+            resolve(data)
+          }.bind(this)).catch(function(err) {
+            
+            reject(err)
+          })
+        }.bind(this));
+        _accountLoaded.set(this, promise);
+        return promise;
+      }
+      loadUser() {
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+            type: "get",
+            url: "/api/account/id/" + _userID.get(this) + "/",
+            dataType: "json",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+            success: function(data) {resolve(data)}.bind(this),
+            error: function(jqXHR) {reject(jqXHR)}                      
+          });
+        }.bind(this))
+      }
+      loadLocation(dateTime) {
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+            type: "get",
+            url: "/api/account/location/datetime/" + dateTime + "/id/" + _userID.get(this) + "/",
+            dataType: "json",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+            success: function(data) {resolve(data)}.bind(this),
+            error: function(jqXHR) {reject(jqXHR)}                      
+          });
+        }.bind(this))
       }
       topCard() {
         var top = $("<div/>").addClass("col s12 m12 l8 push-l2");
@@ -317,33 +332,44 @@
 
       }
 
-      generateOverlay(id, active) {
+      generateOverlay(id, active, ignoreLoaded) {
 
-        if(active) {
-          active = "active"
+        console.log("trig")
+        if(ignoreLoaded) {
+          gen.call(this);
         } else {
-          active = "";
+          _accountLoaded.get(this).then(function() {
+            gen.call(this);
+          }.bind(this))
         }
-
-        if($("#"+id).length > 0) {
-          this.deleteOverlay(id)
-        }
-        
-        
-        $("body").prepend($("<div/>").attr("id", id).addClass("accountInfoOverlay " + active).prepend(
-          $("<div/>").addClass("userCardBundle").append($("<div/>").addClass("row").append(this.topCard()))
-            .append($("<div/>").addClass("row")
-              .append(this.universalInfoCard())
-              .append(this.currentLocationCard())
-          )
-        ));
-        $(window).click(function() {
-          this.closeOverlay(id)
+        function gen() {
+          if($("#"+id).length > 0) {
+            this.deleteOverlay(id)
+          }
           
-        }.bind(this));
-        $("#"+id+" .userCardBundle").click(function(event){
-          event.stopPropagation();
-        });
+          
+          $("body").prepend($("<div/>").attr("id", id).addClass("accountInfoOverlay").prepend(
+            $("<div/>").addClass("userCardBundle").append($("<div/>").addClass("row").append(this.topCard()))
+              .append($("<div/>").addClass("row")
+                .append(this.universalInfoCard())
+                .append(this.currentLocationCard())
+            )
+          ));
+          window.requestAnimationFrame(function() {
+            if(active) {
+              $("#"+id).addClass("active")
+            }
+          })
+          
+          
+          $(window).click(function() {
+            this.closeOverlay(id)
+            
+          }.bind(this));
+          $("#"+id+" .userCardBundle").click(function(event){
+            event.stopPropagation();
+          });
+        };
       }
       closeOverlay(id) {
         $("#"+id).removeClass("active")

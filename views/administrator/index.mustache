@@ -68,7 +68,7 @@ email: hi@josephhassell.com
       </ul>
     </div>
 
-    <div id="mainCards" class="container" style="display: none;">
+    <div id="mainCards" class="container">
       <div id="cal"> 
         <div class="row">
           <div class="col s12">
@@ -89,7 +89,7 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
-    <div id="searchCards" class="container">
+    <div id="searchCards" class="container" style="display: none;">
       <div class="row">
         <div class="col s12">
           <div class="card grey darken-3">
@@ -166,13 +166,16 @@ email: hi@josephhassell.com
              console.log(state);
           });*/
           //change for mixen
+
           let SearchUserCard = (function() {
             let _query = new WeakMap();
             let _generatedULID = new WeakMap();
             let _inputID = new WeakMap();
+            let _enableAccountOverlay = new WeakMap();
             class SearchUserCard {
-              constructor(inputID, cardContainerID) {
+              constructor(inputID, cardContainerID, enableAccountOverlay) {
                 this._queryDone;
+                _enableAccountOverlay.set(this, enableAccountOverlay)
                 if(cardContainerID) {
                   _generatedULID.set(this, uuidv4());
                   $("#" + cardContainerID).empty().append($("<ul/>").addClass("collection").attr("id", _generatedULID.get(this)))
@@ -232,6 +235,14 @@ email: hi@josephhassell.com
                   this._queryDone.then(function(userArray) {
                     var listElm = [];
                     for(var x = 0; x < userArray.length; x++) {
+                      var button = $("<a/>").addClass("secondary-content btn-floating waves-effect waves-circle waves-light tooltipped")
+                                .attr("data-position", "right")
+                                .attr("data-delay", "50")
+                                .attr("data-tooltip", "Account Cards")
+                                .attr("onclick", "new AccountOverlay(\"" + userArray[x].id + "\", function(err) {errorHand(err);}).generateOverlay(\"overlay" + userArray[x].id + "\", true, false);")
+                                
+                                .append($("<i/>").addClass("material-icons").html("account_circle"))
+
                       var li = $("<li/>").addClass("collection-item avatar").append(
                               $("<img/>").attr("src", "/api/media/avatar/" + userArray[x].id + "/50.svg").attr("alt", "User Avatar").addClass("passport-avatar circle")
                       ).append(
@@ -240,14 +251,7 @@ email: hi@josephhassell.com
                               $("<p/>").prepend("Email: ").append($("<strong/>").html(userArray[x].email))
                       ).append(
                               $("<p/>").attr("title", "User Group").prepend("Account Type: ").append($("<strong/>").html(userArray[x].userGroup))
-                      ).append(
-                              $("<a/>").addClass("secondary-content btn-floating waves-effect waves-circle waves-light tooltipped")
-                              .attr("data-position", "right")
-                              .attr("data-delay", "50")
-                              .attr("data-tooltip", "Account Cards")
-                              .append($("<i/>").addClass("material-icons").html("account_circle"))
-                      )
-                      
+                      ).append(button)
                       listElm.push(li);
                       if(x >= userArray.length -1) {
                         resolve(listElm)
@@ -259,17 +263,29 @@ email: hi@josephhassell.com
                 //return _query.get(this);
               }
 
+              /*.click(function() {
+                                  console.log(userArray[x])
+                                  new AccountOverlay("overlay"+userArray[x].id, function(err) {errorHand(err);}).generateOverlay("overlay" + userArray[x].id, true, false);
+                                })*/
+
             };
             return SearchUserCard;
           }());
-
+          
           var SearchUser = new SearchUserCard("searchAccounts", "accountSearchReturn");
-          var accountOverlay = new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
-            if(err) {
-              return errorHand(err);
+          document.getElementById("searchAccounts").addEventListener("keyup", function() {
+            if($("#searchAccounts").val().length <=0 ) {
+              $("#searchCards").hide()
+              $("#mainCards").show()
+            } else {
+              $("#mainCards").hide()
+              $("#searchCards").show()
             }
-            accountOverlay.generateOverlay("overlay" + "797fe81b-cf0a-448b-8782-6e35b711e535", true)
           });
+          /*
+          new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
+            errorHand(err);
+          }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);*/
         </script>
 </body>
 </html>
