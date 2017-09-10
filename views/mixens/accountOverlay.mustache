@@ -1,4 +1,4 @@
-<div id="accountInfo" class="accountInfoOverlay">
+<div id="accountInfo" class="accountInfoOverlay active">
   
   <div class="userCardBundle">
     <!--Top Card -->
@@ -133,23 +133,72 @@
     </div>
     <div class="row" >
       <div class="col s12 m12 l8 push-l2">
-        <div class="card" >
-           
+      <div class="card">
           <div class="card-content">
-            <span class="card-title">Schedule</span>
-            <table class="highlight responsive-table">
-              <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Class</th>
-                    <th>Teacher</th>
-                    <th>Room</th>
-                </tr>
-              </thead>
+          <span class="card-title">Schedules</span>
+            <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab"><a href="#test4">Student Type Schedule</a></li>
+              <li class="tab"><a class="active" href="#test5">Teacher Type Schedule</a></li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="test4">
+              <table class="highlight responsive-table">
+                <thead>
+                  <tr>
+                      <th>Period</th>
+                      <th>Class</th>
+                      <th>Teacher</th>
+                      <th>Room</th>
+                  </tr>
+                </thead>
 
-              <tbody>
-              </tbody>
-            </table>
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>Ms. Humptydinkle</td>
+                    <td>123456</td>
+                  </tr>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>Ms. Humptydinkle</td>
+                    <td>123456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="test5">
+              <table class="highlight responsive-table">
+                <thead>
+                  <tr>
+                      <th>Period</th>
+                      <th>Class</th>
+                      <th>Limit</th>
+                      <th>Room</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>3</td>
+                    <td>123456</td>
+                  </tr>
+                  <tr>
+                    <td>B</td>
+                    <td>Algebra</td>
+                    <td>3</td>
+                    <td>123456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -180,11 +229,15 @@
     let _location = new WeakMap();
     let _accountLoaded = new WeakMap();
     class AccountOverlay {
-      constructor(userID, errorCallback) {
+      constructor(userID, loadedCallback) {
         _userID.set(this, userID);
         console.log(this)
         this.loadData().catch(function(err) {
-          errorCallback(err);
+          if(err) {
+            loadedCallback(err);
+          } else {
+            loadedCallback(null)
+          }
         })
       };
 
@@ -340,6 +393,87 @@
 
       }
 
+      scheduleCard() {
+        var top = $("<div/>").addClass("col s12 m12 l8 push-l2");
+
+        var cont = $("<div/>").addClass("card-content").append($("<span/>").addClass("card-title").html("Schedules"));
+
+        return top.append($("<div/>").addClass("card")
+            .append(cont)
+          )
+      }
+      /*
+      <div class="col s12 m12 l8 push-l2">
+      <div class="card">
+          <div class="card-content">
+          <span class="card-title">Schedules</span>
+            <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab"><a href="#test4">Student Type Schedule</a></li>
+              <li class="tab"><a class="active" href="#test5">Teacher Type Schedule</a></li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="test4">
+              <table class="highlight responsive-table">
+                <thead>
+                  <tr>
+                      <th>Period</th>
+                      <th>Class</th>
+                      <th>Teacher</th>
+                      <th>Room</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>Ms. Humptydinkle</td>
+                    <td>123456</td>
+                  </tr>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>Ms. Humptydinkle</td>
+                    <td>123456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="test5">
+              <table class="highlight responsive-table">
+                <thead>
+                  <tr>
+                      <th>Period</th>
+                      <th>Class</th>
+                      <th>Limit</th>
+                      <th>Room</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>Algebra</td>
+                    <td>3</td>
+                    <td>123456</td>
+                  </tr>
+                  <tr>
+                    <td>B</td>
+                    <td>Algebra</td>
+                    <td>3</td>
+                    <td>123456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      */
       generateOverlay(id, active, ignoreLoaded) {
 
         console.log("trig")

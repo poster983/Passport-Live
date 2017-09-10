@@ -239,7 +239,7 @@ email: hi@josephhassell.com
                                 .attr("data-position", "right")
                                 .attr("data-delay", "50")
                                 .attr("data-tooltip", "Account Cards")
-                                .attr("onclick", "new AccountOverlay(\"" + userArray[x].id + "\", function(err) {errorHand(err);}).generateOverlay(\"overlay" + userArray[x].id + "\", true, false);")
+                                .attr("onclick", "new AccountOverlay(\"" + userArray[x].id + "\", function(err) {if(err) {errorHand(err);}}).generateOverlay(\"overlay" + userArray[x].id + "\", true, false);")
                                 
                                 .append($("<i/>").addClass("material-icons").html("account_circle"))
 
@@ -283,9 +283,9 @@ email: hi@josephhassell.com
             }
           });
           
-          new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
-            errorHand(err);
-          }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);
+          /*new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
+            if(err) {errorHand(err);}
+          }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);*/
         </script>
 </body>
 </html>

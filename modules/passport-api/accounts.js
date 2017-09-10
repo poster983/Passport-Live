@@ -717,7 +717,7 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     var promises = [];
     if(periodArray.length <= 0) {
         var err = new Error("No Periods Specified");
-            err.status = 404;
+            err.status = 400;
             return done(err)
     }
     exports.getUserByID(db.conn(), userID, function(err, userData) {

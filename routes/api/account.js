@@ -523,6 +523,81 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
     })
 });
 
+/** GETs account schedules for teacher dash
+    * @function getSchedulesForTeacherDash
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/teacher/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForTeacherDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    //console.log("HIIIIIIIIIIIIIIIIIii")
+    api.getTeacherSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        
+        res.send(data)
+    })
+});
+
+
+/** GETs All account schedule types for an account
+    * @function getAllSchedules
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    var prom = [];
+
+    prom.push(new Promise(function(resolve, reject) {
+        api.getStudentSchedule(req.params.id, function(err, data) {
+            if(err && err.status != 404) {
+                return reject(err);
+            }
+            
+            return resolve(data)
+        })
+    }))
+
+    prom.push(new Promise(function(resolve, reject) {
+        api.getTeacherSchedule(req.params.id, function(err, data) {
+            if(err && err.status != 404) {
+                return reject(err);
+            }
+            
+            return resolve(data)
+        })
+    }))
+
+    Promise.all(prom).then(function(arr) {
+        res.json({studentType: arr[0], teacherType: arr[1]});
+    }).catch(function(err) {
+        return next(err)
+    });
+});
+
+
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation
     * @async
