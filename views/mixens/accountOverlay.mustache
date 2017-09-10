@@ -290,6 +290,11 @@
                         .attr("title", "Email") 
                         .prepend($("<i/>").addClass("material-icons").html("email"))
                         .append($("<strong/>").html(_user.get(this).email))
+        var accountType = $("<span/>")
+                        .attr("title", "User Group/Account Type") 
+                        .prepend($("<i/>").addClass("material-icons").html("security"))
+                        .append($("<strong/>").html(_user.get(this).userGroup))
+
         var cont = $("<div/>")
                       .addClass("card-content")
                       .append($("<span/>").addClass("card-title").html("Universal Info"))
@@ -297,6 +302,9 @@
                       .append($("<br/>"))
                       .append($("<br/>"))
                       .append(email)
+                      .append($("<br/>"))
+                      .append($("<br/>"))
+                      .append(accountType)
 
         return top.append($("<div/>").addClass("card")
             .append(cont)
