@@ -122,6 +122,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             requester: requester,
             period: period,
             date: r.ISO8601(date),
+            dateTimeRequested: r.now(),
             status: {
                 confirmation: {
                     state: "pending",
