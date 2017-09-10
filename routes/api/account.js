@@ -262,7 +262,7 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
         } else if(acc == null) {
             return res.json([]) 
         }
-        console.log(acc)
+        
         var ret = [];
         if(acc.length <= 0) {
             return res.json([]);
@@ -299,7 +299,7 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
         } else if(acc == null) {
             return res.json([]) 
         }
-        console.log(acc)
+        
         var ret = [];
         if(acc.length <= 0) {
             return res.json([]);

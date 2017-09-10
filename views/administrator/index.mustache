@@ -95,16 +95,18 @@ email: hi@josephhassell.com
           <div class="card grey darken-3">
             <div class="card-content">
               <span class="card-title white-text">Account Search</span>
-              <ul class="collection" id="accountSearchReturn">
-                <li class="collection-item avatar">
-                  <img src="/api/media/avatar/febffe69-0185-46ac-a005-09c1c6de154f/50.svg" alt="avatar" class="passport-avatar circle">
-                  <span class="title">Mr. Joseph Hassell</span>
-                  <p>Email: <strong>josephh2018@gmail.com</strong></p>
-                  <p title="User Group">Account Type: <strong>Student</strong></p>
-                  <a class="secondary-content btn-floating waves-effect waves-circle waves-light"><i class="material-icons">account_circle</i></a>
-                  
-                </li>
-              </ul>
+              <div id="accountSearchReturn">
+                <ul class="collection">
+                  <li class="collection-item avatar">
+                    <img src="/api/media/avatar/febffe69-0185-46ac-a005-09c1c6de154f/50.svg" alt="avatar" class="passport-avatar circle">
+                    <span class="title">Mr. Joseph Hassell</span>
+                    <p>Email: <strong>josephh2018@gmail.com</strong></p>
+                    <p title="User Group">Account Type: <strong>Student</strong></p>
+                    <a class="secondary-content btn-floating waves-effect waves-circle waves-light"><i class="material-icons">account_circle</i></a>
+                    
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -166,19 +168,39 @@ email: hi@josephhassell.com
           //change for mixen
           let SearchUserCard = (function() {
             let _query = new WeakMap();
+            let _generatedULID = new WeakMap();
+            let _inputID = new WeakMap();
             class SearchUserCard {
-              constructor(inputID, cardContainer) {
+              constructor(inputID, cardContainerID) {
                 this._queryDone;
-                if(inputID) {
-                  document.getElementById(inputID).addEventListener("keyup", function(e){
-                      console.log(document.getElementById(inputID).value)
-                      if(cardContainer)
-                      this.query(document.getElementById(inputID).value).toCard();
-                  }.bind(this));
+                if(cardContainerID) {
+                  _generatedULID.set(this, uuidv4());
+                  $("#" + cardContainerID).empty().append($("<ul/>").addClass("collection").attr("id", _generatedULID.get(this)))
+                  if(inputID) {
+                    _inputID.set(this, inputID);
+                    document.getElementById(inputID).addEventListener("keyup", function() {
+                      this.keyDownEvent()
+                    }.bind(this));
+                  }
                 }
               }
               get rawQuery() {
                 return _query.get(this); 
+              }
+              get generatedULID() {
+                return _generatedULID.get(this);
+              }
+              keyDownEvent() {
+                $("#" + _generatedULID.get(this)).empty();
+                this.query(document.getElementById(_inputID.get(this)).value).toCard().then(function(cardList) {
+                  for(var x = 0; x < cardList.length; x++) {
+                    $("#" + _generatedULID.get(this)).append(cardList[x])
+                    $('.tooltipped').tooltip({delay: 50});
+                  }
+                }.bind(this))
+              }
+              destroyListner() {
+                document.getElementById(_inputID.get(this)).removeEventListener("keyup");
               }
               _ajaxQuery(name) {
                 return new Promise(function(resolve, reject) {
@@ -197,22 +219,51 @@ email: hi@josephhassell.com
                   if(name.length > 0) {
                     this._ajaxQuery(name).then(function(data) {
                       _query.set(this, data); 
-                      resolve();
-                    }.bind(this)) 
+                      resolve(data);
+                    }.bind(this)).catch(function(err) {
+                      reject(err)
+                    })
                   }
                 }.bind(this));
                 return this;
               }
               toCard() {
-                this._queryDone.then(function() {
-                  
-                }.bind(this));
+                return new Promise(function(resolve, reject) {
+                  this._queryDone.then(function(userArray) {
+                    var listElm = [];
+                    for(var x = 0; x < userArray.length; x++) {
+                      var li = $("<li/>").addClass("collection-item avatar").append(
+                              $("<img/>").attr("src", "/api/media/avatar/" + userArray[x].id + "/50.svg").attr("alt", "User Avatar").addClass("passport-avatar circle")
+                      ).append(
+                              $("<span/>").addClass("title").html(userArray[x].name.salutation + " " + userArray[x].name.first + " " + userArray[x].name.last)
+                      ).append(
+                              $("<p/>").prepend("Email: ").append($("<strong/>").html(userArray[x].email))
+                      ).append(
+                              $("<p/>").attr("title", "User Group").prepend("Account Type: ").append($("<strong/>").html(userArray[x].userGroup))
+                      ).append(
+                              $("<a/>").addClass("secondary-content btn-floating waves-effect waves-circle waves-light tooltipped")
+                              .attr("data-position", "right")
+                              .attr("data-delay", "50")
+                              .attr("data-tooltip", "Account Cards")
+                              .append($("<i/>").addClass("material-icons").html("account_circle"))
+                      )
+                      
+                      listElm.push(li);
+                      if(x >= userArray.length -1) {
+                        resolve(listElm)
+                      }
+                    }
+                    
+                  }.bind(this));
+                }.bind(this))
                 //return _query.get(this);
               }
+
             };
             return SearchUserCard;
           }());
-          var SearchUser = new SearchUserCard("searchAccounts");
+
+          var SearchUser = new SearchUserCard("searchAccounts", "accountSearchReturn");
           var accountOverlay = new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
             if(err) {
               return errorHand(err);

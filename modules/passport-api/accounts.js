@@ -180,18 +180,6 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
     * @param {function} done - Callback
     */
 exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) { 
-    var nameSplit = human.parseName(name);
-    if(!nameSplit.lastName) {
-        nameSplit.lastName = null;
-    }
-     if(!nameSplit.firstName) {
-        nameSplit.firstName = null;
-        
-    }
-    /*.filter(function(doc){
-            return doc('userGroup').match(userGroup).and(doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+name.replace(/\s/g,'')))
-        })*/
-    console.log(name)
      r.table("accounts")
      .filter(function(doc){
             return doc('userGroup').match(userGroup).and(
@@ -209,88 +197,14 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
         }
 
         document.toArray(function(err, arr) {
-            console.log(arr)
             if(err) {
                 return done(err)
             }
-            return done(null, arr);
-            /*
-            if(arr.length <= 0) {
-                return done(null, arr)
-            }
-            //Add Salutation for compadability
-            
-            for (var i = 0; i < arr.length; i++) {
-                if(nameSplit.salutation) {
-                    if(!arr[i].name.salutation) {
-                        arr[i].name.salutation = nameSplit.salutation;
-                    }
-                } else {
-                    if(arr[i].name.salutation) {
-                        arr[i].name.salutation = null;
-                    }
-                }
-                
-                
-                if(i >= arr.length-1) {
-                    return done(null, arr);
-                }
-            }*/
-            
+            return done(null, arr);            
         });
     });
 }
-    /*
-exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) { 
-    var nameSplit = human.parseName(name);
-    if(!nameSplit.lastName) {
-        nameSplit.lastName = null;
-    }
-     if(!nameSplit.firstName) {
-        nameSplit.firstName = null;
-        
-    }
-    console.log(nameSplit)
-     r.table("accounts").filter(function(doc){
-            return (doc('userGroup').match(userGroup).and(doc('name')("last").match("(?i)"+nameSplit.lastName).or(doc('name')("first").match("(?i)"+nameSplit.firstName))));
-        }).
-        run(dbConn, function(err, document) {
-
-         if(err) {
-            return done(err, null);
-        }
-
-        document.toArray(function(err, arr) {
-            console.log(arr)
-            if(err) {
-                return done(err)
-            }
-
-            if(arr.length <= 0) {
-                return done(null, arr)
-            }
-            //Add Salutation for compadability
-            
-            for (var i = 0; i < arr.length; i++) {
-                if(nameSplit.salutation) {
-                    if(!arr[i].name.salutation) {
-                        arr[i].name.salutation = nameSplit.salutation;
-                    }
-                } else {
-                    if(arr[i].name.salutation) {
-                        arr[i].name.salutation = null;
-                    }
-                }
-                
-                
-                if(i >= arr.length-1) {
-                    return done(null, arr);
-                }
-            }
-            
-        });
-    });
-}*/
+    
 /** 
     * Searches by usergroup the account database 
     * @function getUserGroupAccountByUserGroup
