@@ -49,9 +49,10 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             return done(err)
     }
     if (!fromPerson || typeof fromPerson != "string") {
-        var err = new Error("fromPerson Not Valid");
+        /*var err = new Error("fromPerson Not Valid");
             err.status = 400;
-            return done(err)
+            return done(err)*/
+        fromPerson = null
     }
     if(!migrator || typeof migrator != "string") {
         var err = new Error("Migrator Not Valid");
@@ -247,6 +248,7 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     .without("left")
     //merge correct values
     .map(r.row.merge (function(ro) {
+
         return {
             "requester": ro("right").pluck("id", "name", "email", "schedules")
         }
