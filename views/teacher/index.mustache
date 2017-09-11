@@ -880,6 +880,7 @@ console.log(state)
                   .append(requesterEl)
                   .attr("data-passId-arriving", myPasses[i].id)
                   .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
+                  .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
       $myPasses.append(li)
       if(myPasses[i].status.migration.arrivedTime) {
         setArrivingButtonsAndState(myPasses[i].id, "arrived");
@@ -922,7 +923,11 @@ function arrivingButtonActions(passLI, action) {
 
     if(transaction && transaction.replaced == 1) {
       Materialize.toast('Successfully Updated State', 4000) 
+      if(action == "denied" || action == "canceled") {
+        $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr("data-stateSetByCurrentUser", true);
+      }
       setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+
     } else {
       return materialResponse("cancel", "warning");
     }
@@ -981,6 +986,7 @@ function checkInButtons(passLI, isCheckedIn) {
   var checkInBtn = $("*[data-passId-arriving=" + passId + "]").find("a.cyan.btn-floating");
   var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
   var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
+  var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") == "true";
 //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
 console.log(state)
   switch(state){
@@ -1022,11 +1028,11 @@ console.log(state)
       break;
     case "denied":
     case "canceled":
-      if(!userIsRequester) {
+      if(stateSetByCurrentUser && !userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("data-tooltip", "ReAccept Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-      } else if(userIsRequester) {
+      } else if(stateSetByCurrentUser && userIsRequester) {
         releaseBtn.attr("disabled", false);
         releaseBtn.attr("data-tooltip", "Reopen Pass");
         releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
