@@ -76,15 +76,15 @@ router.get('/signup/', function(req, res, next) {
 
 router.get('/logout', function(req, res, next){
   //req.logout();
-  req.session.destroy(function (err) {
+  (req.session.destroy(function (err) {
     if(err) {
       return next(err)
     }
     res.redirect('/auth/login'); 
-  });
+  }) || req.logout());
 
   //res.redirect('/auth/login');
-}) || req.logout();
+});
 
 
 module.exports = router;
