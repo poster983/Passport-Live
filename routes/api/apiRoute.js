@@ -217,7 +217,7 @@ function handleNewApiKey(req, res, next) {
 schedule
 **/
 //new Schedule Definition 
-router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
     var name=req.body.name;
     var scheduleData=req.body.scheduleData;
 
@@ -253,7 +253,7 @@ router.get('/schedule/definition/:id', function(req, res, next) {
 })
 //schedule Single Schedule Definition
 
-router.post('/schedule/date', function(req, res, next) {
+router.post('/schedule/date', ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -269,7 +269,7 @@ router.get('/schedule/date/:id', function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.post('/schedule/repeat', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post('/schedule/repeat', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var repeatingRule=req.body.repeatingRule;
 

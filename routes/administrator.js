@@ -26,7 +26,7 @@ var passport = require('passport')
 var checkAuth = require('connect-ensure-login');
 var ssarv = require('ssarv');
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;

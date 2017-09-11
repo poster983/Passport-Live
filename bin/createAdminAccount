@@ -25,7 +25,7 @@ var api = require("../modules/passport-api/security.js");
 db.setup().then(function() {
 	console.log("generating admin permkey...")
 	var date = new Date();
-	api.createPermissionKey({userGroups: ["admin"]}, {}, {time: date.setDate(date.getDate() + 1)}, function(err, result) {
+	api.createPermissionKey({userGroups: ["admin", "dev"]}, {}, {time: date.setDate(date.getDate() + 1)}, function(err, result) {
 		if(err) {
 			throw err
 		}
