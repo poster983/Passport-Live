@@ -189,7 +189,7 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
         toDate = moment(toDate).toISOString();
 
     }
-
+    
 
     
     r.table("passes")
@@ -205,7 +205,23 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
             return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date())
         }
     })
-    
+    //join optional fromPerson value
+    .outerJoin(r.table("accounts"), function(passRow, accountRow) {
+        return passRow("fromPerson").eq(accountRow("id"))
+    })
+    .map(r.row.merge (function(ro) {
+        return ro("left")
+    }))
+    .without("left")
+    .map(r.row.merge (function(ro) {
+        return {
+
+                "fromPerson": ro("right").pluck("id", "name", "email", "schedules").default(null)
+
+        }
+    }))
+    .without("right")
+    /*
     //man join from person
     .eqJoin("fromPerson", r.table("accounts"))
     //merge out the left 
@@ -221,7 +237,7 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
 
         }
     }))
-    .without("right")
+    .without("right")*/
     //_______
     //merge toPerson
     
