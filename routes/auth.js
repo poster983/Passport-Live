@@ -84,7 +84,7 @@ router.get('/logout', function(req, res, next){
   });
 
   //res.redirect('/auth/login');
-});
+}) || req.logout();
 
 
 module.exports = router;
