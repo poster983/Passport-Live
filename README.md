@@ -19,7 +19,8 @@ NOTE: These instructions are assuming you are using Ubuntu 16.04+ LTS
    a. (NOTE.) If you get errors related to "node-sass", run `rm -rf node_modules` and then run `~$ npm install --unsafe-perm`  
 7. Run `~$ rethinkdb`  
 8. Run in a new termanal instance `~$ npm run configure:db`  
-9. CTRL^C Exits the program.
+9. Once that is done, run `~$ npm run configure:root` to create an admin permission key to create an account.
+10. CTRL^C Exits the program.
 
 ## Updating 
 We HIGHLY recommend that you use git for updating the code, however please be sure that there are no breaking changes documented or you may have to change any coustom code.  
