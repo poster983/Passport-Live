@@ -843,12 +843,17 @@ console.log(state)
                       .addClass("new badge")
       
 
-      var leavingFromEl = $("<p/>")
+      if(myPasses[i].fromPerson) {
+        var leavingFromEl = $("<p/>")
                       .text("Leaving From: ")
                       .append(
                         $("<strong/>")
                         .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
                       )
+      } else {
+        var leavingFromEl = $("<p/>")
+                      .text("Leaving From No One")
+      }
 
       var requesterEl = $("<p/>")
                       .text("Requester: ")

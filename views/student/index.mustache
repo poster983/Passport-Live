@@ -1087,13 +1087,18 @@ function setMyPasses() {
                       //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
                       .addClass("new badge")
       
-
-      var leavingFromEl = $("<p/>")
+      if(myPasses[i].fromPerson) {
+        var leavingFromEl = $("<p/>")
                       .text("Leaving From: ")
                       .append(
                         $("<strong/>")
                         .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
                       )
+      } else {
+        var leavingFromEl = $("<p/>")
+                      .text("Leaving From No One")
+      }
+      
 
       var requesterEl = $("<p/>")
                       .text("Requester: ")
@@ -1161,7 +1166,11 @@ function arrivingButtonActions(passLI, action) {
 
     if(transaction && transaction.replaced == 1) {
       Materialize.toast('Successfully Updated State', 4000) 
+      if(action == "denied" || action == "canceled") {
+        $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr("data-stateSetByCurrentUser", true);
+      }
       setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+
     } else {
       materialResponse("cancel", "warning");
     }
@@ -1203,7 +1212,11 @@ console.log(cantAccept)
       }
       undoBtn.attr("disabled", false);
       undoBtn.attr("data-tooltip", "Cancel This Pass");
-      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+      if(userIsRequester) {
+        undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+      } else {
+        undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+      }
       badge.removeClass().addClass("new badge");
       
       break;
