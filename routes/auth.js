@@ -76,16 +76,17 @@ router.get('/signup/', function(req, res, next) {
 
 router.get('/logout', function(req, res, next){
   //req.logout();
-  if(typeof req.session.destroy == "function") {
-     req.session.destroy(function (err) {
+
+  if(config.get('misc.storeSessionToDisc')) {
+    req.session = null;
+    res.redirect('/auth/login');
+  } else {
+    req.session.destroy(function (err) {
       if(err) {
         return next(err)
       }
       res.redirect('/auth/login'); 
     });
-  } else {
-    req.logout();
-    res.redirect('/auth/login');
   }
  
 
