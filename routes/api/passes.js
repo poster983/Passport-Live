@@ -93,7 +93,7 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     * @param {nextCallback} next
     * @apiparam {string} idCol - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @apiparam {date} fromDay - Begining of the search range
-    * @api GET /api/passes/me/from/:fromDay/
+    * @api GET /api/passes/me/by/:idCol/from/:fromDay/
     * @apiresponse {json} Returns rethink db action summery
     */
 router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromDay(req, res, next) {
@@ -121,7 +121,7 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session
     * @apiparam {string} idCol - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @apiparam {date} fromDay - Begining of the search range
     * @apiparam {date} toDay - End of the search range
-    * @api GET /api/passes/me/from/:fromDay/to/:toDay
+    * @api GET /api/passes/me/by/:idCol/from/:fromDay/to/:toDay
     * @apiresponse {json} Returns rethink db action summery
     */
 router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromToDay(req, res, next) {
