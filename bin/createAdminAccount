@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+/*
+  Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+*/
+
+var db = require("../modules/db/index.js")
+var api = require("../modules/passport-api/security.js");
+
+db.setup().then(function() {
+	console.log("generating admin permkey...")
+	var date = new Date();
+	api.createPermissionKey({userGroups: ["admin"]}, {}, {time: date.setDate(date.getDate() + 1)}, function(err, result) {
+		if(err) {
+			throw err
+		}
+			console.log("Your admin permission key:", result);
+			console.log("You can now create an account at: /auth/signup?pk=" + result)
+			console.log("To make keys for other userGroups, use the passport-CLI:", "https://github.com/poster983/passport-live-cli")
+			process.exit();
+	})
+})

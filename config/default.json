@@ -57,7 +57,7 @@
 			},
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
-		"admin": {
+		"admin": { //warning, don't change until you have an admin account on Passport
 			"permissions": {
 				"dashboards": ["student", "teacher", "kiosk", "administrator", "admin"], // what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 

@@ -26,18 +26,16 @@ var connection = null;
 var config = require('config');
 
 exports.setup = function() {
-
-
-        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
-            if (err) {
-
-                throw err;
-            }
-            console.log("DB Connected")
-            connection = conn;
-
-            return true
-        });
+        return new Promise(function(resolve, reject) {
+            r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
+                if (err) {
+                    throw err;
+                }
+                console.log("DB Connected")
+                connection = conn;
+                resolve()
+            });
+        }) 
 }
 
 exports.get = function() {
