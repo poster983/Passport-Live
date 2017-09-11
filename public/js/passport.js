@@ -260,7 +260,7 @@ function materialResponse(icon, colorClass, done) {
 function errorHand(err) {
   //Do more Later
   if(err.status) {
-    var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + err.getResponseHeader("errormessage") + "</strong> </span>"))
+    var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.getResponseHeader("errormessage")) + "</strong> </span>"))
   } else if(err.message) {
     var $toastHTML = $("<span> ERROR: " + err.message + "</span>")
   } else {

@@ -159,10 +159,12 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
     * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @param {date} fromDate - low range date to search for.  
     * @param {date} toDate - High range date to search for.  set null for none
+    * @param {array} periods - Only return passes with these periods.  set null for none
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
     */
-exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
+exports.flexableGetPasses = function(id, byColl, fromDate, toDate, periods, done) {
+    console.log(periods)
     if(!id || typeof id != "string") {
         var err = new Error("Invalid ID");
             err.status = 400;
@@ -191,6 +193,13 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
     }
     
 
+    if(periods != null && !Array.isArray(periods)) {
+        var err = new Error("Expected periods to be either undefined, null or an array.  Got: " + typeof periods);
+            err.status = 400;
+            return done(err)
+    }
+
+
     
     r.table("passes")
 
@@ -203,6 +212,14 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
                 day("date").date().eq(r.ISO8601(fromDate).date()));
         } else {
             return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date())
+        }
+    })
+    .filter(function(period) {
+        if(!periods) {
+            return true;
+        } else {
+            console.log(period("period"))
+            return r.expr(periods).contains(period("period"));
         }
     })
     //join optional fromPerson value
@@ -303,6 +320,8 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, done) {
 }
 
 
+
+
 exports.getPass = function(passId, done) {
      if(!validator.isUUID(passId)) {
         var err = new Error("Not a valid passId");
@@ -349,3 +368,5 @@ exports.updatePass = function(passId, doc, done) {
         return done(null, trans);
     })
 }
+
+

@@ -146,7 +146,7 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
                       userGroup: userGroup, // should be same as a usergroup in config/default.json
                       groupFields: groupFields,
                       isArchived: false,
-                      verified: false
+                      isVerified: false
                     }).run(dbConn);
                     promice.then(function(conn) {
                         return done(null);
@@ -180,21 +180,19 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
     * @param {function} done - Callback
     */
 exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) { 
-    var nameSplit = human.parseName(name);
-    if(!nameSplit.lastName) {
-        nameSplit.lastName = null;
-    }
-     if(!nameSplit.firstName) {
-        nameSplit.firstName = null;
-        
-    }
-    console.log(nameSplit)
-     r.table("accounts").filter(function(doc){
-            return (doc('userGroup').match(userGroup).and(doc('name')("last").match("(?i)"+nameSplit.lastName).or(doc('name')("first").match("(?i)"+nameSplit.firstName))));
-        }).
-        run(dbConn, function(err, document) {
+     r.table("accounts")
+     .filter(function(doc){
+            return doc('userGroup').match(userGroup).and(
+                    doc('name')('first').add(doc('name')('last')).match("(?i)"+name.replace(/\s/g,'')).or(
+                        doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+name.replace(/\s/g,'')).or(
+                            doc('name')('salutation').add(doc('name')('last')).match("(?i)"+name.replace(/\s/g,''))
+                        )
+                    )
+                )
+        }).run(dbConn, function(err, document) {
 
          if(err) {
+            //console.log(err)
             return done(err, null);
         }
 
@@ -202,31 +200,11 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
             if(err) {
                 return done(err)
             }
-            if(arr.length <= 0) {
-                return done(null, arr)
-            }
-            //Add Salutation for compadability
-            
-            for (var i = 0; i < arr.length; i++) {
-                if(nameSplit.salutation) {
-                    if(!arr[i].name.salutation) {
-                        arr[i].name.salutation = nameSplit.salutation;
-                    }
-                } else {
-                    if(arr[i].name.salutation) {
-                        arr[i].name.salutation = null;
-                    }
-                }
-                
-                
-                if(i >= arr.length-1) {
-                    return done(null, arr);
-                }
-            }
-            
+            return done(null, arr);            
         });
     });
 }
+    
 /** 
     * Searches by usergroup the account database 
     * @function getUserGroupAccountByUserGroup
@@ -549,7 +527,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
 }
 /** 
     * Gets a schedule for a student dash 
-    * @function newUserSchedule
+    * @function getStudentSchedule
     * @link module:passportAccountsApi
     * @async
     * @param {string} userID - ID of User.
@@ -626,7 +604,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     student.schedule[keys[0]].teacher.id = teacherAccount.id;
                     student.schedule[keys[0]].teacher.name = teacherAccount.name;
                     student.schedule[keys[0]].teacher.scheduleID = null;
-                    console.log(keys[0], "teacherid is Null")
+                    //console.log(keys[0], "teacherid is Null")
 
                     return recursiveStudentScheduleJoin(keys.slice(1), student, done)
                 } else {
@@ -645,7 +623,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
 
                             if(teacher.schedule.hasOwnProperty(keys[0]) && teacher.schedule[keys[0]]) {
                                 //start joining
-                                console.log(teacher.schedule[keys[0]], keys[0])
+                                //console.log(teacher.schedule[keys[0]], keys[0])
                                 student.schedule[keys[0]] = teacher.schedule[keys[0]];
                                 student.schedule[keys[0]].teacher = {};
                                 student.schedule[keys[0]].teacher.id = teacher.userId;
@@ -671,8 +649,148 @@ function recursiveStudentScheduleJoin(keys, student, done) {
             return done(e)
         }
     } else {
-        console.log(keys[0], "skipped")
+        //console.log(keys[0], "skipped")
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }
 
+}
+
+/** 
+    * Gets a schedule for a teacher dash 
+    * @function getTeacherSchedule
+    * @link module:passportAccountsApi
+    * @async
+    * @param {string} userID - ID of User.
+    * @param {function} done - Callback
+    * @returns {callback}
+    */
+exports.getTeacherSchedule = function(userID, done) {
+    if(!userID) {
+        var err = new Error("User ID Not Present");
+        err.status = 400;
+        return done(err)
+    }
+
+    r.table('accounts').get(userID).pluck({
+        "name": true,
+        "id": true,
+        "schedules": {
+            "teacher": true
+        }
+    }).run(db.conn(), function(err, accDoc) {
+         if(err) {
+
+            return done(err);
+        }
+        //if returned stuff
+        if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
+             r.table('userSchedules').get(accDoc.schedules.teacher).run(db.conn(), function(err, teacher) {
+                if(err) {
+                    return done(err);
+                }
+                if(!teacher || !teacher.schedule) {
+                    var err = new Error("teacher.schedule not defined");
+                    err.status = 500;
+                    return done(err)
+                }
+                
+                return done(null, teacher)
+            });
+        } else {
+            var err = new Error("Account has no schedule linked");
+                    err.status = 404;
+                    return done(err)
+        }
+    });
+}
+
+/** 
+    * Gets Specific Periods based of user.  
+    * @function getSpecificPeriods
+    * @link module:passportAccountsApi
+    * @async
+    * @param {string} userID - ID of User.
+    * @param {function} done - Callback
+    * @returns {callback} Both teacher and student dashboard period info
+    */
+exports.getSpecificPeriods = function(userID, periodArray, done) {
+    var promises = [];
+    if(periodArray.length <= 0) {
+        var err = new Error("No Periods Specified");
+            err.status = 400;
+            return done(err)
+    }
+    exports.getUserByID(db.conn(), userID, function(err, userData) {
+        if(err) {
+            return done(err)
+        } 
+        if(!userData) {
+            var err = new Error("Account Not Found");
+            err.status = 404;
+            return done(err)
+        }
+        if(!userData.schedules || (!userData.schedules.student && !userData.schedules.teacher)) {
+            var err = new Error("Account Has No Schedules Linked");
+            err.status = 404;
+            return done(err)
+        }
+    
+        if(userData.schedules.student) {
+            promises.push(new Promise(function(resolve, reject) {
+                exports.getStudentSchedule(userID, function(err, studentSchedule) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(!studentSchedule.schedule) {
+                        var err = new Error("Schedule Not Found");
+                        err.status = 404;
+                        return reject(err)
+                    }
+                    var studentReturn = {student: []};
+                    for(var x = 0; x < periodArray.length; x++) {
+                        studentReturn.student.push({period: periodArray[x], periodData: studentSchedule.schedule[periodArray[x]]})
+                        if(x >= periodArray.length-1 ) {
+                            return resolve(studentReturn);                            
+                        }
+                        
+                    }
+                    
+                })
+                
+            }));
+        }
+        if(userData.schedules.teacher) {
+            promises.push(new Promise(function(resolve, reject) {
+                exports.getTeacherSchedule(userID, function(err, teacherSchedule) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(!teacherSchedule.schedule) {
+                        var err = new Error("Schedule Not Found");
+                        err.status = 404;
+                        return reject(err)
+                    }
+                    var teacherReturn = {teacher: []};
+                    for(var x = 0; x < periodArray.length; x++) {
+                        teacherReturn.teacher.push({period: periodArray[x], periodData: teacherSchedule.schedule[periodArray[x]]})
+                        if(x >= periodArray.length-1 ) {
+                            return resolve(teacherReturn);                            
+                        }
+                        
+                    }
+                })
+            }));
+        }
+
+        Promise.all(promises).then(function(periods){
+            if(periods.length == 2) {
+                return done(null, Object.assign({},periods[0], periods[1]))
+            } else {
+                return done(null, periods[0])
+            }
+            
+        }).catch(function(err) {
+            return done(err)
+        });
+    });
 }

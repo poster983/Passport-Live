@@ -101,7 +101,7 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session
     var fromDay = req.params.fromDay;
     var idCol = req.params.idCol;
 
-    api.flexableGetPasses(req.user.id, idCol, fromDay, null,  function(err, data) {
+    api.flexableGetPasses(req.user.id, idCol, fromDay, null, null, function(err, data) {
         if(err) {
             return next(err);
         }
@@ -129,7 +129,7 @@ router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt',
     var toDay = req.params.toDay;
     var idCol = req.params.idCol;
 
-    api.flexableGetPasses(req.user.id, idCol, fromDay, toDay,  function(err, data) {
+    api.flexableGetPasses(req.user.id, idCol, fromDay, toDay, null, function(err, data) {
         if(err) {
             return next(err);
         }

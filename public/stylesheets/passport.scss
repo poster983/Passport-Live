@@ -822,8 +822,8 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     position: relative;
     top: 123px;
   }
-
-  .card-avatar {
+  /*
+  img.card-avatar {
     position: absolute;
     border-radius: 50%;
     width: 100px;
@@ -833,7 +833,21 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     top: 125px;
     left: 50%;
     transform: translate(-50%, 0%)
+  }*/
+  div.card-avatar {
+    display: flex;
+    justify-content: center;
   }
+  img.card-avatar {
+    position: absolute;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #e0e0e0;
+    z-index: 1;
+    top: 125px;
+  }
+
   .passport-avatar {
     position: inherit;
     border-radius: 50%;
@@ -1125,7 +1139,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     }
 
 
-
+//OUTDATED BROWSER CSS
 .outdated-browser {
   display: none;
   position: fixed;
@@ -1169,4 +1183,37 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     font-size: 36px;
     line-height: 36px;
   }
+}
+
+//ACCOUNT INFO OVERLAY 
+
+div.accountInfoOverlay {
+  overflow: scroll;
+  height: 0;
+  position: fixed;
+  top:100%;
+  left:0;
+  opacity: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background-color: rgba(33, 33, 33, 0.5);
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  transition: all 0.375s;
+  transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+div.accountInfoOverlay.active {
+  z-index: 1001;
+  top:0%;
+  opacity: 1;
+  transition: all 0.375s;
+  transition-property: opacity, top;
+  transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+div.accountInfoOverlay div.card-avatar {
+  display: flex;
+  justify-content: center;
 }

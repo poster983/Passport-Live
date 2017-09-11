@@ -74,9 +74,16 @@ router.get('/signup/', function(req, res, next) {
 });*/
 
 
-router.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/auth/login');
+router.get('/logout', function(req, res, next){
+  //req.logout();
+  req.session.destroy(function (err) {
+    if(err) {
+      return next(err)
+    }
+    res.redirect('/auth/login'); 
+  });
+
+  //res.redirect('/auth/login');
 });
 
 

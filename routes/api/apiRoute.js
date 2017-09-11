@@ -33,6 +33,8 @@ var api = require('../../modules/passport-api/index.js'); //("jdsfak");
 var cors = require('cors');
 var ssarv = require("ssarv");
 
+var accountApi = require("../../modules/passport-api/accounts.js");
+
 router.use(cors());
 router.options('*', cors())
 
@@ -285,7 +287,7 @@ router.get('/schedule/repeat/:id', function(req, res, next) {
 
 router.get('/schedule/for/:date', function(req, res, next) {
     var date=req.params.date;
-    api.getScheduleOfADate(connection, date, function(err, data) {
+    api.getScheduleOfADate(connection, date, false, function(err, data) {
         if(err) {
             return next(err);
         }
@@ -397,20 +399,6 @@ router.post('/test/db', function(req, res, next) {
     })
 });*/
 
-router.get('/test/error/:error', function(req, res, next) {
-    /*
-    var err = new Error(req.params.error);
-    err.status = 400
-    next(err);*/
-    throw new Error(req.params.error);
-});
-router.get('/test/error/account/:error', function(req, res, next) {
-    
-    var err = new Error(req.params.error);
-    err.status = 400
-    err.level = 'fatal'
-    next(err);
-});
 /*
 router.get('/test/key/:key', function(req, res, next) {
     console.log(req.params.key)
@@ -423,7 +411,23 @@ router.get('/test/key/:key', function(req, res, next) {
         
     });
 })*/
-
+/*
+router.get("/test/date/:dateTime", function(req, res, next) {
+    scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, resp) {
+        if(err) {
+            return next(err)
+        }
+        return res.send(resp)
+    })
+})*/
+router.get("/test/teacherSchedule/:id", function(req, res, next) {
+    accountApi.getTeacherSchedule(req.params.id, function(err, resp) {
+        if(err) {
+            return next(err)
+        }
+        return res.send(resp)
+    })
+})
 
 
 //default Responce

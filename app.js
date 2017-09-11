@@ -184,7 +184,7 @@ app.use(function(err, req, res, next) {
 
   //console.log(err)
   // render the error page
-  res.append("errormessage", err.message);
+  res.append("errormessage", encodeURIComponent(err.message));
   res.status(err.status);
   res.render('error');
   

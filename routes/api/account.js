@@ -33,6 +33,10 @@ var ssarv = require("ssarv")
 var miscApi = require("../../modules/passport-api/index.js");
 
 
+var scheduleApi = require("../../modules/passport-api/schedules.js");
+var passApi = require("../../modules/passport-api/passes.js");
+var moment = require("moment")
+
 //var for backwards compadability.  neads to be removed later 
 
 
@@ -235,8 +239,8 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
 
 
 /**
-    * GETs accounts by name
-    * @function handleGetAccountsByName
+    * GETs accounts by name and usergroup
+    * @function handleGetAccountsByNameAndUserGroup
     * @async
     * @param {request} req
     * @param {response} res
@@ -247,29 +251,66 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByNameAndUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
     
     api.getUserGroupAccountByName(r.conn(), name, userGroup, function(err, acc) {
         if(err) {
-            next(err);
+            return next(err);
+        } else if(acc == null) {
+            return res.json([]) 
         }
-        console.log(acc)
+        
         var ret = [];
-        for (var i = 0; i < acc.length; i++) {
-             var safeUser = {
-                name: acc[i].name, 
-                email: acc[i].email, 
-                userGroup: acc[i].userGroup, 
-                id: acc[i].id, 
-                groupFields: acc[i].groupFields[userGroup]
-                
-            }
-            ret.push(safeUser);
+        if(acc.length <= 0) {
+            return res.json([]);
         }
-        res.json(ret);
+        for (var i = 0; i < acc.length; i++) {
+            ret.push(utils.cleanUser(acc[i]))
+            if(i>= acc.length -1) {
+                return res.json(ret);
+            }
+        }
+    }); 
+});
+
+/**
+    * GETs accounts by name
+    * @function handleGetAccountsByName
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/name/:name/
+    * @apiparam {string} name - A user's name.  Can be in any name format.
+    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+router.get("/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
+    var name = req.params.name;
+
+    
+    api.getUserGroupAccountByName(r.conn(), name, ".", function(err, acc) {
+
+        if(err) {
+            return next(err);
+        } else if(acc == null) {
+            return res.json([]) 
+        }
+        
+        var ret = [];
+        if(acc.length <= 0) {
+            return res.json([]);
+        }
+        for (var i = 0; i < acc.length; i++) {
+            ret.push(utils.cleanUser(acc[i]))
+            if(i>= acc.length -1) {
+                return res.json(ret);
+            }
+        }
+        
     }); 
 });
 
@@ -481,6 +522,273 @@ router.get('/schedule/student/id/:id/', passport.authenticate('jwt', { session: 
         res.send(data)
     })
 });
+
+/** GETs account schedules for teacher dash
+    * @function getSchedulesForTeacherDash
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/teacher/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForTeacherDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    //console.log("HIIIIIIIIIIIIIIIIIii")
+    api.getTeacherSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        
+        res.send(data)
+    })
+});
+
+
+/** GETs All account schedule types for an account
+    * @function getAllSchedules
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    var prom = [];
+
+    prom.push(new Promise(function(resolve, reject) {
+        api.getStudentSchedule(req.params.id, function(err, data) {
+            if(err && err.status != 404) {
+                return reject(err);
+            }
+            
+            return resolve(data)
+        })
+    }))
+
+    prom.push(new Promise(function(resolve, reject) {
+        api.getTeacherSchedule(req.params.id, function(err, data) {
+            if(err && err.status != 404) {
+                return reject(err);
+            }
+            
+            return resolve(data)
+        })
+    }))
+
+    Promise.all(prom).then(function(arr) {
+        res.json({studentType: arr[0], teacherType: arr[1]});
+    }).catch(function(err) {
+        return next(err)
+    });
+});
+
+
+/** GETs Current Period Location regardless of dashboard
+    * @function getCurrentLocation
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/location/datetime/:dateTime/id/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiparam {string} dateTime - An ISO dateTime string WITH timezone.
+    * @apiresponse {json} Returns Both teacher and studnet locations 
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+
+router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
+    var promises = [];
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, currentSchedules) {
+        if(err) {
+            return next(err);
+        }
+        if(currentSchedules.length <=0 ) {
+            return res.json({})
+        }
+        var forPeriods = currentSchedules.map(function(x) {
+            return x.period
+        })
+        console.log(forPeriods)
+        //get user's location 
+        promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods, "schedule"));
+
+        //Check for Passes 
+        promises.push(new Promise(function(doneResolve, doneReject) {
+            passApi.flexableGetPasses(req.params.id, "migrator", moment(req.params.dateTime).utc().format("Y-MM-DD"), moment(req.params.dateTime).add(1, "days").utc().format("Y-MM-DD"), forPeriods, function(err, passes) {
+                if(err) {
+                    return doneReject(err);
+                }
+                var passPromise = [];
+                if(passes.length <= 0) {
+                    return doneResolve({pass: null})
+                }
+                console.log(passes.length)
+                for(var x = 0; x < passes.length; x++) {
+                    if(!passes[x].toPerson || !passes[x].toPerson.schedules) {
+                        passPromise.push(new Promise(function(resolve, reject) {
+                            return resolve({pass: null})
+                        }));
+                        
+                    } else {
+                        if(!passes[x].toPerson.schedules.teacher && !passes[x].toPerson.schedules.student) {
+                        //console.log(passes[x].toPerson)
+                            passPromise.push(new Promise(function(resolve, reject) {
+                                return resolve({pass: null})
+                            }));
+                        } else {
+                            passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods, "pass", {passId: passes[x].id, toPerson: passes[x].toPerson}));
+                        }
+                    }
+                    
+                    
+
+                    if(x >= passes.length - 1) {
+                        //console.log("hello")
+                        Promise.all(passPromise).then(function(data) {
+                            var finalPassData = {};
+                            var studentPassArr = [];
+                            var teacherPassArr = [];
+                            
+                            if(data.length <= 0) {
+                                return doneResolve({});
+                            }
+                            for(var i = 0; i < data.length; i++) {
+                                if(data[i].pass && data[i].pass.student) {
+                                   studentPassArr= studentPassArr.concat(data[i].pass.student)
+                                }
+
+                                if(data[i].pass && data[i].pass.teacher) {
+                                    teacherPassArr = teacherPassArr.concat(data[i].pass.teacher);
+                                }
+
+                                if(i >= data.length -1 ) {
+
+                                    console.log(finalPassData, "tru")
+                                    return doneResolve({pass: {student: studentPassArr, teacher: teacherPassArr}})
+                                }
+                            }
+                            
+                        }).catch(function(err) {
+                            return doneReject(err)
+                        });
+                    }
+                }
+                
+
+
+                
+            });
+        }));
+
+        Promise.all(promises).then(function(data) {
+
+            return res.json(Object.assign({}, data[0], data[1]))
+        }).catch(function(err) {
+            return next(err)
+        });
+    })
+});
+
+function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, extraData) {
+    return new Promise(function(doneResolve, doneReject) {
+        var promises = [];
+         api.getSpecificPeriods(userID, forPeriods, function(err, periodData) {
+            if(err) {
+                return doneReject(err)
+            }
+            //return res.json(periodData)
+            if(!periodData) {
+                var err = new Error("getSpecificPeriods did not return anything ");
+                err.status = 500;
+                return doneReject(err)
+            }
+            //Get student.schedule return data
+            var scheduleLocationReturn = {};
+            scheduleLocationReturn[scheduleKeyName] = {};
+            promises.push(new Promise(function(resolve, reject) {
+                if(periodData.student) {
+                    //scheduleLocationReturn[scheduleKeyName].student = [];
+                    var pS = periodData.student;
+                    var tS = [];
+                    if(pS.length <=0) {
+                        return resolve();
+                    }
+                    for(var x = 0; x < pS.length; x++) {
+                        if(pS[x].periodData) {
+                            //check if they have a teacher or not
+                            if(pS[x].periodData.teacher) {
+                                //check if the teacer has a schedule set
+                                tS.push(Object.assign({},{period: pS[x].period}, pS[x].periodData, extraData))
+                            } else {
+                                tS.push(Object.assign({},{period: pS[x].period, teacher: null}, extraData))
+                            }
+                        }
+                        //end
+                        if(x >= pS.length - 1) {
+                            scheduleLocationReturn[scheduleKeyName].student = tS
+                            return resolve();
+                        }
+                    }
+                } else {
+                    return resolve();
+                }
+            }));
+
+            //get teacher.schedule 
+            promises.push(new Promise(function(resolve, reject) {
+                if(periodData.teacher) {
+                    //scheduleLocationReturn[scheduleKeyName].teacher = [];
+                    var pT = periodData.teacher;
+                    var tT = [];
+                    if(pT.length <=0) {
+                        return resolve();
+                    }
+                    for(var x = 0; x < pT.length; x++) {
+                        if(pT[x].periodData) {
+                            tT.push(Object.assign({},{period: pT[x].period}, pT[x].periodData, extraData))
+                        }
+                        if(x >= pT.length-1) {
+                            scheduleLocationReturn[scheduleKeyName].teacher = tT;
+                            return resolve();
+                        }
+                    }
+                    
+                } else {
+                    return resolve();
+                }
+            }));
+
+            Promise.all(promises).then(function(data) {
+                return doneResolve(scheduleLocationReturn)
+            }).catch(function(err) {
+                return doneReject(err)
+            });
+        });
+
+    });
+}
+
+/**/
 
 /** Checks if an accuunt is missing required fields by that dashboard  
     * @function studentCheckIfIncomplete
