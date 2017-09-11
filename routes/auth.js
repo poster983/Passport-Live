@@ -77,7 +77,7 @@ router.get('/signup/', function(req, res, next) {
 router.get('/logout', function(req, res, next){
   //req.logout();
 
-  if(config.get('misc.storeSessionToDisc')) {
+  if(!config.get('misc.storeSessionToDisc')) {
     req.session = null;
     res.redirect('/auth/login');
   } else {
