@@ -112,4 +112,10 @@ router.post('/login/dscm', passport.authenticate('local-login', {
     })
 });
 
+
+router.get("/google/callback", passport.authenticate( 'google', { 
+        successRedirect: '/',
+        failureRedirect: '/auth/login'
+}));
+
 module.exports = router;

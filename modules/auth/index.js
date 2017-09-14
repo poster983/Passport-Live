@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 var LocalStrategy   = require('passport-local').Strategy;
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var config = require('config');
 var utils = require('../passport-utils/index.js');
 
@@ -90,6 +91,24 @@ passport.use('local-login', new LocalStrategy({
           return done(null, user);
       });
     });
+  }
+));
+
+
+/**
+  Google OAuth 2.0
+**/
+
+passport.use(new GoogleStrategy({
+    clientID:     config.get("secrets.OAuth.google.clientID"),
+    clientSecret: config.get("secrets.OAuth.google.clientSecret"),
+    callbackURL: config.get("server.domain") + "/api/auth/google/callback",
+    passReqToCallback   : true
+  },
+  function(request, accessToken, refreshToken, profile, done) {
+    console.log(profile, "profile");
+    console.log(profile.isPlusUser)
+    done(null, true)
   }
 ));
 

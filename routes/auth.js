@@ -44,7 +44,7 @@ var connection = null;
 
 
 
-/* GET home page. */
+
 
 router.get('/login', function(req, res, next) {
   var msg = "";
@@ -53,12 +53,15 @@ router.get('/login', function(req, res, next) {
   }
   res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
 });
-/*
-router.post('/login', passport.authenticate('local-login', { 
-  successRedirect: '/',
-  failureRedirect: '/auth/login?',
-  session: true
-}));*/
+
+
+/** 
+  Google Login
+**/
+
+router.get('/google', passport.authenticate('google', { scope: 
+    [ 'https://www.googleapis.com/auth/plus.profile.emails.read' ] }
+));
 
 
 //et signup
@@ -93,6 +96,8 @@ router.get('/logout', function(req, res, next){
 
   //res.redirect('/auth/login');
 });
+
+
 
 
 module.exports = router;
