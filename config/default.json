@@ -84,7 +84,7 @@
 		"password": "" //Dont Change.  Use local.json
 	},
 	"server": {
-		"doamin": "https://example.com", //unfortunately for things like OAuth, we need the exact domain of the server passport is running on. 
+		"domain": "https://example.com", //unfortunately for things like OAuth, we need the exact domain of the server passport is running on. 
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
 		"https": {
 			"port": 3443, //set in production config file, 443
