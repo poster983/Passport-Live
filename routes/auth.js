@@ -43,7 +43,17 @@ var connection = null;
         });
 
 
+/** 
+  Google Login
+**/
 
+router.get('/google', function googleSigninUp(req, res, next) {
+    //req.session.permissionKey = req.params.pk;
+    res.cookie('OAuthPermissionKey', req.params.pk, {httpOnly: true, signed: true});
+    next();
+}, passport.authenticate('google', { scope: 
+    [ 'https://www.googleapis.com/auth/plus.profile.emails.read' ] }
+));
 
 
 router.get('/login', function(req, res, next) {
@@ -55,13 +65,6 @@ router.get('/login', function(req, res, next) {
 });
 
 
-/** 
-  Google Login
-**/
-
-router.get('/google', passport.authenticate('google', { scope: 
-    [ 'https://www.googleapis.com/auth/plus.profile.emails.read' ] }
-));
 
 
 //et signup

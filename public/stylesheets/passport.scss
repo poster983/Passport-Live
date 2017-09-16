@@ -18,6 +18,9 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 //@import "components/variables";
+
+@import url("https://fonts.googleapis.com/css?family=Roboto:500");
+
 /*For Global Styles*/
 
 .nav-right {
@@ -608,31 +611,6 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
 }
 
 
-    .Xleft {
-      position: absolute;
-      display: inline-block;
-      top: 30%;
-      left: 50%;
-      opacity: 1;
-      width: 20px;
-      height: 250px;
-      transform: rotate(45deg);
-      background-color: white;
-
-    }
-    .Xright {
-      position: absolute;
-      display: inline-block;
-      top: 30%;
-      left: 50%;
-      opacity: 1;
-      width: 20px;
-      height: 250px;
-      transform: rotate(-45deg);
-      background-color: white;
-
-    }
-
 
     /*From passr.css OLD*/
 
@@ -753,36 +731,6 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
 }
 
 
-/** AUTO COMPLETE*/
-.autocomplete2 {
-            display: -ms-flexbox;
-            display: flex;
-        }
-.autocomplete2 .ac-users {
-    padding-top: 10px;
-}
-.autocomplete2 .ac-users .chip {
-    -ms-flex: auto;
-    flex: auto;
-    margin-bottom: 10px;
-    margin-right: 10px;
-}
-.autocomplete2 .ac-users .chip:last-child {
-    margin-right: 5px;
-}
-.autocomplete2 .ac-dropdown .ac-hover {
-    background: #eee;
-}
-.autocomplete2 .ac-input {
-    -ms-flex: 1;
-    flex: 1;
-    min-width: 150px;
-    padding-top: 0.6rem;
-}
-.autocomplete2 .ac-input input {
-    height: 2.4rem;
-}
-
 //Morphy sidebar selector
 .SBmorphBox {
   position: absolute;
@@ -856,6 +804,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
 
 
   /* MATERIAL RESPONCE GROW ANIMATION */
+
   @keyframes cirGrow {
       0% {
         transform: scale(0);
@@ -1217,3 +1166,41 @@ div.accountInfoOverlay div.card-avatar {
   display: flex;
   justify-content: center;
 }
+
+/** OAUTH BUTTONS **/
+
+button.google-auth.google-dark {
+  display: block;
+  width: 100%;
+  border-radius: 1px;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  background: #4285f4;
+  border: #4285f4 solid 1px;
+  box-shadow: 1px 1px 5px 0 #b7b7b7;
+  text-align: left; }
+  button.google-auth.google-dark span.google-icon {
+    background-image: url("/images/g-icon.svg");
+    background-color: #fff;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    border-radius: 1px;
+    margin-right: 16px; }
+  button.google-auth.google-dark span.google-text {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #fff;
+    opacity: 1;
+    font-family: 'Roboto', sans-serif;
+    padding-right: 8px; }

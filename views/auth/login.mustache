@@ -40,10 +40,13 @@ email: hi@josephhassell.com
                 <button class="btn waves-effect waves-light red darken-4" onclick="login()">Login
                     <i class="material-icons right">lock_open</i>
                 </button>
-								<br>
-								<div class="section">
-								<a class="waves-effect waves-light btn" href="/auth/signup/">Create An Account</a>
-							</div>
+        		<br>
+        		<div class="section">
+        			<a class="waves-effect waves-light btn" href="/auth/signup/">Create An Account</a>
+        		</div>       
+                <div class="section">
+                    <a href="/api/auth/google/"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
+                </div>           
             </div>
             			{{#message}}
 						<h6> {{message}} </h6>

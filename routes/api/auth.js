@@ -56,14 +56,13 @@ function serializeUser(req, res, done) {
     * @param {request} req
     * @param {response} res
     * @api POST /api/auth/login/
-    * @apibody {application/x-www-form-urlencoded}
+    * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
     * email:<user's email>,
     * password:<user's password>
     * @todo Test application/json
     * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-    * @todo Require passport to run over https.  Dissallow any website to use it
     */
 router.post('/login', passport.authenticate('local-login', {
   session: false
@@ -82,19 +81,18 @@ router.post('/login', passport.authenticate('local-login', {
 
 /**
     * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies
-    * @function handleAuthLogin
+    * @function loginDSCM
     * @async
     * @param {request} req
     * @param {response} res
     * @api POST /api/auth/login/
-    * @apibody {application/x-www-form-urlencoded}
+    * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
     * email:<user's email>,
     * password:<user's password>
     * @todo Test application/json
     * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth
-    * @todo Require passport to run over https
     */
 
 router.post('/login/dscm', passport.authenticate('local-login', {
@@ -113,7 +111,11 @@ router.post('/login/dscm', passport.authenticate('local-login', {
 });
 
 
-router.get("/google/callback", passport.authenticate( 'google', { 
+
+
+
+
+router.get("/google/callback",  passport.authenticate( 'google', { 
         successRedirect: '/',
         failureRedirect: '/auth/login'
 }));
