@@ -48,14 +48,15 @@ var connection = null;
 **/
 
 router.get('/google', function googleSigninUp(req, res, next) {
-    //req.session.permissionKey = req.params.pk;
-    res.cookie('OAuthPermissionKey', req.params.pk, {httpOnly: true, signed: true});
+    req.session.permissionKey = req.query.pk;
+    //res.cookie('OAuthPermissionKey', req.query.pk, {httpOnly: true, signed: true});
+    //console.log(req.query, "PPPPPPPPPPPPPKKKKKKKKKKKKKKKK")
     next();
 }, passport.authenticate('google', { scope: 
-    [ 'https://www.googleapis.com/auth/plus.profile.emails.read' ] }
+    [ "profile", "email" ] }
 ));
 
-
+//'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
   var msg = "";
   if(req.query.msg) {

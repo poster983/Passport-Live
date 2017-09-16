@@ -109,7 +109,59 @@ passport.use(new GoogleStrategy({
     console.log(profile, "profile");
     console.log(accessToken, "accessToken");
     console.log(refreshToken, "refreshToken");
-    console.log(request.signedCookies.OAuthPermissionKey, "permissionkey")
+    console.log(request.session.permissionKey, "permissionkey")
+
+    if(profile.emails.length <1) {
+      var err = new Error("No email attached to account")
+      err.status = 412;
+      return done(err);
+      
+    }
+    var prom = new Promise(function(resolve, reject) {
+      for(var x = 0; x < profile.emails.length; x++) {
+        if(profile.emails[x].type == "account") {
+          return resolve(profile.emails[x].value);
+        }
+      }
+    }
+
+    r.table("accounts").filter({
+        "email": email
+    }).run(connection, function(err, cursor){
+      if (err) {
+        return done(err)
+      }
+      cursor.toArray(function(err, accounts) {
+        if(err) {
+          return done(err);
+        }
+        if(accounts.length < 1) {
+          //check if google email fits any existing accounts 
+          r.table("accounts").filter({
+              "email": email
+          }).run(connection, function(err, eCursor){
+            if(err) {
+              return done(err);
+            }
+            eCursor.toArray(function(err, emailAccounts) {
+              if(err) {
+                return done(err);
+              }
+            });
+          });
+          return done(null, false);
+        }
+        if(accounts.length > 1) {
+          var err = new Error("Account Conflict")
+          err.status = 409;
+          return done(err);
+        }
+        if(accounts.length == 1) {
+          return done(null, accounts);
+        }
+      })
+    });
+
     done(null, true)
   }
 ));
