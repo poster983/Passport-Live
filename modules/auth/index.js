@@ -122,8 +122,11 @@ passport.use(new GoogleStrategy({
         if(profile.emails[x].type == "account") {
           return resolve(profile.emails[x].value);
         }
+        if(x >= profile.emails.length -1) {
+
+        }
       }
-    }
+    });
 
     r.table("accounts").filter({
         "email": email
