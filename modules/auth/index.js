@@ -123,54 +123,80 @@ passport.use(new GoogleStrategy({
           return resolve(profile.emails[x].value);
         }
         if(x >= profile.emails.length -1) {
-
+          var err = new Error("No account email attached to google account");
+          err.status = 412;
+          return reject(err);
         }
       }
     });
-
-    r.table("accounts").filter({
-        "email": email
-    }).run(connection, function(err, cursor){
-      if (err) {
-        return done(err)
-      }
-      cursor.toArray(function(err, accounts) {
-        if(err) {
-          return done(err);
-        }
-        if(accounts.length < 1) {
-          //check if google email fits any existing accounts 
-          r.table("accounts").filter({
-              "email": email
-          }).run(connection, function(err, eCursor){
-            if(err) {
-              return done(err);
+    prom.then(function(googleEmail) {
+      //find the oauth key if any
+      r.table("accounts").filter({
+          "integrations": {
+            "google": {
+              "id": profile.id
             }
-            eCursor.toArray(function(err, emailAccounts) {
+          }
+      }).run(connection, function(err, cursor){
+        if (err) {
+          return done(err)
+        }
+        cursor.toArray(function(err, accounts) {
+          if(err) {
+            return done(err);
+          }
+          if(accounts.length < 1) {
+            //check if google email fits any existing accounts 
+            r.table("accounts").filter({
+                "email": googleEmail
+            }).run(connection, function(err, eCursor){
               if(err) {
                 return done(err);
               }
-            });
-          });
-          return done(null, false);
-        }
-        if(accounts.length > 1) {
-          var err = new Error("Account Conflict")
-          err.status = 409;
-          return done(err);
-        }
-        if(accounts.length == 1) {
-          return done(null, accounts);
-        }
-      })
-    });
+              eCursor.toArray(function(err, emailAccounts) {
+                if(err) {
+                  return done(err);
+                }
+                if(emailAccounts.length < 1) { 
+                  //create account;
+                  console.log("TODO: CREATE NEW ACCOUNT ")
+                  return done(null, accounts);
+                }
 
-    done(null, true)
+                if(accounts.length > 1) {
+                  //console.log("Email Conflict ")
+                  var err = new Error("Email Conflict")
+                  err.status = 409;
+                  return done(err);
+                }
+                if(accounts.length == 1) {
+                  console.log("TODO: LINK ACCOUNTS ")
+                  return done(null, accounts);
+                }
+
+              });
+            });
+          }
+          if(accounts.length > 1) {
+            var err = new Error("Account Conflict")
+            err.status = 409;
+            return done(err);
+          }
+          if(accounts.length == 1) {
+            return done(null, accounts);
+          }
+        })
+      });
+    }, function(err) {
+      return done(err);
+    })
+    
+
   }
 ));
 
 /**
-  JSON Wev Token Auth for API 
+  JSON Web Token Auth for API 
 **/
 
 var opts = {}
