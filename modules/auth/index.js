@@ -38,7 +38,11 @@ var connection = null;
 
 
 passport.serializeUser(function(user, done) {
-  done(null, user[0].id);
+  if(Array.isArray(user)) {
+    done(null, user[0].id);
+  } else {
+    done(null, user.id);
+  }
   //console.log(user);
 });
 
@@ -147,31 +151,47 @@ passport.use(new GoogleStrategy({
           }
           if(accounts.length < 1) {
             //check if google email fits any existing accounts 
+            //console.log("NO ID ")
             r.table("accounts").filter({
                 "email": googleEmail
             }).run(connection, function(err, eCursor){
               if(err) {
+
                 return done(err);
               }
               eCursor.toArray(function(err, emailAccounts) {
                 if(err) {
+
                   return done(err);
                 }
+                //console.log(emailAccounts)
                 if(emailAccounts.length < 1) { 
                   //create account;
                   console.log("TODO: CREATE NEW ACCOUNT ")
                   return done(null, accounts);
                 }
 
-                if(accounts.length > 1) {
+                if(emailAccounts.length > 1) {
                   //console.log("Email Conflict ")
                   var err = new Error("Email Conflict")
                   err.status = 409;
                   return done(err);
                 }
-                if(accounts.length == 1) {
+                if(emailAccounts.length == 1) {
                   console.log("TODO: LINK ACCOUNTS ")
-                  return done(null, accounts);
+                  r.table("accounts").get(emailAccounts[0].id).update({integrations: {google: {id: profile.id}}}).run(connection, function(err, stat) {
+                    if(err) {
+                      return done(err);
+                    }
+                    if(stat.replaced == 1) {
+                      return done(null, Object.assign({}, emailAccounts[0], {integrations: {google: {id: profile.id}}}));
+                    } else {
+                      var err = new Error("Server Error")
+                      err.status = 500;
+                      return done(err);
+                    }
+                  })
+                  
                 }
 
               });
@@ -183,7 +203,7 @@ passport.use(new GoogleStrategy({
             return done(err);
           }
           if(accounts.length == 1) {
-            return done(null, accounts);
+            return done(null, accounts[0]);
           }
         })
       });
