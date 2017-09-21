@@ -34,13 +34,13 @@ To update, run `git pull`
 To start the server, run `~$ npm run db` THEN `~$ npm start` from within the folder "package.json" is located.  
 [Tmux](https://gist.github.com/MohamedAlaa/2961058) may be useful for servers.
 
+## Special Thanks  
+<a href="https://crossbrowsertesting.com/"><img src="https://crossbrowsertesting.com/design/images/brand/cbt-1200x630.png" width="240" height="126" /></a>  
+Thanks to [CrossBrowserTesting](https://crossbrowsertesting.com/) we are able to ensure that Passport works, not only on Chrome, but on many popular mobile devices and browsers.  CBT helps us to cut down on UI testing, and helps us focus on adding new features.
+
 ## Docs 
 [github.io docs](https://poster983.github.io/Passport-Live/)  
 
 This is a work in progress.
-## Help 
-[A knowledge base can be found over at GitBook](https://poster983.gitbooks.io/passport-help/content/)  
-If this doesn't help solve your problem, please [create an issue](https://github.com/poster983/Passport-Live/issues) 
 
-This is a work in progress.
 
