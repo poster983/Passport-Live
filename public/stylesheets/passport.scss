@@ -126,7 +126,7 @@ email: hi@josephhassell.com
 }
 
 .passportLogo.box{
-    position: absolute;
+    position: relative;
     width: 171px;
     height: 235px;
     background-color: #00b8d4;
@@ -538,18 +538,7 @@ filter: brightness(100%) sepia(1)  hue-rotate(330deg) saturate(350%) brightness(
     position: relative;
     top: 123px;
   }
-  /*
-  img.card-avatar {
-    position: absolute;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    background-color: #e0e0e0;
-    z-index: 1;
-    top: 125px;
-    left: 50%;
-    transform: translate(-50%, 0%)
-  }*/
+  
   div.card-avatar {
     display: flex;
     justify-content: center;
