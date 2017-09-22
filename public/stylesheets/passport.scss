@@ -118,13 +118,9 @@ email: hi@josephhassell.com
 }
 
 .loadingScreenCenter {
-  //display: -webkit-flex;
   display: flex;
-  //-webkit-flex-direction: column; 
   flex-direction: column;
-  //-webkit-align-items: center;
   align-items: center;
-  //-webkit-justify-content: center;
   justify-content: center;
   height: inherit;
 }
@@ -140,6 +136,11 @@ email: hi@josephhassell.com
     //-webkit-transform: translateX(-50%);
     //transform: translateX(-50%);
     }
+
+/*.passportLogo.box::before {
+  content: "";
+  display: flex;
+}*/
 
 
 .passportLogo.box > .dark-half{
