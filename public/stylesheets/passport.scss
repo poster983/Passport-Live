@@ -92,6 +92,7 @@ email: hi@josephhassell.com
 
 */
 
+//https://autoprefixer.github.io/
 .loadingScreen.loading {
   display: block;
   height: 100%;
@@ -112,16 +113,26 @@ email: hi@josephhassell.com
   opacity: 0;
   height: 0;
   -webkit-transition: all .3s ease .15s;
+  -o-transition: all .3s ease .15s;
   transition: all .3s ease .15s;
   overflow: hidden;
 
 }
 
 .loadingScreenCenter {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   height: inherit;
 }
 
@@ -131,16 +142,11 @@ email: hi@josephhassell.com
     height: 235px;
     background-color: #00b8d4;
     border-radius: 25px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    //left: 50%;
-    //-webkit-transform: translateX(-50%);
-    //transform: translateX(-50%);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
     }
 
-/*.passportLogo.box::before {
-  content: "";
-  display: flex;
-}*/
 
 
 .passportLogo.box > .dark-half{
@@ -149,30 +155,24 @@ email: hi@josephhassell.com
   height: 50%;
   background-color: #00ACC1;
   border-radius: 25px 25px 0px 0px;
-
-  //left: 50%;
-  //-webkit-transform: translateX(-50%);
-  //transform: translateX(-50%);
   z-index: 1;
 }
 
   .passportLogo.box > .logo {
     position: relative;
-    //left: 50%;
     top: 50%;
     width: 171px;
     color: #F5F5F5;
     fill: currentcolor;
     z-index: 2;
-    transform: translate(0%, -50%) rotate(0deg);
+    -webkit-transform: translate(0%, -50%) rotate(0deg);
+        -ms-transform: translate(0%, -50%) rotate(0deg);
+            transform: translate(0%, -50%) rotate(0deg);
 
   }
 
   .passportLogo.box > .logo.load { 
-    
-
     -webkit-animation-name: passport-logo-loading;
-
             animation-name: passport-logo-loading;
     -webkit-animation-duration: 4s;
             animation-duration: 4s;
@@ -181,20 +181,38 @@ email: hi@josephhassell.com
   }
 
 
-@keyframes passport-logo-loading {
+@-webkit-keyframes passport-logo-loading {
   0% {
-    transform: rotate(0deg) translate(0%, -50%);
+    -webkit-transform: rotate(0deg) translate(0%, -50%);
+            transform: rotate(0deg) translate(0%, -50%);
 
   }
   30% {
-    transform: rotate(10deg) translate(0%, -50%);
+    -webkit-transform: rotate(10deg) translate(0%, -50%);
+            transform: rotate(10deg) translate(0%, -50%);
   }
   60% {
-    transform: rotate(-10deg) translate(0%, -80%);
+    -webkit-transform: rotate(-10deg) translate(0%, -80%);
+            transform: rotate(-10deg) translate(0%, -80%);
   }
 }
 
 
+@keyframes passport-logo-loading {
+  0% {
+    -webkit-transform: rotate(0deg) translate(0%, -50%);
+            transform: rotate(0deg) translate(0%, -50%);
+
+  }
+  30% {
+    -webkit-transform: rotate(10deg) translate(0%, -50%);
+            transform: rotate(10deg) translate(0%, -50%);
+  }
+  60% {
+    -webkit-transform: rotate(-10deg) translate(0%, -80%);
+            transform: rotate(-10deg) translate(0%, -80%);
+  }
+}
 
 /**Error Animation**/
 
