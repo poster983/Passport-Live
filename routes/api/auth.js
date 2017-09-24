@@ -115,9 +115,31 @@ router.post('/login/dscm', passport.authenticate('local-login', {
 
 
 
-router.get("/google/callback",  passport.authenticate( 'google', { 
-        successRedirect: '/',
+router.get("/google/callback", passport.authenticate( 'google', { 
         failureRedirect: '/auth/login'
-}));
+}), function(req, res, next) {
+    console.log(req.user, "USER RETURNED")
+    if(req.session.googleDSCM) {
+        api.newJWTForCookies(req.user.id, function(err, jwtData) {
+            if(err) {
+                return next(err);
+            }
+            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
+            res.cookie('XSRF-TOKEN', jwtData.dscm);
+            res.redirect("/?userId=" + req.user.id);
+        });
+    } else {
+        api.newJWT(req.user.id, function(err, jwt) {
+            if(err) {
+                return next(err);
+            }
+            res.status(200).json({
+                token: "JWT " + jwt,
+                userId: req.user.id
+            });
+        });
+    }
+    
+});
 
 module.exports = router;

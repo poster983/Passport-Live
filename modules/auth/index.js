@@ -166,9 +166,8 @@ passport.use(new GoogleStrategy({
                 }
                 //console.log(emailAccounts)
                 if(emailAccounts.length < 1) { 
-                  //create account;
-                  console.log("TODO: CREATE NEW ACCOUNT ")
-                  return done(null, accounts);
+                  //NO ACCOUNT FOUND 
+                  return done(null, false);
                 }
 
                 if(emailAccounts.length > 1) {
@@ -178,7 +177,7 @@ passport.use(new GoogleStrategy({
                   return done(err);
                 }
                 if(emailAccounts.length == 1) {
-                  console.log("TODO: LINK ACCOUNTS ")
+                  console.log("Linking Account ")
                   r.table("accounts").get(emailAccounts[0].id).update({integrations: {google: {id: profile.id}}}).run(connection, function(err, stat) {
                     if(err) {
                       return done(err);

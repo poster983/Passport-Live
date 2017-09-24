@@ -47,10 +47,17 @@ var connection = null;
   Google Login
 **/
 
-router.get('/google', function googleSigninUp(req, res, next) {
-    req.session.permissionKey = req.query.pk;
-    //res.cookie('OAuthPermissionKey', req.query.pk, {httpOnly: true, signed: true});
-    //console.log(req.query, "PPPPPPPPPPPPPKKKKKKKKKKKKKKKK")
+router.get('/google/', function googleOAuth2(req, res, next) {
+    //req.session.permissionKey = req.query.pk;
+    req.session.googleDSCM = false;
+    next();
+}, passport.authenticate('google', { scope: 
+    [ "profile", "email" ] }
+));
+
+router.get('/google/dscm', function (req, res, next) {
+    //req.session.permissionKey = req.query.pk;
+    req.session.googleDSCM = true;
     next();
 }, passport.authenticate('google', { scope: 
     [ "profile", "email" ] }
