@@ -44,5 +44,5 @@ Thanks to [CrossBrowserTesting](https://crossbrowsertesting.com/) we are able to
 This is a work in progress.
 
 ## Logos
-Found [here](https://github.com/poster983/Passport-Live/tree/master/public/images/logo) or if you want a link for your site, you can use: `https://cdn.josephhassell.com/passport/logos/[SIZE]x[SIZE].png`  
-For just the anchor, use [https://cdn.josephhassell.com/passport/logos/anchor.svg](https://cdn.josephhassell.com/passport/logos/anchor.svg)
+Found [here](https://github.com/poster983/Passport-Live/tree/master/public/images/logo) or if you want a link for your site, you can use: `https://cdn.josephhassell.com/passport/logo/[SIZE]x[SIZE].png`  
+For just the anchor, use [https://cdn.josephhassell.com/passport/logos/anchor.svg](https://cdn.josephhassell.com/passport/logo/anchor.svg)
