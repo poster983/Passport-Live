@@ -56,14 +56,13 @@ function serializeUser(req, res, done) {
     * @param {request} req
     * @param {response} res
     * @api POST /api/auth/login/
-    * @apibody {application/x-www-form-urlencoded}
+    * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
     * email:<user's email>,
     * password:<user's password>
     * @todo Test application/json
     * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-    * @todo Require passport to run over https.  Dissallow any website to use it
     */
 router.post('/login', passport.authenticate('local-login', {
   session: false
@@ -82,19 +81,18 @@ router.post('/login', passport.authenticate('local-login', {
 
 /**
     * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies
-    * @function handleAuthLogin
+    * @function loginDSCM
     * @async
     * @param {request} req
     * @param {response} res
     * @api POST /api/auth/login/
-    * @apibody {application/x-www-form-urlencoded}
+    * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
     * email:<user's email>,
     * password:<user's password>
     * @todo Test application/json
     * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth
-    * @todo Require passport to run over https
     */
 
 router.post('/login/dscm', passport.authenticate('local-login', {
@@ -110,6 +108,38 @@ router.post('/login/dscm', passport.authenticate('local-login', {
             userId: req.user[0].id
         });
     })
+});
+
+
+
+
+
+
+router.get("/google/callback", passport.authenticate( 'google', { 
+        failureRedirect: '/auth/login'
+}), function(req, res, next) {
+    console.log(req.user, "USER RETURNED")
+    if(req.session.googleDSCM) {
+        api.newJWTForCookies(req.user.id, function(err, jwtData) {
+            if(err) {
+                return next(err);
+            }
+            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
+            res.cookie('XSRF-TOKEN', jwtData.dscm);
+            res.redirect("/?userId=" + req.user.id);
+        });
+    } else {
+        api.newJWT(req.user.id, function(err, jwt) {
+            if(err) {
+                return next(err);
+            }
+            res.status(200).json({
+                token: "JWT " + jwt,
+                userId: req.user.id
+            });
+        });
+    }
+    
 });
 
 module.exports = router;

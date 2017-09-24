@@ -43,9 +43,27 @@ var connection = null;
         });
 
 
+/** 
+  Google Login
+**/
 
-/* GET home page. */
+router.get('/google/', function googleOAuth2(req, res, next) {
+    //req.session.permissionKey = req.query.pk;
+    req.session.googleDSCM = false;
+    next();
+}, passport.authenticate('google', { scope: 
+    [ "profile", "email" ] }
+));
 
+router.get('/google/dscm', function (req, res, next) {
+    //req.session.permissionKey = req.query.pk;
+    req.session.googleDSCM = true;
+    next();
+}, passport.authenticate('google', { scope: 
+    [ "profile", "email" ] }
+));
+
+//'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
   var msg = "";
   if(req.query.msg) {
@@ -53,12 +71,8 @@ router.get('/login', function(req, res, next) {
   }
   res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
 });
-/*
-router.post('/login', passport.authenticate('local-login', { 
-  successRedirect: '/',
-  failureRedirect: '/auth/login?',
-  session: true
-}));*/
+
+
 
 
 //et signup
@@ -93,6 +107,8 @@ router.get('/logout', function(req, res, next){
 
   //res.redirect('/auth/login');
 });
+
+
 
 
 module.exports = router;
