@@ -19,45 +19,46 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 -->
     <body>
-        <div class="containerlogin signin-allign">
+    <div class="login-background">
+        <div class="login-col">
+          <div class="login-container">
+              <img src="https://cdn.josephhassell.com/passport/logo/main/512x512.png" class="login-logo animate login-transitions" id="logo">
 
-            <div class="card-panel eagleBlood animated fadeInDown">
-            <div>
-                <h3 class="center">Welcome To Passport</h3>
-                <div class="card-panel">
-
-
-                <div class="input-field">
-                    <input name="email" type="email" id="email">
-                    <label for="email">Email</label>
+            <div id="login-inputs" class="white-text login-inputs animate login-transitions"> 
+              <div class="input-field col s5">
+               <input id="email" type="email" class="validate">
+               <label for="email">Email</label>
+              </div>
+              <div class="input-field col s5">
+               <input id="password" type="password" class="validate">
+               <label for="password">Password</label>
+              </div>
+              <div class="col s5" style="display: none;" id="login-btn-container">
+                <a class="waves-effect waves-light btn"><i class="material-icons left">mail</i>Login With Passport</a>
+              </div>
+              <div id="alt-login-options">
+              <div class="col s5">
+                <a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Login With Google</a>
+                
+              </div>
+                <div class="col s5" id="new-account">
+                  <br>
+                  New? Create an account!
                 </div>
-
-                <div class="input-field">
-                    <input name="password" type="password" id="password">
-                    <label for="password">Password</label>
-                </div>
-                </div>
-                <button class="btn waves-effect waves-light red darken-4" id="login-btn" onclick="login()">Login
-                    <i class="material-icons right">lock_open</i>
-                </button>
-        		<br>
-        		<div class="section">
-        			<a class="waves-effect waves-light btn" href="/auth/signup/">Create An Account</a>
-        		</div>       
-                <div class="section">
-                    <a href="/auth/google/dscm"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
-                </div>           
+                
+              </div>
             </div>
-            			{{#message}}
-						<h6> {{message}} </h6>
-						{{/message}}
-                        <h6 id="msg"></h6>
-            </div>
+          </div>
+          
         </div>
-    <div class="outdated-browser" id="outdated-browser" style="display: block;">
-         <h6></h6>
-         <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera and Safari with success. <br> Unfortunately a few features may be missing like push notifications and full Android App support with Chrome Mobile. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update.<br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a browser?</a></p>
-         <p class="outdated-browser-last"><a href="#" class="outdated-browser-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('outdated-browser').style.display = 'none'">&times;</a></p>
+      
+   
+        
+        <div class="outdated-browser" id="outdated-browser" style="display: block;">
+             <h6></h6>
+             <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera and Safari with success. <br> Unfortunately a few features may be missing like push notifications and full Android App support with Chrome Mobile. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update.<br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a browser?</a></p>
+             <p class="outdated-browser-last"><a href="#" class="outdated-browser-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('outdated-browser').style.display = 'none'">&times;</a></p>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="/js/materialize.js"></script>
@@ -82,6 +83,20 @@ email: hi@josephhassell.com
         })
     </script>
     <script type="text/javascript">
+
+        $("#email").on( "keyup", function(){checkFormFill();})
+        $("#password").on( "keyup", function(){checkFormFill();})
+
+        function checkFormFill() {
+          console.log($("#email").val())
+          if($("#email").val() == "" && $("#password").val() == "") {
+            $("#login-btn-container").slideUp(500);
+            $("#alt-login-options").slideDown(500);
+          } else {
+            $("#login-btn-container").slideDown(500);
+            $("#alt-login-options").slideUp(500);
+          }
+        }
 
         function login() {
             var email = $("#email").val();
