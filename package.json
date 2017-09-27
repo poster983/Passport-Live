@@ -34,6 +34,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.2",
+    "brute-rethinkdb": "^2.0.1",
     "compression": "^1.7.0",
     "config": "latest",
     "connect-ensure-login": "latest",
@@ -43,6 +44,7 @@
     "cors": "^2.8.3",
     "debug": "~2.6.0",
     "express": "~4.15.3",
+    "express-brute": "^1.0.1",
     "express-session": "latest",
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",

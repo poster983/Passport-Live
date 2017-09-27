@@ -65,6 +65,9 @@ passport.use('local-login', new LocalStrategy({
     passReqToCallback: true
     },
   function(req, email, password, done) {
+    /*if(req.session.failedLoginAttempts >= 5) {
+      return done()
+    }*/
     r.table("accounts").filter({
         "email": email
     }).run(connection, function(err, cursor){
@@ -86,9 +89,11 @@ passport.use('local-login', new LocalStrategy({
           }
          if(user.length < 1) { // if no users are returned in the array 
             console.log("Wrong email");
+            //req.session.failedLoginAttempts++;
             return done(null, false);// , req.flash('loginMessage', 'Incorrect Email or Password')
           }
           if(!bcrypt.compareSync(password, user[0].password)) {
+            //req.session.failedLoginAttempts++;
             console.log("Wrong Pwd");
             return done(null, false); // , req.flash('loginMessage', 'Incorrect Email or Password')
           }
