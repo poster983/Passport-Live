@@ -22,7 +22,7 @@ email: hi@josephhassell.com
     <div class="login-background">
         <div class="login-col">
           <div class="login-container">
-              <img src="https://cdn.josephhassell.com/passport/logo/main/512x512.png" class="login-logo animate login-transitions" id="logo">
+              <img src="/images/logo/512x512.png" class="login-logo animate login-transitions" id="logo">
 
             <div id="login-inputs" class="white-text login-inputs animate login-transitions"> 
               <div class="input-field col s5">
@@ -34,16 +34,16 @@ email: hi@josephhassell.com
                <label for="password">Password</label>
               </div>
               <div class="col s5" style="display: none;" id="login-btn-container">
-                <a class="waves-effect waves-light btn"><i class="material-icons left">mail</i>Login With Passport</a>
+                <a class="waves-effect waves-light btn" onclick="login();"><i class="material-icons left">lock_open</i>Login With Passport</a>
               </div>
               <div id="alt-login-options">
               <div class="col s5">
-                <a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Login With Google</a>
+                <a href="/auth/google/dscm"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
                 
               </div>
                 <div class="col s5" id="new-account">
                   <br>
-                  New? Create an account!
+                  New? <a href="/auth/signup/">Create an account!</a>
                 </div>
                 
               </div>
@@ -54,7 +54,7 @@ email: hi@josephhassell.com
       
    
         
-        <div class="outdated-browser" id="outdated-browser" style="display: block;">
+        <div class="outdated-browser" id="outdated-browser" style="display: none;">
              <h6></h6>
              <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera and Safari with success. <br> Unfortunately a few features may be missing like push notifications and full Android App support with Chrome Mobile. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update.<br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a browser?</a></p>
              <p class="outdated-browser-last"><a href="#" class="outdated-browser-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('outdated-browser').style.display = 'none'">&times;</a></p>
@@ -84,8 +84,8 @@ email: hi@josephhassell.com
     </script>
     <script type="text/javascript">
 
-        $("#email").on( "keyup", function(){checkFormFill();})
-        $("#password").on( "keyup", function(){checkFormFill();})
+        $("#email").on( "input", function(){checkFormFill();})
+        $("#password").on( "input", function(){checkFormFill();})
 
         function checkFormFill() {
           console.log($("#email").val())
@@ -101,24 +101,38 @@ email: hi@josephhassell.com
         function login() {
             var email = $("#email").val();
             var password = $("#password").val();
-            $.ajax({
-                type: "post",
-                url: "/api/auth/login/dscm/",
-                data: {email: email, password: password},
-                success: function(data) {
-                    window.location.href = "/"
-                },
-                error: function(jqXHR) {
-                    if(jqXHR.status == 401) {
-                        $("#msg").html("Email or Password is incorrect");
-                    } else if(jqXHR.status == 400) {
-                        $("#msg").html("Email or Password is incorrect");
-                    } else {
-                        errorHand(jqXHR)
-                    }
-                    
-                }                      
+            if(email == "" || password == "") {
+                Materialize.toast('Please Enter Your PassportID', 6000)
+            } else {
+                isFormLoading(true);
+                $.ajax({
+                    type: "post",
+                    url: "/api/auth/login/dscm/",
+                    data: {email: email, password: password},
+                    success: function(data) {
+                        window.location.href = "/"
+                    },
+                    error: function(jqXHR) {
+                        if(jqXHR.status == 401) {
+                            Materialize.toast('Email or Password is incorrect', 6000)
+                            isFormLoading(false);
+                        } else {
+                            isFormLoading(false);
+                            errorHand(jqXHR)
+                        }
+                        
+                    }                      
               });
+            }
+        }
+        function isFormLoading(bool) {
+            if(bool) {
+                $("#logo").removeClass("animate").addClass("load");
+                $("#login-inputs").removeClass("animate").addClass("load");
+            } else {
+                $("#logo").removeClass("load").addClass("animate");
+                $("#login-inputs").removeClass("load").addClass("animate");
+            }
         }
         //handle submit
         $('body').keypress(function (e) {
