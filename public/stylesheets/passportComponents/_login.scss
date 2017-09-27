@@ -89,7 +89,8 @@ login-transitions  {
 
 @media #{$medium-and-up} { 
   .login-logo.animate {
-    transform: translateX(50%);
+    position: absolute;
+    transform: translateX(0%);
     animation-fill-mode: forwards;
     animation-name: login-welcome-logo;
     animation-delay: 0.5s;
@@ -98,15 +99,16 @@ login-transitions  {
   }
   @keyframes login-welcome-logo {
     0% {
-      transform: translateX(50%);
+      transform: translateX(0%);
     }
     100% {
-      transform: translateX(0%);
+      transform: translateX(-50%);
     }
   }
 
   .login-inputs.animate {
-    transform: translateX(-50%) scaleX(0.6);
+    position: absolute;
+    transform: translateX(0%) scaleX(0.6);
     animation-fill-mode: forwards;
     animation-name: login-welcome-inputs;
     animation-delay: 0.5s;
@@ -115,10 +117,10 @@ login-transitions  {
   }
   @keyframes login-welcome-inputs {
     0% {
-      transform: translateX(-50%) scaleX(0.6);
+      transform: translateX(0%) scaleX(0.6);
     }
     100% {
-      transform: translateX(0%) scaleX(1);
+      transform: translateX(50%) scaleX(1);
     }
   }
   .login-logo.load {
