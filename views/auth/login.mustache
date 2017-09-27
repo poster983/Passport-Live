@@ -88,7 +88,6 @@ email: hi@josephhassell.com
         $("#password").on( "input", function(){checkFormFill();})
 
         function checkFormFill() {
-          console.log($("#email").val())
           if($("#email").val() == "" && $("#password").val() == "") {
             $("#login-btn-container").slideUp(500);
             $("#alt-login-options").slideDown(500);
@@ -126,6 +125,7 @@ email: hi@josephhassell.com
             }
         }
         function isFormLoading(bool) {
+            console.log(bool)
             if(bool) {
                 $("#logo").removeClass("animate").addClass("load");
                 $("#login-inputs").removeClass("animate").addClass("load");
