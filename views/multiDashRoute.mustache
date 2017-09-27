@@ -31,19 +31,17 @@ email: hi@josephhassell.com
     <body class="grey darken-4">
        
         <div class="hCenter">
-            <img src="images/passportLogo/icon-144x144.png" alt="Passport Logo">
+            <img src="/images/logo/144x144.png" alt="Passport Logo">
         </div>
         <div class="welcome">
             <h1 class="center white-text">Welcome to Passport!</h1>
             <p class="center white-text"> -- You Have Multiple Options -- </p>
             <div class="container">
                 <div class="input-field col s12">
-                    <form method="post" id="selForm" action="{{callbackURL}}">
-                      <select id="dashSel" onchange="changed(this.value);">
-                        <option value="" disabled selected>Where do you want to go?</option>
-                      </select>
-                      <label>Dashboard</label>
-                    </form>
+                  <select id="dashSel" onchange="changed(this.value);">
+                    <option value="" disabled selected>Where do you want to go?</option>
+                  </select>
+                  <label>Dashboard</label>
                 </div>
               </div>
         </div>
