@@ -27,6 +27,7 @@ var config = require("config");
 var moment = require("moment");
 const ExpressBrute = require('express-brute');
 const BruteRethinkdb = require('brute-rethinkdb')
+const db = require("../db/index.js");
 
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
