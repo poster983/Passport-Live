@@ -17,9 +17,25 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-//@import "components/variables";
-
+@charset "UTF-8";
+/**
+  PRE IMPORTS 
+**/
 @import url("https://fonts.googleapis.com/css?family=Roboto:500");
+
+/** 
+  MIXENS 
+**/
+@import "passportComponents/mixens";
+
+/**
+  STYLE GROUPS
+**/
+@import "passportComponents/login";
+@import "passportComponents/auth";
+
+
+
 
 /*For Global Styles*/
 
@@ -915,40 +931,3 @@ div.accountInfoOverlay div.card-avatar {
   justify-content: center;
 }
 
-/** OAUTH BUTTONS **/
-
-button.google-auth.google-dark {
-  display: block;
-  width: 100%;
-  border-radius: 1px;
-  padding: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  outline: none;
-  cursor: pointer;
-  background: #4285f4;
-  border: #4285f4 solid 1px;
-  box-shadow: 1px 1px 5px 0 #b7b7b7;
-  text-align: left; }
-  button.google-auth.google-dark span.google-icon {
-    background-image: url("/images/g-icon.svg");
-    background-color: #fff;
-    background-size: 18px;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    display: inline-block;
-    vertical-align: middle;
-    width: 40px;
-    height: 40px;
-    border-radius: 1px;
-    margin-right: 16px; }
-  button.google-auth.google-dark span.google-text {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: #fff;
-    opacity: 1;
-    font-family: 'Roboto', sans-serif;
-    padding-right: 8px; }

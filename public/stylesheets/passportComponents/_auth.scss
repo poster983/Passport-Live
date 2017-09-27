@@ -1,0 +1,57 @@
+/*
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+*/
+
+/** OAUTH BUTTONS **/
+
+button.google-auth.google-dark {
+  display: block;
+  width: 100%;
+  border-radius: 1px;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  background: #4285f4;
+  border: #4285f4 solid 1px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: left; }
+  button.google-auth.google-dark span.google-icon {
+    background-image: url("/images/g-icon.svg");
+    background-color: #fff;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    border-radius: 1px;
+    margin-right: 16px; }
+  button.google-auth.google-dark span.google-text {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #fff;
+    opacity: 1;
+    font-family: 'Roboto', sans-serif;
+    padding-right: 8px; }
