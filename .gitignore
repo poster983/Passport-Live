@@ -28,5 +28,3 @@ public/stylesheets/materialize\.css
 public/stylesheets/passport\.css
 
 config/local\.json
-
-package-lock\.json
