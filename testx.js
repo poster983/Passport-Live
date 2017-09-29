@@ -33,7 +33,7 @@ convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefine
 
 	}*/
 
-	var mappedDataProm = data.filter(function(n) {
+	var mappedDataProm = data.map(function(n) {
 		return new Promise(function(gRes, gRej) {
 			var returner = {};
 			returner.name = {};
