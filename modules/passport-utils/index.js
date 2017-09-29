@@ -124,9 +124,9 @@ var handleStoreError = function (error) {
     * Middleware to prevent brute force attacks   
     * @function userBruteforce
     */
-exports.userBruteforce = new ExpressBrute(store, {
+exports.loginBruteforce = new ExpressBrute(store, {
     freeRetries: 5,
-    minWait: 5*60*1000, // 5 minutes 
+    minWait: 1*60*1000, // 1 minute
     maxWait: 60*60*1000, // 1 hour, 
     failCallback: function (req, res, next, nextValidRequestDate) {
         var err = new Error("You've made too many failed attempts in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());
@@ -147,13 +147,13 @@ exports.globalBruteforce = new ExpressBrute(store, {
     handleStoreError: handleStoreError
 });
 
-exports.apiBruteforce = new ExpressBrute(store, {
-    freeRetries: 1000,
+exports.publicApiBruteforce = new ExpressBrute(store, {
+    freeRetries: 30,
     attachResetToRequest: false,
     refreshTimeoutOnRequest: false,
-    minWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
-    maxWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
-    lifetime: 24*60*60, // 1 day (seconds not milliseconds) 
+    minWait: 5*60*1000, // 1 hour (should never reach this wait time) 
+    maxWait: 60*60*1000, // 1 day 1 hour (should never reach this wait time) 
+    //lifetime: 24*60*60, // 1 day (seconds not milliseconds) 
     failCallback: failCallback,
     handleStoreError: handleStoreError
 });
