@@ -4,6 +4,29 @@ convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefine
 		return console.error(err);
 	}
 	//console.log(data, "raw DATA")
+	/*var mapRule = {
+		rule: {
+			name: {
+				first: "First Name",
+				last: "Last Name",
+				salutation: null
+			},
+			schoolID: "Faculty User Id",
+			email: "E-Mail",
+			userGroup: null,
+			isVerified: null,
+			password: null
+		},
+		defaults: {
+			name: {
+				salutation: "Ind."
+			},
+			userGroup: "teacher",
+			isVerified: true,
+			isArchived: false,
+			password: "123"
+		}
+	}*/
 	var mapRule = {
 		rule: {
 			name: {
@@ -134,7 +157,10 @@ convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefine
 	})
 
 	Promise.all(mappedDataProm).then(function(results) {
-		console.log(results, "this")
+		results = results.filter(function(v) {
+			return (v !== null);
+		})
+		console.log(results)
 	}).catch(function(err) {
 		return console.error(err);
 	})
