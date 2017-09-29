@@ -50,12 +50,13 @@ const util = require('util')
     * @param {string} name.first - A user's given name
     * @param {string} name.last - A user's family name
     * @param {string} email - A user's email address
+    * @param {string} schoolID - A user's schoolID (optional)
     * @param {string} password - The user's password
     * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
     * @param {function} done - Callback
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
-exports.createAccount = function(dbConn, userGroup, name, email, password, groupFields, done) {
+exports.createAccount = function(dbConn, userGroup, name, email, password, schoolID, groupFields, done) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
@@ -85,6 +86,9 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
         var err = new Error("password Undefined");
         err.status = 400;
         return done(err);
+    }
+    if(!schoolID || schoolID == "") {
+        schoolID = null;
     }
     if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
         groupFields = {};

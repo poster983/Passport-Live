@@ -68,6 +68,7 @@ function serializeUser(req, res, done) {
     * <caption>Body Structure (application/json): </caption>
     * {
     *    "email": "teacher@gmail.com",
+    *    "schoolID": "02556"
     *    "password": "123abc",
     *    "passwordVerification": "123abc",
     *    "name": {
@@ -91,6 +92,7 @@ function serializeUser(req, res, done) {
     var groupFields = req.body.groupFields
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
+    var schoolID = req.body.schoolID;
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     var promise = new Promise(function(resolve, reject) {
@@ -128,7 +130,7 @@ function serializeUser(req, res, done) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
-            api.createAccount(r.conn(), userGroup, name, email, password, groupFields, function(err, resp) {
+            api.createAccount(r.conn(), userGroup, name, email, password, schoolID, groupFields, function(err, resp) {
                 if(err){
                     next(err);
                 } else {

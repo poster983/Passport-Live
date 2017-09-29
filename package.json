@@ -42,6 +42,7 @@
     "cookie-session": "^2.0.0-beta.2",
     "cors": "^2.8.3",
     "debug": "~2.6.0",
+    "excel-as-json": "^2.0.1",
     "express": "~4.15.3",
     "express-session": "latest",
     "forever": "^0.15.3",
