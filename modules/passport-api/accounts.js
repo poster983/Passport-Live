@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 
 //TODO: INCLUDE IN INDEX.JS
 /** 
-* @module passportAccountsApi
+* @module js/accounts
 */
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
@@ -149,6 +149,7 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, schoo
                       password: hash,
                       userGroup: userGroup, // should be same as a usergroup in config/default.json
                       groupFields: groupFields,
+                      schoolID: schoolID,
                       isArchived: false,
                       isVerified: false,
                       integrations: false
