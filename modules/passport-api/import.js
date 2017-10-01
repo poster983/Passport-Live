@@ -22,6 +22,8 @@ email: hi@josephhassell.com
 * A set of Apis for importing large amounts of data into passport
 * @module js/import
 */
+const convertExcel = require('excel-as-json').processFile;
+const accountAPI = require("./accounts.js");
 
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
@@ -33,102 +35,229 @@ email: hi@josephhassell.com
 * @returns {Promise}
 */
 exports.mapAccounts = function(arrayToMap, mapRule, defaultRule) {
+    return new Promise(function(resolve, reject) {
+        try {
+            var mappedData = arrayToMap.map(function(n) {
+                var returner = {};
+                returner.name = {};
+                if(!mapRule.name || !mapRule.name.first || !n[mapRule.name.first]) {
+                    if(defaultRule.name.first) {
+                        returner.name.first = defaultRule.name.first;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.first = n[mapRule.name.first];
+                }
+                if(!mapRule.name || !mapRule.name.last || !n[mapRule.name.last]) {
+                    if(defaultRule.name.last) {
+                        returner.name.last = defaultRule.name.last;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.last = n[mapRule.name.last];
+                }
+                if(!mapRule.name || !mapRule.name.salutation || !n[mapRule.name.salutation]) {
+                    if(defaultRule.name.salutation) {
+                        returner.name.salutation = defaultRule.name.salutation;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.salutation = n[mapRule.name.salutation];
+                }
+                if(!mapRule.schoolID  || !n[mapRule.schoolID]) {
+                    if(defaultRule.schoolID) {
+                        returner.schoolID = defaultRule.schoolID;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.schoolID = n[mapRule.schoolID];
+                }
+                if(!mapRule.email  || !n[mapRule.email]) {
+                    if(defaultRule.email) {
+                        returner.email = defaultRule.email;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.email = n[mapRule.email];
+                }
+                if(!mapRule.userGroup  || !n[mapRule.userGroup]) {
+                    if(defaultRule.userGroup) {
+                        returner.userGroup = defaultRule.userGroup;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.userGroup = n[mapRule.userGroup];
+                }
+                if(!mapRule.hasOwnProperty("isVerified")  || !n[mapRule.userGroup]) {
+                    if(defaultRule.hasOwnProperty("isVerified")) {
+                        returner.isVerified = defaultRule.isVerified;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.isVerified = n[mapRule.isVerified];
+                }
+
+                if(!mapRule.hasOwnProperty("graduationYear")  || !n[mapRule.graduationYear]) {
+                    if(defaultRule.hasOwnProperty("graduationYear")) {
+                        returner.graduationYear = defaultRule.graduationYear;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.graduationYear = n[mapRule.graduationYear];
+                }
+
+                if(!mapRule.hasOwnProperty("password")  || !n[mapRule.password]) {
+                    if(defaultRule.hasOwnProperty("password")) {
+                        returner.password = defaultRule.password;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.password = n[mapRule.password];
+                }
+
+                return returner;
+            })
+            results = mappedData.filter(function(v) {
+                return (v !== null);
+            })
+            return resolve(results);
+        } catch(err) {
+            return reject(err);
+        }
+
+
+    })
+
     
-
-    var mappedData = data.map(function(n) {
-        var returner = {};
-        returner.name = {};
-        if(!mapRule.name || !mapRule.name.first || !n[mapRule.name.first]) {
-            if(defaultRule.name.first) {
-                returner.name.first = defaultRule.name.first;
-            } else {
-                return null;
-            }
-        } else {
-            returner.name.first = n[mapRule.rule.name.first];
-        }
-        if(!mapRule.rule.name || !mapRule.rule.name.last || !n[mapRule.rule.name.last]) {
-            if(defaultRule.name.last) {
-                returner.name.last = defaultRule.name.last;
-            } else {
-                return null;
-            }
-        } else {
-            returner.name.last = n[mapRule.rule.name.last];
-        }
-        if(!mapRule.rule.name || !mapRule.rule.name.salutation || !n[mapRule.rule.name.salutation]) {
-            if(defaultRule.name.salutation) {
-                returner.name.salutation = defaultRule.name.salutation;
-            } else {
-                return null;
-            }
-        } else {
-            returner.name.salutation = n[mapRule.rule.name.salutation];
-        }
-        if(!mapRule.rule.schoolID  || !n[mapRule.rule.schoolID]) {
-            if(defaultRule.schoolID) {
-                returner.schoolID = defaultRule.schoolID;
-            } else {
-                return null;
-            }
-        } else {
-            returner.schoolID = n[mapRule.rule.schoolID];
-        }
-        if(!mapRule.rule.email  || !n[mapRule.rule.email]) {
-            if(defaultRule.email) {
-                returner.email = defaultRule.email;
-            } else {
-                return null;
-            }
-        } else {
-            returner.email = n[mapRule.rule.email];
-        }
-        if(!mapRule.rule.userGroup  || !n[mapRule.rule.userGroup]) {
-            if(defaultRule.userGroup) {
-                returner.userGroup = defaultRule.userGroup;
-            } else {
-                return null;
-            }
-        } else {
-            returner.userGroup = n[mapRule.rule.userGroup];
-        }
-        if(!mapRule.rule.hasOwnProperty("isVerified")  || !n[mapRule.rule.userGroup]) {
-            if(defaultRule.hasOwnProperty("isVerified")) {
-                returner.isVerified = defaultRule.isVerified;
-            } else {
-                return null;
-            }
-        } else {
-            returner.isVerified = n[mapRule.rule.isVerified];
-        }
-
-        if(!mapRule.rule.hasOwnProperty("graduationYear")  || !n[mapRule.rule.graduationYear]) {
-            if(defaultRule.hasOwnProperty("graduationYear")) {
-                returner.graduationYear = defaultRule.graduationYear;
-            } else {
-                return null;
-            }
-        } else {
-            returner.graduationYear = n[mapRule.rule.graduationYear];
-        }
-
-        if(!mapRule.rule.hasOwnProperty("password")  || !n[mapRule.rule.password]) {
-            if(defaultRule.hasOwnProperty("password") && typeof mapRule.defaults.password == "string") {
-                returner.password = defaultRule.password;
-            } else {
-                return null;
-            }
-        } else {
-            returner.password = n[mapRule.rule.password];
-        }
-
-        return returner;
-    })
-    results = mappedData.filter(function(v) {
-        return (v !== null);
-    })
-    console.log(results)
 }
+
+/** 
+* Takes inan excel file and with some mapping rules, imports them to the accounts table
+* NOTE: Email domains are still must follow userGroup settings.
+* If the account cant be impoirted using the accountApi, the row is skipped
+* @function importAccountsExcel
+* @link module:js/import
+* @param {string} excelFilePath - The path to the excel file.
+* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
+* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @returns {Promise}
+*/
+exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule) {
+    return new Promise(function(resolve, reject) {
+        convertExcel(excelFilePath, undefined, false, function(err, data) {
+            if(err) {
+                return reject(err);
+            }
+            exports.mapAccounts(data, mapRule, defaultRule).then(function(results) {
+                var errors = [];
+                var transPromice = [];
+                var imported = 0;
+                for(var x = 0; x < results.length; x++) {
+                    transPromice.push(new Promise(function(rRes, rRej) {
+                        var promRes = results[x];
+                        accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, function(err, transSummery) {
+                        if(err) {
+                            if(err.status == 500) {
+                                return reject(err); 
+                            } else {
+
+                                rRes({onUser: promRes, error: err});
+                            }
+                        } else {
+                            rRes({onUser: promRes, error: null});
+                            imported++;
+                        }
+                    })}));
+
+                    //end 
+                    if(x >= results.length-1) {
+                        console.log(results.length, errors.length)
+                        Promise.all(transPromice).then(function(sumArray) {
+                            resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
+                        })
+                        //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
+                        
+                    }
+                }
+                
+            }).catch(function(err) {
+                return reject(err);
+            })
+        });
+    });
+}
+
+/*
+exports.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
+            name: {
+                first: "First Name",
+                last: "Last Name",
+                salutation: null
+            },
+            schoolID: "Faculty User Id",
+            graduationYear: null,
+            email: "Filtered Email",
+            userGroup: null,
+            isVerified: null,
+            password: "Password"
+        }, {
+            name: {
+                salutation: "Ind."
+            },
+            userGroup: "teacher",
+            isVerified: true,
+            graduationYear: null
+        }).then(function(transSummery) {
+            console.log(transSummery);
+        }).catch(function(err) {
+            console.error(err);
+        });*/
+
+function tester() {
+
+    convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefined, false, function(err, data) {
+        if(err) {
+            return console.error(err);
+        }
+        console.log(data)
+        exports.mapAccounts(data, {
+            name: {
+                first: "First Name",
+                last: "Last Name",
+                salutation: null
+            },
+            schoolID: "Faculty User Id",
+            graduationYear: null,
+            email: "Filtered Email",
+            userGroup: null,
+            isVerified: null,
+            password: "Password"
+        }, {
+            name: {
+                salutation: "Ind."
+            },
+            userGroup: "teacher",
+            isVerified: true,
+            graduationYear: null
+        }).then(function(results) {
+            console.log("results")
+            console.log(results)
+        }).catch(function(err) {
+            console.error(err)
+        })
+    });
+}
+
+
 
 /**
  * Json object that relates each required field to a key in another dataset.  If any key is null, it will fallback to the defaults.

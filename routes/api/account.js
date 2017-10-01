@@ -35,7 +35,7 @@ var miscApi = require("../../modules/passport-api/index.js");
 
 var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passApi = require("../../modules/passport-api/passes.js");
-var moment = require("moment")
+var moment = require("moment");
 
 //var for backwards compadability.  neads to be removed later 
 
@@ -68,7 +68,8 @@ function serializeUser(req, res, done) {
     * <caption>Body Structure (application/json): </caption>
     * {
     *    "email": "teacher@gmail.com",
-    *    "schoolID": "02556"
+    *    "schoolID": "02556",
+    *    "graduationYear": 2018,
     *    "password": "123abc",
     *    "passwordVerification": "123abc",
     *    "name": {
@@ -76,9 +77,7 @@ function serializeUser(req, res, done) {
     *        "first": "Teacher",
     *        "last": "McTeacher Face"
     *      },
-    *    "groupFields": {
-    *        "teacherID": "1598753"
-    *    },
+    *    "groupFields": {},
     *    "permissionKey": HJhd38
     * }
     */
@@ -93,6 +92,7 @@ function serializeUser(req, res, done) {
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
     var schoolID = req.body.schoolID;
+    var graduationYear = req.body.graduationYear;
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     var promise = new Promise(function(resolve, reject) {
@@ -130,7 +130,7 @@ function serializeUser(req, res, done) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
-            api.createAccount(r.conn(), userGroup, name, email, password, schoolID, groupFields, function(err, resp) {
+            api.createAccount(userGroup, name, email, password, schoolID, graduationYear, groupFields, function(err, resp) {
                 if(err){
                     next(err);
                 } else {

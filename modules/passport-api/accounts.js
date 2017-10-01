@@ -43,7 +43,6 @@ const util = require('util')
     *     //Created
     *   }
     * });
-    * @param {object} dbConn - RethinkDB Connection Object.
     * @param {constant} userGroup - A usergroup defined in the config
     * @param {json} name
     * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
@@ -56,7 +55,7 @@ const util = require('util')
     * @param {function} done - Callback
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
-exports.createAccount = function(dbConn, userGroup, name, email, password, schoolID, groupFields, done) {
+exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, done) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
@@ -89,6 +88,13 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, schoo
     }
     if(!schoolID || schoolID == "") {
         schoolID = null;
+    }
+    if(!graduationYear || graduationYear == "") {
+        graduationYear = null;
+    } else if(isNaN(parseInt(graduationYear))) {
+        var err = new Error("graduationYear Is Not A Number");
+        err.status = 400;
+        return done(err);   
     }
     if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
         groupFields = {};
@@ -126,7 +132,7 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, schoo
             }
             try {
               // Store hash in your password DB.
-              r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
+              r.table("accounts")('email').contains(email).run(db.conn(), function(err, con){
                 if(err) {
                     console.error(err);
                     return done(err);
@@ -150,12 +156,13 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, schoo
                       userGroup: userGroup, // should be same as a usergroup in config/default.json
                       groupFields: groupFields,
                       schoolID: schoolID,
+                      graduationYear: graduationYear,
                       isArchived: false,
                       isVerified: false,
                       integrations: false
-                    }).run(dbConn);
-                    promice.then(function(conn) {
-                        return done(null);
+                    }).run(db.conn());
+                    promice.then(function(conn, results) {
+                        return done(null, results);
                   });
                 }
               });
