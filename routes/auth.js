@@ -49,27 +49,51 @@ var connection = null;
 
 router.get('/google/', function googleOAuth2(req, res, next) {
     //req.session.permissionKey = req.query.pk;
-    req.session.googleDSCM = false;
-    next();
-}, passport.authenticate('google', { scope: 
-    [ "profile", "email" ] }
-));
+    if(req.query.dscm) {
+      req.session.googleDSCM = true;
+    } else {
+      req.session.googleDSCM = false;
+    }
 
+    
+    next();
+}, function(req, res, next) {
+  var prom = null;
+  if(req.query.failGoogle) {
+    prom = "select_account"
+  }
+  passport.authenticate('google', { scope: 
+    [ "profile", "email" ],
+    prompt: prom}
+  )(req, res, function(err) {
+    if(err) {
+      return next(err);
+    }
+    return next();
+  })
+});
+
+/*
 router.get('/google/dscm', function (req, res, next) {
     //req.session.permissionKey = req.query.pk;
     req.session.googleDSCM = true;
     next();
 }, passport.authenticate('google', { scope: 
     [ "profile", "email" ] }
-));
+));*/
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
   var msg = "";
+  var googleQuery = "";
   if(req.query.msg) {
     msg = req.query.msg;
   }
-  res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg});
+  if(req.query.failGoogle) {
+
+    googleQuery += "&failGoogle=true";
+  }
+  res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
 });
 
 
