@@ -33,7 +33,101 @@ email: hi@josephhassell.com
 * @returns {Promise}
 */
 exports.mapAccounts = function(arrayToMap, mapRule, defaultRule) {
-    return "HELLO"
+    
+
+    var mappedData = data.map(function(n) {
+        var returner = {};
+        returner.name = {};
+        if(!mapRule.name || !mapRule.name.first || !n[mapRule.name.first]) {
+            if(defaultRule.name.first) {
+                returner.name.first = defaultRule.name.first;
+            } else {
+                return null;
+            }
+        } else {
+            returner.name.first = n[mapRule.rule.name.first];
+        }
+        if(!mapRule.rule.name || !mapRule.rule.name.last || !n[mapRule.rule.name.last]) {
+            if(defaultRule.name.last) {
+                returner.name.last = defaultRule.name.last;
+            } else {
+                return null;
+            }
+        } else {
+            returner.name.last = n[mapRule.rule.name.last];
+        }
+        if(!mapRule.rule.name || !mapRule.rule.name.salutation || !n[mapRule.rule.name.salutation]) {
+            if(defaultRule.name.salutation) {
+                returner.name.salutation = defaultRule.name.salutation;
+            } else {
+                return null;
+            }
+        } else {
+            returner.name.salutation = n[mapRule.rule.name.salutation];
+        }
+        if(!mapRule.rule.schoolID  || !n[mapRule.rule.schoolID]) {
+            if(defaultRule.schoolID) {
+                returner.schoolID = defaultRule.schoolID;
+            } else {
+                return null;
+            }
+        } else {
+            returner.schoolID = n[mapRule.rule.schoolID];
+        }
+        if(!mapRule.rule.email  || !n[mapRule.rule.email]) {
+            if(defaultRule.email) {
+                returner.email = defaultRule.email;
+            } else {
+                return null;
+            }
+        } else {
+            returner.email = n[mapRule.rule.email];
+        }
+        if(!mapRule.rule.userGroup  || !n[mapRule.rule.userGroup]) {
+            if(defaultRule.userGroup) {
+                returner.userGroup = defaultRule.userGroup;
+            } else {
+                return null;
+            }
+        } else {
+            returner.userGroup = n[mapRule.rule.userGroup];
+        }
+        if(!mapRule.rule.hasOwnProperty("isVerified")  || !n[mapRule.rule.userGroup]) {
+            if(defaultRule.hasOwnProperty("isVerified")) {
+                returner.isVerified = defaultRule.isVerified;
+            } else {
+                return null;
+            }
+        } else {
+            returner.isVerified = n[mapRule.rule.isVerified];
+        }
+
+        if(!mapRule.rule.hasOwnProperty("graduationYear")  || !n[mapRule.rule.graduationYear]) {
+            if(defaultRule.hasOwnProperty("graduationYear")) {
+                returner.graduationYear = defaultRule.graduationYear;
+            } else {
+                return null;
+            }
+        } else {
+            returner.graduationYear = n[mapRule.rule.graduationYear];
+        }
+
+        if(!mapRule.rule.hasOwnProperty("password")  || !n[mapRule.rule.password]) {
+            if(defaultRule.hasOwnProperty("password") && typeof mapRule.defaults.password == "string") {
+                returner.password = defaultRule.password;
+            } else {
+                return null;
+            }
+        } else {
+            returner.password = n[mapRule.rule.password];
+        }
+
+        return returner;
+    })
+    results = mappedData.filter(function(v) {
+        return (v !== null);
+    })
+    console.log(results)
 }
 
 /**
