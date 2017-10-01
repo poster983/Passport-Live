@@ -112,7 +112,7 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
                     }
                     if(z >= uGD.length - 1 ) {
                         var err = new Error("Email Domain Not Allowed.")
-                        err.status = 400;
+                        err.status = 403;
                         reject(err);
                     }
                 }
@@ -610,6 +610,10 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                 "name": true, 
                 "id": true
             }).run(db.conn(), function(err, teacherAccount) {
+                if(err) {
+                    console.log(err)
+                    return done(err);
+                }
                 //console.log(teacherAccount.schedules.teacher)
                 if(!teacherAccount.schedules || !teacherAccount.schedules.teacher) {
                     student.schedule[keys[0]] = {};

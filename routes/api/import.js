@@ -25,6 +25,7 @@ const importApi = require("../../modules/passport-api/import.js")
 var ssarv = require("ssarv")
 var multer  = require('multer')
 var upload = multer({ dest: '../../userUploads/' })
+var passport = require("passport");
 
 
 router.use(cors());
@@ -32,11 +33,11 @@ router.options('*', cors())
 
 
 //passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}),
-/*
-router.post('/profile', upload.single('avatar'), function (req, res, next) {
+
+router.post('/accounts', upload.single('excelImport'), passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
-})*/
+})
 
 router.post('/test', function (req, res, next) {
   importApi.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
