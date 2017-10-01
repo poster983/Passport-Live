@@ -12,7 +12,7 @@
   ],
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www -e js,mustache",
+    "start": "nodemon ./bin/www -e js,mustache --trace-sync-io",
     "production": "export NODE_ENV=production && ./node_modules/forever/bin/forever ./bin/www",
     "db": "rethinkdb serve --http-port 3060",
     "start:dbEdit": "chateau",

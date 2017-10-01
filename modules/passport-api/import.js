@@ -169,10 +169,11 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule) {
                             if(err.status == 500) {
                                 return reject(err); 
                             } else {
-
+                                promRes.password = undefined;
                                 rRes({onUser: promRes, error: err});
                             }
                         } else {
+                            promRes.password = undefined;
                             rRes({onUser: promRes, error: null});
                             imported++;
                         }
