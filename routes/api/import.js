@@ -68,4 +68,34 @@ router.post('/test', function (req, res, next) {
         });
 })
 
+router.post('/test/student', function (req, res, next) {
+    console.log("GOOO")
+  importApi.importAccountsExcel("/home/joseph/Desktop/passportImport/studentinfohassellnodupe.xlsx", {
+            name: {
+                first: "Student First Name",
+                last: "Student Last Name",
+                salutation: null
+            },
+            schoolID: "Student User ID",
+            graduationYear: "Student Grad Year",
+            email: "E-Mail",
+            userGroup: null,
+            isVerified: null,
+            password: "Password"
+        }, {
+            name: {
+                salutation: "Ind."
+            },
+            userGroup: "student",
+            isVerified: true,
+            graduationYear: null
+        }).then(function(transSummery) {
+            console.log(transSummery);
+            res.json(transSummery)
+        }).catch(function(err) {
+            console.error(err);
+            res.json(err)
+        });
+})
+
 module.exports = router;

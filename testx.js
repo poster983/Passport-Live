@@ -1,10 +1,11 @@
 convertExcel = require('excel-as-json').processFile;
 //studentinfohassellSHORT
-convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefined, false, function(err, data) {
+convertExcel("/home/joseph/Desktop/passportImport/studentinfohassellnodupe.xlsx", undefined, false, function(err, data) {
 	if(err) {
 		return console.error(err);
 	}
-	//console.log(data, "raw DATA")
+	console.log(data, "raw DATA")
+	/*
 	var mapRule = {
 		rule: {
 			name: {
@@ -55,7 +56,7 @@ convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefine
 			password: "123"
 		}
 	}*/
-	
+	/*
 	var opt = {
 		
 	}
@@ -164,7 +165,7 @@ convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefine
 	})*/
 
 	//console.log(mappedData)
-	//process.exit();
+	//process.exit();*/
 });
 
 /*

@@ -103,26 +103,32 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
     }
     //console.log(email.substring(email.indexOf("@")))
     var emailPromise = new Promise(function(resolve, reject) {
-        if(config.has("userGroups." + userGroup + ".permissions.allowedEmailDomains")) {
-            var uGD = config.get("userGroups." + userGroup + ".permissions.allowedEmailDomains")
-            //console.log(uGD)
-            if(uGD.length > 0) {
-                for(var z = 0; z < uGD.length; z++) {
-                    //console.log(uGD[z], "email")
-                    if(email.substring(email.indexOf("@")) == uGD[z]) {
-                        resolve();
+        if (config.has('userGroups.' + userGroup)) {
+            if(config.has("userGroups." + userGroup + ".permissions.allowedEmailDomains")) {
+                var uGD = config.get("userGroups." + userGroup + ".permissions.allowedEmailDomains")
+                //console.log(uGD)
+                if(uGD.length > 0) {
+                    for(var z = 0; z < uGD.length; z++) {
+                        //console.log(uGD[z], "email")
+                        if(email.substring(email.indexOf("@")) == uGD[z]) {
+                            resolve();
+                        }
+                        if(z >= uGD.length - 1 ) {
+                            var err = new Error("Email Domain Not Allowed.")
+                            err.status = 403;
+                            reject(err);
+                        }
                     }
-                    if(z >= uGD.length - 1 ) {
-                        var err = new Error("Email Domain Not Allowed.")
-                        err.status = 403;
-                        reject(err);
-                    }
+                } else {
+                    resolve();
                 }
             } else {
                 resolve();
             }
         } else {
-            resolve();
+            var err = new Error("Usergroup Not Found");
+            err.status = 404;
+            reject(err);
         }
     });
     emailPromise.then(function() {
