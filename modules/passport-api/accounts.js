@@ -80,6 +80,8 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
         var err = new Error("email Undefined");
         err.status = 400;
         return done(err);
+    } else {
+        email = email.toLowerCase();
     }
     if(!password) {
         var err = new Error("password Undefined");
