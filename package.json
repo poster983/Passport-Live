@@ -22,7 +22,9 @@
     "test": "export NODE_ENV=tests && nyc mocha",
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "generate-docs": "jsdoc --configure config/jsdoc.json --verbose"
+    "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -33,7 +35,7 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "~1.17.2",
+    "body-parser": "~1.18.2",
     "compression": "^1.7.0",
     "config": "latest",
     "connect-ensure-login": "latest",
@@ -42,7 +44,7 @@
     "cookie-session": "^2.0.0-beta.2",
     "cors": "^2.8.3",
     "debug": "~2.6.0",
-    "express": "~4.15.3",
+    "express": "~4.16.0",
     "express-session": "latest",
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",
@@ -53,7 +55,7 @@
     "jsonwebtoken": "^7.4.1",
     "loader-message": "latest",
     "moment": "^2.18.1",
-    "morgan": "~1.8.2",
+    "morgan": "~1.9.0",
     "mustache-express": "1.2.4",
     "node-sass-middleware": "0.9.8",
     "nodemon": "latest",
@@ -71,7 +73,8 @@
     "ssarv": "latest",
     "ua-parser-js": "^0.7.14",
     "underscore": "^1.8.3",
-    "validator": "^8.0.0"
+    "validator": "^8.0.0",
+    "snyk": "^1.42.3"
   },
   "license": "AGPL-3.0",
   "snyk": true,
