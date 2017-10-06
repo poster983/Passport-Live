@@ -79,6 +79,9 @@ router.post('/login', passport.authenticate('local-login', {
     });
 });
 
+
+
+
 /**
     * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies
     * @function loginDSCM
@@ -102,8 +105,8 @@ router.post('/login/dscm', passport.authenticate('local-login', {
         if(err) {
             return next(err);
         }
-        res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
-        res.cookie('XSRF-TOKEN', jwtData.dscm);
+        res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+        res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
         res.status(200).json({
             userId: req.user[0].id
         });
@@ -124,8 +127,8 @@ router.get("/google/callback", passport.authenticate( 'google', {
             if(err) {
                 return next(err);
             }
-            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
-            res.cookie('XSRF-TOKEN', jwtData.dscm);
+            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+            res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
             res.redirect("/?userId=" + req.user.id);
         });
     } else {
