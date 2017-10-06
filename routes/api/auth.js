@@ -119,7 +119,7 @@ router.post('/login/dscm', passport.authenticate('local-login', {
 
 
 router.get("/google/callback", passport.authenticate( 'google', { 
-        failureRedirect: '/auth/login'
+        failureRedirect: '/auth/login?failGoogle=true'
 }), function(req, res, next) {
     console.log(req.user, "USER RETURNED")
     if(req.session.googleDSCM) {

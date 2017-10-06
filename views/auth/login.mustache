@@ -39,7 +39,7 @@ email: hi@josephhassell.com
               </div>
               <div id="alt-login-options">
               <div class="col s5">
-                <a href="/auth/google/dscm"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
+                <a href="/auth/google?dscm=true{{googleQuery}}"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
                 
               </div>
                 <div class="col s5" id="new-account">
@@ -98,6 +98,12 @@ email: hi@josephhassell.com
             $("#alt-login-options").slideUp(500);
           }
         }
+
+        $(document).ready(function() {
+          if(getUrlParameter("failGoogle")) {
+            Materialize.toast($("<span>Google Authentication Failed.</span>").append("<br/> <span>If you don't have a Passport account, you must create one.</span> "), 6000)
+          }
+        });
 
         function login() {
             var email = $("#email").val();
