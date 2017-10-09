@@ -814,6 +814,7 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @property {Object} body
     * @property {String} body.current - The user's current password.
     * @property {String} body.new - The user's new password.
+    * @property {String} body.newVerify - body.new again.
     * @param {response} res
     * @param {nextCallback} next
     * @api PATCH /api/account/password/
@@ -821,12 +822,19 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @returns {callback} - See: {@link nextCallback} 
 */
 router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
-    if(typeof req.body.current === "string" && typeof req.body.new === "string") {
-        api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
-            return res.send(trans);
-        }).catch(function(err) {
+    if(typeof req.body.current === "string" && typeof req.body.new === "string" && typeof req.body.newVerify === "string") {
+        if(req.body.new == req.body.newVerify) {
+            api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
+                return res.send(trans);
+            }).catch(function(err) {
+                return next(err);
+            })
+        } else {
+            var err = new Error("Passwords Do Not Match")
+            err.status = 400;
             return next(err);
-        })
+        }
+        
     } else {
         var err = new Error("Body Malformed")
         err.status = 400;
