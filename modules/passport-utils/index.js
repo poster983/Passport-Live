@@ -23,6 +23,7 @@ email: hi@josephhassell.com
 * @module utils 
 */
 var jwt = require("jsonwebtoken");
+var shortid = require('shortid');
 var config = require("config");
 module.exports = {
     /**
@@ -95,9 +96,17 @@ module.exports = {
         } else {
             return done(null, false);
         }
+    },
+
+    generateSecureKey: function() {
+        return shortid.generate() + shortid.generate();
     }
+
     
 }
+
+//console.log(module.exports.generateSecureKey())
+
 /**
 * A user object found in the database
 * @typedef {json} user

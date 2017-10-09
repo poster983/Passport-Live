@@ -819,3 +819,9 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
         });
     });
 }
+
+exports.changePassword = function(currentPassword, newPassword) {
+    bcrypt.compare(myPlaintextPassword, hash, function(err, res) {
+        // res == true
+    });
+}
