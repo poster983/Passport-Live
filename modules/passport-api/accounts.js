@@ -26,6 +26,7 @@ var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
+var utils = require("../passport-utils/index.js")
 var human = require('humanparser');
 var _ = require("underscore");
 const util = require('util')
@@ -820,17 +821,47 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     });
 }
 
-/**
-*
-*S
-*
-*/
 
+
+/**
+* Updates the given account's password with a new one
+* @function updatePassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} newPassword
+* @returns {Promise}
+*/
 exports.updatePassword = function(id, newPassword) {
-    /*bcrypt.hash(newPassword)
-    r.table('accounts').get(id).update({password:})*/
+    return new Promise(function(resolve, reject) {
+        bcrypt.hash(newPassword, null, null, function(err, hash) {
+          if(err) {
+            //console.log(err)
+            return reject(err);
+          }
+          if(hash) {
+              r.table('accounts').get(id).update({password: hash}).run(db.conn()).then(function(trans) {
+                return resolve(trans);
+              }).catch(function(err) {
+                return reject(err);
+              })
+          } else {
+            var err = new Error("Unknown Hashing Error");
+                err.status = 500;
+                return reject(err);
+          }
+        });
+        //
+    })
 }
 
+/**
+* Verifies if the given password is the correct password for the given account.
+* @function verifyPassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} password - The password to check against the database
+* @returns {Promise}
+*/
 exports.verifyPassword = function(id, password) { 
     return new Promise(function(resolve, reject) {
         r.table('accounts').get(id).run(db.conn()).then(function(account) {
@@ -845,7 +876,6 @@ exports.verifyPassword = function(id, password) {
                 return reject(err);
             }
             bcrypt.compare(password, account.password, function(err, res) {
-                console.log(res)
                 if(err) {
                     return reject(err);
                 }
@@ -864,10 +894,36 @@ exports.verifyPassword("3c4fb0e7-9330-45d0-8d7c-9c29142fac45", "123").then(funct
     console.log("err:", err)
 });
 */
+
+/**
+* Combines {@link verifyPassword} and {@link updatePassword} into one convenient package.  Also checks Password policy.
+* @function changePassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} currentPassword - The account's current password
+* @param {String} newPassword - The new account password
+* @returns {Promise}
+*/
 exports.changePassword = function(id, currentPassword, newPassword) {
     return new Promise(function(resolve, reject) {
         exports.verifyPassword(id, currentPassword).then(function(result) {
-            return resolve(result)
+            if(result) {
+                utils.checkPasswordPolicy(newPassword, function(err) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    exports.updatePassword(id, newPassword).then(function(transaction) {
+                        return resolve(transaction);
+                    }).catch(function(err) {
+                        //console.log(err)
+                        return reject(err);
+                    })
+                })
+            } else {
+                var err = new Error("Unauthorized");
+                err.status = 401;
+                return reject(err);
+            }
         }).catch(function(err) {
             return reject(err);
         })

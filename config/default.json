@@ -122,6 +122,7 @@
 	"passwordPolicy": {  
 		"minimumLength": 6,
 		"maximumLength": 128,
-		"regexRules": []
+		"regexRules": ["[a-z]", "\\d"], // Has lowercase, and has numbers // "[a-z]", "\\d"
+		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase letter, and at least one number."
 	}
 }

@@ -810,7 +810,6 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
 
 /** Updates user Password   
     * @function updateUserPassword
-    * @async
     * @param {request} req
     * @property {Object} body
     * @property {String} body.current - The user's current password.
@@ -819,14 +818,14 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @param {nextCallback} next
     * @api PATCH /api/account/password/
     * @apiresponse {json} Status Code
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @returns {callback} - See: {@link nextCallback} 
 */
 router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
     if(typeof req.body.current === "string" && typeof req.body.new === "string") {
         api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
             return res.send(trans);
         }).catch(function(err) {
-            return res.send(err);
+            return next(err);
         })
     } else {
         var err = new Error("Body Malformed")
