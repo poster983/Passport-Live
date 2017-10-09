@@ -887,13 +887,7 @@ exports.verifyPassword = function(id, password) {
     })
 }
 
-/*
-exports.verifyPassword("3c4fb0e7-9330-45d0-8d7c-9c29142fac45", "123").then(function(res) {
-    console.log(res)
-}).catch(function(err) {
-    console.log("err:", err)
-});
-*/
+
 
 /**
 * Combines {@link verifyPassword} and {@link updatePassword} into one convenient package.  Also checks Password policy.
@@ -928,6 +922,5 @@ exports.changePassword = function(id, currentPassword, newPassword) {
             return reject(err);
         })
     })
-    
-    
 }
+
