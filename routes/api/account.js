@@ -822,11 +822,11 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
 router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
-    if(req.body.current && req.body.new) {
+    if(typeof req.body.current === "string" && typeof req.body.new === "string") {
         api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
-            return res.json(trans);
+            return res.send(trans);
         }).catch(function(err) {
-            return res.json(err);
+            return res.send(err);
         })
     } else {
         var err = new Error("Body Malformed")

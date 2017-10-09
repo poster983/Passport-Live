@@ -827,11 +827,11 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
 */
 
 exports.updatePassword = function(id, newPassword) {
-    bcrypt.hash(newPassword)
-    r.table('accounts').get(id).update({password:})
+    /*bcrypt.hash(newPassword)
+    r.table('accounts').get(id).update({password:})*/
 }
 
-exports.changePassword = function(id, currentPassword, newPassword) {
+exports.verifyPassword = function(id, password) { 
     return new Promise(function(resolve, reject) {
         r.table('accounts').get(id).run(db.conn()).then(function(account) {
             if(!account) {
@@ -844,14 +844,30 @@ exports.changePassword = function(id, currentPassword, newPassword) {
                 err.status = 500;
                 return reject(err);
             }
-            bcrypt.compare(currentPassword, account.password, function(err, res) {
+            bcrypt.compare(password, account.password, function(err, res) {
+                console.log(res)
                 if(err) {
                     return reject(err);
                 }
-                if(res) {
-                    
-                }
+                return resolve(res);
             });
+        }).catch(function(err) {
+            return reject(err);
+        })
+    })
+}
+
+/*
+exports.verifyPassword("3c4fb0e7-9330-45d0-8d7c-9c29142fac45", "123").then(function(res) {
+    console.log(res)
+}).catch(function(err) {
+    console.log("err:", err)
+});
+*/
+exports.changePassword = function(id, currentPassword, newPassword) {
+    return new Promise(function(resolve, reject) {
+        exports.verifyPassword(id, currentPassword).then(function(result) {
+            return resolve(result)
         }).catch(function(err) {
             return reject(err);
         })

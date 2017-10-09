@@ -118,5 +118,10 @@
 				"clientSecret": "123454"
 			}
 		}
+	},
+	"passwordPolicy": {  
+		"minimumLength": 6,
+		"maximumLength": 128,
+		"regexRules": []
 	}
 }
