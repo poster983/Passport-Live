@@ -820,8 +820,31 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     });
 }
 
-exports.changePassword = function(currentPassword, newPassword) {
-    bcrypt.compare(myPlaintextPassword, hash, function(err, res) {
-        // res == true
-    });
+exports.changePassword = function(id, currentPassword, newPassword) {
+    return new Promise(function(resolve, reject) {
+        r.table('accounts').get(id).run(db.conn()).then(function(account) {
+            if(!account) {
+                var err = new Error("Account Not Found");
+                err.status = 404;
+                return reject(err);
+            }
+            if(!account.password) {
+                var err = new Error("account.password undefined");
+                err.status = 500;
+                return reject(err);
+            }
+            bcrypt.compare(currentPassword, account.password, function(err, res) {
+                if(err) {
+                    return reject(err);
+                }
+                if(res) {
+                    
+                }
+            });
+        }).catch(function(err) {
+            return reject(err);
+        })
+    })
+    
+    
 }
