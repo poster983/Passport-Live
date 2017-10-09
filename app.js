@@ -94,12 +94,6 @@ if(config.get('misc.storeSessionToDisc')) {
     saveUninitialized: false 
   }));
 } else {
-  /*
-  app.use(session({ 
-    secret: config.get('secrets.session-key'), 
-    resave: false, 
-    saveUninitialized: false 
-  }));*/
   app.use(cookieSession({
     name: 'session',
     secret: config.get('secrets.session-key'), 

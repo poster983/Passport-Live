@@ -105,6 +105,7 @@ router.post('/login/dscm', passport.authenticate('local-login', {
         if(err) {
             return next(err);
         }
+        
         res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
         res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
         res.status(200).json({
