@@ -820,6 +820,17 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     });
 }
 
+/**
+*
+*S
+*
+*/
+
+exports.updatePassword = function(id, newPassword) {
+    bcrypt.hash(newPassword)
+    r.table('accounts').get(id).update({password:})
+}
+
 exports.changePassword = function(id, currentPassword, newPassword) {
     return new Promise(function(resolve, reject) {
         r.table('accounts').get(id).run(db.conn()).then(function(account) {

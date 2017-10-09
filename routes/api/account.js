@@ -798,7 +798,7 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/incomplete/dashboard/studen
+    * @api GET /api/account/incomplete/dashboard/student
     * @apiresponse {json} Returns missing fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo SSARV
@@ -806,7 +806,34 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
 router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
     //todo 
 });
-//getUserByID
+
+
+/** Updates user Password   
+    * @function updateUserPassword
+    * @async
+    * @param {request} req
+    * @property {Object} body
+    * @property {String} body.current - The user's current password.
+    * @property {String} body.new - The user's new password.
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/password/
+    * @apiresponse {json} Status Code
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
+    if(req.body.current && req.body.new) {
+        api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
+            return res.json(trans);
+        }).catch(function(err) {
+            return res.json(err);
+        })
+    } else {
+        var err = new Error("Body Malformed")
+        err.status = 400;
+        return next(err);
+    }
+});
 
 module.exports = router;
 
