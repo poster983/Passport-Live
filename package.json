@@ -62,6 +62,7 @@
     "pixel-tracker": "0.0.5",
     "requirejs": "^2.3.3",
     "rethinkdb": "latest",
+    "rethinkdb-job-queue": "^3.1.4",
     "serve-favicon": "~2.4.3",
     "session-file-store": "^1.0.0",
     "shortid": "^2.2.8",

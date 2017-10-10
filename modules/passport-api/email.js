@@ -19,10 +19,18 @@ email: hi@josephhassell.com
 */
 
 /** 
-* @module passportEmailApi
+* @module js/email
 */
 
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require('config');
+const nodemailer = require('nodemailer');
 
+let SMTPTransporter = nodemailer.createTransport(config.get("nodemailerConfig"));
+
+/**
+
+exports.sendMail = function(header, body, options) {
+
+}
