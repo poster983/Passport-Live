@@ -32,10 +32,9 @@ let SMTPTransporter = nodemailer.createTransport(config.get("nodemailerConfig"))
 
 
 /** 
-* Takes in a flat array of messy named data and then maps it to a passport standard
-* @function mapAccounts
-* @link module:js/import
-* @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
+* Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.
+* @function sendMail
+* @link module:js/email
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
 * @returns {Promise}
