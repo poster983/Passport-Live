@@ -35,10 +35,29 @@ let SMTPTransporter = nodemailer.createTransport(config.get("nodemailerConfig"))
 * Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.
 * @function sendMail
 * @link module:js/email
-* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
-* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
-* @returns {Promise}
+* @param {emailHeader} messageConfig - Nodemailer Message options. See: {@link emailHeader}
+* @param {Object} options
+* @param {boolean} options.jobQueue - Default: true
+* @returns {Promise} 
 */
-exports.sendMail = function(header, body, options) {
+exports.sendMail = function(messageConfig, options) {
 
 }
+
+
+/**
+ * Nodemailer Message options. Can use any property found [Here]{@link: https://nodemailer.com/message/}
+ * @typedef {Object} emailMessageConfig
+ * @property {(String|null|undefined)} from - if null or undefined, passport will use configuration defalts "[email.defaults.fromName] <[email]>"
+ * @property {String} to - Emails to send this to. Separated by ","
+ * @property {String} subject
+ * @property {String} text - Plaintext version of the message
+ * @property (String) html - HTML version of the message
+ * {
+ *   from: 'sender@server.com',
+ *   to: 'receiver@sender.com',
+ *   subject: 'Message title',
+ *   text: 'Plaintext version of the message',
+ *   html: '<p>HTML version of the message</p>'
+ *   }
+ */

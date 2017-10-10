@@ -118,13 +118,19 @@
 			}
 		}
 	},
-	"nodemailerConfig": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used here. 
-	    "host": "smtp.example.com",
-	    "port": 465,
-	    "secure": true, // secure:true for port 465, secure:false for port 587
-	    "auth": {
-	        "user": "username@example.com",
-	        "pass": "userpass"
-	    }
+	"email": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used in nodemailerConfig. 
+	    "nodemailerConfig": {
+		    "host": "smtp.example.com",
+		    "port": 465,
+		    "secure": true, // secure:true for port 465, secure:false for port 587
+		    "auth": {
+		        "user": "username@example.com",
+		        "pass": "userpass"
+		    }
+		},
+	    "defaults": {
+	    	"fromName": "Passport",
+	    	"fromEmail": null  //only if username is not the email
+	    }	
 	} 
 }
