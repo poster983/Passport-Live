@@ -24,6 +24,8 @@ var express = require('express');
 var router = express.Router();
 
 
+
+
 var emailTracker = require('pixel-tracker')
 emailTracker.use(function (error, result) {
   console.log(result)
@@ -34,5 +36,14 @@ router.get("/pixel.gif", function(req, res, next) {
     return next();
 }, emailTracker.middleware);
 
+
+var emailApi = require("../../modules/passport-api/email.js")
+router.post("/sendMail", function(req, res, next) {
+    emailApi.sendMail(null, null).then(function(resp) {
+        res.send(resp);
+    }).catch(function(err) {
+        next(err)
+    })
+})
 
 module.exports = router;
