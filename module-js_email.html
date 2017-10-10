@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>authRESTAPI - Documentation</title>
+    <title>js/email - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">authRESTAPI</h1>
+    <h1 class="page-title">js/email</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,9 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: authRESTAPI</h2>
+      <h2>Module: js/email</h2>
+        
+            
         
     
 
@@ -59,9 +61,7 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
-            
-            <li><a href="#loginDSCM">loginDSCM</a></li>
+            <li><a href="#mapAccounts">mapAccounts</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -69,6 +69,133 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Apis for sending mail to users</p></div>
+        
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-js/email">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Apis for sending mail to users\n* @module js/email\n*/","meta":{"filename":"email.js","lineno":21,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Apis for sending mail to users</p>","kind":"module","name":"js/email","longname":"module:js/email","___id":"T000002R000205","___s":true,"attribs":"","id":"js/email","ancestors":[]}
+</pre>
+-->
+</div>
 
         
     
@@ -101,7 +228,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line52">52</a>
+    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line34">34</a>
   </code>
 </div>
 
@@ -112,8 +239,8 @@
 
     
 
-    <h4 class="name" id="~handleAuthLogin">
-      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id="~mapAccounts">
+      <a href="#params-mapAccounts"><span class="type-signature">(inner) </span>mapAccounts</a><span class="signature">(arrayToMap, mapRule, defaultRule)</span><span class="type-signature"> &rarr; {Promise}</span>
 
     </h4>
 
@@ -123,38 +250,26 @@
 
 
 
-      <a href="#api-handleAuthLogin">
-        <span class="label label-api">API: POST /api/auth/login/</span>
-      </a>
-    
 
 
 
-<span class="label label-default">Async</span>
+
 
 
 
 
 <div class="description">
-    <p>Logges the user in using passport.authenticate</p>
+    <p>Takes in a flat array of messy named data and then maps it to a passport standard</p>
 </div>
 
 
 
 
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
 
 
 
 
-
-
-<div class="collapse_" id="methodCollapse-handleAuthLogin">
+<div class="collapse_" id="methodCollapse-mapAccounts">
 
   
 
@@ -198,19 +313,12 @@ password:&lt;user's password></code></pre>
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
 
 
 
 
 
-
-  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
+  <div id="params-mapAccounts" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -237,13 +345,13 @@ password:&lt;user's password></code></pre>
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>arrayToMap</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">Array.&lt;Object></span>
 
 
             
@@ -253,20 +361,20 @@ password:&lt;user's password></code></pre>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>most likely imported from excel using the import api; the messy data that must be sorted</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>mapRule</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#response">response</a></span>
+<span class="param-type">accountMapRule</span>
 
 
             
@@ -276,7 +384,30 @@ password:&lt;user's password></code></pre>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Json object that relates each required field to a key in another dataset. See: <code>accountMapRule</code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">accountDefaultRule</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The fallback Json object for missing values in the arrayToMap and mapRule See: <code>accountDefaultRule</code></p></td>
         </tr>
 
     
@@ -297,20 +428,9 @@ password:&lt;user's password></code></pre>
 
 
 
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
 
-
-  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
-    <h5>
-      API Route:
-      POST /api/auth/login/
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
         
 
 
@@ -320,37 +440,16 @@ password:&lt;user's password></code></pre>
     </dt>
     <dd>
         
-<span class="param-type">application/json</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
 </dl>
 
     
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
 </div>
+  
 
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
 
 
 
@@ -360,283 +459,7 @@ password:&lt;user's password></code></pre>
 
 <!--
 <pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT\n    */","meta":{"filename":"auth.js","lineno":52,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R000676","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line85">85</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~loginDSCM">
-      <a href="#params-loginDSCM"><span class="type-signature">(async, inner) </span>loginDSCM</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-loginDSCM">
-        <span class="label label-api">API: POST /api/auth/login/</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-loginDSCM">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-loginDSCM" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-loginDSCM">
-    <h5>
-      API Route:
-      POST /api/auth/login/
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Sends Status code of 200.  Sets Cookies for webapp auth
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies\n    * @function loginDSCM\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth\n    */","meta":{"filename":"auth.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>","kind":"function","name":"loginDSCM","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Sends Status code of 200.  Sets Cookies for webapp auth"},"longname":"module:authRESTAPI~loginDSCM","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R000680","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~loginDSCM","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
+{"comment":"/** \n* Takes in a flat array of messy named data and then maps it to a passport standard\n* @function mapAccounts\n* @link module:js/import\n* @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted\n* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: <code>accountMapRule</code>\n* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: <code>accountDefaultRule</code>\n* @returns {Promise}\n*/","meta":{"filename":"email.js","lineno":34,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Takes in a flat array of messy named data and then maps it to a passport standard</p>","kind":"function","name":"mapAccounts","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["Array.<Object>"]},"description":"<p>most likely imported from excel using the import api; the messy data that must be sorted</p>","name":"arrayToMap"},{"type":{"names":["accountMapRule"]},"description":"<p>Json object that relates each required field to a key in another dataset. See: <code>accountMapRule</code></p>","name":"mapRule"},{"type":{"names":["accountDefaultRule"]},"description":"<p>The fallback Json object for missing values in the arrayToMap and mapRule See: <code>accountDefaultRule</code></p>","name":"defaultRule"}],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/email~mapAccounts","scope":"inner","memberof":"module:js/email","___id":"T000002R000211","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~mapAccounts","signature":"<span class=\"signature\">(arrayToMap, mapRule, defaultRule)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
 </pre>
 -->
 </div>
