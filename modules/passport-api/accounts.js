@@ -267,8 +267,8 @@ exports.getAccountByEmail = function(email, done) {
     * @param {constant} id - The ID of the user
     * @param {function} done - Callback
     */
-exports.getUserByID = function(dbConn, id, done) { 
-     r.table("accounts").get(id).run(dbConn, function(err, document) {
+exports.getUserByID = function(id, done) { 
+     r.table("accounts").get(id).run(db.conn(), function(err, document) {
         if(err) {
             return done(err);
         }
@@ -721,7 +721,7 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
             err.status = 400;
             return done(err)
     }
-    exports.getUserByID(db.conn(), userID, function(err, userData) {
+    exports.getUserByID(userID, function(err, userData) {
         if(err) {
             return done(err)
         } 
