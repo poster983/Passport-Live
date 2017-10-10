@@ -39,7 +39,12 @@ router.get("/pixel.gif", function(req, res, next) {
 
 var emailApi = require("../../modules/passport-api/email.js")
 router.post("/sendMail", function(req, res, next) {
-    emailApi.sendMail(null, null).then(function(resp) {
+    emailApi.sendMail({
+        to: 'receiver@sender.com',
+        subject: 'Message title',
+        text: 'Plaintext version of the message',
+        html: '<p>HTML version of the message</p>'
+    }, null).then(function(resp) {
         res.send(resp);
     }).catch(function(err) {
         next(err)

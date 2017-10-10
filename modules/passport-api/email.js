@@ -28,7 +28,7 @@ var db = require('../../modules/db/index.js');
 var config = require('config');
 const nodemailer = require('nodemailer');
 
-let SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
+var SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
 
 
 /** 
@@ -41,8 +41,34 @@ let SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerCon
 * @returns {Promise} 
 */
 exports.sendMail = function(messageConfig, options) {
-
+    return new Promise(function(resolve, reject) {
+        if(messageConfig) {
+            if(!messageConfig.from) {
+                messageConfig.from = "";
+                if(config.has("email.defaults.fromName")) {
+                    messageConfig.from += config.get("email.defaults.fromName")
+                }
+                if(config.has("email.defaults.fromEmail") && config.get("email.defaults.fromEmail")) {
+                    messageConfig.from += " <" + config.get("email.defaults.fromEmail") + ">";
+                } else {
+                    messageConfig.from += " <" + config.get("email.nodemailerConfig").auth.user + ">";
+                }
+            }
+            console.log(messageConfig, config.get("email.nodemailerConfig"))
+            SMTPTransporter.sendMail(messageConfig).then(function(resp) {
+                return resolve(resp)
+            }).catch(function(err) {
+                return reject(err)
+            })
+        } else {
+            var err = new Error("messageConfig undefined");
+            err.status = 500;
+            return reject(err)
+        }
+    })
 }
+
+
 
 
 /**
