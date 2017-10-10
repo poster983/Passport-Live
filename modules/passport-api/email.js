@@ -19,6 +19,7 @@ email: hi@josephhassell.com
 */
 
 /** 
+* Apis for sending mail to users
 * @module js/email
 */
 
@@ -29,8 +30,16 @@ const nodemailer = require('nodemailer');
 
 let SMTPTransporter = nodemailer.createTransport(config.get("nodemailerConfig"));
 
-/**
 
+/** 
+* Takes in a flat array of messy named data and then maps it to a passport standard
+* @function mapAccounts
+* @link module:js/import
+* @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
+* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
+* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @returns {Promise}
+*/
 exports.sendMail = function(header, body, options) {
 
 }
