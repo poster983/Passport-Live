@@ -23,6 +23,7 @@ email: hi@josephhassell.com
 
 var r = require('rethinkdb');
 var config = require('config');
+//rethinkdbdash
 var rdash = require('rethinkdbdash')({
   servers: [
     {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port')}
@@ -31,6 +32,31 @@ var rdash = require('rethinkdbdash')({
   db: config.get('rethinkdb.database'), 
   password: config.get("rethinkdb.password")
 });
+//job queues 
+const Queue = require('rethinkdb-job-queue');
+const QueuecxnOptions = {
+  host: config.get('rethinkdb.host'),
+  port: config.get('rethinkdb.port'),
+  user: "admin",
+  password: config.get("rethinkdb.password"),
+  db: 'JobQueue' // The name of the database in RethinkDB
+}
+var queueNewAccountEmail = new Queue(QueuecxnOptions, {
+  name: 'NewAccountEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueNewAccountEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}
+
+
+
 var connection = null;
 
 
@@ -50,11 +76,18 @@ exports.setup = function() {
 exports.get = function() {
         return r;
 }
-exports.getDash = function() {
+exports.dash = function() {
     return rdash;
 }
 exports.conn = function() {
     return connection;
 }
+
+//queues 
+exports.queue = {};
+exports.queue.newAccountEmail = function() {
+    return queueNewAccountEmail
+}
+
 
 //return module.exports

@@ -103,7 +103,7 @@ exports.checkPeriod = function(period, done) {
 
 
 //brute prevention
-let store = new BruteRethinkdb(db.getDash(), {table: 'brute'});
+let store = new BruteRethinkdb(db.dash(), {table: 'brute'});
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
     var err = new Error("You've made too many requests in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());

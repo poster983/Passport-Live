@@ -75,23 +75,69 @@ exports.sendMail = function(messageConfig, options) {
 * Sends the new passport id templeate email with one time use password.
 * @function sendNewAccountWithPassEmail
 * @link module:js/email
-* @param {String} to - Email address(s) to the email to.  Multiple emails separated by commas 
-* @param {Object} name - Name object.
-* @param {Object} name.first - User's First Name.
-* @param {String} accountEmail - Passport email in the database
-* @param {String} password - Unhashed password.  
-* @returns {Promise} 
+* @param {(Object | Object[])} mailOptions
+* @param {String} mailOptions.to - Email address(s) to the email to.  Multiple emails separated by commas 
+* @param {Object} mailOptions.name - Name object.
+* @param {Object} mailOptions.name.first - User's First Name.
+* @param {String} mailOptions.accountEmail - Passport email in the database
+* @param {String} mailOptions.password - Unhashed password.  
+* @returns {Cursor} - Job Cursor.  Kinda Useless.
 */
-exports.sendNewAccountWithPassEmail = function(to, name, accountEmail, password) {
-    var messageConfig = {
-        to: to,
-        subject: "Your New Passport ID",
-        text: "Email: " + accountEmail + " | Password: " + password,
-        html: emailTemplates.newAccountWithPass(name, accountEmail, password).html
+exports.sendNewAccountWithPassEmail = function(mailOptions) {
+     if(Array.isArray(mailOptions)) {
+        var jobs = [];
+        for(var x = 0; x < mailOptions.length; x++) {
+            var job = db.queue.newAccountEmail().createJob()
+            job.to = mailOptions[x].to;
+            job.name = mailOptions[x].name;
+            job.accountEmail = mailOptions[x].accountEmail;
+            job.password = mailOptions[x].password;
+            jobs.push(job);
+            if(x >= mailOptions.length-1) {
+                return db.queue.newAccountEmail().addJob(jobs);
+            }
+        }
+    } else if (typeof mailOptions === "object") {
+        var job = db.queue.newAccountEmail().createJob();
+        job.to = mailOptions.to;
+        job.name = mailOptions.name;
+        job.accountEmail = mailOptions.accountEmail;
+        job.password = mailOptions.password;
+        return db.queue.newAccountEmail().addJob(job);
+    } else {
+        console.log(typeof mailOptions)
+        return new Error("mailOptions must be either an array or an object.")
     }
-    return exports.sendMail(messageConfig);
+    
 }
 
+/* JOBS */
+
+//sendNewAccountWithPassEmail
+db.queue.newAccountEmail().process((job, next) => {
+  // Send email using job.recipient as the destination address
+    var messageConfig = {
+        to: job.to,
+        subject: "Your New Passport ID",
+        text: "Email: " + job.accountEmail + " | Password: " + job.password,
+        html: emailTemplates.newAccountWithPass(job.name, job.accountEmail, job.password).html
+    }
+    exports.sendMail(messageConfig).then((trans) => {
+        console.log(trans);
+        return next(null, trans)
+    }).catch((err) => {
+        return next(err);
+    });
+    /*
+  mailOptions.to = job.recipient
+  return transporter.sendMail(mailOptions).then((info) => {
+    console.dir(info)
+    return next(null, info)
+  }).catch((err) => {
+    // This catch is for nodemailer sendMail errors.
+    return next(err)
+  })*/
+})
 
 
 /**
