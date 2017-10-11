@@ -55,7 +55,7 @@ exports.sendMail = function(messageConfig, options) {
                     messageConfig.from += " <" + config.get("email.nodemailerConfig").auth.user + ">";
                 }
             }
-            console.log(messageConfig, config.get("email.nodemailerConfig"))
+            //console.log(messageConfig, config.get("email.nodemailerConfig"))
             //console.log(SMTPTransporter)
             SMTPTransporter.sendMail(messageConfig).then(function(resp) {
                 return resolve(resp)
