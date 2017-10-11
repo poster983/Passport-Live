@@ -40,7 +40,7 @@ router.get("/pixel.gif", function(req, res, next) {
 var emailApi = require("../../modules/passport-api/email.js")
 router.post("/sendMail", function(req, res, next) {
     emailApi.sendMail({
-        to: 'receiver@sender.com',
+        to: 'to@example.com',
         subject: 'Message title',
         text: 'Plaintext version of the message',
         html: '<p>HTML version of the message</p>'
@@ -51,7 +51,7 @@ router.post("/sendMail", function(req, res, next) {
     })
 })
 router.get("/emailTemplate", (req, res, next) => {
-    emailApi.sendNewAccountWithPassEmail("example@example.com", {first: "Tester"}, "example@example.com", Math.random()).then((trans) => {
+    emailApi.sendNewAccountWithPassEmail("to@example.com", {first: "Test", last: "Person"}, "to@example.com", Math.random()).then((trans) => {
         res.send(trans);
     }).catch((err) => {
         return next(err);

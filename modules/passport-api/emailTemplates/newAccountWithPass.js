@@ -60,7 +60,7 @@ module.exports = function(name, email, password) {
 	        </mj-hero-content>
 	      </mj-hero>
 
-	      <mj-spacer height="12px" />
+	      <mj-spacer height="12px"  />
 	      <mj-section padding="20px" background-color="#BDBDBD" border-radius="4px">
 	        <mj-text padding="20px" color="#000" font-family="Roboto" align="center" font-size="30" line-height="45px" font-weight="900">
 	          Login Info
@@ -70,7 +70,7 @@ module.exports = function(name, email, password) {
 	        <mj-spacer height="6px" />
 	        <mj-text>NOTE: You will be required to reset your password after you login.</mj-text>
 	      </mj-section>
-	      <mj-spacer height="12px" />
+	      <mj-spacer height="12px"  />
 	      <mj-section padding="20px" background-color="#BDBDBD" border-radius="4px">
 	        <mj-text padding="20px" color="#000" font-family="Roboto" align="center" font-size="30" line-height="45px" font-weight="900">
 	          Confused?
@@ -79,6 +79,7 @@ module.exports = function(name, email, password) {
 	          Your administrator has added you to Passport, the online hall-pass system. Please talk to an admin if you have questions.
 	        </mj-text>
 	      </mj-section>
+	      <mj-spacer height="12px"  />
 	    </mj-container>
 	  </mj-body>
 	</mjml>`);
