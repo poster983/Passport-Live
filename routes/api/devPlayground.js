@@ -50,5 +50,18 @@ router.post("/sendMail", function(req, res, next) {
         next(err)
     })
 })
+router.get("/emailTemplate", (req, res, next) => {
+    emailApi.sendNewAccountWithPassEmail("example@example.com", {first: "Tester"}, "example@example.com", Math.random()).then((trans) => {
+        res.send(trans);
+    }).catch((err) => {
+        return next(err);
+    })
+})
+
+router.get("/delay/:delay", (req, res, next) => {
+    setTimeout(function() {
+        res.send("Hello World")
+    }, parseInt(req.params.delay))
+})
 
 module.exports = router;

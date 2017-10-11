@@ -27,7 +27,7 @@ var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require('config');
 const nodemailer = require('nodemailer');
-
+var emailTemplates = require('./emailTemplates/index.js');
 var SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
 
 
@@ -55,6 +55,7 @@ exports.sendMail = function(messageConfig, options) {
                 }
             }
             console.log(messageConfig, config.get("email.nodemailerConfig"))
+            //console.log(SMTPTransporter)
             SMTPTransporter.sendMail(messageConfig).then(function(resp) {
                 return resolve(resp)
             }).catch(function(err) {
@@ -68,6 +69,27 @@ exports.sendMail = function(messageConfig, options) {
     })
 }
 
+
+/** 
+* Sends the new passport id templeate email with one time use password.
+* @function sendNewAccountWithPassEmail
+* @link module:js/email
+* @param {String} to - Email address(s) to the email to.  Multiple emails separated by commas 
+* @param {Object} name - Name object.
+* @param {Object} name.first - User's First Name.
+* @param {String} accountEmail - Passport email in the database
+* @param {String} password - Unhashed password.  
+* @returns {Promise} 
+*/
+exports.sendNewAccountWithPassEmail = function(to, name, accountEmail, password) {
+    var messageConfig = {
+        to: to,
+        subject: "Your New Passport ID",
+        text: "Email: " + accountEmail + " | Password: " + password,
+        html: emailTemplates.newAccountWithPass(name, accountEmail, password).html
+    }
+    return exports.sendMail(messageConfig);
+}
 
 
 
