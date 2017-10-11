@@ -19,6 +19,7 @@ email: hi@josephhassell.com
 */
 var express = require('express');
 var config = require('config');
+var utils = require("../modules/passport-utils/index.js")
 var router = express.Router();
 
 //this page will route each user to the correct page after login 
@@ -28,7 +29,8 @@ router.get('/', function(req, res, next) {
 
         var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
         if(permittedDash.length > 1) {
-            res.render('multiDashRoute',{doc_Title: "Passport", callbackURL: "/callback/multiDashRoute/", dashboards: permittedDash});
+            //callbackURL: "/callback/multiDashRoute/",
+            res.render('multiDashRoute',{doc_Title: "Passport",  dashboards: permittedDash});
         } else {
             res.redirect(permittedDash[0]);
         }
@@ -40,9 +42,16 @@ router.get('/', function(req, res, next) {
   
 });
 
+/*
 router.post('/callback/multiDashRoute/', function(req, res, next) {
 
-});
+});*/
 
+router.get("/test", utils.testBruteForse.prevent, function(req, res, next) {
+    res.json({num: Math.random(), brute: req.brute});
+})
+router.get("/brute", utils.testBruteForse.prevent, function(req, res, next) {
+    res.json({num: Math.random(), brute: req.brute});
+})
 
 module.exports = router;

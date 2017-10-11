@@ -22,8 +22,17 @@ email: hi@josephhassell.com
 
 
 var r = require('rethinkdb');
-var connection = null;
 var config = require('config');
+var rdash = require('rethinkdbdash')({
+  servers: [
+    {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port')}
+  ],
+  user: "admin",
+  db: config.get('rethinkdb.database'), 
+  password: config.get("rethinkdb.password")
+});
+var connection = null;
+
 
 exports.setup = function() {
         return new Promise(function(resolve, reject) {
@@ -40,6 +49,9 @@ exports.setup = function() {
 
 exports.get = function() {
         return r;
+}
+exports.getDash = function() {
+    return rdash;
 }
 exports.conn = function() {
     return connection;
