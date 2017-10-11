@@ -81,34 +81,40 @@ exports.sendMail = function(messageConfig, options) {
 * @param {Object} mailOptions.name.first - User's First Name.
 * @param {String} mailOptions.accountEmail - Passport email in the database
 * @param {String} mailOptions.password - Unhashed password.  
-* @returns {Cursor} - Job Cursor.  Kinda Useless.
+* @returns {Promise} - Job Cursor.  Kinda Useless.
 */
 exports.sendNewAccountWithPassEmail = function(mailOptions) {
-     if(Array.isArray(mailOptions)) {
-        var jobs = [];
-        for(var x = 0; x < mailOptions.length; x++) {
-            var job = db.queue.newAccountEmail().createJob()
-            job.to = mailOptions[x].to;
-            job.name = mailOptions[x].name;
-            job.accountEmail = mailOptions[x].accountEmail;
-            job.password = mailOptions[x].password;
-            jobs.push(job);
-            if(x >= mailOptions.length-1) {
-                return db.queue.newAccountEmail().addJob(jobs);
+    return new Promise((resolve, reject) => {
+        if(Array.isArray(mailOptions)) {
+            var jobs = [];
+            if(mailOptions.length)
+            for(var x = 0; x < mailOptions.length; x++) {
+                var job = db.queue.newAccountEmail().createJob()
+                job.to = mailOptions[x].to;
+                job.name = mailOptions[x].name;
+                job.accountEmail = mailOptions[x].accountEmail;
+                job.password = mailOptions[x].password;
+                jobs.push(job);
+                if(x >= mailOptions.length-1) {
+                    db.queue.newAccountEmail().addJob(jobs).then((cur) => {
+                        return resolve(cur);
+                    });
+                }
             }
+        } else if (typeof mailOptions === "object") {
+            var job = db.queue.newAccountEmail().createJob();
+            job.to = mailOptions.to;
+            job.name = mailOptions.name;
+            job.accountEmail = mailOptions.accountEmail;
+            job.password = mailOptions.password;
+            db.queue.newAccountEmail().addJob(job).then((cur) => {
+                return resolve(cur);
+            });
+        } else {
+            console.log(typeof mailOptions)
+            return reject(new Error("mailOptions must be either an array or an object."))
         }
-    } else if (typeof mailOptions === "object") {
-        var job = db.queue.newAccountEmail().createJob();
-        job.to = mailOptions.to;
-        job.name = mailOptions.name;
-        job.accountEmail = mailOptions.accountEmail;
-        job.password = mailOptions.password;
-        return db.queue.newAccountEmail().addJob(job);
-    } else {
-        console.log(typeof mailOptions)
-        return new Error("mailOptions must be either an array or an object.")
-    }
-    
+    })  
 }
 
 /* JOBS */
