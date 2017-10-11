@@ -28,6 +28,7 @@ var db = require('../../modules/db/index.js');
 var config = require('config');
 const nodemailer = require('nodemailer');
 var emailTemplates = require('./emailTemplates/index.js');
+//console.log(config.get("email.nodemailerConfig"))
 var SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
 
 

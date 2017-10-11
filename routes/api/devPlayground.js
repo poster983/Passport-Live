@@ -52,7 +52,7 @@ router.post("/sendMail", function(req, res, next) {
 })
 router.get("/emailTemplate", (req, res, next) => {
     emailApi.sendNewAccountWithPassEmail("to@example.com", {first: "Test", last: "Person"}, "to@example.com", Math.random()).then((trans) => {
-        res.send(trans);
+        return res.send(trans);
     }).catch((err) => {
         return next(err);
     })

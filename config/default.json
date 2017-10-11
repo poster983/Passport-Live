@@ -118,7 +118,7 @@
 			}
 		}
 	},
-	"email": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used in nodemailerConfig. 
+	"email": { //nodemailer.createTransport options should be used in nodemailerConfig. 
 	    "nodemailerConfig": {
 		    "host": "smtp.example.com",
 		    "port": 465,
