@@ -208,8 +208,18 @@ module.exports = {
         }
 
         //defaults
-        if(!repeatingRule.importance) {
-            repeatingRule.importance = 0;
+        if(isNaN(parseInt(repeatingRule.importance))) {
+            if(typeof repeatingRule.importance == "string") {
+                if(isNaN(parseInt(repeatingRule.importance))) {
+                    var err = new Error("repeatingRule.importance expected a number");
+                    err.status = 400;
+                    return done(err); 
+                }
+            }
+            var err = new Error("repeatingRule.importance expected a number");
+            err.status = 400;
+            return done(err); 
+
         }
 
         repeatingRule.startsOn = moment(repeatingRule.startsOn).format("Y-MM-DD");
@@ -275,6 +285,11 @@ module.exports = {
                 if(err) return done(err);
                 cursor.toArray(function(err, results) {
                     if(err) return done(err);
+                    if(results.length <= 0) {
+                        var err = new Error("No Recurring Schedules Found");
+                        err.status = 404;
+                        return done(err)
+                    }
                     //start checking rules
                     for(var x = 0; x < results.length; x++) {
                         var startDay = moment(results[x].repeatingRule.startsOn);

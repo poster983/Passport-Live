@@ -130,7 +130,7 @@ function serializeUser(req, res, done) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
-            api.createAccount(userGroup, name, email, password, schoolID, graduationYear, groupFields, {} function(err, resp) {
+            api.createAccount(userGroup, name, email, password, schoolID, graduationYear, groupFields, {}, function(err, resp) {
                 if(err){
                     next(err);
                 } else {
