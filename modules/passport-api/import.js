@@ -33,7 +33,13 @@ function newBulkLog(name) {
        return r.table("bulkImports").insert({name: name, date: r.now()}).run(db.conn());
     //})
 }
+function updateBulkLog(id, totalTried, totalImported, loggedErrors) { 
+    r.table("bulkImports").get(id).update({totalTried: totalTried, totalImported: totalImported, loggedErrors: loggedErrors}).run(db.conn());
+}
 
+function deleteBulkLog(id) { 
+    r.table("bulkImports").get(id).delete().run(db.conn());
+}
 
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
@@ -211,7 +217,17 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                             if(x >= results.length-1) {
                                 console.log(results.length, errors.length)
                                 Promise.all(transPromice).then(function(sumArray) {
-                                    resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
+                                    if(imported == 0) {
+                                        var finalLog = deleteBulkLog(jResp.generated_keys[0])
+                                    } else {
+                                        var finalLog = updateBulkLog(jResp.generated_keys[0], results.length, imported, errors)
+                                    }
+                                    finalLog.then(() => {
+                                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
+                                    }).catch((err) => {
+                                        return reject(err);
+                                    })
+                                    
                                 })
                                 //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
                                 
