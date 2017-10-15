@@ -24,6 +24,16 @@ email: hi@josephhassell.com
 */
 const convertExcel = require('excel-as-json').processFile;
 const accountAPI = require("./accounts.js");
+var r = require('rethinkdb');
+var db = require('../../modules/db/index.js');
+
+//util function 
+function newBulkLog(name) {
+    //return new Promise((resolve, reject) => {
+       return r.table("bulkImports").insert({name: name, date: r.now()}).run(db.conn());
+    //})
+}
+
 
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
@@ -141,7 +151,7 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
 }
 
 /** 
-* Takes inan excel file and with some mapping rules, imports them to the accounts table
+* Takes in an excel file and with some mapping rules, imports them to the accounts table
 * NOTE: Email domains are still must follow userGroup settings.
 * If the account cant be impoirted using the accountApi, the row is skipped
 * @function importAccountsExcel
@@ -149,10 +159,21 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
 * @param {string} excelFilePath - The path to the excel file.
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @param {Object} jobProperties
+* @property {String} jobProperties.name - Name to identify this import as.
 * @returns {Promise}
 */
-exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule) {
+exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobProperties) {
     return new Promise(function(resolve, reject) {
+        if(Array.isArray(jobProperties) || typeof jobProperties != "object") {
+            var err = new TypeError("jobProperties must me an object");
+            return reject(err);
+        }
+        if(typeof jobProperties.name != "string") {
+            var err = new TypeError("jobProperties.name must me a string");
+            err.status = 400;
+            return reject(err);
+        }
         convertExcel(excelFilePath, undefined, false, function(err, data) {
             if(err) {
                 return reject(err);
@@ -161,34 +182,50 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule) {
                 var errors = [];
                 var transPromice = [];
                 var imported = 0;
-                for(var x = 0; x < results.length; x++) {
-                    transPromice.push(new Promise(function(rRes, rRej) {
-                        var promRes = results[x];
-                        accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, {}, function(err, transSummery) {
-                        if(err) {
-                            if(err.status == 500) {
-                                return reject(err); 
-                            } else {
-                                //promRes.password = undefined;
-                                rRes({onUser: promRes, error: err});
-                            }
-                        } else {
-                            //promRes.password = undefined;
-                            rRes({onUser: promRes, error: null});
-                            imported++;
-                        }
-                    })}));
-
-                    //end 
-                    if(x >= results.length-1) {
-                        console.log(results.length, errors.length)
-                        Promise.all(transPromice).then(function(sumArray) {
-                            resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
-                        })
-                        //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
-                        
-                    }
+                if(results.length <= 0) {
+                    var err = new TypeError("Excel can't be mapped");
+                    err.status = 500;
+                    return reject(err);
                 }
+                newBulkLog(jobProperties.name).then((jResp) => {
+                    if(jResp.inserted == 1) {
+                        for(var x = 0; x < results.length; x++) {
+                            transPromice.push(new Promise(function(rRes, rRej) {
+                                var promRes = results[x];
+                                accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, {bulkImportID: jResp.generated_keys[0]}, function(err, transSummery) {
+                                if(err) {
+                                    if(err.status == 500) {
+                                        return reject(err); 
+                                    } else {
+                                        //promRes.password = undefined;
+                                        rRes({onUser: promRes, error: err});
+                                    }
+                                } else {
+                                    //promRes.password = undefined;
+                                    rRes({onUser: promRes, error: null});
+                                    imported++;
+                                }
+                            })}));
+
+                            //end 
+                            if(x >= results.length-1) {
+                                console.log(results.length, errors.length)
+                                Promise.all(transPromice).then(function(sumArray) {
+                                    resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
+                                })
+                                //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
+                                
+                            }
+                        }
+                    } else {
+                        var err = new TypeError("Failed to log import job");
+                        err.status = 500;
+                        return reject(err);
+                    }
+                }).catch((err) => {
+                    return reject(err);
+                })
+                
                 
             }).catch(function(err) {
                 return reject(err);
