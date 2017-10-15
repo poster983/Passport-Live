@@ -26,11 +26,12 @@ const convertExcel = require('excel-as-json').processFile;
 const accountAPI = require("./accounts.js");
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+var utils = require('../passport-utils/index.js');
 
 //util function 
-function newBulkLog(name, importType) {
+function newBulkLog(name, importType, generatedPassword) {
     //return new Promise((resolve, reject) => {
-       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
+       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType, generatedPassword: generatedPassword}).run(db.conn());
     //})
 }
 function updateBulkLog(id, totalTried, totalImported, loggedErrors) { 
@@ -48,9 +49,10 @@ function deleteBulkLog(id) {
 * @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @param {boolean} generatePassword - Will generate a password if the default rule for password is undefined.
 * @returns {Promise}
 */
-exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
+exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePassword) {
     return new Promise(function(resolve, reject) {
         try {
             var mappedData = arrayToMap.map(function(n) {
@@ -134,7 +136,13 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
                     if(defaultRule.hasOwnProperty("password")) {
                         returner.password = defaultRule.password;
                     } else {
-                        return null;
+                        //generate password
+                        if(generatePassword == true) {
+                            returner.password = utils.generateSecureKey();
+                        } else {
+                           return null;
+                        }
+                        
                     }
                 } else {
                     returner.password = n[mapRule.password];
@@ -167,6 +175,8 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
 * @param {Object} jobProperties
 * @property {String} jobProperties.name - Name to identify this import as.
+* @property {String} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.  Will automaticly require all accounts to reset passwords.
+* @property {String} jobProperties.requirePasswordReset - Flags the account to reset the password on first login
 * @returns {Promise}
 */
 exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobProperties) {
@@ -184,7 +194,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
             if(err) {
                 return reject(err);
             }
-            exports.mapAccounts(data, mapRule, defaultRule).then(function(results) {
+            exports.mapAccounts(data, mapRule, defaultRule, jobProperties.generatePassword).then(function(results) {
                 var errors = [];
                 var transPromice = [];
                 var imported = 0;
@@ -193,12 +203,20 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                     err.status = 500;
                     return reject(err);
                 }
-                newBulkLog(jobProperties.name, "account").then((jResp) => {
+                newBulkLog(jobProperties.name, "account", (jobProperties.generatePassword == true)).then((jResp) => {
                     if(jResp.inserted == 1) {
                         for(var x = 0; x < results.length; x++) {
                             transPromice.push(new Promise(function(rRes, rRej) {
                                 var promRes = results[x];
-                                accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, {bulkImportID: jResp.generated_keys[0]}, function(err, transSummery) {
+                                var flags = {}
+                                flags.bulkImportID = jResp.generated_keys[0];
+                                if(jobProperties.generatePassword == true) {
+                                    flags.requirePasswordReset = true;
+                                }
+                                if(jobProperties.requirePasswordReset) {
+                                    flags.requirePasswordReset = true;
+                                }
+                                accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, flags, function(err, transSummery) {
                                 if(err) {
                                     if(err.status == 500) {
                                         return reject(err); 

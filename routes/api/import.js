@@ -51,7 +51,7 @@ router.post('/test', function (req, res, next) {
             email: "Filtered Email",
             userGroup: null,
             isVerified: null,
-            password: "Password"
+            password: null //"Password"
         }, {
             name: {
                 salutation: "Ind."
@@ -59,7 +59,7 @@ router.post('/test', function (req, res, next) {
             userGroup: "teacher",
             isVerified: true,
             graduationYear: null
-        }, {name: "testFaculty"}).then(function(transSummery) {
+        }, {name: "testFaculty", generatePassword: true}).then(function(transSummery) {
             console.log(transSummery);
             res.json(transSummery)
         }).catch(function(err) {

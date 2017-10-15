@@ -54,11 +54,11 @@ const util = require('util')
     * @param {string} schoolID - A user's schoolID (optional)
     * @param {string} password - The user's password
     * @param {Object} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
-    * @param {accountTags} tags - See typedef
+    * @param {accountFlags} flags - See typedef
     * @param {function} done - Callback
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
-exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, tags, done) {
+exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, flags, done) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
@@ -171,7 +171,7 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
                       isArchived: false,
                       isVerified: false,
                       integrations: false,
-                      tags: (tags || null)
+                      flags: (flags || null)
                     }).run(db.conn());
                     promice.then(function(conn, results) {
                         return done(null, results);
@@ -955,8 +955,8 @@ exports.updateTags = function(id, tagData) {
 
 
 /**
- * Account Tags/metadata/options. 
- * @typedef {(Object|undefined|null)} accountTags
+ * Account Tags/flags/metadata/options. 
+ * @typedef {(Object|undefined|null)} accountFlags
  * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
  * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
  */
