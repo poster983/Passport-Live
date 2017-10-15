@@ -36,7 +36,7 @@ var FileStore = require('session-file-store')(session);
 var optional = require('optional');
 var Raven = optional('raven');
 var utils = require('./modules/passport-utils/index');
-var compression = require('compression')
+var compression = require('compression');
 
 /*Routes*/
 var rootLevel = require('./routes/index');
