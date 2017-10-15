@@ -38,7 +38,7 @@ router.post('/accounts', upload.single('excelImport'), passport.authenticate('jw
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
 })
-
+//{name: "testFaculty"}
 router.post('/test', function (req, res, next) {
   importApi.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
             name: {
@@ -59,12 +59,12 @@ router.post('/test', function (req, res, next) {
             userGroup: "teacher",
             isVerified: true,
             graduationYear: null
-        }).then(function(transSummery) {
+        }, {name: "testFaculty"}).then(function(transSummery) {
             console.log(transSummery);
             res.json(transSummery)
         }).catch(function(err) {
             console.error(err);
-            res.json(err)
+            next(err)
         });
 })
 

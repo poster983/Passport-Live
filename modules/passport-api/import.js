@@ -28,9 +28,9 @@ var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 
 //util function 
-function newBulkLog(name) {
+function newBulkLog(name, importType) {
     //return new Promise((resolve, reject) => {
-       return r.table("bulkImports").insert({name: name, date: r.now()}).run(db.conn());
+       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
     //})
 }
 function updateBulkLog(id, totalTried, totalImported, loggedErrors) { 
@@ -193,7 +193,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                     err.status = 500;
                     return reject(err);
                 }
-                newBulkLog(jobProperties.name).then((jResp) => {
+                newBulkLog(jobProperties.name, "account").then((jResp) => {
                     if(jResp.inserted == 1) {
                         for(var x = 0; x < results.length; x++) {
                             transPromice.push(new Promise(function(rRes, rRej) {
@@ -204,6 +204,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                         return reject(err); 
                                     } else {
                                         //promRes.password = undefined;
+                                        errors.push(err)
                                         rRes({onUser: promRes, error: err});
                                     }
                                 } else {
@@ -217,12 +218,13 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                             if(x >= results.length-1) {
                                 console.log(results.length, errors.length)
                                 Promise.all(transPromice).then(function(sumArray) {
+                                    var finalLog = [];
                                     if(imported == 0) {
-                                        var finalLog = deleteBulkLog(jResp.generated_keys[0])
+                                        finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
                                     } else {
-                                        var finalLog = updateBulkLog(jResp.generated_keys[0], results.length, imported, errors)
+                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors))
                                     }
-                                    finalLog.then(() => {
+                                    Promise.all(finalLog).then(() => {
                                         resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
                                     }).catch((err) => {
                                         return reject(err);
