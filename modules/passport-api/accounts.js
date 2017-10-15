@@ -20,6 +20,7 @@ email: hi@josephhassell.com
 
 //TODO: INCLUDE IN INDEX.JS
 /** 
+* Account manipulation APIs
 * @module js/accounts
 */
 var r = require('rethinkdb');
@@ -45,18 +46,19 @@ const util = require('util')
     *   }
     * });
     * @param {constant} userGroup - A usergroup defined in the config
-    * @param {json} name
+    * @param {Object} name
     * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
     * @param {string} name.first - A user's given name
     * @param {string} name.last - A user's family name
     * @param {string} email - A user's email address
     * @param {string} schoolID - A user's schoolID (optional)
     * @param {string} password - The user's password
-    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @param {Object} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @param {accountTags} tags - See typedef
     * @param {function} done - Callback
     * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
     */
-exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, done) {
+exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, tags, done) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
@@ -168,7 +170,8 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
                       graduationYear: graduationYear,
                       isArchived: false,
                       isVerified: false,
-                      integrations: false
+                      integrations: false,
+                      tags: (tags || null)
                     }).run(db.conn());
                     promice.then(function(conn, results) {
                         return done(null, results);
@@ -924,3 +927,36 @@ exports.changePassword = function(id, currentPassword, newPassword) {
     })
 }
 
+/**
+* Wrapper Function to update tag data.  
+* @function updateTags
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {accountTags} tagData - The account's current password
+* @returns {Promise}
+*/
+exports.updateTags = function(id, tagData) {
+    return new Promise((resolve, reject) => {
+        if(Array.isArray(tagData)) {
+            var err = new TypeError("tagData is an array, expected Json object");
+            return reject(err);
+        } else if(typeof tagData != "object") {
+            var err = new TypeError("tagData is " + typeof tagData + ", expected Json object");
+            return reject(err);
+        }
+        r.table("accounts").get(id).update({tags: tagData}).run(db.conn()).then((res) => {
+            return resolve(res);
+        }).catch((err) => {
+            return reject(err);
+        })
+    })
+    
+}
+
+
+/**
+ * Account Tags/metadata/options. 
+ * @typedef {(Object|undefined|null)} accountTags
+ * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
+ * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
+ */

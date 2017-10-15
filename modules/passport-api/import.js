@@ -34,7 +34,7 @@ const accountAPI = require("./accounts.js");
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
 * @returns {Promise}
 */
-exports.mapAccounts = function(arrayToMap, mapRule, defaultRule) {
+exports.mapAccounts = function(arrayToMap, mapRule, defaultRule,) {
     return new Promise(function(resolve, reject) {
         try {
             var mappedData = arrayToMap.map(function(n) {
@@ -164,16 +164,16 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule) {
                 for(var x = 0; x < results.length; x++) {
                     transPromice.push(new Promise(function(rRes, rRej) {
                         var promRes = results[x];
-                        accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, function(err, transSummery) {
+                        accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, {}, function(err, transSummery) {
                         if(err) {
                             if(err.status == 500) {
                                 return reject(err); 
                             } else {
-                                promRes.password = undefined;
+                                //promRes.password = undefined;
                                 rRes({onUser: promRes, error: err});
                             }
                         } else {
-                            promRes.password = undefined;
+                            //promRes.password = undefined;
                             rRes({onUser: promRes, error: null});
                             imported++;
                         }
@@ -272,7 +272,7 @@ function tester() {
  * @property {(string|null)} email - Key/Column name of The user's email located in the unmapped json import source.
  * @property {(string|null)} userGroup - Key/Column name of The user's userGroup constant from the configs located in the unmapped json import source.
  * @property {(boolean|null)} isVerified - Because you are importing this, we recomend you set this to null.
- * @property {(string|null)} password - Name of the Key/Column containing the passwords (WE HIGHLY RECOMMEND SETTING THIS TO undefined AS A COMMON PASSWORD IS DUMB).
+ * @property {(string|null)} password - Name of the Key/Column containing the passwords.
  * @example
  * {
  *       name: {
