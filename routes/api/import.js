@@ -34,9 +34,10 @@ router.options('*', cors())
 
 //passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}),
 
-router.post('/accounts', upload.single('excelImport'), passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function (req, res, next) {
+router.post('/accounts', upload.single('excelImport'), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
+  res.send(req.file)
 })
 //{name: "testFaculty"}
 router.post('/test', function (req, res, next) {
