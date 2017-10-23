@@ -68,7 +68,7 @@ module.exports = function(name, email, password) {
 	        <mj-text>Email: <b>` + email + `</b></mj-text>
 	        <mj-text>Password: <b>` + password + `</b></mj-text>
 	        <mj-spacer height="6px" />
-	        <mj-text>NOTE: You will be required to reset your password after you login.</mj-text>
+	        <mj-text>NOTE: You may be required to reset your password after you login.</mj-text>
 	      </mj-section>
 	      <mj-spacer height="12px"  />
 	      <mj-section padding="20px" background-color="#BDBDBD" border-radius="4px">
