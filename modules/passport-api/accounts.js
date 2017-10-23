@@ -32,6 +32,8 @@ var human = require('humanparser');
 var _ = require("underscore");
 const util = require('util')
 
+
+
 /** 
     * Creates An Account 
     * @function createAccount
@@ -45,20 +47,25 @@ const util = require('util')
     *     //Created
     *   }
     * });
-    * @param {constant} userGroup - A usergroup defined in the config
-    * @param {Object} name
-    * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
-    * @param {string} name.first - A user's given name
-    * @param {string} name.last - A user's family name
-    * @param {string} email - A user's email address
-    * @param {string} schoolID - A user's schoolID (optional)
-    * @param {string} password - The user's password
-    * @param {Object} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
-    * @param {accountFlags} flags - See typedef
-    * @param {function} done - Callback
-    * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
+    * @param {Object} user
+    * @property {String} user.userGroup - A usergroup defined in the config
+    * @property {Object} user.name
+    * @property {string} user.name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
+    * @property {string} user.name.first - A user's given name
+    * @property {string} user.name.last - A user's family name
+    * @property {string} user.email - A user's email address
+    * @property {string} user.schoolID - A user's schoolID (optional)
+    * @property {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
+    * @property {Object} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @property {accountFlags} user.flags - See typedef
+    * @param {Object} options
+    * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password (Default: false)
+    * @property {Object} options.email
+    * @property {} options.email.withPassword - Will send an account confirmation email with the password
+    * @returns {Promise} -  Resolution includes the transaction summary
     */
-exports.createAccount = function(userGroup, name, email, password, schoolID, graduationYear, groupFields, flags, done) {
+//userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
+exports.createAccount = function(user, options) {
     if(!userGroup) {
         var err = new Error("Usergroup Undefined");
         err.status = 400;
@@ -173,8 +180,10 @@ exports.createAccount = function(userGroup, name, email, password, schoolID, gra
                       integrations: false,
                       flags: (flags || null)
                     }).run(db.conn());
-                    promice.then(function(conn, results) {
+                    promice.then(function(results) {
                         return done(null, results);
+                  }).catch(function(err) {
+                    return done(err)
                   });
                 }
               });
