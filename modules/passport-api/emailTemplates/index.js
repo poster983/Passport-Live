@@ -24,4 +24,4 @@ email: hi@josephhassell.com
 
 
 
-exports.newAccountWithPass = require("./newAccountWithPass.js")
+exports.newAccount = require("./newAccount.js")

@@ -126,7 +126,7 @@ db.queue.newAccountEmail().process((job, next) => {
         to: job.to,
         subject: "Your New Passport ID",
         text: "Email: " + job.accountEmail + " | Password: " + job.password,
-        html: emailTemplates.newAccountWithPass(job.name, job.accountEmail, job.password).html
+        html: emailTemplates.newAccount.withPass(job.name, job.accountEmail, job.password).html
     }
     exports.sendMail(messageConfig).then((trans) => {
         console.log(trans);
