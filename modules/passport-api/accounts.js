@@ -57,9 +57,9 @@ const util = require('util')
     * @property {string} user.schoolID - A user's schoolID (optional)
     * @property {(int|null|undefined)} user.graduationYear - Optional
     * @property {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
-    * @property {Object} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @property {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
     * @property {accountFlags} user.flags - See typedef
-    * @param {Object} options
+    * @param {(Object|undefined)} options
     * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password (Default: false)
     * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
     * @property {boolean} options.sendConfirmEmailwithPassword - Will send an account confirmation email with the password.  If false, it will just send an email with the username. (Default: false)
@@ -69,61 +69,64 @@ const util = require('util')
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
     return new Promise((resolve, reject) => {
-        if(!userGroup) {
+        if(options && options.generatePassword) {
+            user.password = utils.generateSecureKey();
+        }
+        if(!user.userGroup) {
             var err = new Error("Usergroup Undefined");
             err.status = 400;
             return reject(err);
         }
-        if(!name || !name.salutation) {
+        if(!user.name || !user.name.salutation) {
             var err = new Error("salutation Undefined");
             err.status = 400;
             return reject(err);
         }
-        if(!name || !name.first) {
+        if(!user.name || !user.name.first) {
             var err = new Error("firstName Undefined");
             err.status = 400;
             return reject(err);
         }
-        if(!name || !name.last) {
+        if(!user.name || !user.name.last) {
             var err = new Error("lastName Undefined");
             err.status = 400;
             return reject(err);
         }
-        if(!email) {
+        if(!user.email) {
             var err = new Error("email Undefined");
             err.status = 400;
             return reject(err);
         } else {
-            email = email.toLowerCase();
+            user.email = user.email.toLowerCase();
         }
-        if(!password) {
+        if(!user.password) {
             var err = new Error("password Undefined");
             err.status = 400;
             return reject(err);
         }
-        if(!schoolID || schoolID == "") {
-            schoolID = null;
+        if(!user.schoolID || user.schoolID == "") {
+            user.schoolID = null;
         }
-        if(!graduationYear || graduationYear == "") {
-            graduationYear = null;
-        } else if(isNaN(parseInt(graduationYear))) {
+        if(!user.graduationYear || user.graduationYear == "") {
+            user.graduationYear = null;
+        } else if(isNaN(parseInt(user.graduationYear))) {
             var err = new Error("graduationYear Is Not A Number");
             err.status = 400;
             return reject(err);   
         }
-        if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
-            groupFields = {};
+        if(typeof user.groupFields == "undefined" || !!user.groupFields || (user.groupFields.constructor === Object && Object.keys(user.groupFields).length === 0)) {
+            user.groupFields = {};
         }
         //console.log(email.substring(email.indexOf("@")))
         var emailPromise = new Promise(function(resolveE, rejectE) {
-            if (config.has('userGroups.' + userGroup)) {
-                if(config.has("userGroups." + userGroup + ".permissions.allowedEmailDomains")) {
-                    var uGD = config.get("userGroups." + userGroup + ".permissions.allowedEmailDomains")
+            if (config.has('userGroups.' + user.userGroup)) {
+                if(config.has("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")) {
+                    var uGD = config.get("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")
                     //console.log(uGD)
                     if(uGD.length > 0) {
                         for(var z = 0; z < uGD.length; z++) {
                             //console.log(uGD[z], "email")
-                            if(email.substring(email.indexOf("@")) == uGD[z]) {
+                            if(user.email.substring(user.email.indexOf("@")) == uGD[z]) {
                                 resolveE();
                             }
                             if(z >= uGD.length - 1 ) {
@@ -146,14 +149,14 @@ exports.createAccount = function(user, options) {
         });
         emailPromise.then(function() {
 
-            bcrypt.hash(password, null, null, function(err, hash) {
+            bcrypt.hash(user.password, null, null, function(err, hash) {
                 if(err) {
                     console.error(err);
                     return reject(err, null);
                 }
                 try {
                   // Store hash in your password DB.
-                  r.table("accounts")('email').contains(email).run(db.conn(), function(err, con){
+                  r.table("accounts")('email').contains(user.email).run(db.conn(), function(err, con){
                     if(err) {
                         console.error(err);
                         return reject(err);
@@ -168,27 +171,42 @@ exports.createAccount = function(user, options) {
                         //insert new account
                         promice = r.table("accounts").insert({
                           name: {
-                            first: name.first,
-                            last: name.last,
-                            salutation: name.salutation
+                            first: user.name.first,
+                            last: user.name.last,
+                            salutation: user.name.salutation
                           },
-                          email: email,
+                          email: user.email,
                           password: hash,
-                          userGroup: userGroup, // should be same as a usergroup in config/default.json
-                          groupFields: groupFields,
-                          schoolID: schoolID,
-                          graduationYear: graduationYear,
+                          userGroup: user.userGroup, // should be same as a usergroup in config/default.json
+                          groupFields: user.groupFields,
+                          schoolID: user.schoolID,
+                          graduationYear: user.graduationYear,
                           isArchived: false,
                           isVerified: false,
                           integrations: false,
-                          flags: (flags || null)
+                          flags: (user.flags || null)
                         }).run(db.conn());
                         promice.then(function(results) {
-                            var resp = {transaction: results};
-                            if(options && options.returnPassword) {
-                                resp.password = password; 
+                            if(results.inserted == 1) {
+                                //check email stuff
+                                if(options && !options.skipEmail) {
+                                    if(options && options.sendConfirmEmailwithPassword == true) {
+                                        //send email with password
+                                    } else {
+                                        //send email without password
+                                    }
+                                }
+                                var resp = {transaction: results};
+                                if(options && options.returnPassword) {
+                                    resp.password = user.password; 
+                                }
+                                return resolve(resp);
+                            } else {
+                                var err = new Error("Failed to store user in the database");
+                                err.status = 500;
+                                return reject(err, results)
                             }
-                            return resolve(resp);
+                            
                       }).catch(function(err) {
                         return reject(err)
                       });

@@ -175,8 +175,10 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePasswor
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
 * @param {Object} jobProperties
 * @property {String} jobProperties.name - Name to identify this import as.
-* @property {String} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.  Will automaticly require all accounts to reset passwords.
-* @property {String} jobProperties.requirePasswordReset - Flags the account to reset the password on first login
+* @property {boolean} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.
+* @property {boolean} jobProperties.requirePasswordReset - Flags the account to reset the password on first login
+* @property {(Object|undefined)} jobProperties.emailUsers - If undefined, the accounts will automaticly be verified and no email will be sent.
+* @property {boolean} jobProperties.emailUsers.includePassword -  If ture, the email will include the password. 
 * @returns {Promise}
 */
 exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobProperties) {
@@ -203,32 +205,42 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                     err.status = 500;
                     return reject(err);
                 }
+                //logs this import job in the DB for easy rollback
                 newBulkLog(jobProperties.name, "account", (jobProperties.generatePassword == true)).then((jResp) => {
                     if(jResp.inserted == 1) {
+                        //loop through mapped account data 
                         for(var x = 0; x < results.length; x++) {
                             transPromice.push(new Promise(function(rRes, rRej) {
                                 var promRes = results[x];
                                 var flags = {}
+                                var newAccountOptions = {};
                                 flags.bulkImportID = jResp.generated_keys[0];
-                                if(jobProperties.generatePassword == true) {
-                                    flags.requirePasswordReset = true;
-                                }
                                 if(jobProperties.requirePasswordReset) {
                                     flags.requirePasswordReset = true;
                                 }
-                                accountAPI.createAccount(results[x].userGroup, results[x].name, results[x].email, results[x].password, results[x].schoolID, results[x].graduationYear, {}, flags, function(err, transSummery) {
-                                if(err) {
-                                    if(err.status == 500) {
-                                        return reject(err); 
+                                if(jobProperties.emailUsers) {
+                                    if(jobProperties.emailUsers.includePassword == true) {
+                                        //send email with password
+                                        newAccountOptions.sendConfirmEmailwithPassword = true;
                                     } else {
-                                        //promRes.password = undefined;
-                                        errors.push(err)
-                                        rRes({onUser: promRes, error: err});
+                                        //send email without password
+                                        newAccountOptions.sendConfirmEmailwithPassword = false;
                                     }
                                 } else {
+                                    newAccountOptions.skipEmail = true;
+                                }
+
+                                accountAPI.createAccount({userGroup: results[x].userGroup, name: results[x].name, email: results[x].email, password: results[x].password, schoolID: results[x].schoolID, graduationYear: results[x].graduationYear, flags: flags}, newAccountOptions).then(function(transSummery) {
                                     //promRes.password = undefined;
                                     rRes({onUser: promRes, error: null});
                                     imported++;
+                            }).catch((err) => {
+                                if(err.status == 500) {
+                                    return reject(err); 
+                                } else {
+                                    //promRes.password = undefined;
+                                    errors.push(err)
+                                    rRes({onUser: promRes, error: err});
                                 }
                             })}));
 
@@ -238,8 +250,10 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                 Promise.all(transPromice).then(function(sumArray) {
                                     var finalLog = [];
                                     if(imported == 0) {
+                                        //deletes log if theere was nothing that could be imported
                                         finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
                                     } else {
+                                        //updates the log with more job info
                                         finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors))
                                     }
                                     Promise.all(finalLog).then(() => {
