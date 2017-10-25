@@ -62,8 +62,10 @@ email: hi@josephhassell.com
                         </div>
                         <br>
                         <div class="col s12 input-field" id="gradYearCon" style="display:none;">
-                            <input name="gradYear" type="text" class="datepicker tooltipped" data-position="bottom" id="schoolID">
-                            <label for="gradYear">Graduation Year</label>
+                            <select id="gradYear" class="validate">
+                                <option value="" disabled selected>Choose a Year</option>
+                            </select>
+                            <label>Graduation Year</label>
                         </div>
                     </div>
                     <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
@@ -157,10 +159,19 @@ email: hi@josephhassell.com
             }
         }
     }
-
+    var doesGraduate = null;
     function checkIfGraduates(dis) {
+        $("#gradYear").empty().prepend($("<option value='' disabled selected>Choose a Year</option>"));
+        $('select').material_select();
+        doesGraduate = userGroupsData[$(dis).val()].graduates;
         if(userGroupsData[$(dis).val()].graduates) {
+            var year = new Date().getFullYear();
+            for(var x = 0; x < 5; x++) {
+                $("#gradYear").append($("<option/>").val(year+x).html(year+x))
+            }
+            $('select').material_select();
             $("#gradYearCon").slideDown();
+
             console.log("Graduates")
         } else {
             $("#gradYearCon").slideUp();
@@ -230,6 +241,8 @@ email: hi@josephhassell.com
             var email = $("#email").val();
             var passwordVerification = $("#passwordVer").val();
             var password = $("#password").val();
+            var gradYear = $("#gradYear").val();
+            var schoolID = $("#schoolID").val();
             var errored = false;
             console.log(accountType)
             if(!accountType) {
@@ -267,7 +280,20 @@ email: hi@josephhassell.com
                 Materialize.toast("Passwords must match", 4000)
                 errored = true;
             }
-            var sData = {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
+            if(!gradYear) {
+                if(doesGraduate) {
+                    $("#gradYear").removeClass("valid").addClass("invalid");
+                    Materialize.toast("You must specify your graduation year.", 4000)
+                    errored = true;
+                } else {
+                    gradYear = null;
+                }
+                
+            }
+            if(!schoolID) {
+                schoolID = null;
+            }
+            var sData = {graduationYear: gradYear, schoolID: schoolID, email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
             var pk = getUrlParameter("pk");
             if(pk) {
                 sData.permissionKey = pk;

@@ -29,6 +29,7 @@ var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
 var utils = require("../passport-utils/index.js")
 var human = require('humanparser');
+var moment = require("moment");
 var _ = require("underscore");
 const util = require('util')
 
@@ -109,10 +110,12 @@ exports.createAccount = function(user, options) {
         }
         if(!user.graduationYear || user.graduationYear == "") {
             user.graduationYear = null;
-        } else if(isNaN(parseInt(user.graduationYear))) {
-            var err = new Error("graduationYear Is Not A Number");
+        } else if(!moment(user.graduationYear, "YYYY", true).isValid()) { //isNaN(parseInt(user.graduationYear))
+            var err = new Error("graduationYear Is Not A year");
             err.status = 400;
             return reject(err);   
+        } else {
+            user.graduationYear = parseInt(user.graduationYear)
         }
         if(typeof user.groupFields == "undefined" || !!user.groupFields || (user.groupFields.constructor === Object && Object.keys(user.groupFields).length === 0)) {
             user.groupFields = {};
