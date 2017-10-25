@@ -23,6 +23,7 @@ var shortid = require('shortid');
 var utils = require('../passport-utils/index.js');
 var moment = require('moment');
 var config = require('config');
+var securityAPI = require("./security.js");
 //All functions that make the api function.
 /** 
 * @module passportApi 
@@ -355,141 +356,17 @@ module.exports = {
     /**
     SECURITY
     **/
-    /*
-    Creates a short permission key 
-
-    Callback: done(err, key)
-    "permissions": a JSON object with a custom permission payload, Ex: userGroups
-    "parms": per Use case
-    "timeout": Must be a Json object either:
-    {
-        tally: 5
-    }
-    OR 
-    {
-        time: Date object
-    }
-    */
-    /**
-     * Creates a New Permission Key.
-     * @function createPermissionKey
-     * @link module:passportApi
-     * @async
-     * @param {object} dbConn - RethinkDB Connection Object.
-     * @param {json} permissions - Json tree of permissions.
-     * @param {json} parms - unused.
-     * @param {json} timeout - Time.
-     * @param {function} done - Callback.
-     * @returns {callback} - See: {@link #params-doneCallback|<a href="#params-createPermissionKeyCallback">Callback Definition</a>}
-     */
-    createPermissionKey: function(dbConn, permissions, parms, timeout, done) {
-        var key = shortid.generate() + shortid.generate();
-        console.log(parseInt(timeout.tally))
-        console.log(timeout.tally)
-        if(timeout.time) {
-            //format time to a general format
-            timeout.time = moment(timeout.time).toISOString();
-        } else if(timeout.tally) {
-            if(isNaN(parseInt(timeout.tally))) {
-                var err = new Error("timeout.tally expected an int");
-                err.status = 400;
-                return done(err)
-            } else {
-                timeout.tally = parseInt(timeout.tally)
-            }
-        }
-        if(!parms) {
-            parms = {};
-        }
-        r.table("permissionKeys").insert({ 
-            key: key,
-            permissions: permissions,
-            parms: parms,
-            timeout: timeout
-        }).run(dbConn, function(err) {
-            if(err) {
-                return done(err, null);
-            }
-            return done(null, key);
+    //Wrapper for compatibility
+    createPermissionKey: function(dbConnNull, permissions, parms, timeout, done) {
+        securityAPI.createPermissionKey(permissions, parms, timeout, function(err, resp) {
+            return done(err, resp)
         })
     },
-    /**
-    * @callback createPermissionKeyCallback
-    * @param {object} err - Returns an error if any. 
-    * @param {string} key - Returnes the new permission key.
-    */
-
-    //This checks to see if the Permission key is valid and returns a json object with the permissions.
-    //Callback: done(err, perms)
-    //SHould only return one
-    /**
-     * Checks a Permission Key.
-     * @link module:passportApi
-     * @async
-     * @param {object} dbConn - RethinkDB Connection Object.
-     * @param {string} key - the key to check.
-     * @param {function} done - Callback.
-     */
-    checkPermissionKey: function(dbConn, key, done) {
-
-        r.table("permissionKeys").filter({
-            key: key,
-        }).run(dbConn, function(err, document) {
-            if(err) {
-                return done(err, null);
-            }
-
-            document.toArray(function(err, arr) {
-                if(err) {
-                    return done(err)
-                }
-                console.log(arr)
-                //Found key
-                if(0<arr.length) {
-                    if(arr[0].timeout.time) {
-                        if(moment(arr[0].timeout.time).isSameOrAfter()) {
-                            return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
-
-                        } else {
-                            var err = new Error("Key Not Valid");
-                            err.status = 422;
-                            return done(err, null);
-                        }
-                    } else if(Number.isInteger(arr[0].timeout.tally)) {
-                        if(arr[0].timeout.tally >= 1) {
-                            //Subtract 1 from tally
-                            r.table("permissionKeys").update({
-                                timeout: { 
-                                    tally: r.row("timeout")("tally").sub(1)
-                                }
-                            }).run(dbConn, function(err) {
-                                if(err) {
-                                    return done(err);
-                                } else {
-                                    return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
-                                    
-                                }
-                            });
-                        } else {
-                            // Tally is less than 1
-                            var err = new Error("Key Not Valid");
-                            err.status = 422;
-                            return done(err, null);
-                        }
-                    } else {
-                        var err = new Error("Timeout field malformed.");
-                        err.status = 500;
-                        return done(err, null);
-                    }
-                    //return done(null, arr[0]);
-                } else {
-                    err = new Error("Key Not Found");
-                    err.status = 404;
-                    return done(err, null);
-                }
-            });
-        });
-    },
+    checkPermissionKey: function(dbConnNull, key, done) {
+        securityAPI.checkPermissionKey(key, function(err, resp) {
+            return done(err, resp)
+        })
+    }
 
 
     /**
