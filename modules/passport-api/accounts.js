@@ -64,12 +64,14 @@ const util = require('util')
     * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password (Default: false)
     * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
     * @property {boolean} options.sendConfirmEmailwithPassword - Will send an account confirmation email with the password.  If false, it will just send an email with the username. (Default: false)
-    * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set thew account to be Verified. (Default: false)
+    * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set the account to be Verified. (Default: false)
     * @returns {Promise} -  Resolution includes the transaction summary
     */
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
     return new Promise((resolve, reject) => {
+        var isVerified = false;
+        //
         if(options && options.generatePassword) {
             user.password = utils.generateSecureKey();
         }
@@ -109,6 +111,11 @@ exports.createAccount = function(user, options) {
             user.schoolID = null;
         }
         if(!user.graduationYear || user.graduationYear == "") {
+            if(config.has('userGroups.' + user.userGroup + '.graduates') && config.get('userGroups.' + user.userGroup + '.graduates') == true) {
+                var err = new Error("usergroup \"" + user.userGroup + "\" graduates. user.graduationYear must be a year.");
+                err.status = 400;
+                return reject(err);  
+            }
             user.graduationYear = null;
         } else if(!moment(user.graduationYear, "YYYY", true).isValid()) { //isNaN(parseInt(user.graduationYear))
             var err = new Error("graduationYear Is Not A year");
