@@ -27,7 +27,7 @@ email: hi@josephhassell.com
                 <div class="card-panel">
                     <div class="row">
                         <div class="input-field col s12">
-                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this);">
+                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this); checkIfGraduates(this);">
                               <option value="" disabled selected>Choose your account type</option>
                             </select>
                             <label>Account Type</label>
@@ -49,12 +49,21 @@ email: hi@josephhassell.com
                             <label for="email">Email</label>
                         </div>
                         <div class="col s12 input-field">
+                            <input name="schoolID" type="number" class="tooltipped" data-tooltip="Leave this blank if you don't have one" data-position="bottom" id="schoolID">
+                            <label for="schoolID">School ID</label>
+                        </div>
+                        <div class="col s12 input-field">
                             <input name="password" type="password" class="validate" id="password">
                             <label for="password">Password</label>
                         </div>
                         <div class="col s12 input-field">
                             <input name="passwordVerification" type="password" class="validate" id="passwordVer">
                             <label for="passwordVer">Password (Again)</label>
+                        </div>
+                        <br>
+                        <div class="col s12 input-field" id="gradYearCon" style="display:none;">
+                            <input name="gradYear" type="text" class="datepicker tooltipped" data-position="bottom" id="schoolID">
+                            <label for="gradYear">Graduation Year</label>
                         </div>
                     </div>
                     <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
@@ -74,6 +83,15 @@ email: hi@josephhassell.com
     <script type="text/javascript">
     var userGroupsData = null;
     $(document).ready(function() {
+         $('.datepicker').pickadate({
+            selectMonths: false,
+            selectYears: 5, 
+            today: null,
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+        
          $('input.autocomplete').autocomplete({
             data: {
               "Mr.": null,
@@ -137,6 +155,15 @@ email: hi@josephhassell.com
                     str = str + " or a ";
                 }
             }
+        }
+    }
+
+    function checkIfGraduates(dis) {
+        if(userGroupsData[$(dis).val()].graduates) {
+            $("#gradYearCon").slideDown();
+            console.log("Graduates")
+        } else {
+            $("#gradYearCon").slideUp();
         }
     }
 
