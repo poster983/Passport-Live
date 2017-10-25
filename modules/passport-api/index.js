@@ -366,7 +366,7 @@ module.exports = {
         securityAPI.checkPermissionKey(key, function(err, resp) {
             return done(err, resp)
         })
-    }
+    },
 
 
     /**

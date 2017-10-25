@@ -26,7 +26,7 @@ var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require("config");
 var moment = require("moment");
-
+var shortid = require("shortid");
 var oldApi = require("./index.js")
 
 ///PERMISSON KEYS

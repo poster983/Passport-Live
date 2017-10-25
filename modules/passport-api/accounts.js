@@ -169,6 +169,7 @@ exports.createAccount = function(dbConn, userGroup, name, email, password, group
     */
 
 
+
 /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName
