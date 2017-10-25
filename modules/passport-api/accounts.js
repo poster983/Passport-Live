@@ -56,6 +56,7 @@ const util = require('util')
     * @property {string} user.name.last - A user's family name
     * @property {string} user.email - A user's email address
     * @property {string} user.schoolID - A user's schoolID (optional)
+    * @property {(boolean|undefined)} user.isVerified - If false, the user must first click on a verification link before being able to login. (default: false)
     * @property {(int|null|undefined)} user.graduationYear - Optional
     * @property {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
     * @property {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
@@ -65,7 +66,7 @@ const util = require('util')
     * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
     * @property {boolean} options.sendConfirmEmailwithPassword - Will send an account confirmation email with the password.  If false, it will just send an email with the username. (Default: false)
     * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set the account to be Verified. (Default: false)
-    * @returns {Promise} -  Resolution includes the transaction summary
+    * @returns {Promise} - Resolution includes the transaction summary
     */
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
@@ -74,6 +75,12 @@ exports.createAccount = function(user, options) {
         //
         if(options && options.generatePassword) {
             user.password = utils.generateSecureKey();
+        }
+        console.log(typeof user.isVerified)
+        if(typeof user.isVerified != "boolean" || typeof user.isVerified != "undefined") {
+            var err = new Error("user.isVerified must be a boolean.  Got " + typeof user.isVerified);
+            err.status = 400;
+            return reject(err);
         }
         if(!user.userGroup) {
             var err = new Error("Usergroup Undefined");
