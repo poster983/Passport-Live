@@ -71,7 +71,9 @@ const util = require('util')
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
     return new Promise((resolve, reject) => {
-        var isVerified = false;
+        if(options && options.skipEmail) {
+            user.isVerified = true;
+        }
         //
         if(options && options.generatePassword) {
             user.password = utils.generateSecureKey();
