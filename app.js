@@ -53,6 +53,7 @@ var apiBlackouts = require('./routes/api/blackout');
 var apiSecurity = require("./routes/api/security");
 var apiDevPlayground = require("./routes/api/devPlayground");
 var apiMisc = require("./routes/api/misc");
+var apiImport = require("./routes/api/import");
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -139,6 +140,7 @@ app.use('/api/auth', apiAuth)
 app.use('/api/blackout', apiBlackouts)
 app.use('/api/passes', apiPasses)
 app.use("/api/security", apiSecurity)
+app.use("/api/import", apiImport)
 app.use("/api", apiMisc)
 if (process.env.NODE_ENV === "development" || !process.env.NODE_ENV) {
   console.log("Playground Enabled")

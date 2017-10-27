@@ -20,15 +20,20 @@ email: hi@josephhassell.com
 
 //TODO: INCLUDE IN INDEX.JS
 /** 
-* @module passportAccountsApi
+* Account manipulation APIs
+* @module js/accounts
 */
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
 var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
+var utils = require("../passport-utils/index.js")
 var human = require('humanparser');
+var moment = require("moment");
 var _ = require("underscore");
 const util = require('util')
+
+
 
 /** 
     * Creates An Account 
@@ -36,131 +41,199 @@ const util = require('util')
     * @link module:passportApi
     * @async
     * @example
-    * api.createAccount(connection, "student", {first: "Student", last: "McStudentface", salutation: "Mx." } "james.smith@gmail.com", "123456", {studentID: 01236, isArchived: false }, function(err){
+    * api.createAccount({userGroup: "student", name: {first: "Student", last: "McStudentface", salutation: "Mx." } email: "james.smith@gmail.com", schoolID: "123456", {studentID: 01236, isArchived: false }, function(err){
     *   if(err) {
     *     //do something with error
     *   } else {
     *     //Created
     *   }
     * });
-    * @param {object} dbConn - RethinkDB Connection Object.
-    * @param {constant} userGroup - A usergroup defined in the config
-    * @param {json} name
-    * @param {string} name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
-    * @param {string} name.first - A user's given name
-    * @param {string} name.last - A user's family name
-    * @param {string} email - A user's email address
-    * @param {string} password - The user's password
-    * @param {json} groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
-    * @param {function} done - Callback
-    * @returns {callback} - See: {@link #params-createAccountCallback|<a href="#params-createAccountCallback">Callback Definition</a>} 
+    * @param {Object} user
+    * @property {String} user.userGroup - A usergroup defined in the config
+    * @property {Object} user.name
+    * @property {string} user.name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
+    * @property {string} user.name.first - A user's given name
+    * @property {string} user.name.last - A user's family name
+    * @property {string} user.email - A user's email address
+    * @property {string} user.schoolID - A user's schoolID (optional)
+    * @property {(boolean|undefined)} user.isVerified - If false, the user must first click on a verification link before being able to login. (default: false)
+    * @property {(int|null|undefined)} user.graduationYear - Optional
+    * @property {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
+    * @property {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @property {accountFlags} user.flags - See typedef
+    * @param {(Object|undefined)} options
+    * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password Will return the password in the promise.(Default: false)
+    * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
+    * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set the account to be Verified. (Default: false)
+    * @returns {Promise} - Resolution includes the transaction summary
     */
-exports.createAccount = function(dbConn, userGroup, name, email, password, groupFields, done) {
-    if(!userGroup) {
-        var err = new Error("Usergroup Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(!name || !name.salutation) {
-        var err = new Error("salutation Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(!name || !name.first) {
-        var err = new Error("firstName Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(!name || !name.last) {
-        var err = new Error("lastName Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(!email) {
-        var err = new Error("email Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(!password) {
-        var err = new Error("password Undefined");
-        err.status = 400;
-        return done(err);
-    }
-    if(typeof groupFields == "undefined" || !!groupFields || (groupFields.constructor === Object && Object.keys(groupFields).length === 0)) {
-        groupFields = {};
-    }
-    //console.log(email.substring(email.indexOf("@")))
-    var emailPromise = new Promise(function(resolve, reject) {
-        if(config.has("userGroups." + userGroup + ".permissions.allowedEmailDomains")) {
-            var uGD = config.get("userGroups." + userGroup + ".permissions.allowedEmailDomains")
-            //console.log(uGD)
-            if(uGD.length > 0) {
-                for(var z = 0; z < uGD.length; z++) {
-                    //console.log(uGD[z], "email")
-                    if(email.substring(email.indexOf("@")) == uGD[z]) {
-                        resolve();
+//userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
+exports.createAccount = function(user, options) {
+    return new Promise((resolve, reject) => {
+        if(options && options.skipEmail) {
+            user.isVerified = true;
+        }
+        //
+        if(options && options.generatePassword) {
+            user.password = utils.generateSecureKey();
+        }
+        console.log(typeof user.isVerified)
+        if(typeof user.isVerified != "boolean" && typeof user.isVerified != "undefined") {
+            var err = new Error("user.isVerified must be a boolean.  Got " + typeof user.isVerified);
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.userGroup) {
+            var err = new Error("Usergroup Undefined");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.name || !user.name.salutation) {
+            var err = new Error("salutation Undefined");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.name || !user.name.first) {
+            var err = new Error("firstName Undefined");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.name || !user.name.last) {
+            var err = new Error("lastName Undefined");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.email) {
+            var err = new Error("email Undefined");
+            err.status = 400;
+            return reject(err);
+        } else {
+            user.email = user.email.toLowerCase();
+        }
+        if(!user.password) {
+            var err = new Error("password Undefined");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!user.schoolID || user.schoolID == "") {
+            user.schoolID = null;
+        }
+        if(!user.graduationYear || user.graduationYear == "") {
+            if(config.has('userGroups.' + user.userGroup + '.graduates') && config.get('userGroups.' + user.userGroup + '.graduates') == true) {
+                var err = new Error("usergroup \"" + user.userGroup + "\" graduates. user.graduationYear must be a year.");
+                err.status = 400;
+                return reject(err);  
+            }
+            user.graduationYear = null;
+        } else if(!moment(user.graduationYear, "YYYY", true).isValid()) { //isNaN(parseInt(user.graduationYear))
+            var err = new Error("graduationYear Is Not A year");
+            err.status = 400;
+            return reject(err);   
+        } else {
+            user.graduationYear = parseInt(user.graduationYear)
+        }
+        if(typeof user.groupFields == "undefined" || !!user.groupFields || (user.groupFields.constructor === Object && Object.keys(user.groupFields).length === 0)) {
+            user.groupFields = {};
+        }
+        //console.log(email.substring(email.indexOf("@")))
+        var emailPromise = new Promise(function(resolveE, rejectE) {
+            if (config.has('userGroups.' + user.userGroup)) {
+                if(config.has("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")) {
+                    var uGD = config.get("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")
+                    //console.log(uGD)
+                    if(uGD.length > 0) {
+                        for(var z = 0; z < uGD.length; z++) {
+                            //console.log(uGD[z], "email")
+                            if(user.email.substring(user.email.indexOf("@")) == uGD[z]) {
+                                resolveE();
+                            }
+                            if(z >= uGD.length - 1 ) {
+                                var err = new Error("Email Domain Not Allowed.")
+                                err.status = 403;
+                                rejectE(err);
+                            }
+                        }
+                    } else {
+                        resolveE();
                     }
-                    if(z >= uGD.length - 1 ) {
-                        var err = new Error("Email Domain Not Allowed.")
-                        err.status = 400;
-                        reject(err);
-                    }
+                } else {
+                    resolveE();
                 }
             } else {
-                resolve();
-            }
-        } else {
-            resolve();
-        }
-    });
-    emailPromise.then(function() {
-
-        bcrypt.hash(password, null, null, function(err, hash) {
-            if(err) {
-                console.error(err);
-                return done(err, null);
-            }
-            try {
-              // Store hash in your password DB.
-              r.table("accounts")('email').contains(email).run(dbConn, function(err, con){
-                if(err) {
-                    console.error(err);
-                    return done(err);
-                }
-                //Checks to see if there is already an email in the DB            
-                if(con){
-                  //THe email has been taken
-                  var err = new Error("Email Taken");
-                  err.status = 409
-                  return done(err);
-                } else {
-                    //insert new account
-                    promice = r.table("accounts").insert({
-                      name: {
-                        first: name.first,
-                        last: name.last,
-                        salutation: name.salutation
-                      },
-                      email: email,
-                      password: hash,
-                      userGroup: userGroup, // should be same as a usergroup in config/default.json
-                      groupFields: groupFields,
-                      isArchived: false,
-                      isVerified: false,
-                      integrations: false
-                    }).run(dbConn);
-                    promice.then(function(conn) {
-                        return done(null);
-                  });
-                }
-              });
-            } catch(e) {
-                
-                return done(e);
+                var err = new Error("Usergroup Not Found");
+                err.status = 404;
+                rejectE(err);
             }
         });
-    }, function(err) {
-        return done(err);
+        emailPromise.then(function() {
+
+            bcrypt.hash(user.password, null, null, function(err, hash) {
+                if(err) {
+                    console.error(err);
+                    return reject(err, null);
+                }
+                try {
+                  // Store hash in your password DB.
+                  r.table("accounts")('email').contains(user.email).run(db.conn(), function(err, con){
+                    if(err) {
+                        console.error(err);
+                        return reject(err);
+                    }
+                    //Checks to see if there is already an email in the DB            
+                    if(con){
+                      //THe email has been taken
+                      var err = new Error("Email Taken");
+                      err.status = 409
+                      return reject(err);
+                    } else {
+                        //insert new account
+                        promice = r.table("accounts").insert({
+                          name: {
+                            first: user.name.first,
+                            last: user.name.last,
+                            salutation: user.name.salutation
+                          },
+                          email: user.email,
+                          password: hash,
+                          userGroup: user.userGroup, // should be same as a usergroup in config/default.json
+                          groupFields: user.groupFields,
+                          schoolID: user.schoolID,
+                          graduationYear: user.graduationYear,
+                          isArchived: false,
+                          isVerified: false,
+                          integrations: false,
+                          flags: (user.flags || null)
+                        }).run(db.conn());
+                        promice.then(function(results) {
+                            if(results.inserted == 1) {
+                                //check email stuff
+                                if(options && !options.skipEmail) {
+                                    
+                                }
+                                var resp = {transaction: results};
+                                if((options && options.returnPassword) ||(options && options.generatePassword)) {
+                                    resp.password = user.password; 
+                                }
+                                return resolve(resp);
+                            } else {
+                                var err = new Error("Failed to store user in the database");
+                                err.status = 500;
+                                return reject(err, results)
+                            }
+                            
+                      }).catch(function(err) {
+                        return reject(err)
+                      });
+                    }
+                  });
+                } catch(e) {
+                    
+                    return reject(e);
+                }
+            });
+        }, function(err) {
+            return reject(err);
+        })
     })
 }
 /**
@@ -598,6 +671,10 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                 "name": true, 
                 "id": true
             }).run(db.conn(), function(err, teacherAccount) {
+                if(err) {
+                    console.log(err)
+                    return done(err);
+                }
                 //console.log(teacherAccount.schedules.teacher)
                 if(!teacherAccount.schedules || !teacherAccount.schedules.teacher) {
                     student.schedule[keys[0]] = {};
@@ -795,3 +872,140 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
         });
     });
 }
+
+
+
+/**
+* Updates the given account's password with a new one
+* @function updatePassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} newPassword
+* @returns {Promise}
+*/
+exports.updatePassword = function(id, newPassword) {
+    return new Promise(function(resolve, reject) {
+        bcrypt.hash(newPassword, null, null, function(err, hash) {
+          if(err) {
+            //console.log(err)
+            return reject(err);
+          }
+          if(hash) {
+              r.table('accounts').get(id).update({password: hash}).run(db.conn()).then(function(trans) {
+                return resolve(trans);
+              }).catch(function(err) {
+                return reject(err);
+              })
+          } else {
+            var err = new Error("Unknown Hashing Error");
+                err.status = 500;
+                return reject(err);
+          }
+        });
+        //
+    })
+}
+
+/**
+* Verifies if the given password is the correct password for the given account.
+* @function verifyPassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} password - The password to check against the database
+* @returns {Promise}
+*/
+exports.verifyPassword = function(id, password) { 
+    return new Promise(function(resolve, reject) {
+        r.table('accounts').get(id).run(db.conn()).then(function(account) {
+            if(!account) {
+                var err = new Error("Account Not Found");
+                err.status = 404;
+                return reject(err);
+            }
+            if(!account.password) {
+                var err = new Error("account.password undefined");
+                err.status = 500;
+                return reject(err);
+            }
+            bcrypt.compare(password, account.password, function(err, res) {
+                if(err) {
+                    return reject(err);
+                }
+                return resolve(res);
+            });
+        }).catch(function(err) {
+            return reject(err);
+        })
+    })
+}
+
+
+
+/**
+* Combines {@link verifyPassword} and {@link updatePassword} into one convenient package.  Also checks Password policy.
+* @function changePassword
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {String} currentPassword - The account's current password
+* @param {String} newPassword - The new account password
+* @returns {Promise}
+*/
+exports.changePassword = function(id, currentPassword, newPassword) {
+    return new Promise(function(resolve, reject) {
+        exports.verifyPassword(id, currentPassword).then(function(result) {
+            if(result) {
+                utils.checkPasswordPolicy(newPassword, function(err) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    exports.updatePassword(id, newPassword).then(function(transaction) {
+                        return resolve(transaction);
+                    }).catch(function(err) {
+                        //console.log(err)
+                        return reject(err);
+                    })
+                })
+            } else {
+                var err = new Error("Unauthorized");
+                err.status = 401;
+                return reject(err);
+            }
+        }).catch(function(err) {
+            return reject(err);
+        })
+    })
+}
+
+/**
+* Wrapper Function to update tag data.  
+* @function updateTags
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {accountTags} tagData - The account's current password
+* @returns {Promise}
+*/
+exports.updateTags = function(id, tagData) {
+    return new Promise((resolve, reject) => {
+        if(Array.isArray(tagData)) {
+            var err = new TypeError("tagData is an array, expected Json object");
+            return reject(err);
+        } else if(typeof tagData != "object") {
+            var err = new TypeError("tagData is " + typeof tagData + ", expected Json object");
+            return reject(err);
+        }
+        r.table("accounts").get(id).update({tags: tagData}).run(db.conn()).then((res) => {
+            return resolve(res);
+        }).catch((err) => {
+            return reject(err);
+        })
+    })
+    
+}
+
+
+/**
+ * Account Tags/flags/metadata/options. 
+ * @typedef {(Object|undefined|null)} accountFlags
+ * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
+ * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
+ */

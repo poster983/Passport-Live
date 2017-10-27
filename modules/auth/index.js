@@ -88,11 +88,19 @@ passport.use('local-login', new LocalStrategy({
             console.log("Wrong email");
             return done(null, false);// , req.flash('loginMessage', 'Incorrect Email or Password')
           }
-          if(!bcrypt.compareSync(password, user[0].password)) {
-            console.log("Wrong Pwd");
-            return done(null, false); // , req.flash('loginMessage', 'Incorrect Email or Password')
-          }
-          return done(null, user);
+          bcrypt.compare(password, user[0].password, function(err, res) {
+            if(err) {
+              return done(err); 
+            }
+            if(!res) {
+              console.log("Wrong Pwd");
+              return done(null, false); // , req.flash('loginMessage', 'Incorrect Email or Password')
+            } else {
+              return done(null, user);
+            }
+          });
+          
+          
       });
     });
   }

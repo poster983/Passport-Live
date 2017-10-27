@@ -7,7 +7,8 @@
 				"dashboards": ["student"], // what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 				"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
 			},
-			"verifyAccountCreation": false //When creating an account, the user will be required to input a random key assigned by an admin.
+			"verifyAccountCreation": false, //When creating an account, the user will be required to input a random key assigned by an admin.
+			"graduates": true //this requires that the user have a graduation year linked to their account.
 		},
 		"teacher": {
 			"permissions": {
@@ -117,6 +118,12 @@
 				"clientSecret": "123454"
 			}
 		}
+	},
+	"passwordPolicy": {  
+		"minimumLength": 6,
+		"maximumLength": 128,
+		"regexRules": ["[a-z]", "\\d"], // Has lowercase, and has numbers // "[a-z]", "\\d"
+		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase letter, and at least one number."
 	},
 	"nodemailerConfig": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used here. 
 	    "host": "smtp.example.com",

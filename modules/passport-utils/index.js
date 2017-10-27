@@ -23,6 +23,7 @@ email: hi@josephhassell.com
 * @module utils 
 */
 var jwt = require("jsonwebtoken");
+var shortid = require('shortid');
 var config = require("config");
 module.exports = {
     /**
@@ -95,9 +96,54 @@ module.exports = {
         } else {
             return done(null, false);
         }
+    },
+
+    /**
+        * Generates a secure token/key  
+        * @function generateSecureKey
+        * @link module:utils
+        * @returns {string} Secure token/key.
+        */
+    generateSecureKey: function() {
+        return shortid.generate() + shortid.generate();
+    },
+
+    /**
+        * Checks if password is complient with password rules in the config file.  
+        * @function checkPasswordPolicy
+        * @link module:utils
+        * @param {string} password - Password to check
+        * @param {function} done - callback. 
+        * @returns {callback} Includes error, and a boolean.
+        */
+    checkPasswordPolicy: function(password, done) {
+        var rules = config.get("passwordPolicy.regexRules");
+        if(password.length >= config.get("passwordPolicy.minimumLength") && password.length <= config.get("passwordPolicy.maximumLength")) {
+            if(rules.length <=0) {
+                return done(null, true);
+            }
+            for(var x = 0; x < rules.length; x++) {
+                if(!new RegExp(rules[x]).test(password)) {
+                    var err = new Error(config.get("passwordPolicy.humanReadableRule") + "Failed at regex test: " + rules[x])
+                    err.status = 400;
+                    return done(err, false);
+                }
+                if(x >= rules.length-1) {
+                    return done(null, true);
+                }
+            }
+        } else {
+            var err = new Error("Password must be " + config.get("passwordPolicy.minimumLength") + " to " + config.get("passwordPolicy.maximumLength") + " characters long.")
+            err.status = 400;
+            return done(err, false);
+        }
     }
+
     
 }
+
+//console.log(module.exports.generateSecureKey())
+
 /**
 * A user object found in the database
 * @typedef {json} user

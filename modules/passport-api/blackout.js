@@ -109,7 +109,7 @@ exports.getBlackoutByDate = function(date, done) {
     }
     var date = moment(date).format("Y-MM-DD"); //get date in format {string}
     r.table('blackouts').filter({
-        date: date
+        date: date // CHANGE TO RETHINKDB DATE
     }).run(db.conn(), function(err, curDoc) {
           if (err) {
             return done(err);

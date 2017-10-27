@@ -25,15 +25,22 @@ var r = require('rethinkdb');
 var connection = null;
 var config = require('config');
 
-exports.setup = function() {
+exports.setup = function(noDefaultDB) {
         return new Promise(function(resolve, reject) {
-            r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
+            var connOpt = {};
+            if(!noDefaultDB) {
+                connOpt.db = config.get('rethinkdb.database');
+            }
+            connOpt.host = config.get('rethinkdb.host');
+            connOpt.port = config.get('rethinkdb.port');
+            connOpt.password = config.get("rethinkdb.password");
+            r.connect(connOpt, function(err, conn) {
                 if (err) {
                     throw err;
                 }
                 console.log("DB Connected")
                 connection = conn;
-                resolve()
+                resolve(conn);
             });
         }) 
 }
