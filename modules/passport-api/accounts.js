@@ -242,6 +242,7 @@ exports.createAccount = function(user, options) {
     */
 
 
+
 /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName

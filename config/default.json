@@ -85,7 +85,7 @@
 		"password": "" //Dont Change.  Use local.json
 	},
 	"server": {
-		"domain": "https://example.com", //unfortunately for things like OAuth, we need the exact domain of the server passport is running on. 
+		"domain": "https://example.com", //unfortunately for things like OAuth and emails, we need the exact domain of the server passport is running on. 
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
 		"https": {
 			"port": 3443, //set in production config file, 443
@@ -125,13 +125,19 @@
 		"regexRules": ["[a-z]", "\\d"], // Has lowercase, and has numbers // "[a-z]", "\\d"
 		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase letter, and at least one number."
 	},
-	"nodemailerConfig": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used here. 
-	    "host": "smtp.example.com",
-	    "port": 465,
-	    "secure": true, // secure:true for port 465, secure:false for port 587
-	    "auth": {
-	        "user": "username@example.com",
-	        "pass": "userpass"
-	    }
+	"email": { //nodemailer.createTransport options should be used in nodemailerConfig. 
+	    "nodemailerConfig": {
+		    "host": "smtp.example.com",
+		    "port": 465,
+		    "secure": true, // secure:true for port 465, secure:false for port 587
+		    "auth": {
+		        "user": "username@example.com",
+		        "pass": "userpass"
+		    }
+		  },
+	    "defaults": {
+	    	"fromName": "Passport",
+	    	"fromEmail": null  //only if username is not the email
+	    }	
 	} 
 }

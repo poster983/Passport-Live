@@ -24,6 +24,8 @@ var express = require('express');
 var router = express.Router();
 
 
+
+
 var emailTracker = require('pixel-tracker')
 emailTracker.use(function (error, result) {
   console.log(result)
@@ -34,5 +36,39 @@ router.get("/pixel.gif", function(req, res, next) {
     return next();
 }, emailTracker.middleware);
 
+
+var emailApi = require("../../modules/passport-api/email.js")
+router.post("/sendMail", function(req, res, next) {
+    emailApi.sendMail({
+        to: 'to@example.com',
+        subject: 'Message title',
+        text: 'Plaintext version of the message',
+        html: '<p>HTML version of the message</p>'
+    }, null).then(function(resp) {
+        res.send(resp);
+    }).catch(function(err) {
+        next(err)
+    })
+})
+router.get("/emailTemplate", (req, res, next) => {
+    var MesOpt = [];
+    for(var x = 0; x < 100; x++) {
+        MesOpt.push({to: "to@example.com", name: {first: "Test", last: "Person"}, accountEmail: "to@example.com", password: Math.random()})
+    }
+    console.log(MesOpt)
+    emailApi.sendNewAccountWithPassEmail(MesOpt).then((trans) => {
+        console.log(trans, "job?")
+        return res.sendStatus(202)
+        
+    }).catch((err) => {
+        return next(err);
+    })
+})
+
+router.get("/delay/:delay", (req, res, next) => {
+    setTimeout(function() {
+        res.send("Hello World")
+    }, parseInt(req.params.delay))
+})
 
 module.exports = router;
