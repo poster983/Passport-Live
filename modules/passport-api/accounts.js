@@ -77,7 +77,7 @@ exports.createAccount = function(user, options) {
             user.password = utils.generateSecureKey();
         }
         console.log(typeof user.isVerified)
-        if(typeof user.isVerified != "boolean" || typeof user.isVerified != "undefined") {
+        if(typeof user.isVerified != "boolean" && typeof user.isVerified != "undefined") {
             var err = new Error("user.isVerified must be a boolean.  Got " + typeof user.isVerified);
             err.status = 400;
             return reject(err);
