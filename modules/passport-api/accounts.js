@@ -62,9 +62,8 @@ const util = require('util')
     * @property {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
     * @property {accountFlags} user.flags - See typedef
     * @param {(Object|undefined)} options
-    * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password (Default: false)
+    * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password Will return the password in the promise.(Default: false)
     * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
-    * @property {boolean} options.sendConfirmEmailwithPassword - Will send an account confirmation email with the password.  If false, it will just send an email with the username. (Default: false)
     * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set the account to be Verified. (Default: false)
     * @returns {Promise} - Resolution includes the transaction summary
     */
@@ -209,14 +208,10 @@ exports.createAccount = function(user, options) {
                             if(results.inserted == 1) {
                                 //check email stuff
                                 if(options && !options.skipEmail) {
-                                    if(options && options.sendConfirmEmailwithPassword == true) {
-                                        //send email with password
-                                    } else {
-                                        //send email without password
-                                    }
+                                    
                                 }
                                 var resp = {transaction: results};
-                                if(options && options.returnPassword) {
+                                if((options && options.returnPassword) ||(options && options.generatePassword)) {
                                     resp.password = user.password; 
                                 }
                                 return resolve(resp);
