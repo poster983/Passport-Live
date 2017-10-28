@@ -56,34 +56,38 @@ email: hi@josephhassell.com
       
    
         
-        <div class="outdated-browser" id="outdated-browser" style="display: none;">
+        <div class="unsupported-browser-tab" id="unsupported-browser" style="display: none;">
              <h6></h6>
-             <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera and Safari with success. <br> Unfortunately a few features may be missing like push notifications and full Android App support with Chrome Mobile. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update.<br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a browser?</a></p>
-             <p class="outdated-browser-last"><a href="#" class="outdated-browser-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('outdated-browser').style.display = 'none'">&times;</a></p>
+             <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update. <br> Your browser <strong id="browser-name"></strong><br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a new browser?</a></p>
+             <p class="unsupported-browser-tab-last"><a href="#" class="unsupported-browser-tab-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('unsupported-browser').style.display = 'none'">&times;</a></p>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="/js/materialize.js"></script>
-	<script src="/js/passport.js"></script>
     <script src="/ua-parser-js/dist/ua-parser.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            var parser = new UAParser().getResult();
-            console.log(parser.browser)
-            if(parser.browser.name == "Chrome" || parser.browser.name == "Vivaldi" || parser.browser.name == "Firefox"  ) {
-                $("#outdated-browser").hide();
-            } else if (parser.browser.name == "Edge") {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is partially unsupported!")
-            } else if (parser.browser.name == "Opera" || parser.browser.name == "Safari") {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is unofficially supported!")
-            } else {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is unsupported!")
-            }
-        })
+      $(document).ready(function() {
+        var parser = new UAParser().getResult();
+        console.log(parser.browser)
+        $("#browser-name").html(parser.browser.name);
+        if(parser.browser.name == "Chrome" || parser.browser.name == "Vivaldi" || parser.browser.name == "Firefox" || (parser.browser.name == "Safari" && parser.browser.major >= 10)) {
+            $("#unsupported-browser").hide();
+        } else if (parser.browser.name == "Edge") {
+            $("#unsupported-browser").show();
+            $("#unsupported-browser").find("h6").prepend("Your browser is partially unsupported!")
+        } else if (parser.browser.name == "Opera") {
+            $("#unsupported-browser").show();
+            $("#unsupported-browser").find("h6").prepend("Your browser has not been thoroughly tested.")
+        } else if(parser.browser.name == "IE" || parser.browser.name == "Safari") {
+          $("#unsupported-browser").slideUp(500);
+          $("#unsupported-browser").find("h6").prepend("Your browser is not supported!")
+        } else {
+            $("#unsupported-browser").show();
+            $("#unsupported-browser").find("h6").prepend("Your browser is unsupported!")
+        }
+      })
     </script>
+    <script src="/js/materialize.js"></script>
+	  <script src="/js/passport.js"></script>
     <script type="text/javascript">
 
         $("#email").on( "input", function(){checkFormFill();})

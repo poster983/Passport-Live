@@ -30,6 +30,7 @@ email: hi@josephhassell.com
   background-color: #212121;
 }
 
+/**MAIN LAYOUT**/
 
 @media #{$medium-and-up} { 
   .login-container {
@@ -163,4 +164,8 @@ login-transitions  {
   height: inherit;
   z-index: 1;
 }
+
+
+/** END MAIN LAYOUT **/
+
 
