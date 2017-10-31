@@ -23,7 +23,7 @@ var router = express.Router();
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config');
-var usParser = require('ua-parser-js');
+var uaParser = require('ua-parser-js');
 
 /*
 var httpv = require('http').Server(router);
@@ -93,9 +93,9 @@ router.get('/login', function(req, res, next) {
   if(req.query.failGoogle) {
     googleQuery += "&failGoogle=true";
   }
-
+  var supportedBrowsers = ["Chrome"]
   //check user agent and browser support 
-
+  var ua = parser(req.get('user-agent'));
 
   res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
 });

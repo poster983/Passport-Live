@@ -73,9 +73,9 @@
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 	},
-	"dashboards": {
-		"student": {
-			//todo: 
+	"webInterface": {
+		"browserSupport": {
+			"supported": [""]
 		}
 	},
 	"rethinkdb": {
