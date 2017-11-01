@@ -405,6 +405,10 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bowser@^1.0.0:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.8.1.tgz#49785777e7302febadb1a5b71d9a646520ed310d"
+
 boxen@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/boxen/-/boxen-1.2.1.tgz#0f11e7fe344edb9397977fc13ede7f64d956481d"
@@ -600,6 +604,12 @@ chalk@^2.0.1:
     ansi-styles "^3.1.0"
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
+
+check-browser@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/check-browser/-/check-browser-0.1.7.tgz#fc2645045948a969e526fcaa35fadce7a528a9c2"
+  dependencies:
+    bowser "^1.0.0"
 
 check-error@^1.0.1:
   version "1.0.2"

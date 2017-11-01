@@ -93,9 +93,12 @@ router.get('/login', function(req, res, next) {
   if(req.query.failGoogle) {
     googleQuery += "&failGoogle=true";
   }
-  var supportedBrowsers = ["Chrome"]
+
   //check user agent and browser support 
-  var ua = parser(req.get('user-agent'));
+  var bS = config.get("webInterface.browserSupport");
+  var ua = uaParser(req.get('user-agent'));
+  console.log(ua)
+  //if()
 
   res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
 });

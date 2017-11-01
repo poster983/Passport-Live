@@ -75,7 +75,14 @@
 	},
 	"webInterface": {
 		"browserSupport": {
-			"supported": [""]
+			"supported": {  //Best Not to change
+				"Chrome": 45,
+				"Firefox": 52,
+				"Safari": 10,
+				"Opera": 32,
+				"Edge": 38,
+				"Vivaldi": 1
+			}
 		}
 	},
 	"rethinkdb": {

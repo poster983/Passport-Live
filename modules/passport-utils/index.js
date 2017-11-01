@@ -161,6 +161,8 @@ exports.checkPasswordPolicy = function(password, done) {
     }
 }
 
+//exports.getBrowserSupport
+
     
 //brute prevention
 let store = new BruteRethinkdb(db.dash(), {table: 'brute'});
