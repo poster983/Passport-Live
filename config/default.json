@@ -76,12 +76,18 @@
 	"webInterface": {
 		"browserSupport": {
 			"supported": {  //Best Not to change
-				"Chrome": 45,
+				"Chrome": 45,  //If browserVersion >= 45
+				"Chromium": 45,
 				"Firefox": 52,
 				"Safari": 10,
 				"Opera": 32,
 				"Edge": 38,
-				"Vivaldi": 1
+				"Vivaldi": true //every version 
+			},
+			"blocked": { // will not let the user go to the login page
+				"IE": true, //every version is blocked
+				"IEMobile": true,
+				"Safari": 9 // if browserVersion <= 9
 			}
 		}
 	},

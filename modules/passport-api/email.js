@@ -154,6 +154,7 @@ db.queue.newAccountEmail().process((job, next) => {
  * @property {String} subject
  * @property {String} text - Plaintext version of the message
  * @property (String) html - HTML version of the message
+ * @example
  * {
  *   from: 'sender@server.com',
  *   to: 'receiver@sender.com',

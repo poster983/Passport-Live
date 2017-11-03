@@ -23,7 +23,7 @@ var router = express.Router();
 var r = require('rethinkdb');
 var bcrypt = require('bcrypt-nodejs');
 var config = require('config');
-var uaParser = require('ua-parser-js');
+var utils = require("../modules/passport-utils/index.js");
 
 /*
 var httpv = require('http').Server(router);
@@ -95,12 +95,36 @@ router.get('/login', function(req, res, next) {
   }
 
   //check user agent and browser support 
-  var bS = config.get("webInterface.browserSupport");
-  var ua = uaParser(req.get('user-agent'));
-  console.log(ua)
-  //if()
-
-  res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
+  utils.getBrowserSupport(req.headers['user-agent']).then((sB) => {
+    console.log(sB);
+    if(sB.blocked) {
+      res.render('auth/blockedBrowser', { 
+        doc_Title: 'Blocked Browser', 
+        browserSupport: {
+          head: "Your browser is incompatible with Passport",
+          message: "Please upgrade to an actual browser instead of using an overcooked potato. <br> Thank You For Your Understanding <br> <a href=\"https://poster983.github.io/Passport-Live/tutorial-Web%20App%20System%20Requirements.html\">See System Requirements</a>"
+        }
+      });
+    } else {
+      
+      if(sB.untested) {
+        var templateBs = {};
+        templateBs.head = "Your browser is untested!"
+        templateBs.message = "You may experience broken features or layout bugs."
+        templateBs.browser = sB.ua.browser;
+      } else if(sB.outdated) {
+        var templateBs = {};
+        templateBs.head = "Your browser is outdated!"
+        templateBs.message = "Your browser is older than the minimum supported version. <br> You may experience broken features or layout bugs.  <br>  We highly encourage updating your browser."
+        templateBs.browser = sB.ua.browser;
+      }
+      res.render('auth/login', { doc_Title: 'Login -- Passport', browserSupport: templateBs, message: msg, googleQuery: googleQuery});
+    }
+  }).catch((err) => {
+    console.log(err)
+    msg = "Unable to detect browser. Proceed with caution";
+    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
+  });
 });
 
 

@@ -29,6 +29,7 @@ var moment = require("moment");
 const ExpressBrute = require('express-brute');
 const BruteRethinkdb = require('brute-rethinkdb')
 const db = require("../db/index.js");
+var uaParser = require('ua-parser-js');
 
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
@@ -121,7 +122,7 @@ exports.checkPeriod = function(period, done) {
   }
 
     /**
-        * Generates a secure token/key  
+        * Generates a secure token/key
         * @function generateSecureKey
         * @link module:utils
         * @returns {string} Secure token/key.
@@ -161,7 +162,62 @@ exports.checkPasswordPolicy = function(password, done) {
     }
 }
 
-//exports.getBrowserSupport
+/**
+    * Given a user agent, the function determines if it is compatible with passport's web app
+    * @function getBrowserSupport
+    * @link module:utils
+    * @param {string} userAgent - Password to check
+    * @returns {Promise} See Example
+    * @example <caption>Promise Payload</caption>
+    * {
+    *   supported: (boolean)
+    *   untested: (boolean)
+    *   blocked: (boolean)
+    *   outdated: (boolean)
+    * }
+    */
+exports.getBrowserSupport = function(userAgent) {
+    return new Promise((resolve, reject) => {
+        var ua = uaParser(userAgent);
+        
+        var bS = config.get("webInterface.browserSupport");
+        
+        if(ua && ua.browser && ua.browser.name && ua.browser.major) {
+            var returnObj = {
+                supported: false,
+                untested: false,
+                blocked:  false,
+                outdated: false,
+                ua: ua
+            } 
+            if(bS.supported && bS.supported[ua.browser.name]) {
+                //FOUND BROWSER IN SUPPORTED LIST
+                if(ua.browser.major >= bS.supported[ua.browser.name] || bS.supported[ua.browser.name] === true) { 
+                    //SUPPORTED
+                    returnObj.supported = true;
+                } else {
+                    //OUTDATED 
+                    returnObj.outdated = true;
+                }
+            } else if(bS.blocked && bS.blocked[ua.browser.name]) {
+                if(ua.browser.major <= bS.blocked[ua.browser.name] || bS.blocked[ua.browser.name] === true) {
+                    //BLOCKED
+                    returnObj.blocked = true;
+                } else {
+                    //untested
+                    returnObj.untested = true;
+                }
+            } else {
+                //UNTESTED
+                returnObj.untested = true;
+            }
+            return resolve(returnObj);
+        } else {
+            return reject(new TypeError("userAgent.browser Undefined"));
+            
+        }
+    })  
+}
 
     
 //brute prevention
