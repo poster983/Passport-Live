@@ -20,19 +20,26 @@ email: hi@josephhassell.com
 -->
     <body>
     <div class="login-background">
+    <!-- Loader Bar -->
+      <div class="progress" id="loader" style="position: absolute; display:none;">
+        <div class="indeterminate"></div>
+      </div>
         <div class="login-col">
           <div class="login-container">
             
             <img src="/images/logo/512x512.png" class="login-logo animate login-transitions" id="logo">
 
             <div id="login-inputs" class="white-text login-inputs animate login-transitions"> 
-              <div class="input-field col s5">
-               <input id="email" type="email" class="validate">
-               <label for="email">Email</label>
+              <div class="input-field col s1" id="back-button" style="display: none;">
+                <a href="#" class="waves-effect waves-circle waves-light"><i class="material-icons white-text ">arrow_back</i></a>
               </div>
-              <div class="input-field col s5">
-               <input id="password" type="password" class="validate">
-               <label for="password">Password</label>
+               <div class="input-field col s5" id="email-div">
+                <input id="email" type="email" class="validate">
+                <label for="email">Email</label>
+              </div>
+              <div class="input-field col s5" style="display: none;" id="password-div">
+                <input id="password" type="password" class="validate">
+                <label for="password">Password</label>
               </div>
               <div class="col s5" style="display: none;" id="login-btn-container">
                 <a class="waves-effect waves-light btn" onclick="login();"><i class="material-icons left">lock_open</i>Login With Passport</a>
@@ -46,7 +53,16 @@ email: hi@josephhassell.com
                   <br>
                   New? <a href="/auth/signup/">Create an account!</a>
                 </div>
-                
+              </div>
+              <div class="col s5" id="forgot-password">
+                Lost your Password? <a href="#resetPassword"> Reset It!</a>
+              </div>
+              <div class="col s5" style="display: none;" id="reset-password-submit">
+                <a class="waves-effect waves-light btn" onclick="sudoSendResetEmail()"><i class="material-icons left">cloud</i>Send Reset Email</a>
+              </div>
+              <div class="col s5" id="notification" style="display: none;">
+                <h5>Failed To send Message</h5>
+                <p>See the console (F12) for full error logs.</p>
               </div>
             </div>
             
@@ -84,9 +100,11 @@ email: hi@josephhassell.com
           if($("#email").val() == "" && $("#password").val() == "") {
             $("#login-btn-container").slideUp(500);
             $("#alt-login-options").slideDown(500);
+            $("#password-div").slideUp(500);
           } else {
             $("#login-btn-container").slideDown(500);
             $("#alt-login-options").slideUp(500);
+            $("#password-div").slideDown(500);
           }
         }
 
@@ -94,7 +112,9 @@ email: hi@josephhassell.com
           if(getUrlParameter("failGoogle")) {
             Materialize.toast($("<span>Google Authentication Failed.</span>").append("<br/> <span>If you don't have a Passport account, you must create one.</span> "), 6000)
           }
+          checkWindowHash();
         });
+
 
         function login() {
             var email = $("#email").val();
@@ -102,20 +122,21 @@ email: hi@josephhassell.com
             if(email == "" || password == "") {
                 Materialize.toast('Please Enter Your PassportID', 6000)
             } else {
-                isFormLoading(true);
+                window.location.hash = "#processing"
                 $.ajax({
                     type: "post",
                     url: "/api/auth/login/dscm/",
                     data: {email: email, password: password},
                     success: function(data) {
+
                         window.location.href = "/"
                     },
                     error: function(jqXHR) {
                         if(jqXHR.status == 401) {
                             Materialize.toast('Email or Password is incorrect', 6000)
-                            isFormLoading(false);
+                            window.location.hash = "#"
                         } else {
-                            isFormLoading(false);
+                            window.location.hash = "#"
                             errorHand(jqXHR)
                         }
                         
@@ -140,6 +161,75 @@ email: hi@josephhassell.com
             return false;   
           }
         });
+
+
+        $(window).on('hashchange', function() {
+          checkWindowHash()
+        });
+
+        function checkWindowHash() {
+          console.log(window.location.hash)
+          
+          //reset pages
+          /*$("#logo").removeClass("animate");
+          $("#login-inputs").removeClass("animate");*/
+          
+          //reset event listeners 
+          $("#email").off("keyup");
+          $("#password").off("keyup");
+          
+          //show and init pages 
+          if(window.location.hash == "#resetPassword") {
+            $("#back-button > a").attr("href", "#");
+            $("#password-div").slideUp(500);
+            $("#login-btn-container").slideUp(500);
+            $("#alt-login-options").slideUp(500);
+            $("#forgot-password").slideUp(500);
+            $("#reset-password-submit").slideDown(500);
+            $("#loader").slideUp(500)
+            $("#back-button").show(500);          
+            $("#notification").slideUp(500);
+            $("#email-div").slideDown(500);
+          } else if (window.location.hash == "#notification"){
+            //Shows if there is a major response from the server after an action.  Like a failed password reset email
+            //back Button 
+            $("#back-button > a").attr("href", "#");
+            $("#back-button").show(500);  
+            //containers 
+            $("#logo").removeClass("load").addClass("animate");
+            $("#login-inputs").removeClass("load").addClass("animate");
+            //elements
+            $("#password-div").slideUp(500);
+            $("#login-btn-container").slideUp(500);
+            $("#alt-login-options").slideUp(500);
+            $("#forgot-password").slideUp(500);
+            $("#reset-password-submit").slideUp(500)
+            $("#email-div").slideUp(500);
+            $("#loader").slideUp(500);
+            //shown elements
+            $("#notification").slideDown(500);
+          } else if(window.location.hash == "#processing") {
+            $("#loader").slideDown(500);
+            //containers 
+            $("#logo").removeClass("animate").addClass("load");
+            $("#login-inputs").removeClass("animate").addClass("load");
+          } else {
+            $("#email").on( "keyup", function(){checkFormFill();})
+            $("#password").on( "keyup", function(){checkFormFill();})
+            
+            $("#logo").removeClass("load").addClass("animate");
+            $("#login-inputs").removeClass("load").addClass("animate");
+            
+            $("#password-div").slideUp(500);
+            $("#forgot-password").slideDown(500);
+            $("#reset-password-submit").slideUp(500);
+            $("#email-div").slideDown(500);
+            $("#back-button").hide(500);
+            $("#loader").slideUp(500)
+            $("#notification").slideUp(500);
+            checkFormFill();
+          }
+        }
     </script>
     </body>
 
