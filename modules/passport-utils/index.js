@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 //Useful functions for passport (NOT API FUNCTIONS)
 
 /** 
-* @module utils 
+* @module js/utils 
 */
 var jwt = require("jsonwebtoken");
 var shortid = require('shortid');
@@ -34,7 +34,7 @@ var uaParser = require('ua-parser-js');
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
 * @function cleanUser
-* @link module:utils
+* @link module:js/utils
 * @param {user} user - The user to clean.  The same user object found in the database 
 * @returns {user}
 */
@@ -53,7 +53,7 @@ exports.cleanUser = function(user){
  /**
     * Checks if req is using DSCM and then allows passport to view the data 
     * @function dscm
-    * @link module:utils
+    * @link module:js/utils
     * @param {json} req - Request 
     * @param {json} res - Response 
     * @param {function} next - Callback 
@@ -89,7 +89,7 @@ exports.dscm = function(req, res, next) {
  /**
     * Checks if period is a period constant  
     * @function checkPeriod
-    * @link module:utils
+    * @link module:js/utils
     * @param {string} period - a single period to check against the configs. 
     * @param {function} done - callback. 
     * @returns {done} Includes error, and a boolean.  True for valid period, false for not
@@ -107,7 +107,7 @@ exports.checkPeriod = function(period, done) {
      /**
         * Checks if period is a period constant  
         * @function checkPeriod
-        * @link module:utils
+        * @link module:js/utils
         * @param {string} period - a single period to check against the configs. 
         * @param {function} done - callback. 
         * @returns {done} Includes error, and a boolean.  True for valid period, false for not
@@ -124,7 +124,7 @@ exports.checkPeriod = function(period, done) {
     /**
         * Generates a secure token/key
         * @function generateSecureKey
-        * @link module:utils
+        * @link module:js/utils
         * @returns {string} Secure token/key.
         */
   exports.generateSecureKey = function() {
@@ -134,7 +134,7 @@ exports.checkPeriod = function(period, done) {
     /**
         * Checks if password is complient with password rules in the config file.  
         * @function checkPasswordPolicy
-        * @link module:utils
+        * @link module:js/utils
         * @param {string} password - Password to check
         * @param {function} done - callback. 
         * @returns {callback} Includes error, and a boolean.
@@ -165,7 +165,7 @@ exports.checkPasswordPolicy = function(password, done) {
 /**
     * Given a user agent, the function determines if it is compatible with passport's web app
     * @function getBrowserSupport
-    * @link module:utils
+    * @link module:js/utils
     * @param {string} userAgent - Password to check
     * @returns {Promise} See Example
     * @example <caption>Promise Payload</caption>
@@ -221,7 +221,7 @@ exports.getBrowserSupport = function(userAgent) {
 
     
 //brute prevention
-let store = new BruteRethinkdb(db.dash(), {table: 'brute'});
+
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
     var err = new Error("You've made too many requests in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());
@@ -242,10 +242,11 @@ var handleStoreError = function (error) {
 //console.log(module.exports.generateSecureKey())
 
 /**
-    * Middleware to prevent brute force attacks   
-    * @function userBruteforce
+    * Middleware to prevent brute force attacks when logging in
+    * @link module:js/utils
+    * @function loginBruteforce
     */
-exports.loginBruteforce = new ExpressBrute(store, {
+exports.loginBruteforce = new ExpressBrute(db.brute(), {
     freeRetries: 5,
     minWait: 1*60*1000, // 1 minute
     maxWait: 60*60*1000, // 1 hour, 
@@ -256,8 +257,29 @@ exports.loginBruteforce = new ExpressBrute(store, {
     },
     handleStoreError: handleStoreError
 });
+/**
+    * Middleware to prevent brute force attacks when requesing a password reset email 
+    * Retries: 3
+    * Remembers for 1 day
+    * @link module:js/utils
+    * @function emailPasswordResetBruteforce
+    */
+exports.emailPasswordResetBruteforce = new ExpressBrute(db.brute(), {
+    freeRetries: 3,
+    attachResetToRequest: false,
+    refreshTimeoutOnRequest: false,
+    minWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
+    maxWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
+    lifetime: 24*60*60, // 1 day (seconds not milliseconds) 
+    failCallback: function (req, res, next, nextValidRequestDate) {
+        var err = new Error("You've made too many requests in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());
+        err.status = 429;
+        return next(err);
+    },
+    handleStoreError: handleStoreError
+});
 // No more than 1000 login attempts per day per IP 
-exports.globalBruteforce = new ExpressBrute(store, {
+exports.globalBruteforce = new ExpressBrute(db.brute(), {
     freeRetries: 1000,
     attachResetToRequest: false,
     refreshTimeoutOnRequest: false,
@@ -268,7 +290,7 @@ exports.globalBruteforce = new ExpressBrute(store, {
     handleStoreError: handleStoreError
 });
 
-exports.publicApiBruteforce = new ExpressBrute(store, {
+exports.publicApiBruteforce = new ExpressBrute(db.brute(), {
     freeRetries: 30,
     attachResetToRequest: false,
     refreshTimeoutOnRequest: false,
@@ -279,7 +301,7 @@ exports.publicApiBruteforce = new ExpressBrute(store, {
     handleStoreError: handleStoreError
 });
 
-exports.testBruteForse = new ExpressBrute(store, {
+exports.testBruteForse = new ExpressBrute(db.brute(), {
     freeRetries: 3,
     attachResetToRequest: true,
     refreshTimeoutOnRequest: false,

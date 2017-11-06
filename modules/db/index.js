@@ -55,7 +55,9 @@ queueNewAccountEmail.jobOptions = {
   retryDelay: 600000 // Time in milliseconds to delay retries
 }
 
-
+//Brute Store 
+const BruteRethinkdb = require('brute-rethinkdb')
+let bruteStore = new BruteRethinkdb(rdash, {table: 'brute'});
 
 var connection = null;
 
@@ -96,5 +98,10 @@ exports.queue.newAccountEmail = function() {
     return queueNewAccountEmail
 }
 
+
+//brute
+exports.brute = () => {
+  return bruteStore;
+}
 
 //return module.exports

@@ -117,6 +117,8 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
     })  
 }
 
+
+
 /* JOBS */
 
 //sendNewAccountWithPassEmail

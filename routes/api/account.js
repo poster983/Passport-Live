@@ -18,7 +18,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 /**
-* @module accountRESTAPI
+* @module api/account
 */
 var express = require("express");
 var router = express.Router();
@@ -61,7 +61,7 @@ function serializeUser(req, res, done) {
 /**
     * Creates A New Account
     * @function handleNewAccount
-    * @api POST /api/account/:userGroup/
+    * @api POST /api/account/new/:userGroup/
     * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
     * @apibody {(application/json | application/x-www-form-urlencoded)}
     * @example 
@@ -81,7 +81,7 @@ function serializeUser(req, res, done) {
     *    "permissionKey": HJhd38
     * }
     */
-    router.post("/:userGroup/", function handleNewAccount(req, res, next) {
+    router.post("/new/:userGroup/", function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
@@ -803,6 +803,27 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
 router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
     //todo 
 });
+
+
+/**
+    * Given an email, the api sends a reset password email to the email given.  If the email is attached to an account.
+    * @function sendResetPasswordEmail
+    * @link api/account
+    * @param {request} req
+    * @property {Object} req.body
+    * @property {String} req.body.email
+    * @api POST /api/account/sendResetPasswordEmail
+    * @apibody {application/json}
+    * @apiresponse {json} Sends Status code of 202, or the error.
+    */
+
+router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res, next) {
+    api.generateResetPasswordLink(req.body).then((link) => {
+        res.json(link);
+    }).catch((err) => {
+        return next(err);
+    })
+})
 
 
 /** Updates user Password   

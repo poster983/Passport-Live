@@ -161,7 +161,7 @@ router.post('/security/key/', passport.authenticate('jwt', { session: false}), s
     *  permissions: {
     *    userGroups: ["teacher", "admin", "dev"]
     *  },
-    *  parms: {},
+    *  params: {},
     *  timeout: {
     *    time: moment.js compatible time
     *  }
@@ -172,20 +172,20 @@ router.post('/security/key/', passport.authenticate('jwt', { session: false}), s
     *  permissions: {
     *    userGroups: ["teacher", "admin", "dev"]
     *  },
-    *  parms: {},
+    *  params: {},
     *  timeout: {
     *    tally: 5
     *  }
     * }
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Add JWT Auth
     */
 function handleCreatePermissionKey(req, res, next) {
     var permissions=req.body.permissions;
-    var parms=req.body.parms;
+    var params=req.body.parms;
+    var params=req.body.params;
     var timeout=req.body.timeout;
     
-    api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
+    api.createPermissionKey(connection, permissions, params, timeout, function(err, key) {
         if(err) {
             return next(err)
         }

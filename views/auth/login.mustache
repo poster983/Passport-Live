@@ -46,7 +46,7 @@ email: hi@josephhassell.com
               </div>
               <div id="alt-login-options">
               <div class="col s5">
-                <a href="/auth/google?dscm=true{{googleQuery}}"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
+                <a href="/auth/google?dscm=true{{googleQuery}}" onclick="window.location.hash =='#processing'"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
                 
               </div>
                 <div class="col s5" id="new-account">
@@ -58,7 +58,7 @@ email: hi@josephhassell.com
                 Lost your Password? <a href="#resetPassword"> Reset It!</a>
               </div>
               <div class="col s5" style="display: none;" id="reset-password-submit">
-                <a class="waves-effect waves-light btn" onclick="sudoSendResetEmail()"><i class="material-icons left">cloud</i>Send Reset Email</a>
+                <a class="waves-effect waves-light btn" onclick="sudoSendResetEmail()"><i class="material-icons left">send</i>Send Reset Email</a>
               </div>
               <div class="col s5" id="notification" style="display: none;">
                 <h5>Failed To send Message</h5>

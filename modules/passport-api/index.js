@@ -372,8 +372,8 @@ module.exports = {
     SECURITY
     **/
     //Wrapper for compatibility
-    createPermissionKey: function(dbConnNull, permissions, parms, timeout, done) {
-        securityAPI.createPermissionKey(permissions, parms, timeout, function(err, resp) {
+    createPermissionKey: function(dbConnNull, permissions, params, timeout, done) {
+        securityAPI.createPermissionKey(permissions, params, timeout, function(err, resp) {
             return done(err, resp)
         })
     },

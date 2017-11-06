@@ -36,7 +36,7 @@ var oldApi = require("./index.js")
 
     Callback: done(err, key)
     "permissions": a JSON object with a custom permission payload, Ex: userGroups
-    "parms": per Use case
+    "params": per Use case
     "timeout": Must be a Json object either:
     {
         tally: 5
@@ -52,12 +52,12 @@ var oldApi = require("./index.js")
      * @link module:js/misc
      * @async
      * @param {json} permissions - Json tree of permissions.
-     * @param {json} parms - unused.
+     * @param {json} params - unused.
      * @param {json} timeout - Time.
      * @param {function} done - Callback.
      * @returns {callback} - See: {@link #params-doneCallback|<a href="#params-createPermissionKeyCallback">Callback Definition</a>}
      */
-    exports.createPermissionKey = function(permissions, parms, timeout, done) {
+    exports.createPermissionKey = function(permissions, params, timeout, done) {
         var key = shortid.generate() + shortid.generate();
         console.log(parseInt(timeout.tally))
         console.log(timeout.tally)
@@ -73,13 +73,13 @@ var oldApi = require("./index.js")
                 timeout.tally = parseInt(timeout.tally)
             }
         }
-        if(!parms) {
-            parms = {};
+        if(!params) {
+            params = {};
         }
         r.table("permissionKeys").insert({ 
             key: key,
             permissions: permissions,
-            parms: parms,
+            params: params,
             timeout: timeout
         }).run(db.conn(), function(err) {
             if(err) {
@@ -122,7 +122,7 @@ exports.checkPermissionKey = function(key, done) {
             if(0<arr.length) {
                 if(arr[0].timeout.time) {
                     if(moment(arr[0].timeout.time).isSameOrAfter()) {
-                        return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
+                        return done(null, {permissions: arr[0].permissions, params: arr[0].params});
 
                     } else {
                         var err = new Error("Key Not Valid");
@@ -140,7 +140,7 @@ exports.checkPermissionKey = function(key, done) {
                             if(err) {
                                 return done(err);
                             } else {
-                                return done(null, {permissions: arr[0].permissions, parms: arr[0].parms});
+                                return done(null, {permissions: arr[0].permissions, params: arr[0].params});
                                 
                             }
                         });
