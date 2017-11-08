@@ -24,4 +24,5 @@ email: hi@josephhassell.com
 
 
 
-exports.newAccount = require("./newAccount.js")
+exports.newAccount = require("./newAccount.js");
+exports.activateAccount = require("./activateAccount.js");

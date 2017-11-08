@@ -40,7 +40,8 @@ exports.withPass = function(name, email, password) {
 	        <mj-column width="80%">
 	          <mj-inline-links base-url="" hamburger="hamburger" ico-color="#ffffff">
 	            <mj-link href="` + bURL + `/auth/login" color="#ffffff">Login</mj-link>
-	            <mj-link href="https://github.com/poster983/Passport-Live" color="#ffffff">Project Page</mj-link>
+	            <mj-link href="https://getpassport.live" color="#ffffff">Project Page</mj-link>
+	            <mj-link href="https://github.com/poster983/Passport-Live" color="#ffffff">Github Page</mj-link>
 	          </mj-inline-links>
 	        </mj-column>
 	      </mj-navbar>
