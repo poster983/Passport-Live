@@ -102,3 +102,4 @@ module.exports = function(name, activateLink) {
     </mj-container>
 </mj-body>
 </mjml>`);
+}
