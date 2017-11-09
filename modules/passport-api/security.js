@@ -29,6 +29,7 @@ var moment = require("moment");
 var shortid = require("shortid");
 var oldApi = require("./index.js")
 var typeCheck = require("type-check").typeCheck;
+var utils = require("../passport-utils/index.js")
 
 
 ///PERMISSON KEYS
@@ -63,7 +64,7 @@ var typeCheck = require("type-check").typeCheck;
     exports.createPermissionKey = function(type, permissions, params, timeout) {
         return new Promise((resolve, reject) => {
             var key = shortid.generate() + shortid.generate();
-            /*
+            
             console.log(parseInt(timeout.tally))
             console.log(timeout.tally)
             if(timeout.time) {
@@ -73,16 +74,20 @@ var typeCheck = require("type-check").typeCheck;
                 if(isNaN(parseInt(timeout.tally))) {
                     var err = new Error("timeout.tally expected an int");
                     err.status = 400;
-                    return done(err)
+                    return reject(err)
                 } else {
                     timeout.tally = parseInt(timeout.tally)
                 }
             }
             if(!params) {
                 params = {};
-            }*/
+            }
 
-
+            if(!typeCheck("permissionKeyType | Null", type, utils.typeCheck.security)) {
+                var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+                    err.status = 400;
+                    return reject(err)
+            }
 
             r.table("permissionKeys").insert({ 
                 type: type,
@@ -97,6 +102,14 @@ var typeCheck = require("type-check").typeCheck;
                 return resolve(null, key);
             })
         })
+    }
+    /**
+     * Creates a New Permission Key For New Accounts.
+     * @link module:js/security
+     * @returns {Promise}
+     */
+    exports.createNewAccountPermissionKey = function() {
+        return "WIP"
     }
 
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
@@ -231,3 +244,12 @@ ENUM TYPES
         UNKNOWN: null
     };
 exports.permissionKeyType = Object.freeze(exports.permissionKeyType);
+/*
+setTimeout(function() {
+    console.log(exports.permissionKeyType.NEW_ACCOUNT)
+console.log(utils.typeCheck, "TS");
+console.log(typeCheck("permissionKeyType | Null", exports.permissionKeyType.RESET_PASSWORDs, utils.typeCheck.security))
+console.log(typeCheck("Even", 2, utils.typeCheck.security))
+}, 1000)
+*/
+//console.log(typeCheck("permissionKeyType", exports.permissionKeyType.NEW_ACCOUNT, utils.typeCheck.security))

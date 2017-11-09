@@ -31,6 +31,8 @@ const BruteRethinkdb = require('brute-rethinkdb')
 const db = require("../db/index.js");
 var uaParser = require('ua-parser-js');
 
+exports.typeCheck = require("./customTypeCheck.js");
+//console.log(exports.typeCheck)
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
 * @function cleanUser
