@@ -183,7 +183,8 @@ email: hi@josephhassell.com
         if(pk) {
             $.ajax({
                 type: "get",
-                url: "/api/security/key/"+pk,
+                url: "/api/security/key/",
+                data: {key: pk},
                 success: function(data) {
                     console.log(data)
                     if(data && data.permissions && data.permissions.userGroups) {

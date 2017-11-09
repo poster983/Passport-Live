@@ -19,7 +19,7 @@ email: hi@josephhassell.com
 */
 
 /**
-* @module js/misc
+* @module js/security
 */
 
 var r = require('rethinkdb');
@@ -28,13 +28,18 @@ var config = require("config");
 var moment = require("moment");
 var shortid = require("shortid");
 var oldApi = require("./index.js")
+var typeCheck = require("type-check").typeCheck;
+
 
 ///PERMISSON KEYS
+    
+
+
 
     /*
     Creates a short permission key 
 
-    Callback: done(err, key)
+    
     "permissions": a JSON object with a custom permission payload, Ex: userGroups
     "params": per Use case
     "timeout": Must be a Json object either:
@@ -49,45 +54,50 @@ var oldApi = require("./index.js")
     /**
      * Creates a New Permission Key.
      * @function createPermissionKey
-     * @link module:js/misc
-     * @async
+     * @link module:js/security
      * @param {json} permissions - Json tree of permissions.
      * @param {json} params - unused.
      * @param {json} timeout - Time.
-     * @param {function} done - Callback.
-     * @returns {callback} - See: {@link #params-doneCallback|<a href="#params-createPermissionKeyCallback">Callback Definition</a>}
+     * @returns {Promise}
      */
-    exports.createPermissionKey = function(permissions, params, timeout, done) {
-        var key = shortid.generate() + shortid.generate();
-        console.log(parseInt(timeout.tally))
-        console.log(timeout.tally)
-        if(timeout.time) {
-            //format time to a general format
-            timeout.time = moment(timeout.time).toISOString();
-        } else if(timeout.tally) {
-            if(isNaN(parseInt(timeout.tally))) {
-                var err = new Error("timeout.tally expected an int");
-                err.status = 400;
-                return done(err)
-            } else {
-                timeout.tally = parseInt(timeout.tally)
+    exports.createPermissionKey = function(type, permissions, params, timeout) {
+        return new Promise((resolve, reject) => {
+            var key = shortid.generate() + shortid.generate();
+            /*
+            console.log(parseInt(timeout.tally))
+            console.log(timeout.tally)
+            if(timeout.time) {
+                //format time to a general format
+                timeout.time = moment(timeout.time).toISOString();
+            } else if(timeout.tally) {
+                if(isNaN(parseInt(timeout.tally))) {
+                    var err = new Error("timeout.tally expected an int");
+                    err.status = 400;
+                    return done(err)
+                } else {
+                    timeout.tally = parseInt(timeout.tally)
+                }
             }
-        }
-        if(!params) {
-            params = {};
-        }
-        r.table("permissionKeys").insert({ 
-            key: key,
-            permissions: permissions,
-            params: params,
-            timeout: timeout
-        }).run(db.conn(), function(err) {
-            if(err) {
-                return done(err, null);
-            }
-            return done(null, key);
+            if(!params) {
+                params = {};
+            }*/
+
+
+
+            r.table("permissionKeys").insert({ 
+                type: type,
+                key: key,
+                permissions: permissions,
+                params: params,
+                timeout: timeout
+            }).run(db.conn(), function(err) {
+                if(err) {
+                    return reject(err);
+                }
+                return resolve(null, key);
+            })
         })
-    },
+    }
     /**
     * @callback createPermissionKeyCallback
     * @param {object} err - Returns an error if any. 
@@ -99,8 +109,7 @@ var oldApi = require("./index.js")
     //SHould only return one
     /**
      * Checks a Permission Key.  It also may change the timeout field if on tally mode
-     * @link module:js/misc
-     * @async
+     * @link module:js/security
      * @param {string} key - the key to check.
      * @param {function} done - Callback.
      */
@@ -167,8 +176,7 @@ exports.checkPermissionKey = function(key, done) {
 
 /**
  * Gets Permission Key data.
- * @function getPermissionKeyData
- * @async
+ * @link module:js/security
  * @param {string} key - the key to check.
  * @param {function} done - Callback.
  */
@@ -205,3 +213,37 @@ exports.getPermissionKeyData = function(key, done) {
 }
 
 
+
+/**
+ENUM TYPES
+**/
+
+/**
+ * Used for ensuring the correct fields are added for each type of permission key.
+ * @readonly
+ * @enum {string}
+ */
+ exports.permissionKeyType = {
+        /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
+        NEW_ACCOUNT: "NEW_ACCOUNT", 
+        /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
+        ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
+        /** Used for resetting your password via an email. */
+        RESET_PASSWORD: "RESET_PASSWORD",
+        /** @type {null} */
+        UNKNOWN: null
+    };
+ `
+exports.permissionKeyType = Object.freeze(
+    {
+        /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
+        NEW_ACCOUNT: "NEW_ACCOUNT", 
+        /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
+        ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
+        /** Used for resetting your password via an email. */
+        RESET_PASSWORD: "RESET_PASSWORD",
+        /** @type {null} */
+        UNKNOWN: null
+    });
+
+*/`

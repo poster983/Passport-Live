@@ -27,6 +27,7 @@ var cors = require('cors');
 var passport = require("passport");
 var config = require("config");
 var api = require("../../modules/passport-api/security.js");
+var typeCheck = require("type-check").typeCheck;
 
 router.use(cors());
 router.options('*', cors())
@@ -48,28 +49,25 @@ function serializeUser(req, res, done) {
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/security/key/:key
-    * @apiparam {string} key - permission key
+    * @api GET /api/security/key/
+    * @apiquery {string} key - permission key
     * @apiresponse {json} Returns the permission key data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo Rate Limit DONT USE JWT
     */
 
-router.get('/key/:key', function getPermissionKeyData(req, res, next) {
-    var key = req.params.key;
-    var promise = new Promise(function(resolve, reject) {
-        api.getPermissionKeyData(key, function(err, data) {
-            if(err) {
-                return reject(err);
-            }
-            return resolve(data);
-        })
-    })
-
-    promise.then(function(resp) {
-        return res.json(resp);
-    }, function(err) {
+router.get('/key/', function getPermissionKeyData(req, res, next) {
+    var key = req.query.key;
+    if(!typeCheck("String", key)) {
+        var err = TypeError("Query \"key\" must be a string.  Got " + typeof key);
+        err.status = 400;
         return next(err)
+    }
+    api.getPermissionKeyData(key, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        return res.json(data);
     })
 });
 
