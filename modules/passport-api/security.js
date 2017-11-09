@@ -53,10 +53,10 @@ var typeCheck = require("type-check").typeCheck;
     */
     /**
      * Creates a New Permission Key.
-     * @function createPermissionKey
      * @link module:js/security
+     * @param {permissionKeyType} type - ENUM for the type of permission key this is.  Each may impose diffrent requirements.
      * @param {json} permissions - Json tree of permissions.
-     * @param {json} params - unused.
+     * @param {json} params
      * @param {json} timeout - Time.
      * @returns {Promise}
      */
@@ -98,11 +98,6 @@ var typeCheck = require("type-check").typeCheck;
             })
         })
     }
-    /**
-    * @callback createPermissionKeyCallback
-    * @param {object} err - Returns an error if any. 
-    * @param {string} key - Returnes the new permission key.
-    */
 
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
     //Callback: done(err, perms)
@@ -218,10 +213,12 @@ exports.getPermissionKeyData = function(key, done) {
 ENUM TYPES
 **/
 
+
+
 /**
  * Used for ensuring the correct fields are added for each type of permission key.
  * @readonly
- * @enum {string}
+ * @enum {String}
  */
  exports.permissionKeyType = {
         /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
@@ -233,17 +230,4 @@ ENUM TYPES
         /** @type {null} */
         UNKNOWN: null
     };
- `
-exports.permissionKeyType = Object.freeze(
-    {
-        /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
-        NEW_ACCOUNT: "NEW_ACCOUNT", 
-        /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
-        ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
-        /** Used for resetting your password via an email. */
-        RESET_PASSWORD: "RESET_PASSWORD",
-        /** @type {null} */
-        UNKNOWN: null
-    });
-
-*/`
+exports.permissionKeyType = Object.freeze(exports.permissionKeyType);
