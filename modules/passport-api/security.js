@@ -102,15 +102,30 @@ var utils = require("../passport-utils/index.js")
                 return resolve(null, key);
             })
         })
-    }
-    /**
-     * Creates a New Permission Key For New Accounts.
-     * @link module:js/security
+    }//* @link module:js/security
+    //* @memberof! js/security.newKey#
+    //* @exports js/security/newKey
+     /**
+     * A set of wrappers for creating specific types of perm keys. 
+     * @name newKey
+     * @inner
+     * @private
+     * @memberof module:js/security
+     * @property {Object} newKey
+     * @property {function} newKey.newAccount - Creates a New Permission Key For New Accounts
+     */
+    var newKey = {};
+     /**
+     * Creates a New Permission Key For New Accounts 
+     * @function
+     * @memberof module:js/security
      * @returns {Promise}
      */
-    exports.createNewAccountPermissionKey = function() {
+    newKey.newAccount = function() {
         return "WIP"
     }
+    exports.newKey = newKey;
+
 
     //This checks to see if the Permission key is valid and returns a json object with the permissions.
     //Callback: done(err, perms)
