@@ -150,6 +150,7 @@ var utils = require("../passport-utils/index.js")
             return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
         }) 
     }
+    /*
     setTimeout(function() {
         //newKey.newAccount(["student", "teacher"], {tally: }) //["student", "teacher"]
         console.log(typeCheck("Date", new Date()))
@@ -159,7 +160,7 @@ var utils = require("../passport-utils/index.js")
         console.log(typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", {tally: 5, time: date}, utils.typeCheck))
         //newKey.newAccount(["student"], {time: "2017-11-10T02:41:57+00:00", tally:6})
         //newKey.newAccount(["student"], {time: date, tally:12})
-    }, 1000);
+    }, 1000);*/
     exports.newKey = newKey;
 
 
