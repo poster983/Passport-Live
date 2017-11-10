@@ -25,13 +25,15 @@ var api = require("../modules/passport-api/security.js");
 db.setup().then(function() {
 	console.log("generating admin permkey...")
 	var date = new Date();
-	api.createPermissionKey({userGroups: ["admin", "dev"]}, {}, {time: date.setDate(date.getDate() + 1)}, function(err, result) {
-		if(err) {
-			throw err
-		}
-			console.log("Your admin permission key:", result);
-			console.log("You can now create an account at: /auth/signup?pk=" + result)
-			console.log("To make keys for other userGroups, use the passport-CLI:", "https://github.com/poster983/passport-live-cli")
-			process.exit();
-	})
+    date.setDate(date.getDate() + 1);
+	api.newKey.newAccount(["admin", "dev"], {time: date}).then((result) => {
+        console.log("Your admin permission key:", result);
+        console.log("You can now create an account at: /auth/signup?pk=" + result)
+        console.log("To make keys for other userGroups, use the passport-CLI:", "https://github.com/poster983/passport-live-cli")
+        process.exit();
+    }).catch((err) => {
+        console.error(err)
+        process.exit();
+    })
+			
 })

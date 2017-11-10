@@ -56,18 +56,21 @@ var utils = require("../passport-utils/index.js")
      * Creates a New Permission Key.
      * @link module:js/security
      * @param {permissionKeyType} type - ENUM for the type of permission key this is.  Each may impose diffrent requirements.
-     * @param {json} permissions - Json tree of permissions.
-     * @param {json} params
-     * @param {json} timeout - Time.
+     * @param {Object} permissions - Json tree of permissions.
+     * @param {Object} params
+     * @param {(undefined|Object)} timeout - When should the key become invalid.
+     * @param {(undefined|number)} timeout.tally - Will become inactive after given number of uses.
+     * @param {(undefined|Date|ISO)} timeout.time - Will become inactive after given time.
      * @returns {Promise}
      */
     exports.createPermissionKey = function(type, permissions, params, timeout) {
         return new Promise((resolve, reject) => {
+            var ins = {}
             var key = shortid.generate() + shortid.generate();
             
-            console.log(parseInt(timeout.tally))
-            console.log(timeout.tally)
-            if(timeout.time) {
+            //console.log(parseInt(timeout.tally))
+            console.log(timeout)
+            /*if(timeout.time) {
                 //format time to a general format
                 timeout.time = moment(timeout.time).toISOString();
             } else if(timeout.tally) {
@@ -78,28 +81,39 @@ var utils = require("../passport-utils/index.js")
                 } else {
                     timeout.tally = parseInt(timeout.tally)
                 }
-            }
-            if(!params) {
-                params = {};
-            }
-
-            if(!typeCheck("permissionKeyType | Null", type, utils.typeCheck.security)) {
-                var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+            }*/
+            if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
+                var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
                     err.status = 400;
                     return reject(err)
             }
 
-            r.table("permissionKeys").insert({ 
-                type: type,
-                key: key,
-                permissions: permissions,
-                params: params,
-                timeout: timeout
-            }).run(db.conn(), function(err) {
+            if(timeout) {
+                if(typeCheck("ISODate", timeout.time, utils.typeCheck)) {
+                    timeout.time = r.ISO8601(timeout.time)
+                }
+                ins.timeout = timeout;
+            }
+            if(params) {
+                ins.params = params;
+            }
+            if(permissions) {
+                ins.permissions = permissions;
+            }
+
+            if(!typeCheck("permissionKeyType | Null", type, utils.typeCheck)) {
+                var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+                    err.status = 400;
+                    return reject(err)
+            }
+            ins.key = key;
+            ins.type = type;
+
+            r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
                 if(err) {
                     return reject(err);
                 }
-                return resolve(null, key);
+                return resolve(key);
             })
         })
     }//* @link module:js/security
@@ -116,14 +130,36 @@ var utils = require("../passport-utils/index.js")
      */
     var newKey = {};
      /**
-     * Creates a New Permission Key For New Accounts 
+     * Creates a New Permission Key For Creating New Accounts from the new account form and API
      * @function
      * @memberof module:js/security
+     * @param {String[]} userGroups - Must only contain valid userGroup keys defined in the configs.
+     * @param {(undefined|Object)} timeout - When should the key become invalid.
+     * @param {(undefined|number)} timeout.tally - Will become inactive after given number of uses.
+     * @param {(undefined|Date|string)} timeout.time - Will become inactive after given time.
      * @returns {Promise}
      */
-    newKey.newAccount = function() {
-        return "WIP"
+    newKey.newAccount = function(userGroups, timeout) {
+        return new Promise((resolve, reject) => {
+            if(!typeCheck("[userGroup]", userGroups, utils.typeCheck)) {
+                var err = new TypeError("userGroups must be an array of type \"userGroup\" strings.");
+                err.status = 400;
+                return reject(err);
+            }
+            //return reject(new Error("REJECTION"))
+            return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
+        }) 
     }
+    setTimeout(function() {
+        //newKey.newAccount(["student", "teacher"], {tally: }) //["student", "teacher"]
+        console.log(typeCheck("Date", new Date()))
+        console.log(typeCheck("ISODate", "2017-11-10T02:41:57+00:00", utils.typeCheck))
+        var date = new Date();
+        date.setDate(date.getDate() + 1)
+        console.log(typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", {tally: 5, time: date}, utils.typeCheck))
+        //newKey.newAccount(["student"], {time: "2017-11-10T02:41:57+00:00", tally:6})
+        //newKey.newAccount(["student"], {time: date, tally:12})
+    }, 1000);
     exports.newKey = newKey;
 
 
@@ -259,12 +295,3 @@ ENUM TYPES
         UNKNOWN: null
     };
 exports.permissionKeyType = Object.freeze(exports.permissionKeyType);
-/*
-setTimeout(function() {
-    console.log(exports.permissionKeyType.NEW_ACCOUNT)
-console.log(utils.typeCheck, "TS");
-console.log(typeCheck("permissionKeyType | Null", exports.permissionKeyType.RESET_PASSWORDs, utils.typeCheck.security))
-console.log(typeCheck("Even", 2, utils.typeCheck.security))
-}, 1000)
-*/
-//console.log(typeCheck("permissionKeyType", exports.permissionKeyType.NEW_ACCOUNT, utils.typeCheck.security))

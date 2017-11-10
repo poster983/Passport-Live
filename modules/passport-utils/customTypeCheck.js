@@ -17,17 +17,32 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var securityJS = require("../passport-api/security.js")
+var securityJS = require("../passport-api/security.js");
+var config = require("config");
+var typeCheck = require("type-check");
+var moment = require("moment")
 
-exports.security = {
+module.exports = {
     customTypes: {
         permissionKeyType: {
             typeOf: "String",//String | Null
             validate: function(x) {
                 //console.log(typeof x, x)
                 //return true
-                return securityJS.permissionKeyType[x] !== undefined
+                return securityJS.permissionKeyType[x] !== undefined;
             }
-        }
+        },
+        userGroup: {
+            typeOf: "String",
+            validate: function(x) {
+                return config.get("userGroups")[x] !== undefined;
+            }
+        },
+        ISODate: {
+            typeOf: "String",
+            validate: function(x) {
+                return moment(x, moment.ISO_8601, true).isValid();
+            }
+        },
     }
 }

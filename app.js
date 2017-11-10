@@ -196,6 +196,14 @@ app.use(function(err, req, res, next) {
 });
 
 
+//Promise Error Hand
+if(process.env.NODE_ENV != "production") {
+  process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason.stack);
+    // application specific logging, throwing an error, or other logic here
+  });
+}
+
 
 
 module.exports = app;
