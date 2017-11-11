@@ -101,7 +101,7 @@ var utils = require("../passport-utils/index.js")
                 ins.permissions = permissions;
             }
 
-            if(!typeCheck("permissionKeyType | Null", type, utils.typeCheck)) {
+            if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
                 var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
                     err.status = 400;
                     return reject(err)
@@ -109,13 +109,20 @@ var utils = require("../passport-utils/index.js")
 
             //CHeck Type Rules
             if(type === "NEW_ACCOUNT") {
-                if(!typeCheck("[userGroup]", permissions.userGroups, utils.typeCheck)) {
+                if(!typeCheck("{userGroups: [userGroup]}", permissions, utils.typeCheck)) {
                     var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
                     err.status = 400;
                     return reject(err);
                 }
             }
-            
+            if(type === "ACTIVATE_ACCOUNT") {
+                if(!typeCheck("{accountID: String}", permissions, utils.typeCheck)) {
+                    var err = new TypeError("permissions.accountID must be an ID string.");
+                    err.status = 400;
+                    return reject(err);
+                }
+            }
+
             ins.key = key;
             ins.type = type;
 
@@ -152,6 +159,34 @@ var utils = require("../passport-utils/index.js")
     newKey.newAccount = function(userGroups, timeout) {
         return new Promise((resolve, reject) => {
             return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
+        }) 
+    }
+
+     /**
+     * Creates a New Permission Key For Activating New Accounts From email
+     * @function
+     * @memberof module:js/security
+     * @param {String} id - Account id that this key will work for.
+     * @returns {Promise}
+     */
+    newKey.activateAccount = function(id) {
+        return new Promise((resolve, reject) => {
+            var date = moment().add(7, "days")
+            return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, {accountID: id}, null, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+        }) 
+    }
+
+    /**
+     * Creates a New Permission Key For resetting a forgotten password Accounts From email. Times out after 1 hour
+     * @function
+     * @memberof module:js/security
+     * @param {String} id - Account id that this key will work for.
+     * @returns {Promise}
+     */
+    newKey.resetPassword = function(id) {
+        return new Promise((resolve, reject) => {
+            var date = moment().add(1, "hours")
+            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, {accountID: id}, null, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
         }) 
     }
     /*
@@ -241,17 +276,24 @@ exports.checkPermissionKey = function(key, done) {
 /**
  * Gets Permission Key data.
  * @link module:js/security
+ * @param {permissionKeyType} type - enum
  * @param {string} key - the key to check.
  * @param {function} done - Callback.
  */
-exports.getPermissionKeyData = function(key, done) {
+exports.getPermissionKeyData = function(type, key, done) {
 	if(!key || typeof key != "string") {
 		var err = new Error("Invalid Key");
 		err.status = 400;
 		return done(err);
 	}
+    if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
+        var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+            err.status = 400;
+            return reject(err)
+    }
 	r.table("permissionKeys").filter({
         key: key,
+        type: type
     }).run(db.conn(), function(err, document) {
         if(err) {
             return done(err);
@@ -296,7 +338,6 @@ ENUM TYPES
         ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
         /** Used for resetting your password via an email. */
         RESET_PASSWORD: "RESET_PASSWORD",
-        /** @type {null} */
-        UNKNOWN: null
+        UNKNOWN: "UNKNOWN"
     };
 exports.permissionKeyType = Object.freeze(exports.permissionKeyType);

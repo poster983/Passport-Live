@@ -20,6 +20,8 @@ email: hi@josephhassell.com
 var express = require('express');
 var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
+var accountJS = require('../modules/passport-api/accounts.js');
+var securityJS = require('../modules/passport-api/security.js');
 var router = express.Router();
 
 //this page will route each user to the correct page after login 
@@ -41,6 +43,18 @@ router.get('/', function(req, res, next) {
     }
   
 });
+
+//RaTE LIMIT RATE LIMIT!!
+//Account Activation
+//localhost:3000/activate
+router.get("/activate", function(req, res, next) {
+  var permissionKey = req.query.ak; //Activation Key (permission key)
+  if(typeof permissionKey === "string") {
+    
+  } else {
+    res.redirect('/auth/login?msg=' + encodeURIComponent("Query \"ak\" expected a string.  Got: " + typeof permissionKey)); 
+  }
+})
 
 /*
 router.post('/callback/multiDashRoute/', function(req, res, next) {

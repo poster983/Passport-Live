@@ -33,6 +33,8 @@ var io = require('socket.io')(httpv);
 var passport = require('passport')
 //  , LocalStrategy = require('passport-local').Strategy;
 var api = require('../modules/passport-api/index.js');
+var accountJS = require('../modules/passport-api/accounts.js');
+var securityJS = require('../modules/passport-api/security.js');
 
 
 
@@ -85,7 +87,8 @@ router.get('/google/dscm', function (req, res, next) {
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
-  var msg = "";
+  var msg = false;
+  var notif = false;
   var googleQuery = "";
   if(req.query.msg) {
     msg = req.query.msg;
@@ -93,7 +96,7 @@ router.get('/login', function(req, res, next) {
   if(req.query.failGoogle) {
     googleQuery += "&failGoogle=true";
   }
-
+  
   //check user agent and browser support 
   utils.getBrowserSupport(req.headers['user-agent']).then((sB) => {
     console.log(sB);
@@ -122,8 +125,8 @@ router.get('/login', function(req, res, next) {
     }
   }).catch((err) => {
     console.log(err)
-    msg = "Unable to detect browser. Proceed with caution";
-    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, googleQuery: googleQuery});
+    notif = "Unable to detect browser. Proceed with caution";
+    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, notification: notif, googleQuery: googleQuery});
   });
 });
 
@@ -138,9 +141,6 @@ router.get('/signup/', function(req, res, next) {
 });
 
 
-/*io.on('connection', function(socket){
-  console.log('a user connected');
-});*/
 
 
 router.get('/logout', function(req, res, next){
@@ -158,10 +158,10 @@ router.get('/logout', function(req, res, next){
       res.redirect('/auth/login'); 
     });
   }
- 
-
   //res.redirect('/auth/login');
 });
+
+
 
 
 

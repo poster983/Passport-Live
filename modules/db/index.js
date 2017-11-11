@@ -41,6 +41,7 @@ const QueuecxnOptions = {
   password: config.get("rethinkdb.password"),
   db: 'JobQueue' // The name of the database in RethinkDB
 }
+/*
 var queueNewAccountEmail = new Queue(QueuecxnOptions, {
   name: 'NewAccountEmail', // The queue and table name
   masterInterval: 310000, // Database review period in milliseconds
@@ -49,6 +50,20 @@ var queueNewAccountEmail = new Queue(QueuecxnOptions, {
   removeFinishedJobs: true, // true, false, or number of milliseconds
 });
 queueNewAccountEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}*/
+
+var queueActivateEmail = new Queue(QueuecxnOptions, {
+  name: 'ActivateEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueActivateEmail.jobOptions = {
   priority: 'normal',
   timeout: 300000,
   retryMax: 3, // Four attempts, first then three retries
@@ -94,8 +109,12 @@ exports.conn = function() {
 
 //queues 
 exports.queue = {};
+/*
 exports.queue.newAccountEmail = function() {
     return queueNewAccountEmail
+}*/
+exports.queue.activateEmail = () => {
+  return queueActivateEmail;
 }
 
 

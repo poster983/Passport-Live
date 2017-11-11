@@ -812,12 +812,14 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @param {request} req
     * @property {Object} req.body
     * @property {String} req.body.email
+    * @property {String} req.body.id
     * @api POST /api/account/sendResetPasswordEmail
     * @apibody {application/json}
     * @apiresponse {json} Sends Status code of 202, or the error.
     */
 
 router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res, next) {
+    
     api.generateResetPasswordLink(req.body).then((link) => {
         res.json(link);
     }).catch((err) => {

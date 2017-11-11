@@ -33,6 +33,7 @@ var moment = require("moment");
 var _ = require("underscore");
 const util = require('util')
 var typeCheck = require("type-check").typeCheck;
+var securityJS = require("./security.js");
 
 
 
@@ -881,35 +882,39 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
 * @link module:js/accounts
 * @param {Object} identifier
 * @property {(undefined|string)} identifier.id - account ID (prefers this)
-* @property {(undefined|string)} identifier.email - account email (If there are conflicts,  an error will be thrown)
+* @property {(undefined|string)} identifier.email - account email (If there are conflicts, an error will be thrown)
 * @returns {Promise}
 
 */
 
 exports.generateResetPasswordLink = function(identifier) {
-    return new Promise((resolve, reject) => {
-        if(typeCheck('{id: Maybe String, email: Maybe String}', identifier)) {
-            if(identifier.id) {
-                exports.getUserByID(identifier.id, (err, user) => {
-                    if(err) {return reject(err);}
-                    if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
-                    return resolve(user)
-                });
-            } else if(identifier.email) {
-                exports.getAccountByEmail(identifier.email, (err, user) => {
-                    if(err) {return reject(err);}
-                    if(user.length <= 0) {var err = new Error("User not found"); err.status = 404; return reject(err);}
-                    if(user.length > 1) {var err = new Error("Conflicting Emails"); err.status = 409; return reject(err);}
-                    return resolve(user)
-                })
+    return new Promise((mainResolve, mainReject) => {
+        return new Promise((resolve, reject) => {
+            if(typeCheck('{id: Maybe String, email: Maybe String}', identifier)) {
+                if(identifier.id) {
+                    exports.getUserByID(identifier.id, (err, user) => {
+                        if(err) {return reject(err);}
+                        if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+                        return resolve(user)
+                    });
+                } else if(identifier.email) {
+                    exports.getAccountByEmail(identifier.email, (err, user) => {
+                        if(err) {return reject(err);}
+                        if(user.length <= 0) {var err = new Error("User not found"); err.status = 404; return reject(err);}
+                        if(user.length > 1) {var err = new Error("Conflicting Emails"); err.status = 409; return reject(err);}
+                        return resolve(user)
+                    })
+                } else {
+                    var err = new TypeError("identifier.id must be of type string OR identifier.email must be of type string");
+                    return reject(err);
+                }
             } else {
                 var err = new TypeError("identifier.id must be of type string OR identifier.email must be of type string");
                 return reject(err);
             }
-        } else {
-            var err = new TypeError("identifier.id must be of type string OR identifier.email must be of type string");
-            return reject(err);
-        }
+        }).then((user) => {
+            return securityJS.newKey.resetPassword(user.id).then(mainResolve).catch(mainReject)
+        }).catch(mainReject);
     })
 }
 

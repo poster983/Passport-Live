@@ -60,14 +60,14 @@ email: hi@josephhassell.com
               <div class="col s5" style="display: none;" id="reset-password-submit">
                 <a class="waves-effect waves-light btn" onclick="sudoSendResetEmail()"><i class="material-icons left">send</i>Send Reset Email</a>
               </div>
-              <div class="col s5" id="notification" style="display: none;">
+              <div class="col s5" id="message" style="display: none;">
                 <h5>Failed To send Message</h5>
                 <p>See the console (F12) for full error logs.</p>
               </div>
             </div>
             
           </div>
-          {{msg}}
+          
         </div>
       
    
@@ -107,11 +107,22 @@ email: hi@josephhassell.com
             $("#password-div").slideDown(500);
           }
         }
+        function showMessage(title, message) {
+          $("#message > h5").html(title);
+          $("#message > p").html(message);
+          window.location.hash = "#message";
+        }
 
         $(document).ready(function() {
           if(getUrlParameter("failGoogle")) {
             Materialize.toast($("<span>Google Authentication Failed.</span>").append("<br/> <span>If you don't have a Passport account, you must create one.</span> "), 6000)
           }
+          {{#message}}
+            showMessage("", "{{message}}");
+          {{/message}}
+          {{#notif}}
+            Materialize.toast($("{{notif}}"), 10000);
+          {{/notif}}
           checkWindowHash();
         });
 
@@ -188,9 +199,9 @@ email: hi@josephhassell.com
             $("#reset-password-submit").slideDown(500);
             $("#loader").slideUp(500)
             $("#back-button").show(500);          
-            $("#notification").slideUp(500);
+            $("#message").slideUp(500);
             $("#email-div").slideDown(500);
-          } else if (window.location.hash == "#notification"){
+          } else if (window.location.hash == "#message"){
             //Shows if there is a major response from the server after an action.  Like a failed password reset email
             //back Button 
             $("#back-button > a").attr("href", "#");
@@ -207,7 +218,7 @@ email: hi@josephhassell.com
             $("#email-div").slideUp(500);
             $("#loader").slideUp(500);
             //shown elements
-            $("#notification").slideDown(500);
+            $("#message").slideDown(500);
           } else if(window.location.hash == "#processing") {
             $("#loader").slideDown(500);
             //containers 
@@ -226,7 +237,7 @@ email: hi@josephhassell.com
             $("#email-div").slideDown(500);
             $("#back-button").hide(500);
             $("#loader").slideUp(500)
-            $("#notification").slideUp(500);
+            $("#message").slideUp(500);
             checkFormFill();
           }
         }

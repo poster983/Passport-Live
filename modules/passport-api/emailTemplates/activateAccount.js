@@ -1,7 +1,7 @@
 var mjml2html = require("mjml").mjml2html;
 var config = require("config");
 
-module.exports = function(name, activateLink) {
+module.exports = function(name, activateLinkKey) {
   var bURL = config.get("server.domain");
   return mjml2html(`
 <mjml>

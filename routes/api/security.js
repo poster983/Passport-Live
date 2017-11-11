@@ -44,7 +44,7 @@ function serializeUser(req, res, done) {
 
 /**
     * Creates a new permission key for creating a new Account.
-    * Please see {@link module-js_security|<a href="module-js_security.html">Module js_security</a>} for type requirements.
+    * Please see {@link module-js_security.html|<a href="module-js_security.html">Module js_security</a>} for type requirements.
     * @function handleCreatePermissionKey
     * @async
     * @param {request} req
@@ -64,14 +64,13 @@ router.post('/key/NEW_ACCOUNT', passport.authenticate('jwt', { session: false}),
     var userGroups=req.body.userGroups;
     var timeout=req.body.timeout;
     
-    api.newKey.newAccount(userGroups, timeout, function(err, key) {
-        if(err) {
-            return next(err)
-        }
+    api.newKey.newAccount(userGroups, timeout).then((key)=> {
         res.status(201).send({
             key: key
         })
-    })
+    }).catch((err) => {
+        return next(err)
+    });
 });
 
 
@@ -103,19 +102,24 @@ router.post('/key/API', function handleNewApiKey(req, res, next) {
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/security/key/
-    
+    * @api GET /api/security/key/:type
+    * @apiparam {permissionKeyType} type - Must provide an allowed key type defined in ENUM "permissionKeyType".  (Currently only "NEW_ACCOUNT" and "UNKNOWN" are allowed)
     * @apiquery {string} key - permission key
     * @apiresponse {json} Returns the permission key data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo Rate Limit DONT USE JWT
     */
 
-router.get('/key/', function getPermissionKeyData(req, res, next) {
+router.get('/key/:type', function getPermissionKeyData(req, res, next) {
     var key = req.query.key;
     if(!typeCheck("String", key)) {
         var err = TypeError("Query \"key\" must be a string.  Got " + typeof key);
         err.status = 400;
+        return next(err)
+    }
+    if(type !== api.permissionKeyType.NEW_ACCOUNT || type !== api.permissionKeyType.UNKNOWN) {
+        var err = TypeError("Forbidden");
+        err.status = 403;
         return next(err)
     }
     api.getPermissionKeyData(key, function(err, data) {

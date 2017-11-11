@@ -28,6 +28,7 @@ var db = require('../../modules/db/index.js');
 var config = require('config');
 const nodemailer = require('nodemailer');
 var emailTemplates = require('./emailTemplates/index.js');
+var securityJS = require("./security.js");
 //console.log(config.get("email.nodemailerConfig"))
 var SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
 
@@ -71,7 +72,7 @@ exports.sendMail = function(messageConfig, options) {
 }
 
 
-/** 
+/*
 * Sends the new passport id templeate email with one time use password.
 * @function sendNewAccountWithPassEmail
 * @link module:js/email
@@ -83,6 +84,7 @@ exports.sendMail = function(messageConfig, options) {
 * @param {String} mailOptions.password - Unhashed password.  
 * @returns {Promise} - Job Cursor.  Kinda Useless.
 */
+/*
 exports.sendNewAccountWithPassEmail = function(mailOptions) {
     return new Promise((resolve, reject) => {
         if(Array.isArray(mailOptions)) {
@@ -115,13 +117,14 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
             return reject(new Error("mailOptions must be either an array or an object."))
         }
     })  
-}
+}*/
 
 
 
 /* JOBS */
 
 //sendNewAccountWithPassEmail
+/*
 db.queue.newAccountEmail().process((job, next) => {
   // Send email using job.recipient as the destination address
     var messageConfig = {
@@ -136,17 +139,21 @@ db.queue.newAccountEmail().process((job, next) => {
     }).catch((err) => {
         return next(err);
     });
-    /*
-  mailOptions.to = job.recipient
-  return transporter.sendMail(mailOptions).then((info) => {
-    console.dir(info)
-    return next(null, info)
-  }).catch((err) => {
-    // This catch is for nodemailer sendMail errors.
-    return next(err)
-  })*/
 })
+*/
 
+//sendActivation Email 
+db.queue.activateEmail().process((job, next) => {
+    securityJS.newKey.activateAccount(job.accountID).then((key) => {
+        var messageConfig = {
+            to: job.to,
+            subject: "Activate Your New Passport ID",
+            text: "",
+            html: emailTemplates.newAccount.withPass(job.name, job.accountEmail, job.password).html
+        }
+    })
+    
+})
 
 /**
  * Nodemailer Message options. Can use any property found [Here]{@link: https://nodemailer.com/message/}
