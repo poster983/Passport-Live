@@ -106,6 +106,16 @@ var utils = require("../passport-utils/index.js")
                     err.status = 400;
                     return reject(err)
             }
+
+            //CHeck Type Rules
+            if(type === "NEW_ACCOUNT") {
+                if(!typeCheck("[userGroup]", permissions.userGroups, utils.typeCheck)) {
+                    var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
+                    err.status = 400;
+                    return reject(err);
+                }
+            }
+            
             ins.key = key;
             ins.type = type;
 
@@ -141,12 +151,6 @@ var utils = require("../passport-utils/index.js")
      */
     newKey.newAccount = function(userGroups, timeout) {
         return new Promise((resolve, reject) => {
-            if(!typeCheck("[userGroup]", userGroups, utils.typeCheck)) {
-                var err = new TypeError("userGroups must be an array of type \"userGroup\" strings.");
-                err.status = 400;
-                return reject(err);
-            }
-            //return reject(new Error("REJECTION"))
             return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
         }) 
     }
