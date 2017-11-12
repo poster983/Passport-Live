@@ -30,6 +30,7 @@ var shortid = require("shortid");
 var oldApi = require("./index.js")
 var typeCheck = require("type-check").typeCheck;
 var utils = require("../passport-utils/index.js")
+var accountsJS = require("./accounts.js")
 
 
 ///PERMISSON KEYS
@@ -116,7 +117,14 @@ var utils = require("../passport-utils/index.js")
                 }
             }
             if(type === "ACTIVATE_ACCOUNT") {
-                if(!typeCheck("{accountID: String}", permissions, utils.typeCheck)) {
+                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
+                    var err = new TypeError("permissions.accountID must be an ID string.");
+                    err.status = 400;
+                    return reject(err);
+                }
+            }
+            if(type === "RESET_PASSWORD") {
+                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
                     var err = new TypeError("permissions.accountID must be an ID string.");
                     err.status = 400;
                     return reject(err);
@@ -171,8 +179,13 @@ var utils = require("../passport-utils/index.js")
      */
     newKey.activateAccount = function(id) {
         return new Promise((resolve, reject) => {
-            var date = moment().add(7, "days")
-            return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, {accountID: id}, null, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+            accountsJS.getUserByID(id, (err, user) => {
+                if(err) {return reject(err);}
+                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+                var date = moment().add(7, "days")
+                return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+            })
+            
         }) 
     }
 
@@ -186,7 +199,7 @@ var utils = require("../passport-utils/index.js")
     newKey.resetPassword = function(id) {
         return new Promise((resolve, reject) => {
             var date = moment().add(1, "hours")
-            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, {accountID: id}, null, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
         }) 
     }
     /*

@@ -21,12 +21,15 @@ email: hi@josephhassell.com
 //THIS FILE WILL STOP WORKING WHEN IN PRODUCTION
 
 var express = require('express');
+var securityJS = require('../../modules/passport-api/security.js');
+var emailApi = require("../../modules/passport-api/email.js")
+var emailTracker = require('pixel-tracker');
 var router = express.Router();
 
 
 
 
-var emailTracker = require('pixel-tracker')
+
 emailTracker.use(function (error, result) {
   console.log(result)
 });
@@ -37,7 +40,6 @@ router.get("/pixel.gif", function(req, res, next) {
 }, emailTracker.middleware);
 
 
-var emailApi = require("../../modules/passport-api/email.js")
 router.post("/sendMail", function(req, res, next) {
     emailApi.sendMail({
         to: 'to@example.com',
@@ -69,6 +71,14 @@ router.get("/delay/:delay", (req, res, next) => {
     setTimeout(function() {
         res.send("Hello World")
     }, parseInt(req.params.delay))
+})
+
+
+
+router.get("/newActivateKey", (req, res, next) => {
+    securityJS.newKey.activateAccount(req.query.id).then((key) => {
+        res.send(key);
+    }).catch((err) => {return next(err);})
 })
 
 module.exports = router;

@@ -22,6 +22,7 @@ var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
+var typeCheck = require("type-check").typeCheck;
 var router = express.Router();
 
 //this page will route each user to the correct page after login 
@@ -50,7 +51,20 @@ router.get('/', function(req, res, next) {
 router.get("/activate", function(req, res, next) {
   var permissionKey = req.query.ak; //Activation Key (permission key)
   if(typeof permissionKey === "string") {
-    
+    securityJS.getPermissionKeyData(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey, (err, payload) => {
+        if(err) {
+            return next(err);
+        }
+        //THIS IS AN EXACT CHECK.  FIX!!!
+        if(!typeCheck("{params: {accountID: String}}", payload)) {
+            var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
+            err.status = 500;
+            return next(err);
+        }
+        accountJS.setVerification(payload.params.accountID, true).then((resp) => {
+            res.send(resp)
+        }).catch((err)=>{return next(err)})
+    });
   } else {
     res.redirect('/auth/login?msg=' + encodeURIComponent("Query \"ak\" expected a string.  Got: " + typeof permissionKey)); 
   }

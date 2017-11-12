@@ -122,7 +122,7 @@ router.get('/key/:type', function getPermissionKeyData(req, res, next) {
         err.status = 403;
         return next(err)
     }
-    api.getPermissionKeyData(key, function(err, data) {
+    api.getPermissionKeyData(type, key, function(err, data) {
         if(err) {
             return next(err);
         }

@@ -339,11 +339,15 @@ exports.getAccountByEmail = function(email, done) {
     * @link module:passportApi
     * @async
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
-    * @param {object} dbConn - RethinkDB Connection Object.
     * @param {constant} id - The ID of the user
     * @param {function} done - Callback
     */
 exports.getUserByID = function(id, done) { 
+    if(!typeCheck("String", id)) {
+        var err = new TypeError("Expected ID to be type \"String\" Got: " + typeof id);
+        err.status = 400;
+        return done(err)
+    }
      r.table("accounts").get(id).run(db.conn(), function(err, document) {
         if(err) {
             return done(err);
@@ -1044,6 +1048,30 @@ exports.updateTags = function(id, tagData) {
         })
     })
     
+}
+
+
+/**
+* Sets the isVerified value.
+* @function setVerification
+* @link module:js/accounts
+* @param {String} id - Account ID
+* @param {Boolean} isVerified
+* @returns {Promise}
+*/
+exports.setVerification = function(id, isVerified) {
+    return new Promise((resolve, reject) => {
+        if(!typeCheck("String", id)) {
+            var err = new TypeError("Expected ID to be type \"String\" Got: " + typeof id);
+            err.status = 400;
+            return reject(err)
+        }
+        if(!typeCheck("Boolean", isVerified)) {
+            var err = new TypeError("Expected isVerified to be type \"Boolean\" Got: " + typeof isVerified);
+            err.status = 400;
+            return reject(err)
+        }
+    });
 }
 
 
