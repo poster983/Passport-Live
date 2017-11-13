@@ -337,40 +337,23 @@ exports.getPermissionKeyData = function(type, key, done) {
  * @link module:js/security
  * @param {permissionKeyType} type - enum
  * @param {string} key - the key to check.
- * @returns {Promise} - See Example.
- * @example <caption>Promise Response</caption>
- * {
- *    valid: (true|false),
- *    keyData: (Object|undefined)
- * }
+ * @returns {Promise} - returns either null or the key data
  */
 
 exports.checkPermissionKeyValidity = function(type, key) {
     return new Promise((resolve, reject) => {
-        /*
-        exports.getPermissionKeyData(type, key, (err, keyData) => {
-            if(err) {return reject(err);}
-            console.log(keyData)
-            if(typeCheck("{timeout: Maybe {tally: Maybe Number, time: Maybe ISODate | Date}, ...}", keyData, utils.typeCheck)) {
-                if(!keyData.timeout) {
-                    //no Timeouts.  Always Valid.
-                    return resolve({valid: true, keyData: keyData});
-                }
-                if(keyData.timeout.time) {
-                    var moment()
-                }
-                return resolve({valid: true, keyData: keyData});
-            } else {
-                var err = new Error("Timeout Data Malformed");
-                err.status = 500;
-                return reject(err);
-            }
-        })
-        */
-        return r.table("permissionKeys").filter({
+        return r.table("permissionKeys")
+        .filter({
             key: key,
             type: type
-        }).run(db.conn()).then((keyDoc) => {
+        })
+        .filter((key) => {
+            return key("timeout")("time").ge(r.now()).default(true);
+        })
+        .filter((key) => {
+            return key("timeout")("tally").gt(0).default(true);
+        })
+        .run(db.conn()).then((keyDoc) => {
             keyDoc.toArray(function(err, keyData) {
                 if(err) {
                     return reject(err)
@@ -378,9 +361,7 @@ exports.checkPermissionKeyValidity = function(type, key) {
                 if(keyData.length == 1) {
                     return resolve(keyData[0]);
                 } else if(keyData.length < 1) {
-                    var err = new Error("Invalid Key");
-                    err.status = 400;
-                    return reject(err);
+                    return resolve(null)
                 } else {
                     var err = new Error("Conflicting Keys");
                     err.status = 500;

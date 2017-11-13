@@ -22,6 +22,8 @@ var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
+var r = require('rethinkdb');
+var db = require('../modules/db/index.js');
 var typeCheck = require("type-check").typeCheck;
 var router = express.Router();
 
@@ -51,11 +53,14 @@ router.get('/', function(req, res, next) {
 router.get("/activate", function(req, res, next) {
   var permissionKey = req.query.key; //Activation Key (permission key)
   if(typeof permissionKey === "string") {
-    securityJS.getPermissionKeyData(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey, (err, payload) => {
-        if(err) {
+    securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
+        console.log(payload)
+        if(!payload) {
+            var err = new Error("Invalid Key");
+            err.status = 400;
             return next(err);
         }
-        //THIS IS AN EXACT CHECK.  FIX!!!
+        
         if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
             var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
             err.status = 500;
@@ -65,8 +70,15 @@ router.get("/activate", function(req, res, next) {
         accountJS.setVerification(payload.params.accountID, true).then((resp) => {
             if(resp && resp.replaced == 1) {
                 //Success
+                //Main Task done. Edit Timeout field
 
-                //Check For Required Fields
+                //Check For Password Field.
+                db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
+                    if(hasPass) {
+                        //send to login page
+                        res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
+                    }
+                }).catch((err)=>{return next(err)})
                 
                 //res.send(resp)
             } else if(resp && resp.replaced > 1) {
@@ -84,9 +96,9 @@ router.get("/activate", function(req, res, next) {
                 return next(err);
             }
         }).catch((err)=>{return next(err)})
-    });
+    }).catch((err)=>{return next(err)});
   } else {
-    res.redirect('/auth/login?msg=' + encodeURIComponent("Query \"key\" expected a string.  Got: " + typeof permissionKey)); 
+    res.redirect('/auth/login'); 
   }
 })
 

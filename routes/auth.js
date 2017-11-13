@@ -87,12 +87,10 @@ router.get('/google/dscm', function (req, res, next) {
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
-  var msg = false;
-  var notif = false;
+  var msg = req.query.msg;
+  var notif = req.query.notif;
   var googleQuery = "";
-  if(req.query.msg) {
-    msg = req.query.msg;
-  }
+  
   if(req.query.failGoogle) {
     googleQuery += "&failGoogle=true";
   }
@@ -121,7 +119,7 @@ router.get('/login', function(req, res, next) {
         templateBs.message = "Your browser is older than the minimum supported version. <br> You may experience broken features or layout bugs.  <br>  We highly encourage updating your browser."
         templateBs.browser = sB.ua.browser;
       }
-      res.render('auth/login', { doc_Title: 'Login -- Passport', browserSupport: templateBs, message: msg, googleQuery: googleQuery});
+      res.render('auth/login', { doc_Title: 'Login -- Passport', browserSupport: templateBs, message: msg, notification: notif, googleQuery: googleQuery});
     }
   }).catch((err) => {
     console.log(err)

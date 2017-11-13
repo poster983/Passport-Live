@@ -120,9 +120,9 @@ email: hi@josephhassell.com
           {{#message}}
             showMessage("", "{{message}}");
           {{/message}}
-          {{#notif}}
-            Materialize.toast($("{{notif}}"), 10000);
-          {{/notif}}
+          {{#notification}}
+            Materialize.toast($("<span>" + decodeURIComponent("{{notification}}") + "</span>"), 10000);
+          {{/notification}}
           checkWindowHash();
         });
 
