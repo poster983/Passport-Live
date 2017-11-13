@@ -81,4 +81,10 @@ router.get("/newActivateKey", (req, res, next) => {
     }).catch((err) => {return next(err);})
 })
 
+router.get("/checkPermKeyValidity", (req, res, next) => {
+    securityJS.checkPermissionKeyValidity(req.query.type, req.query.key).then((key) => {
+        res.send(key);
+    }).catch((err) => {return next(err);})
+})
+
 module.exports = router;

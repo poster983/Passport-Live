@@ -1071,6 +1071,7 @@ exports.setVerification = function(id, isVerified) {
             err.status = 400;
             return reject(err)
         }
+        return r.table("accounts").get(id).update({isVerified: isVerified}).run(db.conn()).then(resolve).catch(reject);
     });
 }
 

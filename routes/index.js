@@ -49,24 +49,44 @@ router.get('/', function(req, res, next) {
 //Account Activation
 //localhost:3000/activate
 router.get("/activate", function(req, res, next) {
-  var permissionKey = req.query.ak; //Activation Key (permission key)
+  var permissionKey = req.query.key; //Activation Key (permission key)
   if(typeof permissionKey === "string") {
     securityJS.getPermissionKeyData(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey, (err, payload) => {
         if(err) {
             return next(err);
         }
         //THIS IS AN EXACT CHECK.  FIX!!!
-        if(!typeCheck("{params: {accountID: String}}", payload)) {
+        if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
             var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
             err.status = 500;
             return next(err);
         }
+        
         accountJS.setVerification(payload.params.accountID, true).then((resp) => {
-            res.send(resp)
+            if(resp && resp.replaced == 1) {
+                //Success
+
+                //Check For Required Fields
+                
+                //res.send(resp)
+            } else if(resp && resp.replaced > 1) {
+                var err = new TypeError("An impossible error has just occurred. Please perform a reality check.");
+                err.status = 500;
+                return next(err);
+            } else if(resp && resp.unchanged > 0) {
+                console.log(resp)
+                var err = new TypeError("User already Verified");
+                err.status = 500;
+                return next(err);
+            } else {
+                var err = new TypeError("User Not Found");
+                err.status = 500;
+                return next(err);
+            }
         }).catch((err)=>{return next(err)})
     });
   } else {
-    res.redirect('/auth/login?msg=' + encodeURIComponent("Query \"ak\" expected a string.  Got: " + typeof permissionKey)); 
+    res.redirect('/auth/login?msg=' + encodeURIComponent("Query \"key\" expected a string.  Got: " + typeof permissionKey)); 
   }
 })
 

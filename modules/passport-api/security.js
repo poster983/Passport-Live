@@ -302,7 +302,7 @@ exports.getPermissionKeyData = function(type, key, done) {
     if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
         var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
             err.status = 400;
-            return reject(err)
+            return done(err)
     }
 	r.table("permissionKeys").filter({
         key: key,
@@ -331,8 +331,66 @@ exports.getPermissionKeyData = function(type, key, done) {
     });
 }
 
+/**
+ * Checks if Permission Key is Valid according to the timeout field.  DOES NOT INCREASE TALLY.
+ * Will not check if key payload is in the correct format Except for the timeout field. 
+ * @link module:js/security
+ * @param {permissionKeyType} type - enum
+ * @param {string} key - the key to check.
+ * @returns {Promise} - See Example.
+ * @example <caption>Promise Response</caption>
+ * {
+ *    valid: (true|false),
+ *    keyData: (Object|undefined)
+ * }
+ */
 
-
+exports.checkPermissionKeyValidity = function(type, key) {
+    return new Promise((resolve, reject) => {
+        /*
+        exports.getPermissionKeyData(type, key, (err, keyData) => {
+            if(err) {return reject(err);}
+            console.log(keyData)
+            if(typeCheck("{timeout: Maybe {tally: Maybe Number, time: Maybe ISODate | Date}, ...}", keyData, utils.typeCheck)) {
+                if(!keyData.timeout) {
+                    //no Timeouts.  Always Valid.
+                    return resolve({valid: true, keyData: keyData});
+                }
+                if(keyData.timeout.time) {
+                    var moment()
+                }
+                return resolve({valid: true, keyData: keyData});
+            } else {
+                var err = new Error("Timeout Data Malformed");
+                err.status = 500;
+                return reject(err);
+            }
+        })
+        */
+        return r.table("permissionKeys").filter({
+            key: key,
+            type: type
+        }).run(db.conn()).then((keyDoc) => {
+            keyDoc.toArray(function(err, keyData) {
+                if(err) {
+                    return reject(err)
+                }
+                if(keyData.length == 1) {
+                    return resolve(keyData[0]);
+                } else if(keyData.length < 1) {
+                    var err = new Error("Invalid Key");
+                    err.status = 400;
+                    return reject(err);
+                } else {
+                    var err = new Error("Conflicting Keys");
+                    err.status = 500;
+                    return reject(err);
+                }
+            });
+        }).catch(reject);
+    })
+    
+}
 /**
 ENUM TYPES
 **/
