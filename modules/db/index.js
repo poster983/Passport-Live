@@ -98,7 +98,7 @@ exports.setup = function(noDefaultDB) {
 }
 
 exports.get = function() {
-        return r;
+    return r;
 }
 exports.dash = function() {
     return rdash;
@@ -106,6 +106,8 @@ exports.dash = function() {
 exports.conn = function() {
     return connection;
 }
+
+
 
 //queues 
 exports.queue = {};

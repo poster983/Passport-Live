@@ -24,6 +24,7 @@ email: hi@josephhassell.com
 
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+var r_ = db.dash()
 var config = require("config");
 var moment = require("moment");
 var shortid = require("shortid");
@@ -222,6 +223,7 @@ var accountsJS = require("./accounts.js")
     /**
      * Checks a Permission Key.  It also may change the timeout field if on tally mode
      * @link module:js/security
+     * @deprecated since version 0.10
      * @param {string} key - the key to check.
      * @param {function} done - Callback.
      */
@@ -340,7 +342,7 @@ exports.getPermissionKeyData = function(type, key, done) {
  * @returns {Promise} - returns either null or the key data
  */
 
-exports.checkPermissionKeyValidity = function(type, key) {
+exports.checkPermissionKeyValidity = (type, key) => {
     return new Promise((resolve, reject) => {
         return r.table("permissionKeys")
         .filter({
@@ -372,6 +374,45 @@ exports.checkPermissionKeyValidity = function(type, key) {
     })
     
 }
+
+
+
+/**
+ * If the key has a tally on it, it will subtract 1 from it.  WILL NOT STOP THE TALLY FROM GOING PAST 0.  THIS IS INTENDED BEHAVIOUR
+ * @link module:js/security
+ * @param {permissionKeyType} type - enum
+ * @param {string} key - the key to check.
+ * @returns {Promise} - returns transaction
+ */
+exports.keyUsed = (type, key) => {
+    return r_.table("permissionKeys")
+    .filter({
+        key: key,
+        type: type
+    })
+    .filter((row) => {
+        return row.hasFields({timeout: {tally: true}})
+    })
+    .update((row) => {
+        return {timeout: {tally: row("timeout")("tally").sub(1)}}
+    }).run()
+}
+
+//exports.keyUsed("ACTIVATE_ACCOUNT", "SJrZpBryGHklrbTBHkf").then((res) => {console.log(res)}).catch((err)=>{console.error(err)})
+/**
+ * Removes all timedout keys and keys with tally <= 0 
+ * @link module:js/security
+ * @returns {Promise} - returns transaction
+ */
+exports.cleanDB = () => {
+    return r_.table("permissionKeys")
+    .filter((key) => {
+        return key("timeout")("time").lt(r_.now())
+        .or(key("timeout")("tally").le(0))
+        .default(false);
+    }).delete().run();
+}
+//exports.cleanDB().then((res) => {console.log(res)})
 /**
 ENUM TYPES
 **/
