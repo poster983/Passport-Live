@@ -71,14 +71,18 @@ router.get("/activate", function(req, res, next) {
             if(resp && resp.replaced == 1) {
                 //Success
                 //Main Task done. Edit Timeout field
-
-                //Check For Password Field.
-                db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
-                    if(hasPass) {
-                        //send to login page
-                        res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
-                    }
-                }).catch((err)=>{return next(err)})
+                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((trans) => {
+                    //Check For Password Field.
+                    db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
+                        if(hasPass) {
+                            //send to login page
+                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
+                        } else {
+                            //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
+                            res.redirect('/auth/login?notif=' + encodeURIComponent("RESET PASSWORD PAGE PLACEHOLDER")); 
+                        }
+                    }).catch((err)=>{return next(err)})
+                }).catch((err) => {return next(err)})
                 
                 //res.send(resp)
             } else if(resp && resp.replaced > 1) {
