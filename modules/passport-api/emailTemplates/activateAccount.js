@@ -3,6 +3,7 @@ var config = require("config");
 
 module.exports = function(name, activateLinkKey) {
   var bURL = config.get("server.domain");
+  var activateLink = bURL + "/activate?key=" + activateLinkKey;
   return mjml2html(`
 <mjml>
 <mj-head>

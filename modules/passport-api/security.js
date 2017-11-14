@@ -71,7 +71,7 @@ var accountsJS = require("./accounts.js")
             var key = shortid.generate() + shortid.generate();
             
             //console.log(parseInt(timeout.tally))
-            console.log(timeout)
+            //console.log(timeout)
             /*if(timeout.time) {
                 //format time to a general format
                 timeout.time = moment(timeout.time).toISOString();

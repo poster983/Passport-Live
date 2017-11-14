@@ -119,7 +119,55 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
     })  
 }*/
 
-
+/*
+* Sends the new passport id templeate email with one time use password.
+* @function sendActivationEmail
+* @link module:js/email
+* @param {(Object | Object[])} mailOptions
+* @param {String} mailOptions.to - Email address to send the email to. 
+* @param {Object} mailOptions.name - Name object.
+* @param {Object} mailOptions.name.first - User's First Name.
+* @param {String} mailOptions.accountID - User ID in the DB.  
+* @returns {Promise} - Job Cursor.  Kinda Useless.
+*/
+exports.sendActivationEmail = function(mailOptions) {
+    return new Promise((resolve, reject) => {
+        console.log("Attempting To Send Activation Email.")
+        if(Array.isArray(mailOptions)) {
+            var jobs = [];
+            if(mailOptions.length)
+            for(var x = 0; x < mailOptions.length; x++) {
+                var job = db.queue.activateEmail().createJob()
+                job.to = mailOptions[x].to;
+                job.name = mailOptions[x].name;
+                job.accountID = mailOptions[x].accountID;
+                jobs.push(job);
+                if(x >= mailOptions.length-1) {
+                    db.queue.activateEmail().addJob(jobs).then((cur) => {
+                        return resolve(cur);
+                    });
+                }
+            }
+        } else if (typeof mailOptions === "object") {
+            var job = db.queue.activateEmail().createJob();
+            job.to = mailOptions.to;
+            job.name = mailOptions.name;
+            job.accountID = mailOptions.accountID;
+            db.queue.activateEmail().addJob(job).then((cur) => {
+                return resolve(cur);
+            });
+        } else {
+            console.log(typeof mailOptions)
+            return reject(new Error("mailOptions must be either an array or an object."))
+        }
+    })  
+}
+/*
+setTimeout(function() {exports.sendActivationEmail({
+    to: "example@example.log",
+    name:{first: "Joey"},
+    accountID: "653f06df-c797-4795-993f-9d2870a57315"
+}).then((res)=> {console.log(res)}).catch((err)=> console.error(err))}, 1000);*/
 
 /* JOBS */
 
@@ -148,10 +196,16 @@ db.queue.activateEmail().process((job, next) => {
         var messageConfig = {
             to: job.to,
             subject: "Activate Your New Passport ID",
-            text: "",
-            html: emailTemplates.newAccount.withPass(job.name, job.accountEmail, job.password).html
+            text: "To activate your passport account, go here: " + config.get("server.domain") + "/activate?key=" + key,
+            html: emailTemplates.activateAccount(job.name, key).html
         }
-    })
+        exports.sendMail(messageConfig).then((trans) => {
+            console.log(trans, "debig");
+            return next(null, trans)
+        }).catch((err) => {
+            return next(err);
+        });
+    }).catch((err) => {return next(err);})
     
 })
 
