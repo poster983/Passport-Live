@@ -54,7 +54,7 @@ router.get("/activate", function(req, res, next) {
   var permissionKey = req.query.key; //Activation Key (permission key)
   if(typeof permissionKey === "string") {
     securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
-        console.log(payload)
+        //console.log(payload)
         if(!payload) {
             var err = new Error("Invalid Key");
             err.status = 400;
@@ -90,7 +90,8 @@ router.get("/activate", function(req, res, next) {
                 err.status = 500;
                 return next(err);
             } else if(resp && resp.unchanged > 0) {
-                console.log(resp)
+                //console.log(resp)
+                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
                 var err = new TypeError("User already Verified");
                 err.status = 500;
                 return next(err);

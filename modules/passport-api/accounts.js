@@ -51,31 +51,28 @@ var securityJS = require("./security.js");
     *   }
     * });
     * @param {Object} user
-    * @property {String} user.userGroup - A usergroup defined in the config
-    * @property {Object} user.name
-    * @property {string} user.name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
-    * @property {string} user.name.first - A user's given name
-    * @property {string} user.name.last - A user's family name
-    * @property {string} user.email - A user's email address
-    * @property {string} user.schoolID - A user's schoolID (optional)
-    * @property {(boolean|undefined)} user.isVerified - If false, the user must first click on a verification link before being able to login. (default: false)
-    * @property {(int|null|undefined)} user.graduationYear - Optional
-    * @property {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
-    * @property {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
-    * @property {accountFlags} user.flags - See typedef
+    * @param {String} user.userGroup - A usergroup defined in the config
+    * @param {Object} user.name
+    * @param {string} user.name.salutation - A user's title/salutation (Mr., Ms., Mx., ECT...)
+    * @param {string} user.name.first - A user's given name
+    * @param {string} user.name.last - A user's family name
+    * @param {string} user.email - A user's email address
+    * @param {string} user.schoolID - A user's schoolID (optional)
+    * @param {(boolean|undefined)} user.isVerified - If false, the user must first click on a verification link before being able to login. (default: false)
+    * @param {(int|null|undefined)} user.graduationYear - Optional
+    * @param {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
+    * @param {(Object|undefined)} user.groupFields - A json object with data unique to that usergroup (Most of the time, the json object is empty.  The program does most of the work)
+    * @param {accountFlags} user.flags - See typedef
     * @param {(Object|undefined)} options
-    * @property {boolean} options.generatePassword - overrides user.password and generates a secure random password Will return the password in the promise.(Default: false)
-    * @property {boolean} options.returnPassword - Will return the password in the promise. (Default: false)
-    * @property {boolean} options.skipEmail - Will Skip sending any confirmation email all together and will set the account to be Verified. (Default: false)
+    * @param {boolean} options.generatePassword - overrides user.password and generates a secure random password Will return the password in the promise.(Default: false)
+    * @param {boolean} options.skipEmail - Will Skip sending any confirmation email all together. (Default: false)
+    * @param {boolean} options.allowNullPassword - Will not error if password is of type Null.  The password will be set on account activation. (default: false)
     * @returns {Promise} - Resolution includes the transaction summary
     */
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
     return new Promise((resolve, reject) => {
-        if(options && options.skipEmail) {
-            user.isVerified = true;
-        }
-        //
+        
         if(options && options.generatePassword) {
             user.password = utils.generateSecureKey();
         }
@@ -85,6 +82,7 @@ exports.createAccount = function(user, options) {
             err.status = 400;
             return reject(err);
         }
+        user.isVerified = (user.isVerified==true);
         if(!user.userGroup) {
             var err = new Error("Usergroup Undefined");
             err.status = 400;
@@ -112,10 +110,25 @@ exports.createAccount = function(user, options) {
         } else {
             user.email = user.email.toLowerCase();
         }
-        if(!user.password) {
-            var err = new Error("password Undefined");
-            err.status = 400;
-            return reject(err);
+        /*if(!options || !options.allowNullPassword) {
+            if(!user.password) {
+                var err = new Error("password Undefined");
+                err.status = 400;
+                return reject(err);
+            }
+        }*/
+        if(options && options.allowNullPassword === true) {
+            if(!typeCheck("{password: Null | String, ...}", user.password)) {
+                var err = new TypeError("expected password to be either Null or String.  Got: " + typeof user.password);
+                err.status = 400;
+                return reject(err);
+            }
+        } else {
+            if(!typeCheck("{password: String, ...}", user.password)) {
+                var err = new TypeError("expected password to be a String.  Got: " + typeof user.password);
+                err.status = 400;
+                return reject(err);
+            }
         }
         if(!user.schoolID || user.schoolID == "") {
             user.schoolID = null;
@@ -202,7 +215,7 @@ exports.createAccount = function(user, options) {
                           schoolID: user.schoolID,
                           graduationYear: user.graduationYear,
                           isArchived: false,
-                          isVerified: false,
+                          isVerified: user.isVerified,
                           integrations: false,
                           flags: (user.flags || null)
                         }).run(db.conn());
@@ -213,7 +226,7 @@ exports.createAccount = function(user, options) {
                                     
                                 }
                                 var resp = {transaction: results};
-                                if((options && options.returnPassword) ||(options && options.generatePassword)) {
+                                if(options && options.generatePassword) {
                                     resp.password = user.password; 
                                 }
                                 return resolve(resp);
