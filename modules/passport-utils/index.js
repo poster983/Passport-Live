@@ -83,7 +83,23 @@ exports.dscm = function(req, res, next) {
         })
 
     } else {
-        return next();
+        if(req.header("authorization")) {
+            jwt.verify(req.signedCookies.JWT.substring(4), config.get("secrets.api-secret-key"), function(err, decode) {
+                if(err) {
+                    return next(err);
+                } else if(decode && decode.dscm) {
+                    //possible spoof 
+                    var err = new Error("Unauthorized");
+                    err.status = 401;
+                    return next(err)
+                } else {
+                    return next();
+                }
+            })
+        } else {
+            return next();
+        }
+        
     }
     
 }
@@ -138,30 +154,47 @@ exports.checkPeriod = function(period, done) {
         * @function checkPasswordPolicy
         * @link module:js/utils
         * @param {string} password - Password to check
-        * @param {function} done - callback. 
-        * @returns {callback} Includes error, and a boolean.
+        * @returns {Promise} 
+        * @example <caption>Promise Payload</caption>
+        * {
+        *   valid: (boolean)
+        *   failedAt: (regex string | undefined)
+        *   humanReadableRule: (string | undefined)
+        * }
         */
-exports.checkPasswordPolicy = function(password, done) {
-    var rules = config.get("passwordPolicy.regexRules");
-    if(password.length >= config.get("passwordPolicy.minimumLength") && password.length <= config.get("passwordPolicy.maximumLength")) {
-        if(rules.length <=0) {
-            return done(null, true);
-        }
-        for(var x = 0; x < rules.length; x++) {
-            if(!new RegExp(rules[x]).test(password)) {
-                var err = new Error(config.get("passwordPolicy.humanReadableRule") + "Failed at regex test: " + rules[x])
-                err.status = 400;
-                return done(err, false);
+exports.checkPasswordPolicy = function(password) {
+    return new Promise((resolve) => {
+        var rules = config.get("passwordPolicy.regexRules");
+        if(password.length >= config.get("passwordPolicy.minimumLength") && password.length <= config.get("passwordPolicy.maximumLength")) {
+            if(rules.length <=0) {
+                return resolve({valid: true})
             }
-            if(x >= rules.length-1) {
-                return done(null, true);
+            for(var x = 0; x < rules.length; x++) {
+                if(!new RegExp(rules[x]).test(password)) {
+                    var err = new Error(config.get("passwordPolicy.humanReadableRule") + "Failed at regex test: " + rules[x])
+                    err.status = 400;
+                    return resolve({
+                        valid: false,
+                        failedAt: rules[x],
+                        humanReadableRule: config.get("passwordPolicy.humanReadableRule")
+                    })
+                }
+                if(x >= rules.length-1) {
+                    return resolve({valid: true})
+                }
             }
+        } else {
+            /*var err = new Error("Password must be " + config.get("passwordPolicy.minimumLength") + " to " + config.get("passwordPolicy.maximumLength") + " characters long.")
+            err.status = 400;
+            return done(err, false);*/
+            return resolve({
+                valid: false,
+                failedAt: "{" + config.get("passwordPolicy.minimumLength") + "," + config.get("passwordPolicy.maximumLength") + "}",
+                humanReadableRule: config.get("passwordPolicy.humanReadableRule")
+            })
         }
-    } else {
-        var err = new Error("Password must be " + config.get("passwordPolicy.minimumLength") + " to " + config.get("passwordPolicy.maximumLength") + " characters long.")
-        err.status = 400;
-        return done(err, false);
-    }
+    })
+    
 }
 
 /**

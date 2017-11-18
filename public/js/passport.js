@@ -259,7 +259,10 @@ function materialResponse(icon, colorClass, done) {
 
 function errorHand(err) {
   //Do more Later
-  if(err.status) {
+  if(err.isFetch) {
+    var $toastHTML = $("<span> ERROR: " + err.response.status + " " + err.message + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.response.headers.get("errormessage")) + "</strong> </span>"))
+  } else if(err.status) {
+    //AJAX ERROR
     var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.getResponseHeader("errormessage")) + "</strong> </span>"))
   } else if(err.message) {
     var $toastHTML = $("<span> ERROR: " + err.message + "</span>")
@@ -292,3 +295,31 @@ function getUrlParameter(sParam) {
     }
 };
 
+function startTimeoutClock(ms, interval, action) {
+  var msCurrent = 0;
+  (function tick() {
+    if(msCurrent >= ms) {
+      return action(0);
+    }
+    setTimeout(tick, interval);
+    msCurrent+=interval;
+    action(((ms-msCurrent)/ms)*100);
+  })();
+}
+
+function fetchStatus(response) {
+  console.log(response)
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.statusText)
+    error.isFetch = true;
+    error.response = response;
+    errorHand(error)
+    throw error
+  }
+}
+
+function fetchJSON(response) {
+  return response.json()
+}

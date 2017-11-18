@@ -893,7 +893,7 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     });
 }
 
-/**
+/*
 * Creates a link that allows the holder to reset the linked account password
 * @function generateResetPasswordLink
 * @link module:js/accounts
@@ -901,9 +901,8 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
 * @property {(undefined|string)} identifier.id - account ID (prefers this)
 * @property {(undefined|string)} identifier.email - account email (If there are conflicts, an error will be thrown)
 * @returns {Promise}
-
 */
-
+/*
 exports.generateResetPasswordLink = function(identifier) {
     return new Promise((mainResolve, mainReject) => {
         return new Promise((resolve, reject) => {
@@ -933,7 +932,7 @@ exports.generateResetPasswordLink = function(identifier) {
             return securityJS.newKey.resetPassword(user.id).then(mainResolve).catch(mainReject)
         }).catch(mainReject);
     })
-}
+}*/
 
 
 /**
@@ -946,23 +945,32 @@ exports.generateResetPasswordLink = function(identifier) {
 */
 exports.updatePassword = function(id, newPassword) {
     return new Promise(function(resolve, reject) {
-        bcrypt.hash(newPassword, null, null, function(err, hash) {
-          if(err) {
-            //console.log(err)
-            return reject(err);
-          }
-          if(hash) {
-              r.table('accounts').get(id).update({password: hash}).run(db.conn()).then(function(trans) {
-                return resolve(trans);
-              }).catch(function(err) {
-                return reject(err);
-              })
-          } else {
-            var err = new Error("Unknown Hashing Error");
-                err.status = 500;
-                return reject(err);
-          }
-        });
+        utils.checkPasswordPolicy(newPassword).then((result) => {
+            if(result.valid) {
+                bcrypt.hash(newPassword, null, null, function(err, hash) {
+                  if(err) {
+                    //console.log(err)
+                    return reject(err);
+                  }
+                  if(hash) {
+                      r.table('accounts').get(id).update({password: hash}).run(db.conn()).then(function(trans) {
+                        return resolve(trans);
+                      }).catch(function(err) {
+                        return reject(err);
+                      })
+                  } else {
+                    var err = new Error("Unknown Hashing Error");
+                        err.status = 500;
+                        return reject(err);
+                  }
+                });
+            } else {
+                var err = new Error(result.humanReadableRule + "  Failed at Regex: " + result.failedAt);
+                    err.status = 400;
+                    return reject(err);
+            }
+        })
+        
         //
     })
 }
@@ -1015,16 +1023,11 @@ exports.changePassword = function(id, currentPassword, newPassword) {
     return new Promise(function(resolve, reject) {
         exports.verifyPassword(id, currentPassword).then(function(result) {
             if(result) {
-                utils.checkPasswordPolicy(newPassword, function(err) {
-                    if(err) {
-                        return reject(err);
-                    }
-                    exports.updatePassword(id, newPassword).then(function(transaction) {
-                        return resolve(transaction);
-                    }).catch(function(err) {
-                        //console.log(err)
-                        return reject(err);
-                    })
+                exports.updatePassword(id, newPassword).then(function(transaction) {
+                    return resolve(transaction);
+                }).catch(function(err) {
+                    //console.log(err)
+                    return reject(err);
                 })
             } else {
                 var err = new Error("Unauthorized");

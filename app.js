@@ -45,6 +45,7 @@ var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
+var account = require('./routes/account');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
 var apiAuth = require('./routes/api/auth');
@@ -133,6 +134,7 @@ app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
 app.use('/administrator', administrator)
+app.use('/account', account)
 //api routes
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)

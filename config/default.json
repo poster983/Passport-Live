@@ -135,8 +135,8 @@
 	"passwordPolicy": {  
 		"minimumLength": 6,
 		"maximumLength": 128,
-		"regexRules": ["[a-z]", "\\d"], // Has lowercase, and has numbers // "[a-z]", "\\d"
-		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase letter, and at least one number."
+		"regexRules": ["[a-zA-Z]", "\\d"], // Has lowercase or uppercase, and has numbers // "[a-zA-Z]", "\\d"
+		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase or uppercase letter, and at least one number."
 	},
 	"email": { //nodemailer.createTransport options should be used in nodemailerConfig. 
 	    "nodemailerConfig": {

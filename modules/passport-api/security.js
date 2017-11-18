@@ -199,10 +199,15 @@ var accountsJS = require("./accounts.js")
      */
     newKey.resetPassword = function(id) {
         return new Promise((resolve, reject) => {
-            var date = moment().add(1, "hours")
-            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+            accountsJS.getUserByID(id, (err, user) => {
+                if(err) {return reject(err);}
+                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+                var date = moment().add(1, "hours")
+                return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
+            });
         }) 
     }
+    //setTimeout(function() {newKey.resetPassword("653f06df-c797-4795-993f-9d2870a57315").then((res)=>{console.log(res)}).catch((err) => {console.error(err)})}, 1000);
     /*
     setTimeout(function() {
         //newKey.newAccount(["student", "teacher"], {tally: }) //["student", "teacher"]
