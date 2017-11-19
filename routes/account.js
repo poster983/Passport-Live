@@ -41,7 +41,7 @@ router.get("/resetPassword", (req, res, next) => {
                 newPayload.dscm = Math.random().toString(36).slice(2);
                 newPayload.key = permissionKey;
                 //console.log(payload)
-                jwt.sign(payload, config.get('secrets.api-secret-key'), {
+                jwt.sign(newPayload, config.get('secrets.api-secret-key'), {
                     expiresIn: "2m",
                 }, (err, token) => {
                     if(err) {return next(err);}
@@ -59,18 +59,20 @@ router.get("/resetPassword", (req, res, next) => {
 })
 //RaTE LIMIT RATE LIMIT!!
 router.post("/resetPassword", (req, res, next) => {
-    console.log(req.signedCookies.JWT);
+    //console.log(req.signedCookies.JWT);
     if(req.header("authorization")) {
         jwt.verify(req.header("authorization").substring(4), config.get('secrets.api-secret-key'), (err, decode) => {
             if(err) {return next(err);}
             securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((payload) => {
                 if(payload && payload.params && payload.params.accountID) {
+                    console.log(req.body)
                     var password = req.body.password;
                     if(password == req.body.passwordVer) {
-                        accountJS.changePassword(payload.params.accountID, password).then((trans) => {
+                        accountJS.updatePassword(payload.params.accountID, password).then((trans) => {
                             console.log(trans)
                             securityJS.keyUsed(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((trans) => {
-                                res.redirect('/auth/login?notif=' + encodeURIComponent("Account Password Reset.")); 
+                                //res.redirect('/auth/login?notif=' + encodeURIComponent("Account Password Reset.")); 
+                                res.json({redirectTo: "/auth/login?notif=" + encodeURIComponent("Account Password Reset.")});
                                 //Should send notification email.
                             }).catch((err) => {return next(err)})
                         }).catch((err) => {return next(err)})
@@ -83,7 +85,7 @@ router.post("/resetPassword", (req, res, next) => {
                     }
                 
                 } else {
-                    var err = new Error("Invalid Payload");
+                    var err = new Error("Invalid Key");
                     err.status = 400;
                     return next(err);
                 }

@@ -69,13 +69,16 @@ exports.dscm = function(req, res, next) {
             if(err) {
                 return next(err);
             }
-            if(decode.dscm == req.header("x-xsrf-token")) {
+            //console.log(decode)
+            if(decode && decode.dscm == req.header("x-xsrf-token")) {
                 //put in headder for passport auth
                 console.log("DSCM In Use");
                 req.headers.authorization = req.signedCookies.JWT;
                 return next();
 
             } else {
+                
+
                 var err = new Error("Unauthorized");
                 err.status = 401;
                 return next(err)
@@ -89,6 +92,7 @@ exports.dscm = function(req, res, next) {
                     return next(err);
                 } else if(decode && decode.dscm) {
                     //possible spoof 
+                    //console.log("WEEEEEEEEEEEE")
                     var err = new Error("Unauthorized");
                     err.status = 401;
                     return next(err)

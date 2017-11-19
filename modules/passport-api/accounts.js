@@ -969,7 +969,7 @@ exports.updatePassword = function(id, newPassword) {
                     err.status = 400;
                     return reject(err);
             }
-        })
+        }).catch((err) => {return reject(err)})
         
         //
     })
