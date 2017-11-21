@@ -47,65 +47,6 @@ router.get('/', function(req, res, next) {
   
 });
 
-//RaTE LIMIT RATE LIMIT!!
-//Account Activation
-//localhost:3000/activate
-router.get("/activate", function(req, res, next) {
-  var permissionKey = req.query.key; //Activation Key (permission key)
-  if(typeof permissionKey === "string") {
-    securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
-        //console.log(payload)
-        if(!payload) {
-            var err = new Error("Invalid Key");
-            err.status = 400;
-            return next(err);
-        }
-        
-        if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
-            var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
-            err.status = 500;
-            return next(err);
-        }
-        
-        accountJS.setVerification(payload.params.accountID, true).then((resp) => {
-            if(resp && resp.replaced == 1) {
-                //Success
-                //Main Task done. Edit Timeout field
-                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((trans) => {
-                    //Check For Password Field.
-                    db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
-                        if(hasPass) {
-                            //send to login page
-                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
-                        } else {
-                            //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
-                            res.redirect('/auth/login?notif=' + encodeURIComponent("RESET PASSWORD PAGE PLACEHOLDER")); 
-                        }
-                    }).catch((err)=>{return next(err)})
-                }).catch((err) => {return next(err)})
-                
-                //res.send(resp)
-            } else if(resp && resp.replaced > 1) {
-                var err = new TypeError("An impossible error has just occurred. Please perform a reality check.");
-                err.status = 500;
-                return next(err);
-            } else if(resp && resp.unchanged > 0) {
-                //console.log(resp)
-                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
-                var err = new TypeError("User already Verified");
-                err.status = 500;
-                return next(err);
-            } else {
-                var err = new TypeError("User Not Found");
-                err.status = 500;
-                return next(err);
-            }
-        }).catch((err)=>{return next(err)})
-    }).catch((err)=>{return next(err)});
-  } else {
-    res.redirect('/auth/login'); 
-  }
-})
 
 /*
 router.post('/callback/multiDashRoute/', function(req, res, next) {

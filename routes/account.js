@@ -58,7 +58,7 @@ router.get("/resetPassword", (req, res, next) => {
     }
 })
 //RaTE LIMIT RATE LIMIT!!
-router.post("/resetPassword", (req, res, next) => {
+router.patch("/resetPassword", (req, res, next) => {
     //console.log(req.signedCookies.JWT);
     if(req.header("authorization")) {
         jwt.verify(req.header("authorization").substring(4), config.get('secrets.api-secret-key'), (err, decode) => {
@@ -70,11 +70,19 @@ router.post("/resetPassword", (req, res, next) => {
                     if(password == req.body.passwordVer) {
                         accountJS.updatePassword(payload.params.accountID, password).then((trans) => {
                             console.log(trans)
-                            securityJS.keyUsed(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((trans) => {
-                                //res.redirect('/auth/login?notif=' + encodeURIComponent("Account Password Reset.")); 
-                                res.json({redirectTo: "/auth/login?notif=" + encodeURIComponent("Account Password Reset.")});
-                                //Should send notification email.
-                            }).catch((err) => {return next(err)})
+                            if(trans && trans.replaced > 1) {
+                                return next(new Error("An impossible error has just occurred. Please perform a reality check."))
+                            } else if(trans && trans.replaced < 1) {
+                                var err = new Error("Nothing Changed")
+                                err.status = 400;
+                                return next(err);
+                            } else {
+                                securityJS.keyUsed(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((usedTrans) => {
+                                    //res.redirect('/auth/login?notif=' + encodeURIComponent("Account Password Reset.")); 
+                                    res.sendStatus(204);
+                                    //Should send notification email.
+                                }).catch((err) => {return next(err)})
+                            }
                         }).catch((err) => {return next(err)})
 
                         
@@ -99,5 +107,69 @@ router.post("/resetPassword", (req, res, next) => {
     //next(new Error("weeeeee"))
     //res.json({hi:"there"})
 });
+
+
+
+//RaTE LIMIT RATE LIMIT!!
+//Account Activation
+//localhost:3000/account/activate
+router.get("/activate", function(req, res, next) {
+  var permissionKey = req.query.key; //Activation Key (permission key)
+  if(typeof permissionKey === "string") {
+    securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
+        //console.log(payload)
+        if(!payload) {
+            var err = new Error("Invalid Key");
+            err.status = 400;
+            return next(err);
+        }
+        
+        if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
+            var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
+            err.status = 500;
+            return next(err);
+        }
+        
+        accountJS.setVerification(payload.params.accountID, true).then((resp) => {
+            if(resp && resp.replaced == 1) {
+                //Success
+                //Main Task done. Edit Timeout field
+                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((trans) => {
+                    //Check For Password Field.
+                    db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
+                        if(hasPass) {
+                            //send to login page
+                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
+                        } else {
+                            //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
+                            res.redirect('/auth/login?notif=' + encodeURIComponent("RESET PASSWORD PAGE PLACEHOLDER")); 
+                        }
+                    }).catch((err)=>{return next(err)})
+                }).catch((err) => {return next(err)})
+                
+                //res.send(resp)
+            } else if(resp && resp.replaced > 1) {
+                var err = new Error("An impossible error has just occurred. Please perform a reality check.");
+                err.status = 500;
+                return next(err);
+            } else if(resp && resp.unchanged > 0) {
+                //console.log(resp)
+                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
+                var err = new Error("User already Verified");
+                err.status = 500;
+                return next(err);
+            } else {
+                var err = new Error("User Not Found");
+                err.status = 500;
+                return next(err);
+            }
+        }).catch((err)=>{return next(err)})
+    }).catch((err)=>{return next(err)});
+  } else {
+    res.redirect('/auth/login'); 
+  }
+})
+
+
 
 module.exports = router;

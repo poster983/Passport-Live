@@ -196,7 +196,7 @@ db.queue.activateEmail().process((job, next) => {
         var messageConfig = {
             to: job.to,
             subject: "Activate Your New Passport ID",
-            text: "To activate your passport account, go here: " + config.get("server.domain") + "/activate?key=" + key,
+            text: "To activate your passport account, go here: " + config.get("server.domain") + "/account/activate?key=" + key,
             html: emailTemplates.activateAccount(job.name, key).html
         }
         exports.sendMail(messageConfig).then((trans) => {

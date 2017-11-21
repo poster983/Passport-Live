@@ -17,6 +17,9 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 -->
+<div class="progress" id="loader" style="position: absolute; display:none;">
+  <div class="indeterminate"></div>
+</div>
 <!--The NAv-->
 <nav>
     <div class="nav-wrapper">
@@ -25,15 +28,17 @@ email: hi@josephhassell.com
     </div>
 </nav>
 
+
 <!--THe FAB-->
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse" id="mixenSESave" onclick="se.submit();">
+    <a class="btn-floating btn-large red waves-effect waves-light pulse disabled" id="mixenSESave" onclick="se.submit();">
       <i class="large material-icons">save</i>
     </a>
   </div>
 
 <!-- THe page -->
 <div class="container">
+
   <div id="SETable"> 
     <div class="row">
       <div class="col s12">
@@ -85,6 +90,7 @@ se.getPeriodConstants = function(done) {
 }
 
 se.initSchedulePage = function() {
+  $("#mixenSESave").removeClass("disabled");
   se.getPeriodConstants(function(err, periods) {
     if(err) {
       return errorHand(err);
@@ -243,15 +249,22 @@ se.newSchedule = function(scheduleBody, done) {
 }
 
 se.submit = function() {
+  $("#loader").slideDown(500);
+  $("#mixenSESave").addClass("disabled");
   se.compileForm(function(err, comSchedule) {
     if(err) {
+      $("#loader").slideUp(500);
+      $("#mixenSESave").removeClass("disabled");
       return errorHand(err);
     }
     if(se.hasExistingSchedule) {
       se.updateSchedule(comSchedule, function(err, sum) {
         if(err) {
+          $("#loader").slideUp(500);
+          $("#mixenSESave").removeClass("disabled");
           return errorHand(err);
         }
+        $("#loader").slideUp(500);
         loadMySchedules()
         closePage('scheduleEditor');
         materialResponse("check", "success");
@@ -259,8 +272,11 @@ se.submit = function() {
     } else {
       se.newSchedule(comSchedule, function(err, sum) {
         if(err) {
+          $("#loader").slideUp(500);
+          $("#mixenSESave").removeClass("disabled");
           return errorHand(err);
         }
+        $("#loader").slideUp(500);
         loadMySchedules()
         closePage('scheduleEditor');
         materialResponse("check", "success");
