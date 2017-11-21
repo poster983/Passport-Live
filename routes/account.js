@@ -27,6 +27,7 @@ var typeCheck = require("type-check").typeCheck;
 var jwt = require('jsonwebtoken');
 var ms = require("ms");
 var router = express.Router();
+var db = require('../modules/db/index.js');
 
 
 
@@ -34,6 +35,7 @@ var router = express.Router();
 //Reset Password 
 router.get("/resetPassword", (req, res, next) => {
     var permissionKey = req.query.key;
+    var notif = req.query.notif;
     if(typeof permissionKey === "string") {
         securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.RESET_PASSWORD, permissionKey).then((payload) => {
             if(payload) {
@@ -47,7 +49,8 @@ router.get("/resetPassword", (req, res, next) => {
                     if(err) {return next(err);}
                     res.cookie('JWT', "JWT " + token, {httpOnly: true, signed: true, maxAge: ms("2m")});
                     res.cookie('XSRF-TOKEN', newPayload.dscm, {maxAge: ms("2m")});
-                    res.render("accounts/passwordReset", {doc_Title: 'Reset Your Password -- Passport'});
+
+                    res.render("accounts/passwordReset", {doc_Title: 'Reset Your Password -- Passport', notification: notif});
                 });
             } else {
                 res.redirect('/auth/login?notif=' + encodeURIComponent("\"key\" invalid")); 
@@ -139,11 +142,11 @@ router.get("/activate", function(req, res, next) {
                     db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
                         if(hasPass) {
                             //send to login page
-                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
+                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your account is now active")); 
                         } else {
                             //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
                             securityJS.newKey.resetPassword(payload.params.accountID).then((key) => {
-                                res.redirect('/account/resetPassword?key=' + encodeURIComponent(key)); 
+                                res.redirect('/account/resetPassword?key=' + encodeURIComponent(key) + "&notif=" + encodeURIComponent("Your account is now active. Please create a password.")); 
                             }).catch((err)=>{return next(err)});
                         }
                     }).catch((err)=>{return next(err)})

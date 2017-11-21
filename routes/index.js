@@ -22,9 +22,9 @@ var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
-var r = require('rethinkdb');
+/*var r = require('rethinkdb');
 var db = require('../modules/db/index.js');
-var typeCheck = require("type-check").typeCheck;
+var typeCheck = require("type-check").typeCheck;*/
 var router = express.Router();
 
 //this page will route each user to the correct page after login 
