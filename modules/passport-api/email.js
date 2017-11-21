@@ -162,8 +162,8 @@ exports.sendActivationEmail = function(mailOptions) {
         }
     })  
 }
-/*
-setTimeout(function() {exports.sendActivationEmail({
+
+/*setTimeout(function() {exports.sendActivationEmail({
     to: "example@example.log",
     name:{first: "Joey"},
     accountID: "653f06df-c797-4795-993f-9d2870a57315"

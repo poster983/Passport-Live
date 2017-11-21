@@ -163,7 +163,7 @@ var accountsJS = require("./accounts.js")
      * @param {(undefined|Object)} timeout - When should the key become invalid.
      * @param {(undefined|number)} timeout.tally - Will become inactive after given number of uses.
      * @param {(undefined|Date|string)} timeout.time - Will become inactive after given time.
-     * @returns {Promise}
+     * @returns {Promise} - key 
      */
     newKey.newAccount = function(userGroups, timeout) {
         return new Promise((resolve, reject) => {
@@ -176,7 +176,7 @@ var accountsJS = require("./accounts.js")
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
-     * @returns {Promise}
+     * @returns {Promise} -key
      */
     newKey.activateAccount = function(id) {
         return new Promise((resolve, reject) => {
@@ -195,7 +195,7 @@ var accountsJS = require("./accounts.js")
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
-     * @returns {Promise}
+     * @returns {Promise} - key
      */
     newKey.resetPassword = function(id) {
         return new Promise((resolve, reject) => {

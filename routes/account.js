@@ -142,7 +142,9 @@ router.get("/activate", function(req, res, next) {
                             res.redirect('/auth/login?notif=' + encodeURIComponent("Your Account Is Now Active!")); 
                         } else {
                             //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
-                            res.redirect('/auth/login?notif=' + encodeURIComponent("RESET PASSWORD PAGE PLACEHOLDER")); 
+                            securityJS.newKey.resetPassword(payload.params.accountID).then((key) => {
+                                res.redirect('/account/resetPassword?key=' + encodeURIComponent(key)); 
+                            }).catch((err)=>{return next(err)});
                         }
                     }).catch((err)=>{return next(err)})
                 }).catch((err) => {return next(err)})
@@ -155,9 +157,7 @@ router.get("/activate", function(req, res, next) {
             } else if(resp && resp.unchanged > 0) {
                 //console.log(resp)
                 securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
-                var err = new Error("User already Verified");
-                err.status = 500;
-                return next(err);
+                res.redirect('/auth/login?notif=' + encodeURIComponent("Your account is already verified")); 
             } else {
                 var err = new Error("User Not Found");
                 err.status = 500;
