@@ -119,8 +119,8 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
     })  
 }*/
 
-/*
-* Sends the new passport id templeate email with one time use password.
+/**
+* Sends the activation email to a user,
 * @function sendActivationEmail
 * @link module:js/email
 * @param {(Object | Object[])} mailOptions
@@ -162,12 +162,62 @@ exports.sendActivationEmail = function(mailOptions) {
         }
     })  
 }
-
 /*setTimeout(function() {exports.sendActivationEmail({
     to: "example@example.log",
     name:{first: "Joey"},
     accountID: "653f06df-c797-4795-993f-9d2870a57315"
 }).then((res)=> {console.log(res)}).catch((err)=> console.error(err))}, 1000);*/
+
+/**
+* Sends a link to the email that can reset the password for the user.
+* @function sendResetPasswordEmail
+* @link module:js/email
+* @param {(Object | Object[])} mailOptions
+* @param {String} mailOptions.to - Email address to send the email to. 
+* @param {Object} mailOptions.name - Name object.
+* @param {Object} mailOptions.name.first - User's First Name.
+* @param {String} mailOptions.accountID - User ID in the DB.  
+* @returns {Promise} - Job Cursor.  Kinda Useless.
+*/
+exports.sendResetPasswordEmail = function(mailOptions) {
+    return new Promise((resolve, reject) => {
+        console.log("Attempting To Send a Reset Password Email.")
+        if(Array.isArray(mailOptions)) {
+            var jobs = [];
+            if(mailOptions.length)
+            for(var x = 0; x < mailOptions.length; x++) {
+                var job = db.queue.resetPasswordEmail().createJob()
+                job.to = mailOptions[x].to;
+                job.name = mailOptions[x].name;
+                job.accountID = mailOptions[x].accountID;
+                jobs.push(job);
+                if(x >= mailOptions.length-1) {
+                    db.queue.resetPasswordEmail().addJob(jobs).then((cur) => {
+                        return resolve(cur);
+                    });
+                }
+            }
+        } else if (typeof mailOptions === "object") {
+            var job = db.queue.resetPasswordEmail().createJob();
+            job.to = mailOptions.to;
+            job.name = mailOptions.name;
+            job.accountID = mailOptions.accountID;
+            db.queue.resetPasswordEmail().addJob(job).then((cur) => {
+                return resolve(cur);
+            });
+        } else {
+            console.log(typeof mailOptions)
+            return reject(new Error("mailOptions must be either an array or an object."))
+        }
+    })  
+}
+
+/*setTimeout(function() {exports.sendResetPasswordEmail({
+    to: "example@example.log",
+    name:{first: "Joey"},
+    accountID: "653f06df-c797-4795-993f-9d2870a57315"
+}).then((res)=> {console.log(res)}).catch((err)=> console.error(err))}, 1000);*/
+
 
 /* JOBS */
 
@@ -201,6 +251,29 @@ db.queue.activateEmail().process((job, next) => {
         }
         exports.sendMail(messageConfig).then((trans) => {
             console.log(trans, "debig");
+            return next(null, trans)
+        }).catch((err) => {
+            return next(err);
+        });
+    }).catch((err) => {return next(err);})
+    
+})
+
+
+db.queue.resetPasswordEmail().process((job, next) => {
+    securityJS.newKey.resetPassword(job.accountID).then((key) => {
+        var messageConfig = {
+            to: job.to,
+            subject: "Reset Your Passport ID's Password",
+            text: "To reset your passport ID's password, go here: " + config.get("server.domain") + "/account/resetPassword?key=" + key,
+            html: emailTemplates.resetPassword(job.name, key).html
+        }
+        exports.sendMail(messageConfig).then((trans) => {
+            console.log(trans, "debig");
+            if(trans.rejected.length >0) {
+                var err = new Error("Failed to send " + trans.rejected.length + " email(s). ")
+                return next(err)
+            }
             return next(null, trans)
         }).catch((err) => {
             return next(err);

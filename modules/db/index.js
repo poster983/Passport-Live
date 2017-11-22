@@ -55,7 +55,7 @@ queueNewAccountEmail.jobOptions = {
   retryMax: 3, // Four attempts, first then three retries
   retryDelay: 600000 // Time in milliseconds to delay retries
 }*/
-
+//activate
 var queueActivateEmail = new Queue(QueuecxnOptions, {
   name: 'ActivateEmail', // The queue and table name
   masterInterval: 310000, // Database review period in milliseconds
@@ -64,6 +64,20 @@ var queueActivateEmail = new Queue(QueuecxnOptions, {
   removeFinishedJobs: true, // true, false, or number of milliseconds
 });
 queueActivateEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}
+//reset Password
+var queueResetPasswordEmail = new Queue(QueuecxnOptions, {
+  name: 'ResetPasswordEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueResetPasswordEmail.jobOptions = {
   priority: 'normal',
   timeout: 300000,
   retryMax: 3, // Four attempts, first then three retries
@@ -118,7 +132,9 @@ exports.queue.newAccountEmail = function() {
 exports.queue.activateEmail = () => {
   return queueActivateEmail;
 }
-
+exports.queue.resetPasswordEmail = () => {
+  return queueResetPasswordEmail;
+}
 
 //brute
 exports.brute = () => {

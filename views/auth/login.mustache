@@ -58,10 +58,10 @@ email: hi@josephhassell.com
                 Lost your Password? <a href="#resetPassword"> Reset It!</a>
               </div>
               <div class="col s5" style="display: none;" id="reset-password-submit">
-                <a class="waves-effect waves-light btn" onclick="sudoSendResetEmail()"><i class="material-icons left">send</i>Send Reset Email</a>
+                <a class="waves-effect waves-light btn" onclick="sendPasswordResetEmail()"><i class="material-icons left">send</i>Send Reset Email</a>
               </div>
               <div class="col s5" id="message" style="display: none;">
-                <h5>Failed To send Message</h5>
+                <h5>No messages right now</h5>
                 <p>See the console (F12) for full error logs.</p>
               </div>
             </div>
@@ -131,7 +131,7 @@ email: hi@josephhassell.com
             var email = $("#email").val();
             var password = $("#password").val();
             if(email == "" || password == "") {
-                Materialize.toast('Please Enter Your PassportID', 6000)
+                Materialize.toast('Please enter your PassportID', 6000)
             } else {
                 window.location.hash = "#processing"
                 $.ajax({
@@ -155,9 +155,32 @@ email: hi@josephhassell.com
               });
             }
         }
+        function sendPasswordResetEmail() {
+          var email = $("#email").val();
+          if(email == "") {
+            Materialize.toast('Please enter your email', 6000)
+          } else {
+            window.location.hash = "#processing"
+            $.ajax({
+                type: "post",
+                url: "/account/sendResetPasswordEmail",
+                data: {email: email},
+                success: function(data) {
+                  showMessage("Email sent", "Allow up to 10 minutes for the email to arrive. <br> Please remember to check your spam.");
+                },
+                error: function(jqXHR) {
+                  showMessage("Error sending email", "Please refresh the page and try again. <br> Error log dumped in console.");
+                  console.error(jqXHR);
+                }                      
+              });
+          }
+        }
+
         function isFormLoading(bool) {
             console.log(bool)
             if(bool) {
+                $("$reset-password-submit > a").addClass("disabled");
+                $("$reset-password-submit > a").addClass("disabled");
                 $("#logo").removeClass("animate").addClass("load");
                 $("#login-inputs").removeClass("animate").addClass("load");
             } else {
@@ -186,8 +209,8 @@ email: hi@josephhassell.com
           $("#login-inputs").removeClass("animate");*/
           
           //reset event listeners 
-          $("#email").off("keyup");
-          $("#password").off("keyup");
+          $("#email").off();
+          $("#password").off();
           
           //show and init pages 
           if(window.location.hash == "#resetPassword") {

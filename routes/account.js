@@ -23,6 +23,7 @@ var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
+var emailJS = require('../modules/passport-api/email.js');
 var typeCheck = require("type-check").typeCheck;
 var jwt = require('jsonwebtoken');
 var ms = require("ms");
@@ -179,8 +180,8 @@ router.get("/activate", function(req, res, next) {
     * @function sendResetPasswordEmail
     * @link api/account
     * @param {request} req
-    * @property {Object} req.body
-    * @property {String} req.body.email
+    * @param {Object} req.body
+    * @param {String} req.body.email
     * @api POST /account/sendResetPasswordEmail
     * @apibody {application/json}
     * @apiresponse {json} Sends Status code of 202, or the error.
@@ -190,16 +191,20 @@ router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res,
     if(!typeCheck("{email: String, ...}", req.body)) {
         var err = new Error("body.email expected a string"); err.status = 400; return next(err);
     }
-    getAccountByEmail(req.body.email, (err, user) => {
+    accountJS.getAccountByEmail(req.body.email, (err, user) => {
         if(err) {return next(err);}
         if(user.length <= 0) {
             //Sends fake accepted response
             return res.sendStatus(202);
         }
         if(user.length > 1) {var err = new Error("Conflicting Emails"); err.status = 409; return next(err);}
-        securityJS.newKey.resetPassword(user.id).then((key) => {
-            //SEND EMAIL
-        }).catch((err) => {return next(err);})
+        emailJS.sendResetPasswordEmail({
+            to: user[0].email,
+            name: user[0].name,
+            accountID: user[0].id
+        }).then((cur) => {
+            return res.sendStatus(202);
+        }).catch((err)=>{return next(err)});
     }) 
     
 });
