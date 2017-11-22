@@ -805,28 +805,6 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
 });
 
 
-/**
-    * Given an email, the api sends a reset password email to the email given.  If the email is attached to an account.
-    * @function sendResetPasswordEmail
-    * @link api/account
-    * @param {request} req
-    * @property {Object} req.body
-    * @property {String} req.body.email
-    * @property {String} req.body.id
-    * @api POST /api/account/sendResetPasswordEmail
-    * @apibody {application/json}
-    * @apiresponse {json} Sends Status code of 202, or the error.
-    */
-
-router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res, next) {
-    
-    api.generateResetPasswordLink(req.body).then((link) => {
-        res.json(link);
-    }).catch((err) => {
-        return next(err);
-    })
-})
-
 
 /** Updates user Password   
     * @function updateUserPassword

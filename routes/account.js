@@ -173,6 +173,36 @@ router.get("/activate", function(req, res, next) {
   }
 })
 
+//RATE LIMIT RATE LIMIT RATE LIMIT
+/*
+    * Given an email, the api sends a reset password email to the email given.  If the email is attached to an account.
+    * @function sendResetPasswordEmail
+    * @link api/account
+    * @param {request} req
+    * @property {Object} req.body
+    * @property {String} req.body.email
+    * @api POST /account/sendResetPasswordEmail
+    * @apibody {application/json}
+    * @apiresponse {json} Sends Status code of 202, or the error.
+    */
+
+router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res, next) {
+    if(!typeCheck("{email: String, ...}", req.body)) {
+        var err = new Error("body.email expected a string"); err.status = 400; return next(err);
+    }
+    getAccountByEmail(req.body.email, (err, user) => {
+        if(err) {return next(err);}
+        if(user.length <= 0) {
+            //Sends fake accepted response
+            return res.sendStatus(202);
+        }
+        if(user.length > 1) {var err = new Error("Conflicting Emails"); err.status = 409; return next(err);}
+        securityJS.newKey.resetPassword(user.id).then((key) => {
+            //SEND EMAIL
+        }).catch((err) => {return next(err);})
+    }) 
+    
+});
 
 
 module.exports = router;

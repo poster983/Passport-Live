@@ -52,20 +52,7 @@ router.post("/sendMail", function(req, res, next) {
         next(err)
     })
 })
-router.get("/emailTemplate", (req, res, next) => {
-    var MesOpt = [];
-    for(var x = 0; x < 100; x++) {
-        MesOpt.push({to: "to@example.com", name: {first: "Test", last: "Person"}, accountEmail: "to@example.com", password: Math.random()})
-    }
-    console.log(MesOpt)
-    emailApi.sendNewAccountWithPassEmail(MesOpt).then((trans) => {
-        console.log(trans, "job?")
-        return res.sendStatus(202)
-        
-    }).catch((err) => {
-        return next(err);
-    })
-})
+
 
 router.get("/delay/:delay", (req, res, next) => {
     setTimeout(function() {
