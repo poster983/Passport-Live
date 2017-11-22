@@ -1110,7 +1110,15 @@ exports.setVerification = function(id, isVerified) {
             err.status = 400;
             return reject(err)
         }
-        return r.table("accounts").get(id).update({isVerified: isVerified}).run(db.conn()).then(resolve).catch(reject);
+
+        function verTime() {
+            if(isVerified) {
+                return r.now();
+            } else {
+                return null;
+            }
+        }
+        return r.table("accounts").get(id).update({isVerified: isVerified, properties: {verifiedOn: verTime()}}).run(db.conn()).then(resolve).catch(reject);
     });
 }
 
