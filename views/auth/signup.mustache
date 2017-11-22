@@ -49,7 +49,7 @@ email: hi@josephhassell.com
                             <label for="email">Email</label>
                         </div>
                         <div class="col s12 input-field">
-                            <input name="schoolID" type="number" class="tooltipped" data-tooltip="Leave this blank if you don't have one" data-position="bottom" id="schoolID">
+                            <input name="schoolID" type="text" class="tooltipped" data-tooltip="Leave this blank if you don't have one" data-position="bottom" id="schoolID">
                             <label for="schoolID">School ID</label>
                         </div>
                         <div class="col s12 input-field">
@@ -244,6 +244,7 @@ email: hi@josephhassell.com
             var password = $("#password").val();
             var gradYear = $("#gradYear").val();
             var schoolID = $("#schoolID").val();
+            console.log(schoolID)
             var errored = false;
             console.log(accountType)
             if(!accountType) {
@@ -307,7 +308,8 @@ email: hi@josephhassell.com
                     success: function(data) {
 
                         materialResponse("check", "success", function() {
-                            window.location.href = "/"
+                            window.location.href = "/auth/login?msgHead="+encodeURIComponent("Account created")+"&msg="+encodeURIComponent(`Your should recieve an activation email soon. 
+                                Please remember to check your spam`);
                         })
                     },
                     error: function(jqXHR) {

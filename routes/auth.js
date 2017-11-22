@@ -87,7 +87,14 @@ router.get('/google/dscm', function (req, res, next) {
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
 router.get('/login', function(req, res, next) {
-  var msg = req.query.msg;
+  var msg = null;
+  if(req.query.msgHead || req.query.msg) {
+    msg = {
+      head: req.query.msgHead,
+      body: req.query.msg
+    }
+  }
+
   var notif = req.query.notif;
   var googleQuery = "";
   

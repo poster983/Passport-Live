@@ -34,7 +34,7 @@ var _ = require("underscore");
 const util = require('util')
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
-
+var emailJS = require("./email.js");
 
 
 /** 
@@ -72,17 +72,18 @@ var securityJS = require("./security.js");
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
 exports.createAccount = function(user, options) {
     return new Promise((resolve, reject) => {
-        
+        //console.log(user)
         if(options && options.generatePassword) {
             user.password = utils.generateSecureKey();
         }
-        console.log(typeof user.isVerified)
+        //console.log(typeof user.isVerified)
         if(typeof user.isVerified != "boolean" && typeof user.isVerified != "undefined") {
             var err = new Error("user.isVerified must be a boolean.  Got " + typeof user.isVerified);
             err.status = 400;
             return reject(err);
         }
         user.isVerified = (user.isVerified==true);
+        
         if(!user.userGroup) {
             var err = new Error("Usergroup Undefined");
             err.status = 400;
@@ -118,18 +119,19 @@ exports.createAccount = function(user, options) {
             }
         }*/
         if(options && options.allowNullPassword === true) {
-            if(!typeCheck("{password: Null | String, ...}", user.password)) {
+            if(!typeCheck("{password: Null | String, ...}", user)) {
                 var err = new TypeError("expected password to be either Null or String.  Got: " + typeof user.password);
                 err.status = 400;
                 return reject(err);
             }
         } else {
-            if(!typeCheck("{password: String, ...}", user.password)) {
+            if(!typeCheck("{password: String, ...}", user)) {
                 var err = new TypeError("expected password to be a String.  Got: " + typeof user.password);
                 err.status = 400;
                 return reject(err);
             }
         }
+
         if(!user.schoolID || user.schoolID == "") {
             user.schoolID = null;
         }
@@ -150,6 +152,7 @@ exports.createAccount = function(user, options) {
         if(typeof user.groupFields == "undefined" || !!user.groupFields || (user.groupFields.constructor === Object && Object.keys(user.groupFields).length === 0)) {
             user.groupFields = {};
         }
+        //console.log(user)
         //console.log(email.substring(email.indexOf("@")))
         var emailPromise = new Promise(function(resolveE, rejectE) {
             if (config.has('userGroups.' + user.userGroup)) {
@@ -202,6 +205,13 @@ exports.createAccount = function(user, options) {
                       return reject(err);
                     } else {
                         //insert new account
+                        function ver() {
+                            if(user.isVerified) {
+                                return r.now();
+                            } else {
+                                return null;
+                            }
+                        }
                         promice = r.table("accounts").insert({
                           name: {
                             first: user.name.first,
@@ -216,20 +226,33 @@ exports.createAccount = function(user, options) {
                           graduationYear: user.graduationYear,
                           isArchived: false,
                           isVerified: user.isVerified,
+                          properties: {
+                            createdOn: r.now(),
+                            verifiedOn: ver()
+                          },
                           integrations: false,
-                          flags: (user.flags || null)
+                          flags: (user.flags || {})
                         }).run(db.conn());
                         promice.then(function(results) {
                             if(results.inserted == 1) {
-                                //check email stuff
-                                if(options && !options.skipEmail) {
-                                    
-                                }
                                 var resp = {transaction: results};
                                 if(options && options.generatePassword) {
                                     resp.password = user.password; 
                                 }
-                                return resolve(resp);
+                                //check email stuff
+                                if(options && options.skipEmail) {
+                                    return resolve(resp);
+                                } else {
+                                    emailJS.sendActivationEmail({
+                                        to: user.email,
+                                        name: user.name,
+                                        accountID: results.generated_keys[0]
+                                    }).then((result)=> {
+                                        return resolve(resp);
+                                    }).catch((err)=> {
+                                        return reject(err);
+                                    })
+                                }
                             } else {
                                 var err = new Error("Failed to store user in the database");
                                 err.status = 500;

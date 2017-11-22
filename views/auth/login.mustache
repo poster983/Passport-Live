@@ -118,7 +118,8 @@ email: hi@josephhassell.com
             Materialize.toast($("<span>Google Authentication Failed.</span>").append("<br/> <span>If you don't have a Passport account, you must create one.</span> "), 6000)
           }
           {{#message}}
-            showMessage("", "{{message}}");
+            showMessage("{{message.head}}", `{{message.body}}`);
+            
           {{/message}}
           {{#notification}}
             Materialize.toast($("<span>" + decodeURIComponent("{{notification}}") + "</span>"), 10000);
