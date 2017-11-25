@@ -59,8 +59,9 @@ router.post('/test', function (req, res, next) {
             },
             userGroup: "teacher",
             isVerified: true,
-            graduationYear: null
-        }, {name: "testFaculty", generatePassword: true}).then(function(transSummery) {
+            graduationYear: null,
+            password: null
+        }, {name: "testFaculty", generatePassword: false}).then(function(transSummery) {
             console.log(transSummery);
             res.json(transSummery)
         }).catch(function(err) {

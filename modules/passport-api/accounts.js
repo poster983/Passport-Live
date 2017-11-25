@@ -57,7 +57,7 @@ var emailJS = require("./email.js");
     * @param {string} user.name.first - A user's given name
     * @param {string} user.name.last - A user's family name
     * @param {string} user.email - A user's email address
-    * @param {string} user.schoolID - A user's schoolID (optional)
+    * @param {(string|undefined|null)} user.schoolID - A user's schoolID (optional)
     * @param {(boolean|undefined)} user.isVerified - If false, the user must first click on a verification link before being able to login. (default: false)
     * @param {(int|null|undefined)} user.graduationYear - Optional
     * @param {(string|undefined|null)} user.password - The user's password.  If undefined or null, options.generatePassword must be true or it will error.
@@ -66,7 +66,7 @@ var emailJS = require("./email.js");
     * @param {(Object|undefined)} options
     * @param {boolean} options.generatePassword - overrides user.password and generates a secure random password Will return the password in the promise.(Default: false)
     * @param {boolean} options.skipEmail - Will Skip sending any confirmation email all together. (Default: false)
-    * @param {boolean} options.allowNullPassword - Will not error if password is of type Null.  The password will be set on account activation. (default: false)
+    * @param {boolean} options.allowNullPassword - Will not error if password is of type Null.  The password will be set on account activation. This improves this function's efficiency massively if the password is set to null(default: false)
     * @returns {Promise} - Resolution includes the transaction summary
     */
 //userGroup, name, email, password, schoolID, graduationYear, groupFields, flags,
@@ -185,11 +185,9 @@ exports.createAccount = function(user, options) {
         });
         emailPromise.then(function() {
 
-            bcrypt.hash(user.password, null, null, function(err, hash) {
-                if(err) {
-                    console.error(err);
-                    return reject(err, null);
-                }
+            
+            //All code to be run after hashing is complete
+            function afterHash(passwordImport) {
                 try {
                   // Store hash in your password DB.
                   r.table("accounts")('email').contains(user.email).run(db.conn(), function(err, con){
@@ -219,7 +217,7 @@ exports.createAccount = function(user, options) {
                             salutation: user.name.salutation
                           },
                           email: user.email,
-                          password: hash,
+                          password: passwordImport,
                           userGroup: user.userGroup, // should be same as a usergroup in config/default.json
                           groupFields: user.groupFields,
                           schoolID: user.schoolID,
@@ -268,7 +266,20 @@ exports.createAccount = function(user, options) {
                     
                     return reject(e);
                 }
-            });
+            }
+            //if password is allwed to be null and is null, then just import it.  If not hash it.  Error checking should have already caught the null if it was not allowed.
+            if((options && options.allowNullPassword === true) && user.password === null) {
+                afterHash(null);
+            } else {
+                bcrypt.hash(user.password, null, null, function(err, hash) {
+                    if(err) {
+                        console.error(err);
+                        return reject(err, null);
+                    }
+                    afterHash(hash);
+                });
+            }
+
         }, function(err) {
             return reject(err);
         })
@@ -1122,6 +1133,9 @@ exports.setVerification = function(id, isVerified) {
     });
 }
 
+/*setTimeout(function() {
+    exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
+}, 1000);*/
 
 /**
  * Account Tags/flags/metadata/options. 

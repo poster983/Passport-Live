@@ -26,22 +26,104 @@ const convertExcel = require('excel-as-json').processFile;
 const accountAPI = require("./accounts.js");
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+var r_ = db.dash()
 var utils = require('../passport-utils/index.js');
+var typeCheck = require("type-check").typeCheck;
+var moment = require("moment");
 
-//util function 
-function newBulkLog(name, importType, generatedPassword) {
+/**
+* Creates a bulk import job log 
+* @function newBulkLog
+* @link module:js/import
+* @param {String} name - A Non unique human readable ID for the job.
+* @param {String} importType - The type of import it is.  includes "account" and "schedule"
+* @returns {Promise}
+*/
+function newBulkLog(name, importType) {
     //return new Promise((resolve, reject) => {
-       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType, generatedPassword: generatedPassword}).run(db.conn());
+       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
     //})
 }
-function updateBulkLog(id, totalTried, totalImported, loggedErrors) { 
-    r.table("bulkImports").get(id).update({totalTried: totalTried, totalImported: totalImported, loggedErrors: loggedErrors}).run(db.conn());
+/**
+* Updates the bulk log with new info about the import
+* @function updateBulkLog
+* @link module:js/import
+* @param {String} id - Bulk Import ID
+* @param {Number} totalTried - Total number of attempted document imports
+* @param {Number} totalImported - The total number of documents successfully imported
+* @param {Object[]} loggedErrors - Any error logged when processing the documents
+* @param {Object} properties - any special properties that each importType might want to include.
+* @param {Number} properties.totalInitialized - (For importType "account") Total number of accounts imported with passwords set.
+* @returns {Promise}
+*/
+function updateBulkLog(id, totalTried, totalImported, loggedErrors, properties) { 
+    return r.table("bulkImports").get(id).update({totalTried: totalTried, totalImported: totalImported, loggedErrors: loggedErrors, properties: properties}).run(db.conn());
 }
-
+/**
+* Deletes the bulk log
+* @function deleteBulkLog
+* @link module:js/import
+* @param {String} id - Bulk Import ID
+* @returns {Promise}
+*/
 function deleteBulkLog(id) { 
-    r.table("bulkImports").get(id).delete().run(db.conn());
+    return r.table("bulkImports").get(id).delete().run(db.conn());
 }
 
+/*
+* Searches the bulk log database 
+* @link module:js/import
+* @param {Object} queries
+* @param {(String|undefined)} queries.name - Bulk Log Name
+* @param {(String|undefined)} queries.type - importType. Current values: "account", "schedule" 
+* @param {(Object|undefined)} queries.date
+* @param {(String|Date|undefined)} queries.date.from - ISO Strng or date Low end.  inclusive
+* @param {(String|Date|undefined)} queries.date.to - ISO Strng High end. inclusive
+* @returns {Promise} - array
+*/
+exports.searchBulkLogs = (queries) => {
+    return new Promise((resolve, reject) => {
+        if(!typeCheck("{name: Maybe String, date: Maybe {from: Maybe ISODate | Date, to: Maybe ISODate | Date}, type: Maybe String}", queries, utils.typeCheck)) {
+            return reject(new TypeError("queries must be an object with format: \"{name: Maybe String, date: Maybe ISODate, type: Maybe String}\""));
+        }
+        //            date: r.ISO8601(queries.date),
+        if(queries.date && typeCheck("Date", queries.date.from)) {
+            queries.date.from = moment(queries.date.from).toISOString()
+        }
+        if(queries.date && typeCheck("Date", queries.date.to)) {
+            queries.date.to = moment(queries.date.to).toISOString()
+        }
+        return r_.table("bulkImports")
+        .filter((date) => {
+            if(queries.date && queries.date.from && queries.date.to) {
+                return date("date").during(r_.ISO8601(queries.date.from), r_.ISO8601(queries.date.to), {leftBound: "closed", rightBound: "closed"});
+            } else if(queries.date && queries.date.from) {
+                return date("date").ge(r_.ISO8601(queries.date.from));
+            } else if(queries.date && queries.date.to) {
+                return date("date").le(r_.ISO8601(queries.date.to));
+            } else {
+                return true;
+            }
+        })
+        .filter((row) => {
+            if(queries.name != undefined) {
+                return row("name").eq(queries.name)
+            } else {
+                return true;
+            }
+        })
+        .filter((row) => {
+            if(queries.type != undefined) {
+                return row("importType").eq(queries.type)
+            } else {
+                return true;
+            }
+        })
+        .run().then(resolve).catch(reject)
+    })
+}
+//exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
+//exports.searchBulkLogs({name: "testFaculty"}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
 * @function mapAccounts
@@ -172,13 +254,10 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePasswor
 * @link module:js/import
 * @param {string} excelFilePath - The path to the excel file.
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
-* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}.  (NOTE: setting password to null will not initialize the account.  When the activation email is sent, the user will have to create a password)
 * @param {Object} jobProperties
-* @property {String} jobProperties.name - Name to identify this import as.
-* @property {boolean} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.
-* @property {boolean} jobProperties.requirePasswordReset - Flags the account to reset the password on first login
-* @property {(Object|undefined)} jobProperties.emailUsers - If undefined, the accounts will automaticly be verified and no email will be sent.
-* @property {boolean} jobProperties.emailUsers.includePassword -  If ture, the email will include the password. 
+* @param {String} jobProperties.name - Name to identify this import as.
+* @param {boolean} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.
 * @returns {Promise}
 */
 exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobProperties) {
@@ -192,6 +271,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
             err.status = 400;
             return reject(err);
         }
+        //converting to json
         convertExcel(excelFilePath, undefined, false, function(err, data) {
             if(err) {
                 return reject(err);
@@ -200,13 +280,14 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                 var errors = [];
                 var transPromice = [];
                 var imported = 0;
+                var initialized = 0;
                 if(results.length <= 0) {
                     var err = new TypeError("Excel can't be mapped");
                     err.status = 500;
                     return reject(err);
                 }
                 //logs this import job in the DB for easy rollback
-                newBulkLog(jobProperties.name, "account", (jobProperties.generatePassword == true)).then((jResp) => {
+                newBulkLog(jobProperties.name, "account").then((jResp) => {
                     if(jResp.inserted == 1) {
                         //loop through mapped account data 
                         for(var x = 0; x < results.length; x++) {
@@ -214,26 +295,17 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                 var promRes = results[x];
                                 var flags = {}
                                 var newAccountOptions = {};
+                                newAccountOptions.skipEmail = true;
+                                newAccountOptions.allowNullPassword = true;
+                                newAccountOptions.generatePassword = false;
                                 flags.bulkImportID = jResp.generated_keys[0];
-                                if(jobProperties.requirePasswordReset) {
-                                    flags.requirePasswordReset = true;
-                                }
-                                if(jobProperties.emailUsers) {
-                                    if(jobProperties.emailUsers.includePassword == true) {
-                                        //send email with password
-                                        newAccountOptions.sendConfirmEmailwithPassword = true;
-                                    } else {
-                                        //send email without password
-                                        newAccountOptions.sendConfirmEmailwithPassword = false;
-                                    }
-                                } else {
-                                    newAccountOptions.skipEmail = true;
-                                }
+
 
                                 accountAPI.createAccount({userGroup: results[x].userGroup, name: results[x].name, email: results[x].email, password: results[x].password, schoolID: results[x].schoolID, graduationYear: results[x].graduationYear, flags: flags}, newAccountOptions).then(function(transSummery) {
                                     //promRes.password = undefined;
-                                    rRes({onUser: promRes, error: null});
                                     imported++;
+                                    if(promRes.password) {initialized++}
+                                    rRes({onUser: promRes, error: null});
                             }).catch((err) => {
                                 if(err.status == 500) {
                                     return reject(err); 
@@ -254,10 +326,10 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                         finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
                                     } else {
                                         //updates the log with more job info
-                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors))
+                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors, {totalInitialized: initialized}))
                                     }
                                     Promise.all(finalLog).then(() => {
-                                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported});
+                                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported, totalInitialized: initialized});
                                     }).catch((err) => {
                                         return reject(err);
                                     })
@@ -328,14 +400,15 @@ function tester() {
             email: "Filtered Email",
             userGroup: null,
             isVerified: null,
-            password: "Password"
+            password: null
         }, {
             name: {
                 salutation: "Ind."
             },
             userGroup: "teacher",
             isVerified: true,
-            graduationYear: null
+            graduationYear: null,
+            password: null
         }).then(function(results) {
             console.log("results")
             console.log(results)
@@ -385,11 +458,11 @@ function tester() {
  * @property {(string|undefined)} name.last - The fallback last name
  * @property {(string|undefined)} name.salutation - The fallback salutation (We recommend Ind. as a good gender neutral salutation if you don't have the user's salutation on hand)
  * @property {(string|undefined)} schoolID - The fallback schoolID,
- * @property {(integer|undefined)} graduationYear - The fallback year the student graduates,
+ * @property {(Number|undefined|null)} graduationYear - The fallback year the student graduates,
  * @property {(string|undefined)} email - The fallback email,
- * @property {(string|undefined)} userGroup - The fallback userGroup constant from your config files.
+ * @property {(string|undefined|null)} userGroup - The fallback userGroup constant from your config files.
  * @property {(boolean|undefined)} isVerified - Because you are importing this, we recomend you set this to true.
- * @property {(string|undefined)} password - The fallback password to be hashed later (WE HIGHLY RECOMMEND SETTING THIS TO undefined AS A COMMON PASSWORD IS DUMB).
+ * @property {(string|undefined|null)} password - The fallback password to be hashed later.  Set this to null if you want the user to set their own passsword on account activation. (null is recommended)
  * @example 
  * {
  *       name: {
@@ -398,7 +471,8 @@ function tester() {
  *       userGroup: "teacher",
  *       isVerified: true,
  *       graduationYear: null,
- *       isArchived: false
+ *       isArchived: false,
+ *       password: null
  *   }
  */
 

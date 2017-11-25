@@ -70,20 +70,6 @@ var accountsJS = require("./accounts.js")
             var ins = {}
             var key = shortid.generate() + shortid.generate();
             
-            //console.log(parseInt(timeout.tally))
-            //console.log(timeout)
-            /*if(timeout.time) {
-                //format time to a general format
-                timeout.time = moment(timeout.time).toISOString();
-            } else if(timeout.tally) {
-                if(isNaN(parseInt(timeout.tally))) {
-                    var err = new Error("timeout.tally expected an int");
-                    err.status = 400;
-                    return reject(err)
-                } else {
-                    timeout.tally = parseInt(timeout.tally)
-                }
-            }*/
             if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
                 var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
                     err.status = 400;
