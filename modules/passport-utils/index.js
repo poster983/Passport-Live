@@ -86,7 +86,7 @@ exports.dscm = function(req, res, next) {
         })
 
     } else {
-        if(req.header("authorization")) {
+        if(req.header("authorization") && req.signedCookies.JWT) {
             jwt.verify(req.signedCookies.JWT.substring(4), config.get("secrets.api-secret-key"), function(err, decode) {
                 if(err) {
                     return next(err);

@@ -188,6 +188,9 @@ accounts.sendActivation = (bulkID) => {
         .map((doc) => {
             return doc.merge({accountID: doc('id')}).without('id');
         })
+        .map((doc) => {
+            return doc.merge({to: doc('email')}).without('email');
+        })
         .run().then((accounts) => {
             emailJS.sendActivationEmail(accounts).then((cur) => {
                 return resolve(accounts, cur)
@@ -196,7 +199,7 @@ accounts.sendActivation = (bulkID) => {
         }).catch(reject)
     })
 }
-accounts.sendActivation("e04fc7be-d02e-4336-a4f6-1d8df4a4b842").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
+//accounts.sendActivation("089aa0ae-c8ab-42c2-9807-b6b6c6dc27de").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
 exports.accounts = accounts;
 
 //exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
@@ -433,67 +436,9 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
     });
 }
 
-/*
-exports.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
-            name: {
-                first: "First Name",
-                last: "Last Name",
-                salutation: null
-            },
-            schoolID: "Faculty User Id",
-            graduationYear: null,
-            email: "Filtered Email",
-            userGroup: null,
-            isVerified: null,
-            password: "Password"
-        }, {
-            name: {
-                salutation: "Ind."
-            },
-            userGroup: "teacher",
-            isVerified: true,
-            graduationYear: null
-        }).then(function(transSummery) {
-            console.log(transSummery);
-        }).catch(function(err) {
-            console.error(err);
-        });*/
 
-function tester() {
 
-    convertExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", undefined, false, function(err, data) {
-        if(err) {
-            return console.error(err);
-        }
-        console.log(data)
-        exports.mapAccounts(data, {
-            name: {
-                first: "First Name",
-                last: "Last Name",
-                salutation: null
-            },
-            schoolID: "Faculty User Id",
-            graduationYear: null,
-            email: "Filtered Email",
-            userGroup: null,
-            isVerified: null,
-            password: null
-        }, {
-            name: {
-                salutation: "Ind."
-            },
-            userGroup: "teacher",
-            isVerified: true,
-            graduationYear: null,
-            password: null
-        }).then(function(results) {
-            console.log("results")
-            console.log(results)
-        }).catch(function(err) {
-            console.error(err)
-        })
-    });
-}
+
 
 
 
@@ -553,4 +498,61 @@ function tester() {
  *   }
  */
 
-//exports.accountsFromJSON = function(account)
+
+
+
+/** IMPORT TEACHER SCHEDULES **/
+
+//function mapStudentSchedule(mapRule, defaultRule)
+
+
+
+/**
+ * Json object that relates each required field to a key in another dataset.  If any key is null, it will fallback to the defaults.
+ * @typedef {Object} studentScheduleMapRule
+ * @property {(string|null)} period - Key/Column name of The .
+ * @property {(string|null)} className - Key/Column name of The period's class title
+ * @property {(boolean|null)} isVerified - Because you are importing this, we recomend you set this to null.
+ * @property {(string|null)} password - Name of the Key/Column containing the passwords.
+ * @example
+ * {
+ *       name: {
+ *           first: "First Name",
+ *           last: "Last Name",
+ *           salutation: null
+ *       },
+ *       schoolID: "Faculty User Id",
+ *       graduationYear: null,
+ *       email: "E-Mail",
+ *       userGroup: null,
+ *       isVerified: null,
+ *       password: "Password"
+ *   }
+ */
+
+ /**
+ * Fallback for {@link studentScheduleMapRule}.
+ * If the key is undefined, and a user lacks a value from the array, the user will be skipped.
+ * @typedef {Object} studentScheduleDefaultRule
+ * @property {Object} name
+ * @property {(string|undefined)} name.first - The fallback first name
+ * @property {(string|undefined)} name.last - The fallback last name
+ * @property {(string|undefined)} name.salutation - The fallback salutation (We recommend Ind. as a good gender neutral salutation if you don't have the user's salutation on hand)
+ * @property {(string|undefined)} schoolID - The fallback schoolID,
+ * @property {(Number|undefined|null)} graduationYear - The fallback year the student graduates,
+ * @property {(string|undefined)} email - The fallback email,
+ * @property {(string|undefined|null)} userGroup - The fallback userGroup constant from your config files.
+ * @property {(boolean|undefined)} isVerified - Because you are importing this, we recomend you set this to true.
+ * @property {(string|undefined|null)} password - The fallback password to be hashed later.  Set this to null if you want the user to set their own passsword on account activation. (null is recommended)
+ * @example 
+ * {
+ *       name: {
+ *           salutation: "Ind."
+ *       },
+ *       userGroup: "teacher",
+ *       isVerified: true,
+ *       graduationYear: null,
+ *       isArchived: false,
+ *       password: null
+ *   }
+ */

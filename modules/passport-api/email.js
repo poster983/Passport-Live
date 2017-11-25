@@ -132,7 +132,7 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
 */
 exports.sendActivationEmail = function(mailOptions) {
     return new Promise((resolve, reject) => {
-        console.log("Attempting To Send Activation Email.")
+        
         if(Array.isArray(mailOptions)) {
             var jobs = [];
             if(mailOptions.length)
@@ -165,7 +165,7 @@ exports.sendActivationEmail = function(mailOptions) {
 /*setTimeout(function() {exports.sendActivationEmail({
     to: "example@example.log",
     name:{first: "Joey"},
-    accountID: "653f06df-c797-4795-993f-9d2870a57315"
+    accountID: "0b95ad00-e9aa-40fd-bbfe-b21c62291e8f"
 }).then((res)=> {console.log(res)}).catch((err)=> console.error(err))}, 1000);*/
 
 /**
@@ -181,7 +181,7 @@ exports.sendActivationEmail = function(mailOptions) {
 */
 exports.sendResetPasswordEmail = function(mailOptions) {
     return new Promise((resolve, reject) => {
-        console.log("Attempting To Send a Reset Password Email.")
+        
         if(Array.isArray(mailOptions)) {
             var jobs = [];
             if(mailOptions.length)
@@ -242,6 +242,7 @@ db.queue.newAccountEmail().process((job, next) => {
 
 //sendActivation Email 
 db.queue.activateEmail().process((job, next) => {
+    console.log("Attempting To Send Activation Email.")
     securityJS.newKey.activateAccount(job.accountID).then((key) => {
         var messageConfig = {
             to: job.to,
@@ -253,6 +254,7 @@ db.queue.activateEmail().process((job, next) => {
             console.log(trans, "debig");
             return next(null, trans)
         }).catch((err) => {
+            console.error(err, "ERROR ");
             return next(err);
         });
     }).catch((err) => {return next(err);})
@@ -261,6 +263,7 @@ db.queue.activateEmail().process((job, next) => {
 
 
 db.queue.resetPasswordEmail().process((job, next) => {
+    console.log("Attempting To Send a Reset Password Email.")
     securityJS.newKey.resetPassword(job.accountID).then((key) => {
         var messageConfig = {
             to: job.to,
