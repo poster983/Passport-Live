@@ -30,6 +30,7 @@ var r_ = db.dash()
 var utils = require('../passport-utils/index.js');
 var typeCheck = require("type-check").typeCheck;
 var moment = require("moment");
+var emailJS = require("./email.js");
 
 /**
 * Creates a bulk import job log 
@@ -53,7 +54,7 @@ function newBulkLog(name, importType) {
 * @param {Number} totalImported - The total number of documents successfully imported
 * @param {Object[]} loggedErrors - Any error logged when processing the documents
 * @param {Object} properties - any special properties that each importType might want to include.
-* @param {Number} properties.totalInitialized - (For importType "account") Total number of accounts imported with passwords set.
+* @param {(Number|undefined)} properties.totalInitialized - (For importType "account") Total number of accounts imported with passwords set.
 * @returns {Promise}
 */
 function updateBulkLog(id, totalTried, totalImported, loggedErrors, properties) { 
@@ -122,6 +123,82 @@ exports.searchBulkLogs = (queries) => {
         .run().then(resolve).catch(reject)
     })
 }
+
+/**
+ * Functions for manupulating imported accunts. Assumes account importType
+ * @name accounts
+ * @inner
+ * @private
+ * @memberof js/import
+ * @property {Object} accounts
+ * @property {function} accounts.rollback - Deletes all accounts linked to a given import job
+ */
+var accounts = {};
+ /**
+ * Deletes all accounts linked to a given import job ID
+ * @function
+ * @memberof js/import
+ * @param {String} bulkID - Id of the bulk import.
+ * @param {Boolean} ignoreActivated - If true, activated accounts will be skipped.
+ * @returns {Promise} - Transaction Statement  
+ */
+ accounts.rollback = (bulkID, ignoreVerified) => {
+    return new Promise((resolve, reject) => {
+        return r_.table("accounts").filter((row) => {
+            return row("flags")("bulkImportID").eq(bulkID);
+        }).filter((row) => {
+            if(ignoreVerified) {
+                return row("isVerified").eq(false);
+            } else {
+                return true;
+            }
+        }).delete().run().then((trans) => {
+             if(trans.deleted > 0) {
+                r_.table("bulkImports").get(bulkID).update({rollback: {on: r_.now(), deleted: trans.deleted}}).run().then(() => {
+                    return resolve(trans);
+                }).catch((err)=>{return reject(err);});
+            } else {
+                return resolve(trans);
+            }
+        }).catch(reject);
+    })
+    
+    //
+ }
+
+//accounts.rollback("8e4a8ff9-5503-4e6f-920c-7b07f1109601", true).then((res)=>{console.log(res)}).catch((err)=>{console.error(err)});
+
+ /**
+ * Sends athe activation email to all unverified users.  
+ * @function
+ * @memberof js/import
+ * @param {String} bulkID - Id of the bulk import.
+ * @returns {Promise} - arg0: Accounts, arg1: sendActivationEmail Cursor
+ */
+accounts.sendActivation = (bulkID) => {
+    return new Promise((resolve, reject) => {
+        return r_.table("accounts")
+        .filter((row) => {
+            return row("flags")("bulkImportID").eq(bulkID);
+        })
+        .filter((row) => {
+            return row("isVerified").eq(false);
+        })
+        .withFields("id", "email", {name: "first"})
+        .map((doc) => {
+            return doc.merge({accountID: doc('id')}).without('id');
+        })
+        .run().then((accounts) => {
+            emailJS.sendActivationEmail(accounts).then((cur) => {
+                return resolve(accounts, cur)
+            }).catch(reject)
+            
+        }).catch(reject)
+    })
+}
+accounts.sendActivation("e04fc7be-d02e-4336-a4f6-1d8df4a4b842").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
+exports.accounts = accounts;
+
 //exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
 //exports.searchBulkLogs({name: "testFaculty"}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
 /** 
