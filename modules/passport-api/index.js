@@ -321,8 +321,10 @@ module.exports = {
                             //check returns nly the most important 
                             if(checkImportance) {
                                 if(validRows.length <= 0) {
-
-                                    return done(null, null);
+                                    
+                                    var err = new Error("No Recurring Schedules Found");
+                                    err.status = 404;
+                                    return done(err)
                                 }
                                 if(validRows.length == 1) {
 

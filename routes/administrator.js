@@ -34,4 +34,13 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administ
     res.render('administrator/index', { doc_Title: 'Passport-Administrator', user: user});
 });
 
+router.get('/import', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    res.render('administrator/import', { doc_Title: 'Import -- Passport-Administrator', user: user});
+});
+
+
 module.exports = router;

@@ -157,7 +157,7 @@ function serializeUser(req, res, done) {
 //GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
 router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function handleGetAccountsById(req, res, next) {
     var id = req.params.id;
-    api.getUserByID(r.conn(), id, function(err, data) {
+    api.getUserByID(id, function(err, data) {
         if(err) {
             return next(err) 
         }

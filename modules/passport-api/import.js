@@ -507,12 +507,12 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
 
 
 
-/**
+/*
  * Json object that relates each required field to a key in another dataset.  If any key is null, it will fallback to the defaults.
  * @typedef {Object} studentScheduleMapRule
- * @property {(string|null)} period - Key/Column name of The .
+ * @property {(string|null)} period - Key/Column name of The period constant 
  * @property {(string|null)} className - Key/Column name of The period's class title
- * @property {(boolean|null)} isVerified - Because you are importing this, we recomend you set this to null.
+ * @property {(boolean|null)} isTeaching - Key/Column name for declaring the period to be teaching only. 
  * @property {(string|null)} password - Name of the Key/Column containing the passwords.
  * @example
  * {
@@ -530,7 +530,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
  *   }
  */
 
- /**
+ /*
  * Fallback for {@link studentScheduleMapRule}.
  * If the key is undefined, and a user lacks a value from the array, the user will be skipped.
  * @typedef {Object} studentScheduleDefaultRule

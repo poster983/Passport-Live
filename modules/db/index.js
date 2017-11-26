@@ -39,7 +39,7 @@ const QueuecxnOptions = {
   port: config.get('rethinkdb.port'),
   user: "admin",
   password: config.get("rethinkdb.password"),
-  db: 'JobQueue' // The name of the database in RethinkDB
+  db: 'PassportJobQueue' // The name of the database in RethinkDB
 }
 /*
 var queueNewAccountEmail = new Queue(QueuecxnOptions, {

@@ -31,6 +31,10 @@ var passport = require("passport");
 router.use(cors());
 router.options('*', cors())
 
+//SEARCH API
+router.get("/", passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), (req, res, next) => {
+
+});
 
 //passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}),
 
