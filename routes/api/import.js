@@ -21,18 +21,39 @@ var express = require('express');
 var config = require('config');
 var cors = require('cors');
 var router = express.Router();
-const importApi = require("../../modules/passport-api/import.js")
-var ssarv = require("ssarv")
-var multer  = require('multer')
-var upload = multer({ dest: '../../userUploads/' })
+const importJS = require("../../modules/passport-api/import.js")
+var ssarv = require("ssarv");
+var multer  = require('multer');
+var upload = multer({ dest: '../../userUploads/' });
 var passport = require("passport");
-
+var db = require("../../modules/db/index.js");
 
 router.use(cors());
 router.options('*', cors())
 
-//SEARCH API
-router.get("/", passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), (req, res, next) => {
+/*
+* Searches the bulk log database 
+* @link module:js/import
+* @function searchBulkImport
+* @api GET /api/import/log
+* @apiparam {permissionKeyType} type - Must provide an allowed key type defined in ENUM "permissionKeyType".  (Currently only "NEW_ACCOUNT" and "UNKNOWN" are allowed)
+* @apiquery {(String|undefined)} name - Bulk Log Name
+* @apiquery {(String|undefined)} type - importType. Current values: "account", "schedule" 
+* @apiquery {(String|undefined)} from - ISO Strng Low end.  inclusive
+* @apiquery {(String|undefined)} to - ISO Strng High end. inclusive
+* @apiresponse {Object[]}
+*/
+router.get("/log", passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function searchBulkImport(req, res, next) {
+    importJS.searchBulkLogs({
+        name: req.query.name,
+        type: req.query.type,
+        date: {
+            from: req.query.from,
+            to: req.query.to
+        }
+    }).then((logs) => {
+        res.json(logs)
+    }).catch((err) => {return next(err)})
 
 });
 
@@ -45,7 +66,7 @@ router.post('/accounts', upload.single('excelImport'), function (req, res, next)
 })
 //{name: "testFaculty"}
 router.post('/test', function (req, res, next) {
-  importApi.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
+  importJS.importAccountsExcel("C:/Users/josep/Documents/facultyhassell.xlsx", {
             name: {
                 first: "First Name",
                 last: "Last Name",
@@ -53,7 +74,7 @@ router.post('/test', function (req, res, next) {
             },
             schoolID: "Faculty User Id",
             graduationYear: null,
-            email: "Filtered Email",
+            email: "E-Mail",
             userGroup: null,
             isVerified: null,
             password: null //"Password"
@@ -76,7 +97,7 @@ router.post('/test', function (req, res, next) {
 
 router.post('/test/student', function (req, res, next) {
     console.log("GOOO")
-  importApi.importAccountsExcel("/home/joseph/Desktop/passportImport/studentinfohassellnodupe.xlsx", {
+  importJS.importAccountsExcel("/home/joseph/Desktop/passportImport/studentinfohassellnodupe.xlsx", {
             name: {
                 first: "Student First Name",
                 last: "Student Last Name",

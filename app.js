@@ -167,7 +167,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-
+  console.error(err)
 
   if(!err.status){
     err.status = 500;
@@ -190,7 +190,8 @@ app.use(function(err, req, res, next) {
 
   //console.log(err)
   // render the error page
-  res.append("errormessage", encodeURIComponent(err.message));
+  
+  res.setHeader("errormessage", encodeURIComponent(err.message));
   res.status(err.status);
   res.render('error');
   

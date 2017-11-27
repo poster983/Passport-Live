@@ -158,11 +158,11 @@ exports.createAccount = function(user, options) {
             if (config.has('userGroups.' + user.userGroup)) {
                 if(config.has("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")) {
                     var uGD = config.get("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")
-                    //console.log(uGD)
-                    if(uGD.length > 0) {
+                    console.log(uGD)
+                    if(uGD != false && uGD.length > 0) {
                         for(var z = 0; z < uGD.length; z++) {
                             //console.log(uGD[z], "email")
-                            if(user.email.substring(user.email.indexOf("@")) == uGD[z]) {
+                            if(user.email.substring(user.email.indexOf("@")) == uGD[z].toLowerCase()) {
                                 resolveE();
                             }
                             if(z >= uGD.length - 1 ) {

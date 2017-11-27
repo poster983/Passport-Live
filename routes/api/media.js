@@ -54,8 +54,6 @@ jdenticon.config = {
 * @todo move rethink db to passport-api module
 */
 router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
-    
-    res.setHeader("Content-Type", "image/svg+xml");
     r.table("accounts").get(req.params.id).run(db.conn(), function(err, data) {
         if (err) {
             return next(err);
@@ -64,6 +62,7 @@ router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
             var pattern = GeoPattern.generate(data.name.salutation + " " + data.name.first + " " + data.name.last, {baseColor: "#b71c1c"});
             var svg = pattern.toSvg();
             var color = pattern.color;
+            res.setHeader("Content-Type", "image/svg+xml");
             res.status(200).send(svg);
             //res.sendFile(svg)
         } else {
@@ -89,7 +88,6 @@ router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
 * @todo move rethink db to passport-api module
 */
 router.get("/avatar/:id/:size.svg", function getAvatar(req, res, next) {
-    res.setHeader("Content-Type", "image/svg+xml");
     var size = parseInt(req.params.size)
     if(isNaN(size)) {
          var err = new Error("Size must be a number");
@@ -103,6 +101,7 @@ router.get("/avatar/:id/:size.svg", function getAvatar(req, res, next) {
             if(data) {
                 var hash = crypto.createHash("md5").update(data.name.salutation + " " + data.name.first + " " + data.name.last).digest("hex")
                 var svg = jdenticon.toSvg(hash, size);
+                res.setHeader("Content-Type", "image/svg+xml");
                 res.status(200).send(svg);
             } else {
                 var err = new Error("Not Found");

@@ -85,7 +85,9 @@ function deleteBulkLog(id) {
 exports.searchBulkLogs = (queries) => {
     return new Promise((resolve, reject) => {
         if(!typeCheck("{name: Maybe String, date: Maybe {from: Maybe ISODate | Date, to: Maybe ISODate | Date}, type: Maybe String}", queries, utils.typeCheck)) {
-            return reject(new TypeError("queries must be an object with format: \"{name: Maybe String, date: Maybe ISODate, type: Maybe String}\""));
+            var err = new TypeError("queries must be an object with format: \"{name: Maybe String, date: Maybe {from: Maybe ISODate | Date, to: Maybe ISODate | Date}, type: Maybe String}\"");
+            err.status = 400;
+            return reject(err);
         }
         //            date: r.ISO8601(queries.date),
         if(queries.date && typeCheck("Date", queries.date.from)) {
@@ -108,7 +110,7 @@ exports.searchBulkLogs = (queries) => {
         })
         .filter((row) => {
             if(queries.name != undefined) {
-                return row("name").eq(queries.name)
+                return row("name").match("(?i)"+queries.name.replace(/\s/g,''))
             } else {
                 return true;
             }
@@ -123,6 +125,8 @@ exports.searchBulkLogs = (queries) => {
         .run().then(resolve).catch(reject)
     })
 }
+
+
 
 /**
  * Functions for manupulating imported accunts. Assumes account importType
@@ -501,58 +505,3 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
 
 
 
-/** IMPORT TEACHER SCHEDULES **/
-
-//function mapStudentSchedule(mapRule, defaultRule)
-
-
-
-/*
- * Json object that relates each required field to a key in another dataset.  If any key is null, it will fallback to the defaults.
- * @typedef {Object} studentScheduleMapRule
- * @property {(string|null)} period - Key/Column name of The period constant 
- * @property {(string|null)} className - Key/Column name of The period's class title
- * @property {(boolean|null)} isTeaching - Key/Column name for declaring the period to be teaching only. 
- * @property {(string|null)} password - Name of the Key/Column containing the passwords.
- * @example
- * {
- *       name: {
- *           first: "First Name",
- *           last: "Last Name",
- *           salutation: null
- *       },
- *       schoolID: "Faculty User Id",
- *       graduationYear: null,
- *       email: "E-Mail",
- *       userGroup: null,
- *       isVerified: null,
- *       password: "Password"
- *   }
- */
-
- /*
- * Fallback for {@link studentScheduleMapRule}.
- * If the key is undefined, and a user lacks a value from the array, the user will be skipped.
- * @typedef {Object} studentScheduleDefaultRule
- * @property {Object} name
- * @property {(string|undefined)} name.first - The fallback first name
- * @property {(string|undefined)} name.last - The fallback last name
- * @property {(string|undefined)} name.salutation - The fallback salutation (We recommend Ind. as a good gender neutral salutation if you don't have the user's salutation on hand)
- * @property {(string|undefined)} schoolID - The fallback schoolID,
- * @property {(Number|undefined|null)} graduationYear - The fallback year the student graduates,
- * @property {(string|undefined)} email - The fallback email,
- * @property {(string|undefined|null)} userGroup - The fallback userGroup constant from your config files.
- * @property {(boolean|undefined)} isVerified - Because you are importing this, we recomend you set this to true.
- * @property {(string|undefined|null)} password - The fallback password to be hashed later.  Set this to null if you want the user to set their own passsword on account activation. (null is recommended)
- * @example 
- * {
- *       name: {
- *           salutation: "Ind."
- *       },
- *       userGroup: "teacher",
- *       isVerified: true,
- *       graduationYear: null,
- *       isArchived: false,
- *       password: null
- *   }
- */
