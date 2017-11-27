@@ -191,7 +191,7 @@ app.use(function(err, req, res, next) {
   //console.log(err)
   // render the error page
   
-  res.setHeader("errormessage", encodeURIComponent(err.message));
+  res.set("errormessage", encodeURIComponent(err.message));
   res.status(err.status);
   res.render('error');
   
