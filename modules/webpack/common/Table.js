@@ -42,7 +42,10 @@ class Table {
         var columnNames = [];
         for(var x = 0; x < this.data.length; x++ ) {
             var flatData = flat(this.data[x]);
+            //array.filter(function(a){return a !== 'deleted'})
             var flatKeys = Object.keys(flatData);
+            columnNames = columnNames.concat(flatKeys);
+
             //Chould check to see if it has a new key to add to the head
             //DO STUFF
             
