@@ -66,7 +66,7 @@ exports.throwError = (err) => {
 * @returns (Promise)
 */
 exports.fetchStatus = (response) => {
-  console.log(response)
+  //console.log(response)
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
@@ -133,4 +133,16 @@ exports.getCookie = (cname) => {
         }
     }
     return "";
+}
+
+/**
+* Returns a list of every distinct key in the object   
+* @link module:webpack/utils
+* @param (Object[]) arr - Array of the json objects with keys to test
+* @returns (String[])
+*/
+exports.distinctKeys = (arr) => {
+    return Object.keys(arr.reduce(function(result, obj) {
+      return Object.assign(result, obj);
+    }, {}))
 }

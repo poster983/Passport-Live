@@ -19,10 +19,13 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var Caret = require("../../common/caret.js");
+var Caret = require("../../common/Caret.js");
+var Table = require("../../common/Table.js");
 var utils = require("../../utils/index.js");
 var importAPI = require("../../api/import.js")
+//var moment = require("moment");
 
+var bulkTable = null;
 window.onload = function() {
   var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
   caret.initialize();
@@ -33,7 +36,18 @@ window.onload = function() {
     null: null,
     undefined: undefined
   }))
+  //get initial table values and create table object.
+  bulkTable = new Table($("#bulkLogTable"), []);
+
   importAPI.searchBulkLogs({
-    name: "1"
-  })
+    name: "f"
+  }).then((data) => {
+    //console.log(data)
+    bulkTable.addData(data)
+    bulkTable.generate();
+  }).catch(err=>utils.throwError(err));
 };
+
+function searchBulkLogsForm() {
+    
+}

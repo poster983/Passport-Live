@@ -37,17 +37,19 @@ var utils = require("../utils/index.js");
 * @returns {Promise} - array
 */
 exports.searchBulkLogs = (queries) => {
-    fetch("/api/import/log?" + utils.urlQuery(queries), {
-        method: "GET",
-        headers: new Headers({
-          //"Content-Type": "application/json",
-          "x-xsrf-token": getCookie("XSRF-TOKEN")
-        }),
-        credentials: 'same-origin'
-    }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
-      console.log(json)
-    }).catch((err) => {
-      return errorHand(err);
+    return new Promise((resolve, reject) => {
+        fetch("/api/import/log?" + utils.urlQuery(queries), {
+            method: "GET",
+            headers: new Headers({
+              //"Content-Type": "application/json",
+              "x-xsrf-token": getCookie("XSRF-TOKEN")
+            }),
+            credentials: 'same-origin'
+        }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+          return resolve(json)
+        }).catch((err) => {
+          return reject(err);
+        })
     })
 }
 

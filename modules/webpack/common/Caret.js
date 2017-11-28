@@ -19,9 +19,6 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-/*
-* @module webpack/framework
-*/
 var typeCheck = require("type-check").typeCheck
 
 /**
@@ -33,11 +30,12 @@ var typeCheck = require("type-check").typeCheck
 * @param {(Object|undefined)} options - The clickable element.
 * @param {(Boolean|undefined)} options.isOpen - True if the element should be shown by default.
 * @param {(Number|undefine)} options.timing - How fast the element will be shown. In ms.
+* @param {(Function|undefine)} options.callback - Passes one argument, "isOpen" (bool). Fires whenever the Caret is opened.
 */
 class Caret {
     constructor(caretButton, content, options) {
-        if(!typeCheck("Maybe {isOpen: Maybe Boolean, timing: Maybe Number}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {isOpen: Maybe Boolean, timing: Maybe Number}\"");
+        if(!typeCheck("Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}\"");
         }
         if(!options) {options = {}}
         this.options = options;
@@ -55,6 +53,7 @@ class Caret {
     }
     _onClick(event) {
         if(this.state) {this.caretButton.css("transform", "rotate(0deg)")} else {this.caretButton.css("transform", "rotate(180deg)")}
+        if(typeCheck("Function", this.options.callback)) {this.options.callback(!this.state)}
         this.showContent(!this.state);
     }
     showContent(isShown, time) {

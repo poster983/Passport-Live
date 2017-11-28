@@ -48,6 +48,7 @@
     "express": "~4.15.3",
     "express-brute": "^1.0.1",
     "express-session": "latest",
+    "flat": "^4.0.0",
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",
     "greenlock-express": "^2.0.11",
