@@ -21,20 +21,34 @@ email: hi@josephhassell.com
 */
 /**
 * Browser Import Functions.
-* @module webpack/import
+* @module webpack/api/import
 */
 
+var utils = require("../utils/index.js");
 
-fetch("/account/resetPassword", {
-                method: "GET",
-                headers: new Headers({
-                  //"Content-Type": "application/json",
-                  "x-xsrf-token": getCookie("XSRF-TOKEN")
-                }),
-                credentials: 'same-origin'
-              }).then(fetchStatus).then(fetchJSON).then((json) => {
-                console.log(json)
-              }).catch((err) => {
-                return errorHand(err);
-              })
+/**
+* Searches the bulk log database 
+* @link module:webpack/api/import
+* @param {Object} queries
+* @param {(String|undefined)} queries.name - Bulk Log Name
+* @param {(String|undefined)} queries.type - importType. Current values: "account", "schedule" 
+* @param {(String|Date|undefined)} queries.from - ISO Strng or date Low end.  inclusive
+* @param {(String|Date|undefined)} queries.to - ISO Strng High end. inclusive
+* @returns {Promise} - array
+*/
+exports.searchBulkLogs = (queries) => {
+    fetch("/api/import/log?" + utils.urlQuery(queries), {
+        method: "GET",
+        headers: new Headers({
+          //"Content-Type": "application/json",
+          "x-xsrf-token": getCookie("XSRF-TOKEN")
+        }),
+        credentials: 'same-origin'
+    }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+      console.log(json)
+    }).catch((err) => {
+      return errorHand(err);
+    })
+}
+
 

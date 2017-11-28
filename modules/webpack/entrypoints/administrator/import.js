@@ -20,9 +20,20 @@ email: hi@josephhassell.com
 
 */
 var Caret = require("../../common/caret.js");
-
+var utils = require("../../utils/index.js");
+var importAPI = require("../../api/import.js")
 
 window.onload = function() {
   var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
   caret.initialize();
+  console.log(utils.urlQuery({
+    string: "There",
+    number: 1,
+    bool: true,
+    null: null,
+    undefined: undefined
+  }))
+  importAPI.searchBulkLogs({
+    name: "1"
+  })
 };
