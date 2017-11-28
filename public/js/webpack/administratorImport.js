@@ -2086,24 +2086,36 @@ class Table {
         //var flatData = flat(this.data);
         console.log(this.data)
         //var distinctKeys = utils.distinctKeys(this.data)
-        console.log(distinctKeys);
+        var columnNames = [];
         for(var x = 0; x < this.data.length; x++ ) {
+            var flatData = flat(this.data[x]);
+            var flatKeys = Object.keys(flatData);
+            //Chould check to see if it has a new key to add to the head
             //DO STUFF
+            
         }
 
 
         //data in the table
         this.liveData = this.data;
-        this.liveKeys = distinctKeys;
+        this.liveColumn = columnNames;
     }
     addData(newData) {
         if(!typeCheck("[Object]", newData)) {
             throw new TypeError("data must be an array of objects");
         }
         this.data = this.data.concat(newData)
-
     }
-
+    replaceData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = newData;
+    }
+    destroyTable() {
+        this.data = [];
+        containerElement.empty();
+    }
 }
 
 module.exports = Table;

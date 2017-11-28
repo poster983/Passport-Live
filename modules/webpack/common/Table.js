@@ -39,6 +39,7 @@ class Table {
         //var flatData = flat(this.data);
         console.log(this.data)
         //var distinctKeys = utils.distinctKeys(this.data)
+        var columnNames = [];
         for(var x = 0; x < this.data.length; x++ ) {
             var flatData = flat(this.data[x]);
             var flatKeys = Object.keys(flatData);
@@ -50,7 +51,7 @@ class Table {
 
         //data in the table
         this.liveData = this.data;
-        this.liveKeys = distinctKeys;
+        this.liveColumn = columnNames;
     }
     addData(newData) {
         if(!typeCheck("[Object]", newData)) {
