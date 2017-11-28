@@ -323,3 +323,4 @@ function fetchStatus(response) {
 function fetchJSON(response) {
   return response.json()
 }
+

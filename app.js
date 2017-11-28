@@ -167,7 +167,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  console.error(err)
+  //console.error(err)
 
   if(!err.status){
     err.status = 500;
