@@ -282,7 +282,11 @@ window.onload = function() {
     undefined: undefined
   }))
   //get initial table values and create table object.
-  bulkTable = new Table($("#bulkLogTable"), []);
+  bulkTable = new Table($("#bulkLogTable"), [], {
+    ignoredKeys: ["id"],
+    idKey: "id",
+    hiddenKeys: ["loggedErrors"]
+  });
 
   importAPI.searchBulkLogs({
     name: "f"
@@ -2072,9 +2076,10 @@ var typeCheck = __webpack_require__(1).typeCheck;
 
 class Table {
     constructor(containerElement, data, options) {
-        if(!typeCheck("Maybe {ignoreKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {ignoreKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}\"");
-        }
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}\"");
+        }*/
+        if(!options){options = {};}
         if(!typeCheck("[Object]", data)) {
             throw new TypeError("data must be an array of objects");
         }
@@ -2087,17 +2092,51 @@ class Table {
         console.log(this.data)
         //var distinctKeys = utils.distinctKeys(this.data)
         var columnNames = [];
+        var rows = [];
         for(var x = 0; x < this.data.length; x++ ) {
-            var flatData = flat(this.data[x]);
-            var flatKeys = Object.keys(flatData);
+            var row = {};
+            row.shownData = flat(this.data[x]);
+            row.rowID = "__TABLE" + utils.uuidv4() + "__";
+            //note ID
+            if(this.options.idKey && row.shownData[this.options.idKey]) {
+                row.rowID = "__TABLE" + row.shownData[this.options.idKey] + "__"; 
+            }
+
+            
+            //Filter out hidden keys for later 
+            if(this.options.hiddenKeys) {
+                row.hiddenData = Object.keys(row.shownData)
+                  .filter(key => this.options.hiddenKeys.includes(key))
+                  .reduce((obj, key) => {
+                    obj[key] = row.shownData[key];
+                    return obj;
+                }, {});
+                this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+            }
+            //filter out unwanted Keys
+            //should error in constructor if not array
+            if(this.options.ignoredKeys) {
+                row.shownData = Object.keys(row.shownData)
+                  .filter(key => !this.options.ignoredKeys.includes(key))
+                  .reduce((obj, key) => {
+                    obj[key] = row.shownData[key];
+                    return obj;
+                }, {});
+            }
+
+            row.shownKeys = Object.keys(row.shownData);
+            columnNames = columnNames.concat(row.shownKeys);
+
             //Chould check to see if it has a new key to add to the head
             //DO STUFF
-            
+            console.log(columnNames)
+            console.log(row)
+            rows.push(row);
         }
 
 
         //data in the table
-        this.liveData = this.data;
+        this.liveRows = rows;
         this.liveColumn = columnNames;
     }
     addData(newData) {

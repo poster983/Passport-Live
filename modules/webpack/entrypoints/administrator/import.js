@@ -37,7 +37,11 @@ window.onload = function() {
     undefined: undefined
   }))
   //get initial table values and create table object.
-  bulkTable = new Table($("#bulkLogTable"), []);
+  bulkTable = new Table($("#bulkLogTable"), [], {
+    ignoredKeys: ["id"],
+    idKey: "id",
+    hiddenKeys: ["loggedErrors"]
+  });
 
   importAPI.searchBulkLogs({
     name: "f"
