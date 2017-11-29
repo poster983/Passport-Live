@@ -267,7 +267,7 @@ email: hi@josephhassell.com
 var Caret = __webpack_require__(3);
 var Table = __webpack_require__(12);
 var utils = __webpack_require__(0);
-var importAPI = __webpack_require__(15)
+var importAPI = __webpack_require__(16)
 //var moment = require("moment");
 
 var bulkTable = null;
@@ -2073,6 +2073,7 @@ email: hi@josephhassell.com
 var flat = __webpack_require__(13);
 var utils = __webpack_require__(0);
 var typeCheck = __webpack_require__(1).typeCheck;
+var DeepKey = __webpack_require__(15);
 
 class Table {
     constructor(containerElement, data, options) {
@@ -2095,33 +2096,39 @@ class Table {
         var rows = [];
         for(var x = 0; x < this.data.length; x++ ) {
             var row = {};
-            row.shownData = flat(this.data[x]);
-            row.rowID = "__TABLE" + utils.uuidv4() + "__";
+            row.shownData = this.data[x];
+            row.rowID = "__TABLE_" + utils.uuidv4() + "__";
             //note ID
             if(this.options.idKey && row.shownData[this.options.idKey]) {
-                row.rowID = "__TABLE" + row.shownData[this.options.idKey] + "__"; 
+                row.rowID = "__TABLE_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
             }
 
             
             //Filter out hidden keys for later 
             if(this.options.hiddenKeys) {
-                row.hiddenData = Object.keys(row.shownData)
-                  .filter(key => this.options.hiddenKeys.includes(key))
-                  .reduce((obj, key) => {
-                    obj[key] = row.shownData[key];
+                row.hiddenData = DeepKey.keys(row.shownData, {
+                    filter: (deepkey) => {
+                        return this.options.hiddenKeys.includes(deepkey.join("."));
+                    }
+                }).reduce((obj, key) => {
+                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
                     return obj;
-                }, {});
+                }, {})
                 this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
             }
+
             //filter out unwanted Keys
             //should error in constructor if not array
             if(this.options.ignoredKeys) {
-                row.shownData = Object.keys(row.shownData)
-                  .filter(key => !this.options.ignoredKeys.includes(key))
-                  .reduce((obj, key) => {
-                    obj[key] = row.shownData[key];
+                row.shownData = DeepKey.keys(row.shownData, {
+                    filter: (deepkey) => {
+                        return !this.options.ignoredKeys.includes(deepkey.join("."));
+                    }
+                }).reduce((obj, key) => {
+                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
                     return obj;
-                }, {});
+                }, {})
+                
             }
 
             row.shownKeys = Object.keys(row.shownData);
@@ -2129,12 +2136,12 @@ class Table {
 
             //Chould check to see if it has a new key to add to the head
             //DO STUFF
-            console.log(columnNames)
-            console.log(row)
+            //console.log(columnNames)
+            //console.log(row)
             rows.push(row);
         }
 
-
+        console.log(rows)
         //data in the table
         this.liveRows = rows;
         this.liveColumn = columnNames;
@@ -2304,6 +2311,151 @@ function isSlowBuffer (obj) {
 
 /***/ }),
 /* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function* iterateKeys(obj, opt, parent) {
+  if (obj === null || obj === undefined)
+    return;
+  if (opt.depth > 0 && parent && parent.length >= opt.depth)
+    return;
+  if (typeof(obj) === 'string')
+    return;
+  parent = parent || [];
+  for (var key of opt.all ? Object.getOwnPropertyNames(obj) : Object.keys(obj)) {
+    if (opt.noindex && obj instanceof Array && /^[0-9]+$/.test(key))
+      continue;
+    var child = parent.slice(0);
+    child.push(key);
+    if (opt.filter && !opt.filter(child, obj[key], !opt.all || obj.propertyIsEnumerable(key)))
+      continue;
+    var descend = iterateKeys(obj[key], opt, child);
+    var dfirst = descend.next();
+    if (opt.leaf) {
+      if (!dfirst.done) {
+        yield dfirst.value;
+        yield* descend;
+      }
+      else
+        yield child;
+    }
+    else {
+      yield child;
+      if (!dfirst.done) {
+        yield dfirst.value;
+        yield* descend;
+      }
+    }
+  }
+}
+function traverse(obj, deepkey, force) {
+  var leaf = obj;
+  for (var c = 0; c < deepkey.length; c++)
+    if (c == deepkey.length - 1) {
+      return [leaf, deepkey[c]];
+    }
+    else {
+      if (!(deepkey[c] in leaf) || leaf[deepkey[c]] === undefined) {
+        if (force) {
+          // if creating intermediate object, its parent must not be sealed
+          if (!Object.isExtensible(leaf))
+            throw `Inextensible object: ${ deepkey.slice(0, c).join('.') }`;
+          leaf[deepkey[c]] = { };
+        }
+        else
+          return undefined;
+      }
+      leaf = leaf[deepkey[c]];
+      // intermediate object must be non-null object or function
+      // note that typeof(null) returns 'object'
+      if (leaf === 'null' || (typeof(leaf) !== 'object' && typeof(leaf) !== 'function')) {
+        if (force)
+          throw `Inextensible object: ${ deepkey.slice(0, c + 1).join('.') }`;
+        else
+          return undefined;
+      }
+    }
+  return undefined;
+}
+function accessor(obj, deepkey) {
+  var t = traverse(obj, deepkey, true);
+  if (!t) return undefined;
+  return {
+    get: () => { return (t[0])[t[1]]; },
+    set: v => { return (t[0])[t[1]] = v;  },
+  }
+}
+function keys(obj, option) {
+  var opt;
+  if (typeof(option) === 'number')
+    opt = { depth: option };
+  else if (typeof(option) === 'function')
+    opt = { filter: option };
+  else if (typeof(option) === 'object' && option !== null)
+    opt = option;
+  else
+    opt = {}
+  opt.depth = opt.depth || 0;
+  var array = [];
+  for (var path of iterateKeys(obj, opt))
+    array.push(path);
+  return array;
+}
+function rename(obj, src, dest) {
+  return set(obj, dest, del(obj, src));
+}
+function del(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  if (!t) return undefined;
+  var v = (t[0])[t[1]];
+  delete (t[0])[t[1]];
+  return v;
+}
+function set(obj, deepkey, value) {
+  var t = traverse(obj, deepkey, true);
+  // The following codes is unneeded, traverse will check them
+  // if (!(t[1] in t[0]) && !Object.isExtensible(t[0]))
+  //   throw `Inextensible object: ${ deepkey.slice(0, deepkey.length - 1).join('.') }`;
+  return (t[0])[t[1]] = value;
+}
+function get(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  return t ? (t[0])[t[1]] : undefined;
+}
+function touch(obj, deepkey, value) {
+  var t = traverse(obj, deepkey, true);
+  if (!(t[1] in t[0])) {
+    if (!Object.isExtensible(t[0]))
+      throw `Inextensible object: ${ deepkey.slice(0, deepkey.length -1).join('.') }`;
+    return (t[0])[t[1]] = value;
+  }
+  else
+    return (t[0])[t[1]];
+}
+function type(obj, deepkey) {
+  return typeof(get(obj, deepkey));
+}
+function exists(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  return t ? t[0].propertyIsEnumerable(t[1]) : false;
+}
+module.exports = {
+  keys: keys,
+  set: set,
+  get: get,
+  touch: touch,
+  type: type,
+  rename: rename,
+  delete: del,
+  exists: exists,
+  accessor: accessor,
+};
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*

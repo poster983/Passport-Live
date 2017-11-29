@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 var flat = require('flat');
 var utils = require("../utils/index.js");
 var typeCheck = require("type-check").typeCheck;
+var DeepKey = require("deep-key");
 
 class Table {
     constructor(containerElement, data, options) {
@@ -44,33 +45,39 @@ class Table {
         var rows = [];
         for(var x = 0; x < this.data.length; x++ ) {
             var row = {};
-            row.shownData = flat(this.data[x]);
-            row.rowID = "__TABLE" + utils.uuidv4() + "__";
+            row.shownData = this.data[x];
+            row.rowID = "__TABLE_" + utils.uuidv4() + "__";
             //note ID
             if(this.options.idKey && row.shownData[this.options.idKey]) {
-                row.rowID = "__TABLE" + row.shownData[this.options.idKey] + "__"; 
+                row.rowID = "__TABLE_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
             }
 
             
             //Filter out hidden keys for later 
             if(this.options.hiddenKeys) {
-                row.hiddenData = Object.keys(row.shownData)
-                  .filter(key => this.options.hiddenKeys.includes(key))
-                  .reduce((obj, key) => {
-                    obj[key] = row.shownData[key];
+                row.hiddenData = DeepKey.keys(row.shownData, {
+                    filter: (deepkey) => {
+                        return this.options.hiddenKeys.includes(deepkey.join("."));
+                    }
+                }).reduce((obj, key) => {
+                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
                     return obj;
-                }, {});
+                }, {})
                 this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
             }
+
             //filter out unwanted Keys
             //should error in constructor if not array
             if(this.options.ignoredKeys) {
-                row.shownData = Object.keys(row.shownData)
-                  .filter(key => !this.options.ignoredKeys.includes(key))
-                  .reduce((obj, key) => {
-                    obj[key] = row.shownData[key];
+                row.shownData = DeepKey.keys(row.shownData, {
+                    filter: (deepkey) => {
+                        return !this.options.ignoredKeys.includes(deepkey.join("."));
+                    }
+                }).reduce((obj, key) => {
+                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
                     return obj;
-                }, {});
+                }, {})
+                
             }
 
             row.shownKeys = Object.keys(row.shownData);
@@ -78,12 +85,12 @@ class Table {
 
             //Chould check to see if it has a new key to add to the head
             //DO STUFF
-            console.log(columnNames)
-            console.log(row)
+            //console.log(columnNames)
+            //console.log(row)
             rows.push(row);
         }
 
-
+        console.log(rows)
         //data in the table
         this.liveRows = rows;
         this.liveColumn = columnNames;

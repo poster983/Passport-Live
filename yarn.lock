@@ -1273,6 +1273,10 @@ deep-extend@~0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.2.tgz#48b699c27e334bf89f10892be432f6e4c7d34a7f"
 
+deep-key@^0.9.9:
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/deep-key/-/deep-key-0.9.9.tgz#339c6c7ed85507d39a36b645985a63ef63175418"
+
 default-require-extensions@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/default-require-extensions/-/default-require-extensions-1.0.0.tgz#f37ea15d3e13ffd9b437d33e1a75b5fb97874cb8"
