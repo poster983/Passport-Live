@@ -26,8 +26,8 @@ var DeepKey = require("deep-key");
 
 class Table {
     constructor(containerElement, data, options) {
-        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String]}\"");
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function}\"");
         }*/
         if(!options){options = {};}
         if(!typeCheck("[Object]", data)) {
@@ -46,10 +46,10 @@ class Table {
         for(var x = 0; x < this.data.length; x++ ) {
             var row = {};
             row.shownData = this.data[x];
-            row.rowID = "__TABLE_" + utils.uuidv4() + "__";
+            row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
             //note ID
             if(this.options.idKey && row.shownData[this.options.idKey]) {
-                row.rowID = "__TABLE_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
+                row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
             }
 
             
@@ -63,7 +63,11 @@ class Table {
                     DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
                     return obj;
                 }, {})
-                this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                if(this.options.ignoredKeys) {
+                    this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                } else {
+                    this.options.ignoredKeys = this.options.hiddenKeys;
+                }
             }
 
             //filter out unwanted Keys
@@ -79,15 +83,35 @@ class Table {
                 }, {})
                 
             }
+            new Promise((resolve, reject) => {
+                //Generate Actions 
+                if(typeCheck("Function", this.options.actions)) {
+                    this.options.inject(row, (injected) => {
+                        if(typeCheck("[{column: String, dom: *}]", injected)) {
+                            for(var a = 0; a < injected.length; a++) {
+                                DeepKey.set(row.shownData, injected[a].column.join("."), injected[a].dom)
+                                if(a >= injected.length-1) {
+                                    return resolve();
+                                }
+                            }
+                            
+                            //row.shownData = {column: column, dom: domToInject};
+                        } else {
+                            return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, dom: *}]"));
+                        }
+                        
+                    })
+                } else {
+                    return resolve()
+                }
+            }).then(() => {
+                var flatData = flat(row.shownData);
+                row.shownKeys = Object.keys(flatData);
+                columnNames = columnNames.concat(row.shownKeys);
 
-            row.shownKeys = Object.keys(row.shownData);
-            columnNames = columnNames.concat(row.shownKeys);
-
-            //Chould check to see if it has a new key to add to the head
-            //DO STUFF
-            //console.log(columnNames)
-            //console.log(row)
-            rows.push(row);
+                rows.push(row);
+            }).catch((err) => {throw err})
+            
         }
 
         console.log(rows)
