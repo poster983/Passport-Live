@@ -286,11 +286,12 @@ window.onload = function() {
   bulkTable = new Table($("#bulkLogTable"), [], {
     ignoredKeys: ["id"],
     idKey: "id",
-    hiddenKeys: ["loggedErrors", "properties", "rollback"],
+    sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
+    hiddenKeys: ["loggedErrors", "rollback"],
     tableClasses: "white-text responsive-table",
     inject: function(row, done) {
         return done([{
-            column: "Actions.hi", 
+            column: "Actions", 
             strictColumn: true,
             dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
             //dom: {hello: "there", howAre: "you"}
@@ -2087,8 +2088,8 @@ var DeepKey = __webpack_require__(15);
 
 class Table {
     constructor(containerElement, data, options) {
-        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String}\"");
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
         }*/
         if(!options){options = {};}
         if(!typeCheck("[Object]", data)) {
@@ -2225,13 +2226,28 @@ class Table {
                         row.shownKeys = Object.keys(flatData);
                     }
                     columnNames = [...new Set([...columnNames, ...row.shownKeys])];
-                    
+
+
+
+
                     // add helper functions
                     row.getBody = () => {return flat(Object.assign(row.shownData, row.injectedData))}
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
                     if(x >= this.data.length-1) {
+                        //sort 
+                        if(typeCheck("[String]", this.options.sort)) {
+                            /*let reference_object = {};
+                            for (let i = 0; i < this.options.sort.length; i++) {
+                                reference_object[this.options.sort[i]] = i;
+                            }*/
+                            columnNames.sort((a, b) => {
+                              return this.options.sort.indexOf(a) - this.options.sort.indexOf(b);
+                            });
+                        } else if(typeCheck("Function", this.options.sort)) {
+                            columnNames.sort(this.options.sort);
+                        }
                         this.sortedColumns = columnNames;
                         this.sortedData = rows;
                         return resolve({columns: this.sortedColumns, rows: this.sortedData});

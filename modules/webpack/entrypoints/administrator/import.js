@@ -40,11 +40,8 @@ window.onload = function() {
   bulkTable = new Table($("#bulkLogTable"), [], {
     ignoredKeys: ["id"],
     idKey: "id",
-    sortShown: {
-        shownOrder: ["Actions", "name", "importType", "date" "totalImported", "totalTried"],
-        compareFunction: undefined
-    }
-    hiddenKeys: ["loggedErrors", "properties", "rollback"],
+    sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
+    hiddenKeys: ["loggedErrors", "rollback"],
     tableClasses: "white-text responsive-table",
     inject: function(row, done) {
         return done([{
