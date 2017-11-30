@@ -38,86 +38,12 @@ class Table {
         this.options = options;
     }
     generate() {
-        //var flatData = flat(this.data);
-        console.log(this.data)
-        //var distinctKeys = utils.distinctKeys(this.data)
-        var columnNames = [];
-        var rows = [];
-        for(var x = 0; x < this.data.length; x++ ) {
-            var row = {};
-            row.shownData = this.data[x];
-            row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
-            //note ID
-            if(this.options.idKey && row.shownData[this.options.idKey]) {
-                row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
-            }
-
-            
-            //Filter out hidden keys for later 
-            if(this.options.hiddenKeys) {
-                row.hiddenData = DeepKey.keys(row.shownData, {
-                    filter: (deepkey) => {
-                        return this.options.hiddenKeys.includes(deepkey.join("."));
-                    }
-                }).reduce((obj, key) => {
-                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
-                    return obj;
-                }, {})
-                if(this.options.ignoredKeys) {
-                    this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
-                } else {
-                    this.options.ignoredKeys = this.options.hiddenKeys;
-                }
-            }
-
-            //filter out unwanted Keys
-            //should error in constructor if not array
-            if(this.options.ignoredKeys) {
-                row.shownData = DeepKey.keys(row.shownData, {
-                    filter: (deepkey) => {
-                        return !this.options.ignoredKeys.includes(deepkey.join("."));
-                    }
-                }).reduce((obj, key) => {
-                    DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
-                    return obj;
-                }, {})
-                
-            }
-            new Promise((resolve, reject) => {
-                //Generate Actions 
-                if(typeCheck("Function", this.options.actions)) {
-                    this.options.inject(row, (injected) => {
-                        if(typeCheck("[{column: String, dom: *}]", injected)) {
-                            for(var a = 0; a < injected.length; a++) {
-                                DeepKey.set(row.shownData, injected[a].column.join("."), injected[a].dom)
-                                if(a >= injected.length-1) {
-                                    return resolve();
-                                }
-                            }
-                            
-                            //row.shownData = {column: column, dom: domToInject};
-                        } else {
-                            return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, dom: *}]"));
-                        }
-                        
-                    })
-                } else {
-                    return resolve()
-                }
-            }).then(() => {
-                var flatData = flat(row.shownData);
-                row.shownKeys = Object.keys(flatData);
-                columnNames = columnNames.concat(row.shownKeys);
-
-                rows.push(row);
-            }).catch((err) => {throw err})
-            
-        }
-
-        console.log(rows)
-        //data in the table
-        this.liveRows = rows;
-        this.liveColumn = columnNames;
+        this._sortData().then(({columns, rows}) => {
+            console.log(columns, "Col")
+            console.log(rows, "rows")
+            console.log(rows[0].shownData.Actions)
+            $(".container").append(rows[0].shownData.Actions)
+        });
     }
     addData(newData) {
         if(!typeCheck("[Object]", newData)) {
@@ -134,6 +60,101 @@ class Table {
     destroyTable() {
         this.data = [];
         containerElement.empty();
+    }
+    parseRowID(TABLE_ROW_ID) {
+        return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
+    }
+    _sortData() {
+        return new Promise((resolve, reject) => {
+            var columnNames = [];
+            var rows = [];
+            for(let x = 0; x < this.data.length; x++ ) {
+                let row = {};
+                row.shownData = this.data[x];
+                row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
+                //note ID
+                if(this.options.idKey && row.shownData[this.options.idKey]) {
+                    row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
+                }
+                //Store Untouched ID for dev
+                row.getRowID = () => {return this.parseRowID(row.rowID);}
+                
+                //Filter out hidden keys for later 
+                if(this.options.hiddenKeys) {
+                    row.hiddenData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return this.options.hiddenKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    if(this.options.ignoredKeys) {
+                        this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                    } else {
+                        this.options.ignoredKeys = this.options.hiddenKeys;
+                    }
+                }
+
+                //filter out unwanted Keys
+                //should error in constructor if not array
+                if(this.options.ignoredKeys) {
+                    row.shownData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return !this.options.ignoredKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    
+                }
+                new Promise((resolve, reject) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", this.options.inject)) {
+                        console.log("INJECTING")
+                        row.injectedData = {};
+                        this.options.inject(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                for(let a = 0; a < injected.length; a++) {
+                                    if(injected[a].strictColumn) {
+                                        row.injectedData[injected[a].column] = injected[a].dom;
+                                    } else {
+                                        row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
+                                    }
+                                    if(a >= injected.length-1) {
+                                        return resolve();
+                                    }
+                                }
+                            } else {
+                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolve()
+                    }
+                }).then(() => {
+                    let flatData = flat(row.shownData, {safe: true});
+                    if(row.injectedData) {
+                        row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                    } else {
+                        row.shownKeys = Object.keys(flatData);
+                    }
+                    columnNames = [...new Set([...columnNames, ...row.shownKeys])];
+                    
+                    //Waitfor end of loop
+                    rows.push(row);
+                    //console.log(rows, "loop Row")
+                    if(x >= this.data.length-1) {
+                        this.sortedColumns = columnNames;
+                        this.sortedData = rows;
+                        return resolve({columns: this.sortedColumns, rows: this.sortedData});
+                    }
+                    
+                }).catch((err) => {throw err})
+            }
+        });
     }
 }
 

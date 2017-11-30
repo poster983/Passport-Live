@@ -38,11 +38,16 @@ window.onload = function() {
   }))
   //get initial table values and create table object.
   bulkTable = new Table($("#bulkLogTable"), [], {
-    //ignoredKeys: ["id"],
+    ignoredKeys: ["id"],
     idKey: "id",
-    hiddenKeys: ["loggedErrors", "id"],
+    hiddenKeys: ["loggedErrors"],
     inject: function(row, done) {
-      return done([{column: "Actions", dom: "TESTinG "}])
+        return done([{
+            column: "Actions.hi", 
+            strictColumn: true,
+            dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+            //dom: {hello: "there", howAre: "you"}
+        }])
     } 
   });
 
