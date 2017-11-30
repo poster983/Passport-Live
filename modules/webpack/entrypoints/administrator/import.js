@@ -38,11 +38,11 @@ window.onload = function() {
   }))
   //get initial table values and create table object.
   bulkTable = new Table($("#bulkLogTable"), [], {
-    ignoredKeys: ["id"],
-    idKey: "id",
-    sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
-    hiddenKeys: ["loggedErrors", "rollback"],
-    tableClasses: "white-text responsive-table",
+    ignoredKeys: ['id'],
+    idKey: 'id',
+    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
+    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
+    tableClasses: 'white-text responsive-table',
     inject: function(row, done) {
         return done([{
             column: "Actions", 

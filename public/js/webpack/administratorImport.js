@@ -284,11 +284,11 @@ window.onload = function() {
   }))
   //get initial table values and create table object.
   bulkTable = new Table($("#bulkLogTable"), [], {
-    ignoredKeys: ["id"],
-    idKey: "id",
-    sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
-    hiddenKeys: ["loggedErrors", "rollback"],
-    tableClasses: "white-text responsive-table",
+    ignoredKeys: ['id'],
+    idKey: 'id',
+    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
+    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
+    tableClasses: 'white-text responsive-table',
     inject: function(row, done) {
         return done([{
             column: "Actions", 
@@ -2086,9 +2086,23 @@ var utils = __webpack_require__(0);
 var typeCheck = __webpack_require__(1).typeCheck;
 var DeepKey = __webpack_require__(15);
 
+/**
+* Takes structured data and makes a table from it. call this.generate() to create a table
+* @link module:webpack/framework
+* @class 
+* @param {Selector} containerElement - The table container.
+* @param {Object} data - The data to be added to the table.
+* @param {(Object|undefined)} options - The clickable element.
+* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
+* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
+* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
+* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+*/
 class Table {
     constructor(containerElement, data, options) {
-        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}"), options) {
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function, ...}"), options) {
             throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
         }*/
         if(!options){options = {};}
@@ -2105,6 +2119,7 @@ class Table {
                 console.log(columns, "Col")
                 console.log(rows, "rows")
                 var promises = [];
+                /**HEAD**/
                 let tableHead = $("<thead/>");
                 promises.push(new Promise((resolveCol, rejectCol) => {
                     let tr = $("<tr/>");
@@ -2119,9 +2134,36 @@ class Table {
                     }
                 }))
 
+                /**BODY**/
+                let tableBody = $("<tbody/>");
+                promises.push(new Promise((resolveRow, rejectRow) => {
+
+                    //compile row
+                    for(let r = 0; r < rows.length; r++) {
+                        let tr = $("<tr/>").attr("id", rows[r].rowID);
+                        let bodyData = rows[r].getBody();
+                        console.log(bodyData)
+                        //allign rows with correct columns 
+                        for (let a = 0 ; a < columns.length; a++) {
+                            tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                            if(a >= columns.length-1) {
+                                //push to body
+                                tableBody.append(tr);
+                            }
+                            if(a >= columns.length-1 && r >= rows.length-1) {
+                                //push to body
+                                return resolveRow();
+
+                            }
+                        }
+                    }
+                }))
+
                 Promise.all(promises).then(() => {
                     this.container.append($("<table/>").addClass(this.options.tableClasses)
                         .append(tableHead)
+                        .append(tableBody)
                     )
                 }).catch((err) => {
                     return reject(err);
@@ -2221,6 +2263,7 @@ class Table {
                 }).then(() => {
                     let flatData = flat(row.shownData, {safe: true});
                     if(row.injectedData) {
+                        console.log(row.injectedData)
                         row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
                     } else {
                         row.shownKeys = Object.keys(flatData);
@@ -2231,7 +2274,7 @@ class Table {
 
 
                     // add helper functions
-                    row.getBody = () => {return flat(Object.assign(row.shownData, row.injectedData))}
+                    row.getBody = () => {return Object.assign(flatData, row.injectedData)}
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
