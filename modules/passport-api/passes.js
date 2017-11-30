@@ -37,7 +37,7 @@ var typeCheck = require("type-check").typeCheck;
     * @param {userId} migrator - Id of the account moving between people
     * @param {userId} requester - Id of the account who requested the pass
     * @param {string} period
-    * @param {date} date
+    * @param {(date|ISOString)} date
     * @param {boolean} checkDupe - Sheck if there is an identical pass in the system already.
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
