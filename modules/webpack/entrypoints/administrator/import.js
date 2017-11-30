@@ -53,9 +53,7 @@ window.onload = function() {
     } 
   });
 
-  importAPI.searchBulkLogs({
-    name: "f"
-  }).then((data) => {
+  importAPI.searchBulkLogs({}).then((data) => {
     //console.log(data)
     bulkTable.addData(data)
     bulkTable.generate().catch(err=>utils.throwError(err));
