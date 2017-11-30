@@ -40,10 +40,15 @@ window.onload = function() {
   bulkTable = new Table($("#bulkLogTable"), [], {
     ignoredKeys: ["id"],
     idKey: "id",
-    hiddenKeys: ["loggedErrors"],
+    sortShown: {
+        shownOrder: ["Actions", "name", "importType", "date" "totalImported", "totalTried"],
+        compareFunction: undefined
+    }
+    hiddenKeys: ["loggedErrors", "properties", "rollback"],
+    tableClasses: "white-text responsive-table",
     inject: function(row, done) {
         return done([{
-            column: "Actions.hi", 
+            column: "Actions", 
             strictColumn: true,
             dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
             //dom: {hello: "there", howAre: "you"}
@@ -56,7 +61,7 @@ window.onload = function() {
   }).then((data) => {
     //console.log(data)
     bulkTable.addData(data)
-    bulkTable.generate();
+    bulkTable.generate().catch(err=>utils.throwError(err));
   }).catch(err=>utils.throwError(err));
 };
 

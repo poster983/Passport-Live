@@ -26,8 +26,8 @@ var DeepKey = require("deep-key");
 
 class Table {
     constructor(containerElement, data, options) {
-        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function}\"");
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String}\"");
         }*/
         if(!options){options = {};}
         if(!typeCheck("[Object]", data)) {
@@ -38,11 +38,33 @@ class Table {
         this.options = options;
     }
     generate() {
-        this._sortData().then(({columns, rows}) => {
-            console.log(columns, "Col")
-            console.log(rows, "rows")
-            console.log(rows[0].shownData.Actions)
-            $(".container").append(rows[0].shownData.Actions)
+        return new Promise((resolve, reject) => {
+            this._sortData().then(({columns, rows}) => {
+                console.log(columns, "Col")
+                console.log(rows, "rows")
+                var promises = [];
+                let tableHead = $("<thead/>");
+                promises.push(new Promise((resolveCol, rejectCol) => {
+                    let tr = $("<tr/>");
+                    //compile Head
+                    for(let x = 0; x < columns.length; x++) {
+                        tr.append($("<th/>").html(columns[x]));
+                        if(x >= columns.length-1) {
+                            //done 
+                            tableHead.append(tr);
+                            return resolveCol()
+                        }
+                    }
+                }))
+
+                Promise.all(promises).then(() => {
+                    this.container.append($("<table/>").addClass(this.options.tableClasses)
+                        .append(tableHead)
+                    )
+                }).catch((err) => {
+                    return reject(err);
+                })
+            });
         });
     }
     addData(newData) {
@@ -78,7 +100,7 @@ class Table {
                 }
                 //Store Untouched ID for dev
                 row.getRowID = () => {return this.parseRowID(row.rowID);}
-                
+
                 //Filter out hidden keys for later 
                 if(this.options.hiddenKeys) {
                     row.hiddenData = DeepKey.keys(row.shownData, {
@@ -143,6 +165,8 @@ class Table {
                     }
                     columnNames = [...new Set([...columnNames, ...row.shownKeys])];
                     
+                    // add helper functions
+                    row.getBody = () => {return flat(Object.assign(row.shownData, row.injectedData))}
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
