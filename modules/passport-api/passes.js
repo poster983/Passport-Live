@@ -75,11 +75,11 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             return done(err)
         }
     });
-    if(!moment(date, "Y-MM-DD", true).isValid()) {
-        var err = new Error("Date Not Valid");
+    if(!typeCheck("Date | ISODate", date, utils.typeCheck)) {
+        var err = new TypeError("date expected to be a \"Date\" or an ISODate. Got: " + typeof date);
             err.status = 400;
             return done(err)
-    } else {
+    } else if(typeCheck("Date", date)){
         date = moment(date).toISOString();
     }
     console.log(date)
