@@ -43,6 +43,7 @@ class Table {
                 console.log(columns, "Col")
                 console.log(rows, "rows")
                 var promises = [];
+                /**HEAD**/
                 let tableHead = $("<thead/>");
                 promises.push(new Promise((resolveCol, rejectCol) => {
                     let tr = $("<tr/>");
@@ -53,6 +54,27 @@ class Table {
                             //done 
                             tableHead.append(tr);
                             return resolveCol()
+                        }
+                    }
+                }))
+
+                /**BODY**/
+                let tableBody = $("<tbody/>");
+                promises.push(new Promise((resolveRow, rejectRow) => {
+
+                    //compile row
+                    for(let r = 0; r < rows.length; r++) {
+                        let tr = $("<tr/>").attr("id", rows[r].rowID);
+                        let bodyData = rows[r].getBody();
+
+                        //allign rows with correct columns 
+                        for (let a = 0 ; i < columns.length; i++) {
+                            tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                            if(a >= columns.length-1) {
+                                //push to body
+                                tableBody.append(tr);
+                            }
                         }
                     }
                 }))
