@@ -21,10 +21,15 @@ email: hi@josephhassell.com
 //THIS FILE WILL STOP WORKING WHEN IN PRODUCTION
 
 var express = require('express');
+var securityJS = require('../../modules/passport-api/security.js');
+var emailApi = require("../../modules/passport-api/email.js")
+var emailTracker = require('pixel-tracker');
 var router = express.Router();
 
 
-var emailTracker = require('pixel-tracker')
+
+
+
 emailTracker.use(function (error, result) {
   console.log(result)
 });
@@ -34,5 +39,39 @@ router.get("/pixel.gif", function(req, res, next) {
     return next();
 }, emailTracker.middleware);
 
+
+router.post("/sendMail", function(req, res, next) {
+    emailApi.sendMail({
+        to: 'to@example.com',
+        subject: 'Message title',
+        text: 'Plaintext version of the message',
+        html: '<p>HTML version of the message</p>'
+    }, null).then(function(resp) {
+        res.send(resp);
+    }).catch(function(err) {
+        next(err)
+    })
+})
+
+
+router.get("/delay/:delay", (req, res, next) => {
+    setTimeout(function() {
+        res.send("Hello World")
+    }, parseInt(req.params.delay))
+})
+
+
+
+router.get("/newActivateKey", (req, res, next) => {
+    securityJS.newKey.activateAccount(req.query.id).then((key) => {
+        res.send(key);
+    }).catch((err) => {return next(err);})
+})
+
+router.get("/checkPermKeyValidity", (req, res, next) => {
+    securityJS.checkPermissionKeyValidity(req.query.type, req.query.key).then((key) => {
+        res.send(key);
+    }).catch((err) => {return next(err);})
+})
 
 module.exports = router;

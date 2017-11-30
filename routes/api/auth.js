@@ -88,7 +88,7 @@ router.post('/login', passport.authenticate('local-login', {
     * @async
     * @param {request} req
     * @param {response} res
-    * @api POST /api/auth/login/
+    * @api POST /api/auth/login/dscm
     * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
@@ -145,5 +145,7 @@ router.get("/google/callback", passport.authenticate( 'google', {
     }
     
 });
+
+
 
 module.exports = router;

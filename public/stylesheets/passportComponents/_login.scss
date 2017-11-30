@@ -30,6 +30,7 @@ email: hi@josephhassell.com
   background-color: #212121;
 }
 
+/**MAIN LAYOUT**/
 
 @media #{$medium-and-up} { 
   .login-container {
@@ -123,11 +124,12 @@ login-transitions  {
       transform: translateX(50%) scaleX(1);
     }
   }
-  .login-logo.load {
+.login-logo.load {
     animation-fill-mode: forwards;
     animation-name: login-logo-load;
     animation-delay: 0s;
     animation-duration: 0.5s;
+    transform: translateX(50%);
     animation-timing-function: ease-in-out;
   }
   @keyframes login-logo-load {
@@ -135,7 +137,7 @@ login-transitions  {
       transform: translateX(0%);
     }
     100% {
-      transform: translateX(50%);
+      transform: translateX(40%);
     }
   }
 
@@ -151,7 +153,7 @@ login-transitions  {
       transform: translateX(0%) scaleX(1);
     }
     100% {
-      transform: translateX(-50%) scaleX(0.6);
+      transform: translateX(-50%) scaleX(0.5);
     }
   }
 }
@@ -163,4 +165,8 @@ login-transitions  {
   height: inherit;
   z-index: 1;
 }
+
+
+/** END MAIN LAYOUT **/
+
 

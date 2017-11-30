@@ -7,7 +7,8 @@
 				"dashboards": ["student"], // what they can login to.  this is going to be put directly into the url that the index.js route sends the user to, so it MUST match an existing route
 				"allowedEmailDomains": ["@gmail.com", "@outlook.com"] //User must signup with these domain endings OR put false if you want to allow any domain.
 			},
-			"verifyAccountCreation": false //When creating an account, the user will be required to input a random key assigned by an admin.
+			"verifyAccountCreation": false, //When creating an account, the user will be required to input a random key assigned by an admin.
+			"graduates": true //this requires that the user have a graduation year linked to their account.
 		},
 		"teacher": {
 			"permissions": {
@@ -72,9 +73,22 @@
 			"verifyAccountCreation": true //When creating an account, the user will be required to input a random key assigned by an admin.
 		},
 	},
-	"dashboards": {
-		"student": {
-			//todo: 
+	"webInterface": {
+		"browserSupport": {
+			"supported": {  //Best Not to change
+				"Chrome": 45,  //If browserVersion >= 45
+				"Chromium": 45,
+				"Firefox": 52,
+				"Safari": 10,
+				"Opera": 32,
+				"Edge": 38,
+				"Vivaldi": true //every version 
+			},
+			"blocked": { // will not let the user go to the login page
+				"IE": true, //every version is blocked
+				"IEMobile": true,
+				"Safari": 9 // if browserVersion <= 9
+			}
 		}
 	},
 	"rethinkdb": {
@@ -84,7 +98,7 @@
 		"password": "" //Dont Change.  Use local.json
 	},
 	"server": {
-		"domain": "https://example.com", //unfortunately for things like OAuth, we need the exact domain of the server passport is running on. 
+		"domain": "https://example.com", //unfortunately for things like OAuth and emails, we need the exact domain of the server passport is running on. 
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
 		"https": {
 			"port": 3443, //set in production config file, 443
@@ -118,13 +132,25 @@
 			}
 		}
 	},
-	"nodemailerConfig": { //set null for no email, but if you want to connect it, nodemailer.createTransport options should be used here. 
-	    "host": "smtp.example.com",
-	    "port": 465,
-	    "secure": true, // secure:true for port 465, secure:false for port 587
-	    "auth": {
-	        "user": "username@example.com",
-	        "pass": "userpass"
-	    }
+	"passwordPolicy": {  
+		"minimumLength": 6,
+		"maximumLength": 128,
+		"regexRules": ["[a-zA-Z]", "\\d"], // Has lowercase or uppercase, and has numbers // "[a-zA-Z]", "\\d"
+		"humanReadableRule": "Passwords must be 6 to 128 characters long, include a lowercase or uppercase letter, and at least one number."
+	},
+	"email": { //nodemailer.createTransport options should be used in nodemailerConfig. 
+	    "nodemailerConfig": {
+		    "host": "smtp.example.com",
+		    "port": 465,
+		    "secure": true, // secure:true for port 465, secure:false for port 587
+		    "auth": {
+		        "user": "username@example.com",
+		        "pass": "userpass"
+		    }
+		  },
+	    "defaults": {
+	    	"fromName": "Passport",
+	    	"fromEmail": null  //only if username is not the email
+	    }	
 	} 
 }

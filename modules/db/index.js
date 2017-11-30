@@ -22,27 +22,123 @@ email: hi@josephhassell.com
 
 
 var r = require('rethinkdb');
-var connection = null;
 var config = require('config');
+//rethinkdbdash
+var rdash = require('rethinkdbdash')({
+  servers: [
+    {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port')}
+  ],
+  user: "admin",
+  db: config.get('rethinkdb.database'), 
+  password: config.get("rethinkdb.password")
+});
+//job queues 
+const Queue = require('rethinkdb-job-queue');
+const QueuecxnOptions = {
+  host: config.get('rethinkdb.host'),
+  port: config.get('rethinkdb.port'),
+  user: "admin",
+  password: config.get("rethinkdb.password"),
+  db: 'PassportJobQueue' // The name of the database in RethinkDB
+}
+/*
+var queueNewAccountEmail = new Queue(QueuecxnOptions, {
+  name: 'NewAccountEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueNewAccountEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}*/
+//activate
+var queueActivateEmail = new Queue(QueuecxnOptions, {
+  name: 'ActivateEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueActivateEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}
+//reset Password
+var queueResetPasswordEmail = new Queue(QueuecxnOptions, {
+  name: 'ResetPasswordEmail', // The queue and table name
+  masterInterval: 310000, // Database review period in milliseconds
+  changeFeed: true, // Enables events from the database table
+  concurrency: 100,
+  removeFinishedJobs: true, // true, false, or number of milliseconds
+});
+queueResetPasswordEmail.jobOptions = {
+  priority: 'normal',
+  timeout: 300000,
+  retryMax: 3, // Four attempts, first then three retries
+  retryDelay: 600000 // Time in milliseconds to delay retries
+}
 
-exports.setup = function() {
+//Brute Store 
+const BruteRethinkdb = require('brute-rethinkdb')
+let bruteStore = new BruteRethinkdb(rdash, {table: 'brute'});
+
+var connection = null;
+
+
+exports.setup = function(noDefaultDB) {
         return new Promise(function(resolve, reject) {
-            r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
+            var connOpt = {};
+            if(!noDefaultDB) {
+                connOpt.db = config.get('rethinkdb.database');
+            }
+            connOpt.host = config.get('rethinkdb.host');
+            connOpt.port = config.get('rethinkdb.port');
+            connOpt.password = config.get("rethinkdb.password");
+            r.connect(connOpt, function(err, conn) {
                 if (err) {
                     throw err;
                 }
                 console.log("DB Connected")
                 connection = conn;
-                resolve()
+                resolve(conn);
             });
         }) 
 }
 
 exports.get = function() {
-        return r;
+    return r;
+}
+exports.dash = function() {
+    return rdash;
 }
 exports.conn = function() {
     return connection;
+}
+
+
+
+//queues 
+exports.queue = {};
+/*
+exports.queue.newAccountEmail = function() {
+    return queueNewAccountEmail
+}*/
+exports.queue.activateEmail = () => {
+  return queueActivateEmail;
+}
+exports.queue.resetPasswordEmail = () => {
+  return queueResetPasswordEmail;
+}
+
+//brute
+exports.brute = () => {
+  return bruteStore;
 }
 
 //return module.exports

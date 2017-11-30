@@ -144,74 +144,7 @@ SECURITY
 **/
 //WILL NEED ACCOUNT PROTECTION 
 //ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}),
-router.post('/security/key/', passport.authenticate('jwt', { session: false}), ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}), handleCreatePermissionKey);
-/**
-    * Creates a new permission key.
-    * @function handleCreatePermissionKey
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/security/key/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
-    * @example
-    * <caption>Typical body when key is set to timeout at a date</caption>
-    * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    time: moment.js compatible time
-    *  }
-    * }
-    * @example
-    * <caption>Typical body when key is set to timeout on a certain number of clicks</caption>
-    * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    tally: 5
-    *  }
-    * }
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Add JWT Auth
-    */
-function handleCreatePermissionKey(req, res, next) {
-    var permissions=req.body.permissions;
-    var parms=req.body.parms;
-    var timeout=req.body.timeout;
-    
-    api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
-        if(err) {
-            return next(err)
-        }
-        res.status(201).send({
-            key: key
-        })
-    })
-}
 
-router.post('/security/apikey/', handleNewApiKey);
-/**
-    * Creates a new API key.
-    * @function handleNewApiKey
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/security/apikey/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns the new api key
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Add JWT Auth ADMIN
-    */
-function handleNewApiKey(req, res, next) {
-    res.sendStatus(501);
-}
 
 /**
 schedule

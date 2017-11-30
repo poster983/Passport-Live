@@ -45,6 +45,7 @@ var studentView = require('./routes/student');
 var api = require('./routes/api/apiRoute');
 var teacher = require('./routes/teacher');
 var administrator = require('./routes/administrator');
+var account = require('./routes/account');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
 var apiAuth = require('./routes/api/auth');
@@ -53,6 +54,7 @@ var apiBlackouts = require('./routes/api/blackout');
 var apiSecurity = require("./routes/api/security");
 var apiDevPlayground = require("./routes/api/devPlayground");
 var apiMisc = require("./routes/api/misc");
+var apiImport = require("./routes/api/import");
 var app = express();
 
 require('./modules/auth/index.js')(passport, r, bcrypt);// auth config
@@ -132,6 +134,7 @@ app.use('/teacher', teacher);
 app.use('/api', api);
 app.use('/auth', auth);
 app.use('/administrator', administrator)
+app.use('/account', account)
 //api routes
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
@@ -139,6 +142,7 @@ app.use('/api/auth', apiAuth)
 app.use('/api/blackout', apiBlackouts)
 app.use('/api/passes', apiPasses)
 app.use("/api/security", apiSecurity)
+app.use("/api/import", apiImport)
 app.use("/api", apiMisc)
 if (process.env.NODE_ENV === "development" || !process.env.NODE_ENV) {
   console.log("Playground Enabled")
@@ -163,7 +167,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-
+  //console.error(err)
 
   if(!err.status){
     err.status = 500;
@@ -186,13 +190,22 @@ app.use(function(err, req, res, next) {
 
   //console.log(err)
   // render the error page
-  res.append("errormessage", encodeURIComponent(err.message));
+  
+  res.set("errormessage", encodeURIComponent(err.message));
   res.status(err.status);
   res.render('error');
   
 
 });
 
+
+//Promise Error Hand
+if(process.env.NODE_ENV != "production") {
+  process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason.stack);
+    // application specific logging, throwing an error, or other logic here
+  });
+}
 
 
 

@@ -61,7 +61,9 @@ email: hi@josephhassell.com
               
             </div>
             <div class="card-content">
-                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img">
+                <div class="card-avatar">
+                  <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img">
+                </div>
                 <br>
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
             </div>
@@ -138,7 +140,7 @@ email: hi@josephhassell.com
     <!--MIXINS-->
     <div id="mustacheMixens">
       <div class="mustacheMixen page" id="scheduleEditor"> 
-        {{>student/editSchedule}}
+        
       </div>
     </div>
     <script type="text/javascript">
