@@ -26,6 +26,7 @@ var db = require("../db/index.js");
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 var validator = require("validator");
+var typeCheck = require("type-check").typeCheck;
 
 /**
     * Creates a new account
