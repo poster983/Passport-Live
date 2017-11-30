@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>js/email - Documentation</title>
+    <title>js/import - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">js/email</h1>
+    <h1 class="page-title">js/import</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: js/email</h2>
+      <h2>Module: js/import</h2>
         
             
         
@@ -61,11 +61,15 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#sendActivationEmail">sendActivationEmail</a></li>
+            <li><a href="#deleteBulkLog">deleteBulkLog</a></li>
             
-            <li><a href="#sendMail">sendMail</a></li>
+            <li><a href="#importAccountsExcel">importAccountsExcel</a></li>
             
-            <li><a href="#sendResetPasswordEmail">sendResetPasswordEmail</a></li>
+            <li><a href="#mapAccounts">mapAccounts</a></li>
+            
+            <li><a href="#newBulkLog">newBulkLog</a></li>
+            
+            <li><a href="#updateBulkLog">updateBulkLog</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -73,7 +77,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Apis for sending mail to users</p></div>
+            <div class="description"><p>A set of Apis for importing large amounts of data into passport</p></div>
         
 
         
@@ -88,7 +92,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line21">21</a>
   </code>
 </div>
 
@@ -114,7 +118,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-js/email">
+<div class="collapse_" id="methodCollapse-js/import">
 
   
 
@@ -130,7 +134,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line21">21</a>
   </code>
 </div>
 
@@ -196,7 +200,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n* Apis for sending mail to users\n* @module js/email\n*/","meta":{"filename":"email.js","lineno":21,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Apis for sending mail to users</p>","kind":"module","name":"js/email","longname":"module:js/email","___id":"T000002R000278","___s":true,"attribs":"","id":"js/email","ancestors":[]}
+{"comment":"/**\n* A set of Apis for importing large amounts of data into passport\n* @module js/import\n*/","meta":{"filename":"import.js","lineno":21,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>A set of Apis for importing large amounts of data into passport</p>","kind":"module","name":"js/import","longname":"module:js/import","___id":"T000002R000351","___s":true,"attribs":"","id":"js/import","ancestors":[]}
 </pre>
 -->
 </div>
@@ -232,7 +236,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line122">122</a>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line63">63</a>
   </code>
 </div>
 
@@ -243,8 +247,8 @@
 
     
 
-    <h4 class="name" id="~sendActivationEmail">
-      <a href="#params-sendActivationEmail"><span class="type-signature">(inner) </span>sendActivationEmail</a><span class="signature">(mailOptions)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id="~deleteBulkLog">
+      <a href="#params-deleteBulkLog"><span class="type-signature">(inner) </span>deleteBulkLog</a><span class="signature">(id)</span><span class="type-signature"> &rarr; {Promise}</span>
 
     </h4>
 
@@ -263,7 +267,7 @@
 
 
 <div class="description">
-    <p>Sends the activation email to a user,</p>
+    <p>Deletes the bulk log</p>
 </div>
 
 
@@ -273,7 +277,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-sendActivationEmail">
+<div class="collapse_" id="methodCollapse-deleteBulkLog">
 
   
 
@@ -322,7 +326,7 @@
 
 
 
-  <div id="params-sendActivationEmail" class="bs-callout bs-callout-primary">
+  <div id="params-deleteBulkLog" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -349,53 +353,7 @@
 
         <tr>
             
-                <td class="name"><code>mailOptions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>to</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
@@ -411,110 +369,7 @@
 
             
 
-            <td class="description last"><p>Email address to send the email to.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name object.</p>
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>first</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User's First Name.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>accountID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User ID in the DB.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last"><p>Bulk Import ID</p></td>
         </tr>
 
     
@@ -539,12 +394,6 @@
     <h5>Returns </h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>Job Cursor.  Kinda Useless.</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -572,7 +421,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Sends the activation email to a user,\n* @function sendActivationEmail\n* @link module:js/email\n* @param {(Object | Object[])} mailOptions\n* @param {String} mailOptions.to - Email address to send the email to. \n* @param {Object} mailOptions.name - Name object.\n* @param {Object} mailOptions.name.first - User's First Name.\n* @param {String} mailOptions.accountID - User ID in the DB.  \n* @returns {Promise} - Job Cursor.  Kinda Useless.\n*/","meta":{"filename":"email.js","lineno":122,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Sends the activation email to a user,</p>","kind":"function","name":"sendActivationEmail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["Object","Array.<Object>"]},"name":"mailOptions","subparams":[{"type":{"names":["String"]},"description":"<p>Email address to send the email to.</p>","name":"to"},{"type":{"names":["Object"]},"description":"<p>Name object.</p>","name":"name","subparams":[{"type":{"names":["Object"]},"description":"<p>User's First Name.</p>","name":"first"}]},null,{"type":{"names":["String"]},"description":"<p>User ID in the DB.</p>","name":"accountID"}]},null,null,null,null],"returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>Job Cursor.  Kinda Useless.</li>\n</ul>"}],"longname":"module:js/email~sendActivationEmail","scope":"inner","memberof":"module:js/email","___id":"T000002R000294","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendActivationEmail","signature":"<span class=\"signature\">(mailOptions)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
+{"comment":"/**\n* Deletes the bulk log\n* @function deleteBulkLog\n* @link module:js/import\n* @param {String} id - Bulk Import ID\n* @returns {Promise}\n*/","meta":{"filename":"import.js","lineno":63,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>Deletes the bulk log</p>","kind":"function","name":"deleteBulkLog","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["String"]},"description":"<p>Bulk Import ID</p>","name":"id"}],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/import~deleteBulkLog","scope":"inner","memberof":"module:js/import","___id":"T000002R000372","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~deleteBulkLog","signature":"<span class=\"signature\">(id)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_import.html\">js/import</a>~"]}
 </pre>
 -->
 </div>
@@ -589,7 +438,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line36">36</a>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line333">333</a>
   </code>
 </div>
 
@@ -600,8 +449,8 @@
 
     
 
-    <h4 class="name" id="~sendMail">
-      <a href="#params-sendMail"><span class="type-signature">(inner) </span>sendMail</a><span class="signature">(messageConfig, options)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id="~importAccountsExcel">
+      <a href="#params-importAccountsExcel"><span class="type-signature">(inner) </span>importAccountsExcel</a><span class="signature">(excelFilePath, mapRule, defaultRule, jobProperties)</span><span class="type-signature"> &rarr; {Promise}</span>
 
     </h4>
 
@@ -620,7 +469,9 @@
 
 
 <div class="description">
-    <p>Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.</p>
+    <p>Takes in an excel file and with some mapping rules, imports them to the accounts table
+NOTE: Email domains are still must follow userGroup settings.
+If the account cant be impoirted using the accountApi, the row is skipped</p>
 </div>
 
 
@@ -630,7 +481,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-sendMail">
+<div class="collapse_" id="methodCollapse-importAccountsExcel">
 
   
 
@@ -679,7 +530,7 @@
 
 
 
-  <div id="params-sendMail" class="bs-callout bs-callout-primary">
+  <div id="params-importAccountsExcel" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -706,13 +557,13 @@
 
         <tr>
             
-                <td class="name"><code>messageConfig</code></td>
+                <td class="name"><code>excelFilePath</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">emailHeader</span>
+<span class="param-type">string</span>
 
 
             
@@ -722,14 +573,60 @@
 
             
 
-            <td class="description last"><p>Nodemailer Message options. See: <code>emailHeader</code></p></td>
+            <td class="description last"><p>The path to the excel file.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>mapRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#accountMapRule">accountMapRule</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#accountDefaultRule">accountDefaultRule</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a>.  (NOTE: setting password to null will not initialize the account.  When the activation email is sent, the user will have to create a password)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>jobProperties</code></td>
             
 
             <td class="type">
@@ -772,7 +669,30 @@
 
         <tr>
             
-                <td class="name"><code>jobQueue</code></td>
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name to identify this import as.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>generatePassword</code></td>
             
 
             <td class="type">
@@ -788,7 +708,7 @@
 
             
 
-            <td class="description last"><p>Default: true</p></td>
+            <td class="description last"><p>Generates a password when no password is found in the excel sheet, and default rule is undefined for password.</p></td>
         </tr>
 
     
@@ -847,7 +767,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n* Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.\n* @function sendMail\n* @link module:js/email\n* @param {emailHeader} messageConfig - Nodemailer Message options. See: <code>emailHeader</code>\n* @param {Object} options\n* @param {boolean} options.jobQueue - Default: true\n* @returns {Promise} \n*/","meta":{"filename":"email.js","lineno":36,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.</p>","kind":"function","name":"sendMail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["emailHeader"]},"description":"<p>Nodemailer Message options. See: <code>emailHeader</code></p>","name":"messageConfig"},{"type":{"names":["Object"]},"name":"options","subparams":[{"type":{"names":["boolean"]},"description":"<p>Default: true</p>","name":"jobQueue"}]},null],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/email~sendMail","scope":"inner","memberof":"module:js/email","___id":"T000002R000286","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendMail","signature":"<span class=\"signature\">(messageConfig, options)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
+{"comment":"/** \n* Takes in an excel file and with some mapping rules, imports them to the accounts table\n* NOTE: Email domains are still must follow userGroup settings.\n* If the account cant be impoirted using the accountApi, the row is skipped\n* @function importAccountsExcel\n* @link module:js/import\n* @param {string} excelFilePath - The path to the excel file.\n* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a>\n* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a>.  (NOTE: setting password to null will not initialize the account.  When the activation email is sent, the user will have to create a password)\n* @param {Object} jobProperties\n* @param {String} jobProperties.name - Name to identify this import as.\n* @param {boolean} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.\n* @returns {Promise}\n*/","meta":{"filename":"import.js","lineno":333,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>Takes in an excel file and with some mapping rules, imports them to the accounts table\nNOTE: Email domains are still must follow userGroup settings.\nIf the account cant be impoirted using the accountApi, the row is skipped</p>","kind":"function","name":"importAccountsExcel","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["string"]},"description":"<p>The path to the excel file.</p>","name":"excelFilePath"},{"type":{"names":["accountMapRule"]},"description":"<p>Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a></p>","name":"mapRule"},{"type":{"names":["accountDefaultRule"]},"description":"<p>The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a>.  (NOTE: setting password to null will not initialize the account.  When the activation email is sent, the user will have to create a password)</p>","name":"defaultRule"},{"type":{"names":["Object"]},"name":"jobProperties","subparams":[{"type":{"names":["String"]},"description":"<p>Name to identify this import as.</p>","name":"name"},{"type":{"names":["boolean"]},"description":"<p>Generates a password when no password is found in the excel sheet, and default rule is undefined for password.</p>","name":"generatePassword"}]},null,null],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/import~importAccountsExcel","scope":"inner","memberof":"module:js/import","___id":"T000002R000417","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~importAccountsExcel","signature":"<span class=\"signature\">(excelFilePath, mapRule, defaultRule, jobProperties)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_import.html\">js/import</a>~"]}
 </pre>
 -->
 </div>
@@ -864,7 +784,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line171">171</a>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line211">211</a>
   </code>
 </div>
 
@@ -875,8 +795,8 @@
 
     
 
-    <h4 class="name" id="~sendResetPasswordEmail">
-      <a href="#params-sendResetPasswordEmail"><span class="type-signature">(inner) </span>sendResetPasswordEmail</a><span class="signature">(mailOptions)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id="~mapAccounts">
+      <a href="#params-mapAccounts"><span class="type-signature">(inner) </span>mapAccounts</a><span class="signature">(arrayToMap, mapRule, defaultRule, generatePassword)</span><span class="type-signature"> &rarr; {Promise}</span>
 
     </h4>
 
@@ -895,7 +815,7 @@
 
 
 <div class="description">
-    <p>Sends a link to the email that can reset the password for the user.</p>
+    <p>Takes in a flat array of messy named data and then maps it to a passport standard</p>
 </div>
 
 
@@ -905,7 +825,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-sendResetPasswordEmail">
+<div class="collapse_" id="methodCollapse-mapAccounts">
 
   
 
@@ -954,7 +874,7 @@
 
 
 
-  <div id="params-sendResetPasswordEmail" class="bs-callout bs-callout-primary">
+  <div id="params-mapAccounts" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -981,15 +901,12 @@
 
         <tr>
             
-                <td class="name"><code>mailOptions</code></td>
+                <td class="name"><code>arrayToMap</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
-|
-
 <span class="param-type">Array.&lt;Object></span>
 
 
@@ -1000,9 +917,237 @@
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-                <!--params.tmpl-->
+            <td class="description last"><p>most likely imported from excel using the import api; the messy data that must be sorted</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mapRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#accountMapRule">accountMapRule</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultRule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#accountDefaultRule">accountDefaultRule</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>generatePassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Will generate a password if the default rule for password is undefined.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Takes in a flat array of messy named data and then maps it to a passport standard\n* @function mapAccounts\n* @link module:js/import\n* @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted\n* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a>\n* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a>\n* @param {boolean} generatePassword - Will generate a password if the default rule for password is undefined.\n* @returns {Promise}\n*/","meta":{"filename":"import.js","lineno":211,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>Takes in a flat array of messy named data and then maps it to a passport standard</p>","kind":"function","name":"mapAccounts","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["Array.<Object>"]},"description":"<p>most likely imported from excel using the import api; the messy data that must be sorted</p>","name":"arrayToMap"},{"type":{"names":["accountMapRule"]},"description":"<p>Json object that relates each required field to a key in another dataset. See: <a href="global.html#accountMapRule"><code>accountMapRule</code></a></p>","name":"mapRule"},{"type":{"names":["accountDefaultRule"]},"description":"<p>The fallback Json object for missing values in the arrayToMap and mapRule See: <a href="global.html#accountDefaultRule"><code>accountDefaultRule</code></a></p>","name":"defaultRule"},{"type":{"names":["boolean"]},"description":"<p>Will generate a password if the default rule for password is undefined.</p>","name":"generatePassword"}],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/import~mapAccounts","scope":"inner","memberof":"module:js/import","___id":"T000002R000392","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~mapAccounts","signature":"<span class=\"signature\">(arrayToMap, mapRule, defaultRule, generatePassword)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_import.html\">js/import</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line35">35</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~newBulkLog">
+      <a href="#params-newBulkLog"><span class="type-signature">(inner) </span>newBulkLog</a><span class="signature">(name, importType)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Creates a bulk import job log</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newBulkLog">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newBulkLog" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -1023,29 +1168,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>to</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Email address to send the email to.</p></td>
-        </tr>
-
     
 
         <tr>
@@ -1056,6 +1178,323 @@
             <td class="type">
             
                 
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A Non unique human readable ID for the job.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>importType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The type of import it is.  includes &quot;account&quot; and &quot;schedule&quot;</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Creates a bulk import job log \n* @function newBulkLog\n* @link module:js/import\n* @param {String} name - A Non unique human readable ID for the job.\n* @param {String} importType - The type of import it is.  includes \"account\" and \"schedule\"\n* @returns {Promise}\n*/","meta":{"filename":"import.js","lineno":35,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>Creates a bulk import job log</p>","kind":"function","name":"newBulkLog","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["String"]},"description":"<p>A Non unique human readable ID for the job.</p>","name":"name"},{"type":{"names":["String"]},"description":"<p>The type of import it is.  includes &quot;account&quot; and &quot;schedule&quot;</p>","name":"importType"}],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/import~newBulkLog","scope":"inner","memberof":"module:js/import","___id":"T000002R000361","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newBulkLog","signature":"<span class=\"signature\">(name, importType)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_import.html\">js/import</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_import.js.html">import.js</a>:<a href="modules_passport-api_import.js.html#line48">48</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~updateBulkLog">
+      <a href="#params-updateBulkLog"><span class="type-signature">(inner) </span>updateBulkLog</a><span class="signature">(id, totalTried, totalImported, loggedErrors, properties)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Updates the bulk log with new info about the import</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-updateBulkLog">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-updateBulkLog" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Bulk Import ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>totalTried</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Total number of attempted document imports</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>totalImported</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The total number of documents successfully imported</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>loggedErrors</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Any error logged when processing the documents</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">Object</span>
 
 
@@ -1066,7 +1505,7 @@
 
             
 
-            <td class="description last"><p>Name object.</p>
+            <td class="description last"><p>any special properties that each importType might want to include.</p>
                 <h6>Properties</h6>
                 <!--params.tmpl-->
 
@@ -1093,13 +1532,16 @@
 
         <tr>
             
-                <td class="name"><code>first</code></td>
+                <td class="name"><code>totalInitialized</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">undefined</span>
 
 
             
@@ -1109,37 +1551,7 @@
 
             
 
-            <td class="description last"><p>User's First Name.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>accountID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User ID in the DB.</p></td>
+            <td class="description last"><p>(For importType &quot;account&quot;) Total number of accounts imported with passwords set.</p></td>
         </tr>
 
     
@@ -1171,12 +1583,6 @@
     <h5>Returns </h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>Job Cursor.  Kinda Useless.</li>
-</ul>
-</div>
-
 
 
 <dl class="param-type">
@@ -1204,7 +1610,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Sends a link to the email that can reset the password for the user.\n* @function sendResetPasswordEmail\n* @link module:js/email\n* @param {(Object | Object[])} mailOptions\n* @param {String} mailOptions.to - Email address to send the email to. \n* @param {Object} mailOptions.name - Name object.\n* @param {Object} mailOptions.name.first - User's First Name.\n* @param {String} mailOptions.accountID - User ID in the DB.  \n* @returns {Promise} - Job Cursor.  Kinda Useless.\n*/","meta":{"filename":"email.js","lineno":171,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Sends a link to the email that can reset the password for the user.</p>","kind":"function","name":"sendResetPasswordEmail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["Object","Array.<Object>"]},"name":"mailOptions","subparams":[{"type":{"names":["String"]},"description":"<p>Email address to send the email to.</p>","name":"to"},{"type":{"names":["Object"]},"description":"<p>Name object.</p>","name":"name","subparams":[{"type":{"names":["Object"]},"description":"<p>User's First Name.</p>","name":"first"}]},null,{"type":{"names":["String"]},"description":"<p>User ID in the DB.</p>","name":"accountID"}]},null,null,null,null],"returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>Job Cursor.  Kinda Useless.</li>\n</ul>"}],"longname":"module:js/email~sendResetPasswordEmail","scope":"inner","memberof":"module:js/email","___id":"T000002R000306","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendResetPasswordEmail","signature":"<span class=\"signature\">(mailOptions)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
+{"comment":"/**\n* Updates the bulk log with new info about the import\n* @function updateBulkLog\n* @link module:js/import\n* @param {String} id - Bulk Import ID\n* @param {Number} totalTried - Total number of attempted document imports\n* @param {Number} totalImported - The total number of documents successfully imported\n* @param {Object[]} loggedErrors - Any error logged when processing the documents\n* @param {Object} properties - any special properties that each importType might want to include.\n* @param {(Number|undefined)} properties.totalInitialized - (For importType \"account\") Total number of accounts imported with passwords set.\n* @returns {Promise}\n*/","meta":{"filename":"import.js","lineno":48,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/import.js"},"description":"<p>Updates the bulk log with new info about the import</p>","kind":"function","name":"updateBulkLog","tags":[{"originalTitle":"link","title":"link","text":"module:js/import","value":"module:js/import"}],"params":[{"type":{"names":["String"]},"description":"<p>Bulk Import ID</p>","name":"id"},{"type":{"names":["Number"]},"description":"<p>Total number of attempted document imports</p>","name":"totalTried"},{"type":{"names":["Number"]},"description":"<p>The total number of documents successfully imported</p>","name":"totalImported"},{"type":{"names":["Array.<Object>"]},"description":"<p>Any error logged when processing the documents</p>","name":"loggedErrors"},{"type":{"names":["Object"]},"description":"<p>any special properties that each importType might want to include.</p>","name":"properties","subparams":[{"type":{"names":["Number","undefined"]},"description":"<p>(For importType &quot;account&quot;) Total number of accounts imported with passwords set.</p>","name":"totalInitialized"}]},null],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/import~updateBulkLog","scope":"inner","memberof":"module:js/import","___id":"T000002R000366","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateBulkLog","signature":"<span class=\"signature\">(id, totalTried, totalImported, loggedErrors, properties)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_import.html\">js/import</a>~"]}
 </pre>
 -->
 </div>

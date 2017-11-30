@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>authRESTAPI - Documentation</title>
+    <title>Table - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">authRESTAPI</h1>
+    <h1 class="page-title">Table</h1>
     
 
     <!--container.tmpl-->
@@ -49,28 +49,433 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: authRESTAPI</h2>
+        <h2>
+        Table
+        </h2>
+        
+            <div class="lead"><p>Takes structured data and makes a table from it. call this.generate() to create a table</p></div>
         
     
 
     
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
-            
-            <li><a href="#loginDSCM">loginDSCM</a></li>
-            </ul></dd></dl></div>
 </header>
 
 <article>
     <div class="container-overview">
     
+        <!--method.tmpl-->
+<div class="method-details">
+
+
+
+
+
+    
+    <h3 class="constructor">Constructor</h3>
+    
+
+    
+      <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_Table.js.html">Table.js</a>:<a href="modules_webpack_common_Table.js.html#line41">41</a>
+  </code>
+</div>
+
+    
+
+    <h4 class="name" id="Table">
+      <a href="#params-Table"><span class="type-signature"></span>new Table</a><span class="signature">(containerElement, data, options)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-Table">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-Table" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>containerElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Selector</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The table container.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data to be added to the table.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The clickable element.</p>
+                <h6>Properties</h6>
+                <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ignoredKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>List of keys to leave out of the row object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>idKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Key name in data to act as ID.  Will generate a unique one for every row if not included.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hiddenKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Removes the keys from the table, but keeps it in row object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tableClasses</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>class strings to be added to the top table element</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sort</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+|
+
+<span class="param-type">Array.&lt;String></span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Takes structured data and makes a table from it. call this.generate() to create a table\n* @link module:webpack/framework\n* @class \n* @param {Selector} containerElement - The table container.\n* @param {Object} data - The data to be added to the table.\n* @param {(Object|undefined)} options - The clickable element.\n* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object\n* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. \n* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. \n* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}\n* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element \n* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort\n*/","meta":{"range":[2207,11393],"filename":"Table.js","lineno":41,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100012680","name":"Table","type":"ClassDeclaration","paramnames":["containerElement","data","options"]},"shortpath":"modules/webpack/common/Table.js"},"classdesc":"<p>Takes structured data and makes a table from it. call this.generate() to create a table</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/framework","value":"module:webpack/framework"}],"kind":"class","params":[{"type":{"names":["Selector"]},"description":"<p>The table container.</p>","name":"containerElement"},{"type":{"names":["Object"]},"description":"<p>The data to be added to the table.</p>","name":"data"},{"type":{"names":["Object","undefined"]},"description":"<p>The clickable element.</p>","name":"options","subparams":[{"type":{"names":["Array.<String>","undefined"]},"description":"<p>List of keys to leave out of the row object</p>","name":"ignoredKeys"},{"type":{"names":["String","undefine"]},"description":"<p>Key name in data to act as ID.  Will generate a unique one for every row if not included.</p>","name":"idKey"},{"type":{"names":["Array.<String>","undefine"]},"description":"<p>Removes the keys from the table, but keeps it in row object.</p>","name":"hiddenKeys"},{"type":{"names":["function","undefine"]},"description":"<p>ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}</p>","name":"inject"},{"type":{"names":["String","undefine"]},"description":"<p>class strings to be added to the top table element</p>","name":"tableClasses"},{"type":{"names":["function","Array.<String>","undefine"]},"description":"<p>Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort</p>","name":"sort"}]},null,null,null,null,null,null],"name":"Table","longname":"Table","scope":"global","___id":"T000003R000003","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"Table","signature":"<span class=\"signature\">(containerElement, data, options)</span><span class=\"type-signature\"></span>","ancestors":[]}
+</pre>
+-->
+</div>
+
     
     </div>
 
@@ -86,562 +491,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line52">52</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~handleAuthLogin">
-      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-handleAuthLogin">
-        <span class="label label-api">API: POST /api/auth/login/</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-handleAuthLogin">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
-    <h5>
-      API Route:
-      POST /api/auth/login/
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT\n    */","meta":{"filename":"auth.js","lineno":52,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001276","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line85">85</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~loginDSCM">
-      <a href="#params-loginDSCM"><span class="type-signature">(async, inner) </span>loginDSCM</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-loginDSCM">
-        <span class="label label-api">API: POST /api/auth/login/dscm</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-loginDSCM">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-loginDSCM" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-loginDSCM">
-    <h5>
-      API Route:
-      POST /api/auth/login/dscm
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Sends Status code of 200.  Sets Cookies for webapp auth
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies\n    * @function loginDSCM\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/dscm\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth\n    */","meta":{"filename":"auth.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>","kind":"function","name":"loginDSCM","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/dscm","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Sends Status code of 200.  Sets Cookies for webapp auth"},"longname":"module:authRESTAPI~loginDSCM","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001280","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~loginDSCM","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
     
 
     

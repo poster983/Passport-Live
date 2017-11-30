@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>authRESTAPI - Documentation</title>
+    <title>Caret - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">authRESTAPI</h1>
+    <h1 class="page-title">Caret</h1>
     
 
     <!--container.tmpl-->
@@ -49,28 +49,352 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: authRESTAPI</h2>
+        <h2>
+        Caret
+        </h2>
+        
+            <div class="lead"><p>Pairs a caret &quot;^&quot; button with a hidden element.  Shows element when carot is clicked and flips carot.</p></div>
         
     
 
     
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
-            
-            <li><a href="#loginDSCM">loginDSCM</a></li>
-            </ul></dd></dl></div>
 </header>
 
 <article>
     <div class="container-overview">
     
+        <!--method.tmpl-->
+<div class="method-details">
+
+
+
+
+
+    
+    <h3 class="constructor">Constructor</h3>
+    
+
+    
+      <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_Caret.js.html">Caret.js</a>:<a href="modules_webpack_common_Caret.js.html#line35">35</a>
+  </code>
+</div>
+
+    
+
+    <h4 class="name" id="Caret">
+      <a href="#params-Caret"><span class="type-signature"></span>new Caret</a><span class="signature">(caretButton, content, options)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-Caret">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-Caret" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>caretButton</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Selector</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The clickable element.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>content</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Selector</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to be shown.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The clickable element.</p>
+                <h6>Properties</h6>
+                <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isOpen</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if the element should be shown by default.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>How fast the element will be shown. In ms.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+|
+
+<span class="param-type">undefine</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Passes one argument, &quot;isOpen&quot; (bool). Fires whenever the Caret is opened.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Pairs a caret \"^\" button with a hidden element.  Shows element when carot is clicked and flips carot.\n* @link module:webpack/framework\n* @class \n* @param {Selector} caretButton - The clickable element.\n* @param {Selector} content - The element to be shown.\n* @param {(Object|undefined)} options - The clickable element.\n* @param {(Boolean|undefined)} options.isOpen - True if the element should be shown by default.\n* @param {(Number|undefine)} options.timing - How fast the element will be shown. In ms.\n* @param {(Function|undefine)} options.callback - Passes one argument, \"isOpen\" (bool). Fires whenever the Caret is opened.\n*/","meta":{"range":[1514,2979],"filename":"Caret.js","lineno":35,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100012405","name":"Caret","type":"ClassDeclaration","paramnames":["caretButton","content","options"]},"shortpath":"modules/webpack/common/Caret.js"},"classdesc":"<p>Pairs a caret &quot;^&quot; button with a hidden element.  Shows element when carot is clicked and flips carot.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/framework","value":"module:webpack/framework"}],"kind":"class","params":[{"type":{"names":["Selector"]},"description":"<p>The clickable element.</p>","name":"caretButton"},{"type":{"names":["Selector"]},"description":"<p>The element to be shown.</p>","name":"content"},{"type":{"names":["Object","undefined"]},"description":"<p>The clickable element.</p>","name":"options","subparams":[{"type":{"names":["Boolean","undefined"]},"description":"<p>True if the element should be shown by default.</p>","name":"isOpen"},{"type":{"names":["Number","undefine"]},"description":"<p>How fast the element will be shown. In ms.</p>","name":"timing"},{"type":{"names":["function","undefine"]},"description":"<p>Passes one argument, &quot;isOpen&quot; (bool). Fires whenever the Caret is opened.</p>","name":"callback"}]},null,null,null],"name":"Caret","longname":"Caret","scope":"global","___id":"T000003R000002","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"Caret","signature":"<span class=\"signature\">(caretButton, content, options)</span><span class=\"type-signature\"></span>","ancestors":[]}
+</pre>
+-->
+</div>
+
     
     </div>
 
@@ -86,562 +410,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line52">52</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~handleAuthLogin">
-      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-handleAuthLogin">
-        <span class="label label-api">API: POST /api/auth/login/</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-handleAuthLogin">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
-    <h5>
-      API Route:
-      POST /api/auth/login/
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT\n    */","meta":{"filename":"auth.js","lineno":52,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001276","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line85">85</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~loginDSCM">
-      <a href="#params-loginDSCM"><span class="type-signature">(async, inner) </span>loginDSCM</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-loginDSCM">
-        <span class="label label-api">API: POST /api/auth/login/dscm</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-loginDSCM">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-loginDSCM" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-loginDSCM">
-    <h5>
-      API Route:
-      POST /api/auth/login/dscm
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Sends Status code of 200.  Sets Cookies for webapp auth
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies\n    * @function loginDSCM\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/dscm\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth\n    */","meta":{"filename":"auth.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>","kind":"function","name":"loginDSCM","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/dscm","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Sends Status code of 200.  Sets Cookies for webapp auth"},"longname":"module:authRESTAPI~loginDSCM","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001280","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~loginDSCM","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
     
 
     

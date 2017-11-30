@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>authRESTAPI - Documentation</title>
+    <title>modules/webpack/common/Table.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">authRESTAPI</h1>
+    <h1 class="page-title">modules/webpack/common/Table.js</h1>
     
 
     <!--container.tmpl-->
@@ -42,614 +42,256 @@
 
 
 
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var flat = require('flat');
+var utils = require("../utils/index.js");
+var typeCheck = require("type-check").typeCheck;
+var DeepKey = require("deep-key");
+
+/**
+* Takes structured data and makes a table from it. call this.generate() to create a table
+* @link module:webpack/framework
+* @class 
+* @param {Selector} containerElement - The table container.
+* @param {Object} data - The data to be added to the table.
+* @param {(Object|undefined)} options - The clickable element.
+* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
+* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
+* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
+* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+*/
+class Table {
+    constructor(containerElement, data, options) {
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function, ...}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
+        }*/
+        if(!options){options = {};}
+        if(!typeCheck("[Object]", data)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = data;
+        this.container = containerElement;
+        this.options = options;
+    }
+    generate() {
+        return new Promise((resolve, reject) => {
+            this._sortData().then(({columns, rows}) => {
+                console.log(columns, "Col")
+                console.log(rows, "rows")
+                var promises = [];
+                /**HEAD**/
+                let tableHead = $("&lt;thead/>");
+                promises.push(new Promise((resolveCol, rejectCol) => {
+                    let tr = $("&lt;tr/>");
+                    //compile Head
+                    for(let x = 0; x &lt; columns.length; x++) {
+                        tr.append($("&lt;th/>").html(columns[x]));
+                        if(x >= columns.length-1) {
+                            //done 
+                            tableHead.append(tr);
+                            return resolveCol()
+                        }
+                    }
+                }))
+
+                /**BODY**/
+                let tableBody = $("&lt;tbody/>");
+                promises.push(new Promise((resolveRow, rejectRow) => {
+
+                    //compile row
+                    for(let r = 0; r &lt; rows.length; r++) {
+                        let tr = $("&lt;tr/>").attr("id", rows[r].rowID);
+                        let bodyData = rows[r].getBody();
+                        console.log(bodyData)
+                        //allign rows with correct columns 
+                        for (let a = 0 ; a &lt; columns.length; a++) {
+                            tr.append($("&lt;td/>").html(bodyData[columns[a]]));
+
+                            if(a >= columns.length-1) {
+                                //push to body
+                                tableBody.append(tr);
+                            }
+                            if(a >= columns.length-1 &amp;&amp; r >= rows.length-1) {
+                                //push to body
+                                return resolveRow();
+
+                            }
+                        }
+                    }
+                }))
+
+                Promise.all(promises).then(() => {
+                    this.container.append($("&lt;table/>").addClass(this.options.tableClasses)
+                        .append(tableHead)
+                        .append(tableBody)
+                    )
+                }).catch((err) => {
+                    return reject(err);
+                })
+            });
+        });
+    }
+    addData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = this.data.concat(newData)
+    }
+    replaceData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = newData;
+    }
+    destroyTable() {
+        this.data = [];
+        containerElement.empty();
+    }
+    parseRowID(TABLE_ROW_ID) {
+        return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
+    }
+    _sortData() {
+        return new Promise((resolve, reject) => {
+            var columnNames = [];
+            var rows = [];
+            for(let x = 0; x &lt; this.data.length; x++ ) {
+                let row = {};
+                row.shownData = this.data[x];
+                row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
+                //note ID
+                if(this.options.idKey &amp;&amp; row.shownData[this.options.idKey]) {
+                    row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
+                }
+                //Store Untouched ID for dev
+                row.getRowID = () => {return this.parseRowID(row.rowID);}
+
+                //Filter out hidden keys for later 
+                if(this.options.hiddenKeys) {
+                    row.hiddenData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return this.options.hiddenKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    if(this.options.ignoredKeys) {
+                        this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                    } else {
+                        this.options.ignoredKeys = this.options.hiddenKeys;
+                    }
+                }
+
+                //filter out unwanted Keys
+                //should error in constructor if not array
+                if(this.options.ignoredKeys) {
+                    row.shownData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return !this.options.ignoredKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    
+                }
+                new Promise((resolve, reject) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", this.options.inject)) {
+                        console.log("INJECTING")
+                        row.injectedData = {};
+                        this.options.inject(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                for(let a = 0; a &lt; injected.length; a++) {
+                                    if(injected[a].strictColumn) {
+                                        row.injectedData[injected[a].column] = injected[a].dom;
+                                    } else {
+                                        row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
+                                    }
+                                    if(a >= injected.length-1) {
+                                        return resolve();
+                                    }
+                                }
+                            } else {
+                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolve()
+                    }
+                }).then(() => {
+                    let flatData = flat(row.shownData, {safe: true});
+                    if(row.injectedData) {
+                        console.log(row.injectedData)
+                        row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                    } else {
+                        row.shownKeys = Object.keys(flatData);
+                    }
+                    columnNames = [...new Set([...columnNames, ...row.shownKeys])];
+
+
+
+
+                    // add helper functions
+                    row.getBody = () => {return Object.assign(flatData, row.injectedData)}
+                    //Waitfor end of loop
+                    rows.push(row);
+                    //console.log(rows, "loop Row")
+                    if(x >= this.data.length-1) {
+                        //sort 
+                        if(typeCheck("[String]", this.options.sort)) {
+                            /*let reference_object = {};
+                            for (let i = 0; i &lt; this.options.sort.length; i++) {
+                                reference_object[this.options.sort[i]] = i;
+                            }*/
+                            columnNames.sort((a, b) => {
+                              return this.options.sort.indexOf(a) - this.options.sort.indexOf(b);
+                            });
+                        } else if(typeCheck("Function", this.options.sort)) {
+                            columnNames.sort(this.options.sort);
+                        }
+                        this.sortedColumns = columnNames;
+                        this.sortedData = rows;
+                        return resolve({columns: this.sortedColumns, rows: this.sortedData});
+                    }
+                    
+                }).catch((err) => {throw err})
+            }
+        });
+    }
+}
+
+module.exports = Table;</code></pre>
+        </article>
+    </section>
 
-<section>
-
-
-
-<header data-tmpl="container.tmpl">
-    
-      <h2>Module: authRESTAPI</h2>
-        
-    
-
-    
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#handleAuthLogin">handleAuthLogin</a></li>
-            
-            <li><a href="#loginDSCM">loginDSCM</a></li>
-            </ul></dd></dl></div>
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line52">52</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~handleAuthLogin">
-      <a href="#params-handleAuthLogin"><span class="type-signature">(async, inner) </span>handleAuthLogin</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-handleAuthLogin">
-        <span class="label label-api">API: POST /api/auth/login/</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-handleAuthLogin">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-handleAuthLogin" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-handleAuthLogin">
-    <h5>
-      API Route:
-      POST /api/auth/login/
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate\n    * @function handleAuthLogin\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT\n    */","meta":{"filename":"auth.js","lineno":52,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate</p>","kind":"function","name":"handleAuthLogin","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Returns in a json object with key: \"token\" and the value has a PassportJS compatible JWT"},"longname":"module:authRESTAPI~handleAuthLogin","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001276","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~handleAuthLogin","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_auth.js.html">auth.js</a>:<a href="routes_api_auth.js.html#line85">85</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~loginDSCM">
-      <a href="#params-loginDSCM"><span class="type-signature">(async, inner) </span>loginDSCM</a><span class="signature">(req, res)</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-loginDSCM">
-        <span class="label label-api">API: POST /api/auth/login/dscm</span>
-      </a>
-    
-
-
-
-<span class="label label-default">Async</span>
-
-
-
-
-<div class="description">
-    <p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body structure: </p>
-    
-    <pre class="prettyprint"><code>email:&lt;user's email>,
-password:&lt;user's password></code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-loginDSCM">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>Test application/json</li>
-    </ul>
-  </div>
-
-
-
-
-
-
-  <div id="params-loginDSCM" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-loginDSCM">
-    <h5>
-      API Route:
-      POST /api/auth/login/dscm
-    </h5>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">application/json</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Sends Status code of 200.  Sets Cookies for webapp auth
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies\n    * @function loginDSCM\n    * @async\n    * @param {request} req\n    * @param {response} res\n    * @api POST /api/auth/login/dscm\n    * @apibody {application/json}\n    * @example \n    * <caption>Body structure: </caption>\n    * email:<user's email>,\n    * password:<user's password>\n    * @todo Test application/json\n    * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth\n    */","meta":{"filename":"auth.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/auth.js"},"description":"<p>Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies</p>","kind":"function","name":"loginDSCM","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"POST /api/auth/login/dscm","body":{"type":{"names":["application/json"]}},"examples":[{"caption":"Body structure: ","code":"email:<user's email>,\npassword:<user's password>"}],"todo":["Test application/json"],"response":{"type":{"names":["json"]},"description":"Sends Status code of 200.  Sets Cookies for webapp auth"},"longname":"module:authRESTAPI~loginDSCM","scope":"inner","memberof":"module:authRESTAPI","___id":"T000002R001280","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~loginDSCM","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-authRESTAPI.html\">authRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 

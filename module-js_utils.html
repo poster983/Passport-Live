@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>js/email - Documentation</title>
+    <title>js/utils - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">js/email</h1>
+    <h1 class="page-title">js/utils</h1>
     
 
     <!--container.tmpl-->
@@ -49,9 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: js/email</h2>
-        
-            
+      <h2>Module: js/utils</h2>
         
     
 
@@ -61,11 +59,23 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#sendActivationEmail">sendActivationEmail</a></li>
+            <li><a href="#checkPasswordPolicy">checkPasswordPolicy</a></li>
             
-            <li><a href="#sendMail">sendMail</a></li>
+            <li><a href="#checkPeriod">checkPeriod</a></li>
             
-            <li><a href="#sendResetPasswordEmail">sendResetPasswordEmail</a></li>
+            <li><a href="#checkPeriod">checkPeriod</a></li>
+            
+            <li><a href="#cleanUser">cleanUser</a></li>
+            
+            <li><a href="#dscm">dscm</a></li>
+            
+            <li><a href="#emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li>
+            
+            <li><a href="#generateSecureKey">generateSecureKey</a></li>
+            
+            <li><a href="#getBrowserSupport">getBrowserSupport</a></li>
+            
+            <li><a href="#loginBruteforce">loginBruteforce</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -73,133 +83,6 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Apis for sending mail to users</p></div>
-        
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-js/email">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line21">21</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** \n* Apis for sending mail to users\n* @module js/email\n*/","meta":{"filename":"email.js","lineno":21,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Apis for sending mail to users</p>","kind":"module","name":"js/email","longname":"module:js/email","___id":"T000002R000278","___s":true,"attribs":"","id":"js/email","ancestors":[]}
-</pre>
--->
-</div>
 
         
     
@@ -232,7 +115,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line122">122</a>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line156">156</a>
   </code>
 </div>
 
@@ -243,8 +126,8 @@
 
     
 
-    <h4 class="name" id="~sendActivationEmail">
-      <a href="#params-sendActivationEmail"><span class="type-signature">(inner) </span>sendActivationEmail</a><span class="signature">(mailOptions)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id="~checkPasswordPolicy">
+      <a href="#params-checkPasswordPolicy"><span class="type-signature">(inner) </span>checkPasswordPolicy</a><span class="signature">(password)</span><span class="type-signature"> &rarr; {Promise}</span>
 
     </h4>
 
@@ -263,17 +146,28 @@
 
 
 <div class="description">
-    <p>Sends the activation email to a user,</p>
+    <p>Checks if password is complient with password rules in the config file.</p>
 </div>
 
 
 
 
+    <h5>Example</h5>
+    
+        <p class="code-caption">Promise Payload</p>
+    
+    <pre class="prettyprint"><code>{
+  valid: (boolean)
+  failedAt: (regex string | undefined)
+  humanReadableRule: (string | undefined)
+}</code></pre>
 
 
 
 
-<div class="collapse_" id="methodCollapse-sendActivationEmail">
+
+
+<div class="collapse_" id="methodCollapse-checkPasswordPolicy">
 
   
 
@@ -322,7 +216,7 @@
 
 
 
-  <div id="params-sendActivationEmail" class="bs-callout bs-callout-primary">
+  <div id="params-checkPasswordPolicy" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -349,16 +243,13 @@
 
         <tr>
             
-                <td class="name"><code>mailOptions</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">string</span>
 
 
             
@@ -368,9 +259,168 @@
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-                <!--params.tmpl-->
+            <td class="description last"><p>Password to check</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n        * Checks if password is complient with password rules in the config file.  \n        * @function checkPasswordPolicy\n        * @link module:js/utils\n        * @param {string} password - Password to check\n        * @returns {Promise} \n        * @example <caption>Promise Payload</caption>\n        * {\n        *   valid: (boolean)\n        *   failedAt: (regex string | undefined)\n        *   humanReadableRule: (string | undefined)\n        * }\n        */","meta":{"filename":"index.js","lineno":156,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Checks if password is complient with password rules in the config file.</p>","kind":"function","name":"checkPasswordPolicy","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["string"]},"description":"<p>Password to check</p>","name":"password"}],"returns":[{"type":{"names":["Promise"]}}],"examples":[{"caption":"Promise Payload","code":"{\n  valid: (boolean)\n  failedAt: (regex string | undefined)\n  humanReadableRule: (string | undefined)\n}"}],"longname":"module:js/utils~checkPasswordPolicy","scope":"inner","memberof":"module:js/utils","___id":"T000002R000784","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~checkPasswordPolicy","signature":"<span class=\"signature\">(password)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line129">129</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~checkPeriod">
+      <a href="#params-checkPeriod"><span class="type-signature">(inner) </span>checkPeriod</a><span class="signature">(period, done)</span><span class="type-signature"> &rarr; {done}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Checks if period is a period constant</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-checkPeriod">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-checkPeriod" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -395,13 +445,13 @@
 
         <tr>
             
-                <td class="name"><code>to</code></td>
+                <td class="name"><code>period</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
             
@@ -411,20 +461,20 @@
 
             
 
-            <td class="description last"><p>Email address to send the email to.</p></td>
+            <td class="description last"><p>a single period to check against the configs.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>done</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">function</span>
 
 
             
@@ -434,87 +484,7 @@
 
             
 
-            <td class="description last"><p>Name object.</p>
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>first</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User's First Name.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>accountID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User ID in the DB.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last"><p>callback.</p></td>
         </tr>
 
     
@@ -540,9 +510,7 @@
 
         
 <div class="param-desc">
-    <ul>
-<li>Job Cursor.  Kinda Useless.</li>
-</ul>
+    <p>Includes error, and a boolean.  True for valid period, false for not</p>
 </div>
 
 
@@ -553,7 +521,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">done</span>
 
 
     </dd>
@@ -572,7 +540,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Sends the activation email to a user,\n* @function sendActivationEmail\n* @link module:js/email\n* @param {(Object | Object[])} mailOptions\n* @param {String} mailOptions.to - Email address to send the email to. \n* @param {Object} mailOptions.name - Name object.\n* @param {Object} mailOptions.name.first - User's First Name.\n* @param {String} mailOptions.accountID - User ID in the DB.  \n* @returns {Promise} - Job Cursor.  Kinda Useless.\n*/","meta":{"filename":"email.js","lineno":122,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Sends the activation email to a user,</p>","kind":"function","name":"sendActivationEmail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["Object","Array.<Object>"]},"name":"mailOptions","subparams":[{"type":{"names":["String"]},"description":"<p>Email address to send the email to.</p>","name":"to"},{"type":{"names":["Object"]},"description":"<p>Name object.</p>","name":"name","subparams":[{"type":{"names":["Object"]},"description":"<p>User's First Name.</p>","name":"first"}]},null,{"type":{"names":["String"]},"description":"<p>User ID in the DB.</p>","name":"accountID"}]},null,null,null,null],"returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>Job Cursor.  Kinda Useless.</li>\n</ul>"}],"longname":"module:js/email~sendActivationEmail","scope":"inner","memberof":"module:js/email","___id":"T000002R000294","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendActivationEmail","signature":"<span class=\"signature\">(mailOptions)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
+{"comment":"/**\n        * Checks if period is a period constant  \n        * @function checkPeriod\n        * @link module:js/utils\n        * @param {string} period - a single period to check against the configs. \n        * @param {function} done - callback. \n        * @returns {done} Includes error, and a boolean.  True for valid period, false for not\n        */","meta":{"filename":"index.js","lineno":129,"columnno":5,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Checks if period is a period constant</p>","kind":"function","name":"checkPeriod","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["string"]},"description":"<p>a single period to check against the configs.</p>","name":"period"},{"type":{"names":["function"]},"description":"<p>callback.</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Includes error, and a boolean.  True for valid period, false for not</p>"}],"longname":"module:js/utils~checkPeriod","scope":"inner","memberof":"module:js/utils","___id":"T000002R000779","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~checkPeriod","signature":"<span class=\"signature\">(period, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
 </pre>
 -->
 </div>
@@ -589,7 +557,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line36">36</a>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line111">111</a>
   </code>
 </div>
 
@@ -600,8 +568,8 @@
 
     
 
-    <h4 class="name" id="~sendMail">
-      <a href="#params-sendMail"><span class="type-signature">(inner) </span>sendMail</a><span class="signature">(messageConfig, options)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id="~checkPeriod">
+      <a href="#params-checkPeriod"><span class="type-signature">(inner) </span>checkPeriod</a><span class="signature">(period, done)</span><span class="type-signature"> &rarr; {done}</span>
 
     </h4>
 
@@ -620,7 +588,7 @@
 
 
 <div class="description">
-    <p>Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.</p>
+    <p>Checks if period is a period constant</p>
 </div>
 
 
@@ -630,7 +598,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-sendMail">
+<div class="collapse_" id="methodCollapse-checkPeriod">
 
   
 
@@ -679,7 +647,7 @@
 
 
 
-  <div id="params-sendMail" class="bs-callout bs-callout-primary">
+  <div id="params-checkPeriod" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -706,13 +674,13 @@
 
         <tr>
             
-                <td class="name"><code>messageConfig</code></td>
+                <td class="name"><code>period</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">emailHeader</span>
+<span class="param-type">string</span>
 
 
             
@@ -722,20 +690,20 @@
 
             
 
-            <td class="description last"><p>Nodemailer Message options. See: <code>emailHeader</code></p></td>
+            <td class="description last"><p>a single period to check against the configs.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>done</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">function</span>
 
 
             
@@ -745,408 +713,7 @@
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>jobQueue</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Default: true</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** \n* Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.\n* @function sendMail\n* @link module:js/email\n* @param {emailHeader} messageConfig - Nodemailer Message options. See: <code>emailHeader</code>\n* @param {Object} options\n* @param {boolean} options.jobQueue - Default: true\n* @returns {Promise} \n*/","meta":{"filename":"email.js","lineno":36,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Lowish level wrapper for nodemailer's sendMail function.  Includes Job queue.</p>","kind":"function","name":"sendMail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["emailHeader"]},"description":"<p>Nodemailer Message options. See: <code>emailHeader</code></p>","name":"messageConfig"},{"type":{"names":["Object"]},"name":"options","subparams":[{"type":{"names":["boolean"]},"description":"<p>Default: true</p>","name":"jobQueue"}]},null],"returns":[{"type":{"names":["Promise"]}}],"longname":"module:js/email~sendMail","scope":"inner","memberof":"module:js/email","___id":"T000002R000286","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendMail","signature":"<span class=\"signature\">(messageConfig, options)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_email.js.html">email.js</a>:<a href="modules_passport-api_email.js.html#line171">171</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~sendResetPasswordEmail">
-      <a href="#params-sendResetPasswordEmail"><span class="type-signature">(inner) </span>sendResetPasswordEmail</a><span class="signature">(mailOptions)</span><span class="type-signature"> &rarr; {Promise}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Sends a link to the email that can reset the password for the user.</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-sendResetPasswordEmail">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-  <div id="params-sendResetPasswordEmail" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mailOptions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>to</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Email address to send the email to.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name object.</p>
-                <h6>Properties</h6>
-                <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>first</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User's First Name.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>accountID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>User ID in the DB.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last"><p>callback.</p></td>
         </tr>
 
     
@@ -1172,9 +739,967 @@
 
         
 <div class="param-desc">
+    <p>Includes error, and a boolean.  True for valid period, false for not</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">done</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Checks if period is a period constant  \n    * @function checkPeriod\n    * @link module:js/utils\n    * @param {string} period - a single period to check against the configs. \n    * @param {function} done - callback. \n    * @returns {done} Includes error, and a boolean.  True for valid period, false for not\n    */","meta":{"filename":"index.js","lineno":111,"columnno":1,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Checks if period is a period constant</p>","kind":"function","name":"checkPeriod","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["string"]},"description":"<p>a single period to check against the configs.</p>","name":"period"},{"type":{"names":["function"]},"description":"<p>callback.</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Includes error, and a boolean.  True for valid period, false for not</p>"}],"longname":"module:js/utils~checkPeriod","scope":"inner","memberof":"module:js/utils","___id":"T000002R000776","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~checkPeriod","signature":"<span class=\"signature\">(period, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line36">36</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~cleanUser">
+      <a href="#params-cleanUser"><span class="type-signature">(inner) </span>cleanUser</a><span class="signature">(user)</span><span class="type-signature"> &rarr; {<a href="global.html#user">user</a>}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Removes data like passwords and other sensitive info before sending it to the user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-cleanUser">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-cleanUser" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#user">user</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The user to clean.  The same user object found in the database</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#user">user</a></span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Removes data like passwords and other sensitive info before sending it to the user \n* @function cleanUser\n* @link module:js/utils\n* @param {user} user - The user to clean.  The same user object found in the database \n* @returns {user}\n*/","meta":{"filename":"index.js","lineno":36,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Removes data like passwords and other sensitive info before sending it to the user</p>","kind":"function","name":"cleanUser","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["user"]},"description":"<p>The user to clean.  The same user object found in the database</p>","name":"user"}],"returns":[{"type":{"names":["user"]}}],"longname":"module:js/utils~cleanUser","scope":"inner","memberof":"module:js/utils","___id":"T000002R000767","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~cleanUser","signature":"<span class=\"signature\">(user)</span><span class=\"type-signature\"> &rarr; {<a href=\"global.html#user\">user</a>}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line55">55</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~dscm">
+      <a href="#params-dscm"><span class="type-signature">(inner) </span>dscm</a><span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {next}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Checks if req is using DSCM and then allows passport to view the data</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-dscm">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+  <div class="bs-callout bs-callout-default">
+    <h5>To Do</h5>
     <ul>
-<li>Job Cursor.  Kinda Useless.</li>
-</ul>
+        <li>Make a passportjs stratagy for this</li>
+    </ul>
+  </div>
+
+
+
+
+
+
+  <div id="params-dscm" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Response</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">next</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Checks if req is using DSCM and then allows passport to view the data \n    * @function dscm\n    * @link module:js/utils\n    * @param {json} req - Request \n    * @param {json} res - Response \n    * @param {function} next - Callback \n    * @returns {next}\n    * @todo Make a passportjs stratagy for this \n    */","meta":{"filename":"index.js","lineno":55,"columnno":1,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Checks if req is using DSCM and then allows passport to view the data</p>","kind":"function","name":"dscm","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["json"]},"description":"<p>Request</p>","name":"req"},{"type":{"names":["json"]},"description":"<p>Response</p>","name":"res"},{"type":{"names":["function"]},"description":"<p>Callback</p>","name":"next"}],"returns":[{"type":{"names":["next"]}}],"todo":["Make a passportjs stratagy for this"],"longname":"module:js/utils~dscm","scope":"inner","memberof":"module:js/utils","___id":"T000002R000769","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~dscm","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {next}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line299">299</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~emailPasswordResetBruteforce">
+      <a href="#params-emailPasswordResetBruteforce"><span class="type-signature">(inner) </span>emailPasswordResetBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks when requesing a password reset email 
+Retries: 3
+Remembers for 1 day</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-emailPasswordResetBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks when requesing a password reset email \n    * Retries: 3\n    * Remembers for 1 day\n    * @link module:js/utils\n    * @function emailPasswordResetBruteforce\n    */","meta":{"filename":"index.js","lineno":299,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Middleware to prevent brute force attacks when requesing a password reset email \nRetries: 3\nRemembers for 1 day</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"kind":"function","name":"emailPasswordResetBruteforce","longname":"module:js/utils~emailPasswordResetBruteforce","scope":"inner","memberof":"module:js/utils","___id":"T000002R000828","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~emailPasswordResetBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line146">146</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~generateSecureKey">
+      <a href="#params-generateSecureKey"><span class="type-signature">(inner) </span>generateSecureKey</a><span class="signature">()</span><span class="type-signature"> &rarr; {string}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Generates a secure token/key</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-generateSecureKey">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>Secure token/key.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n        * Generates a secure token/key\n        * @function generateSecureKey\n        * @link module:js/utils\n        * @returns {string} Secure token/key.\n        */","meta":{"filename":"index.js","lineno":146,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Generates a secure token/key</p>","kind":"function","name":"generateSecureKey","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"returns":[{"type":{"names":["string"]},"description":"<p>Secure token/key.</p>"}],"longname":"module:js/utils~generateSecureKey","scope":"inner","memberof":"module:js/utils","___id":"T000002R000782","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~generateSecureKey","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {string}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line204">204</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~getBrowserSupport">
+      <a href="#params-getBrowserSupport"><span class="type-signature">(inner) </span>getBrowserSupport</a><span class="signature">(userAgent)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Given a user agent, the function determines if it is compatible with passport's web app</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+        <p class="code-caption">Promise Payload</p>
+    
+    <pre class="prettyprint"><code>{
+  supported: (boolean)
+  untested: (boolean)
+  blocked: (boolean)
+  outdated: (boolean)
+}</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getBrowserSupport">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getBrowserSupport" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userAgent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Password to check</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>See Example</p>
 </div>
 
 
@@ -1204,7 +1729,136 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Sends a link to the email that can reset the password for the user.\n* @function sendResetPasswordEmail\n* @link module:js/email\n* @param {(Object | Object[])} mailOptions\n* @param {String} mailOptions.to - Email address to send the email to. \n* @param {Object} mailOptions.name - Name object.\n* @param {Object} mailOptions.name.first - User's First Name.\n* @param {String} mailOptions.accountID - User ID in the DB.  \n* @returns {Promise} - Job Cursor.  Kinda Useless.\n*/","meta":{"filename":"email.js","lineno":171,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{},"shortpath":"modules/passport-api/email.js"},"description":"<p>Sends a link to the email that can reset the password for the user.</p>","kind":"function","name":"sendResetPasswordEmail","tags":[{"originalTitle":"link","title":"link","text":"module:js/email","value":"module:js/email"}],"params":[{"type":{"names":["Object","Array.<Object>"]},"name":"mailOptions","subparams":[{"type":{"names":["String"]},"description":"<p>Email address to send the email to.</p>","name":"to"},{"type":{"names":["Object"]},"description":"<p>Name object.</p>","name":"name","subparams":[{"type":{"names":["Object"]},"description":"<p>User's First Name.</p>","name":"first"}]},null,{"type":{"names":["String"]},"description":"<p>User ID in the DB.</p>","name":"accountID"}]},null,null,null,null],"returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>Job Cursor.  Kinda Useless.</li>\n</ul>"}],"longname":"module:js/email~sendResetPasswordEmail","scope":"inner","memberof":"module:js/email","___id":"T000002R000306","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~sendResetPasswordEmail","signature":"<span class=\"signature\">(mailOptions)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_email.html\">js/email</a>~"]}
+{"comment":"/**\n    * Given a user agent, the function determines if it is compatible with passport's web app\n    * @function getBrowserSupport\n    * @link module:js/utils\n    * @param {string} userAgent - Password to check\n    * @returns {Promise} See Example\n    * @example <caption>Promise Payload</caption>\n    * {\n    *   supported: (boolean)\n    *   untested: (boolean)\n    *   blocked: (boolean)\n    *   outdated: (boolean)\n    * }\n    */","meta":{"filename":"index.js","lineno":204,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Given a user agent, the function determines if it is compatible with passport's web app</p>","kind":"function","name":"getBrowserSupport","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"params":[{"type":{"names":["string"]},"description":"<p>Password to check</p>","name":"userAgent"}],"returns":[{"type":{"names":["Promise"]},"description":"<p>See Example</p>"}],"examples":[{"caption":"Promise Payload","code":"{\n  supported: (boolean)\n  untested: (boolean)\n  blocked: (boolean)\n  outdated: (boolean)\n}"}],"longname":"module:js/utils~getBrowserSupport","scope":"inner","memberof":"module:js/utils","___id":"T000002R000798","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBrowserSupport","signature":"<span class=\"signature\">(userAgent)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_index.js.html">index.js</a>:<a href="modules_passport-utils_index.js.html#line283">283</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~loginBruteforce">
+      <a href="#params-loginBruteforce"><span class="type-signature">(inner) </span>loginBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks when logging in</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-loginBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks when logging in\n    * @link module:js/utils\n    * @function loginBruteforce\n    */","meta":{"filename":"index.js","lineno":283,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/index.js"},"description":"<p>Middleware to prevent brute force attacks when logging in</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils","value":"module:js/utils"}],"kind":"function","name":"loginBruteforce","longname":"module:js/utils~loginBruteforce","scope":"inner","memberof":"module:js/utils","___id":"T000002R000819","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~loginBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils.html\">js/utils</a>~"]}
 </pre>
 -->
 </div>

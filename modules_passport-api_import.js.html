@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>modules/passport-api/import.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/incomplete/dashboard/student</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~studentCheckIfIncomplete">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_account.html">api/account</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_account.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_account.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_account.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_account.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_account.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_account.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_account.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_account.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_account.html#~studentCheckIfIncomplete">studentCheckIfIncomplete</a></li><li data-type='method'><a href="module-api_account.html#~updateUserPassword">updateUserPassword</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li><li data-type='method'><a href="module-js_utils.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passportPassApi.html">passportPassApi</a><ul class='methods'><li data-type='method'><a href="module-passportPassApi.html#~flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-passportPassApi.html#~newPass">newPass</a></li><li data-type='method'><a href="module-passportPassApi.html#~updatePass">updatePass</a></li></ul></li><li><a href="module-passportSchedulesApi.html">passportSchedulesApi</a><ul class='methods'><li data-type='method'><a href="module-passportSchedulesApi.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a></li><li><a href="Table.html">Table</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/passport-api/import.js</h1>
+    
+
+    <!--container.tmpl-->
+
+
+
+
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+*/
+
+/**
+* A set of Apis for importing large amounts of data into passport
+* @module js/import
+*/
+const convertExcel = require('excel-as-json').processFile;
+const accountAPI = require("./accounts.js");
+var r = require('rethinkdb');
+var db = require('../../modules/db/index.js');
+var r_ = db.dash()
+var utils = require('../passport-utils/index.js');
+var typeCheck = require("type-check").typeCheck;
+var moment = require("moment");
+var emailJS = require("./email.js");
+
+/**
+* Creates a bulk import job log 
+* @function newBulkLog
+* @link module:js/import
+* @param {String} name - A Non unique human readable ID for the job.
+* @param {String} importType - The type of import it is.  includes "account" and "schedule"
+* @returns {Promise}
+*/
+function newBulkLog(name, importType) {
+    //return new Promise((resolve, reject) => {
+       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
+    //})
+}
+/**
+* Updates the bulk log with new info about the import
+* @function updateBulkLog
+* @link module:js/import
+* @param {String} id - Bulk Import ID
+* @param {Number} totalTried - Total number of attempted document imports
+* @param {Number} totalImported - The total number of documents successfully imported
+* @param {Object[]} loggedErrors - Any error logged when processing the documents
+* @param {Object} properties - any special properties that each importType might want to include.
+* @param {(Number|undefined)} properties.totalInitialized - (For importType "account") Total number of accounts imported with passwords set.
+* @returns {Promise}
+*/
+function updateBulkLog(id, totalTried, totalImported, loggedErrors, properties) { 
+    return r.table("bulkImports").get(id).update({totalTried: totalTried, totalImported: totalImported, loggedErrors: loggedErrors, properties: properties}).run(db.conn());
+}
+/**
+* Deletes the bulk log
+* @function deleteBulkLog
+* @link module:js/import
+* @param {String} id - Bulk Import ID
+* @returns {Promise}
+*/
+function deleteBulkLog(id) { 
+    return r.table("bulkImports").get(id).delete().run(db.conn());
+}
+
+/*
+* Searches the bulk log database 
+* @link module:js/import
+* @param {Object} queries
+* @param {(String|undefined)} queries.name - Bulk Log Name
+* @param {(String|undefined)} queries.type - importType. Current values: "account", "schedule" 
+* @param {(Object|undefined)} queries.date
+* @param {(String|Date|undefined)} queries.date.from - ISO Strng or date Low end.  inclusive
+* @param {(String|Date|undefined)} queries.date.to - ISO Strng High end. inclusive
+* @returns {Promise} - array
+*/
+exports.searchBulkLogs = (queries) => {
+    return new Promise((resolve, reject) => {
+        if(!typeCheck("{name: Maybe String, date: Maybe {from: Maybe ISODate | Date, to: Maybe ISODate | Date}, type: Maybe String}", queries, utils.typeCheck)) {
+            var err = new TypeError("queries must be an object with format: \"{name: Maybe String, date: Maybe {from: Maybe ISODate | Date, to: Maybe ISODate | Date}, type: Maybe String}\"");
+            err.status = 400;
+            return reject(err);
+        }
+        //            date: r.ISO8601(queries.date),
+        if(queries.date &amp;&amp; typeCheck("Date", queries.date.from)) {
+            queries.date.from = moment(queries.date.from).toISOString()
+        }
+        if(queries.date &amp;&amp; typeCheck("Date", queries.date.to)) {
+            queries.date.to = moment(queries.date.to).toISOString()
+        }
+        return r_.table("bulkImports")
+        .filter((date) => {
+            if(queries.date &amp;&amp; queries.date.from &amp;&amp; queries.date.to) {
+                return date("date").during(r_.ISO8601(queries.date.from), r_.ISO8601(queries.date.to), {leftBound: "closed", rightBound: "closed"});
+            } else if(queries.date &amp;&amp; queries.date.from) {
+                return date("date").ge(r_.ISO8601(queries.date.from));
+            } else if(queries.date &amp;&amp; queries.date.to) {
+                return date("date").le(r_.ISO8601(queries.date.to));
+            } else {
+                return true;
+            }
+        })
+        .filter((row) => {
+            if(queries.name != undefined) {
+                return row("name").match("(?i)"+queries.name.replace(/\s/g,''))
+            } else {
+                return true;
+            }
+        })
+        .filter((row) => {
+            if(queries.type != undefined) {
+                return row("importType").eq(queries.type)
+            } else {
+                return true;
+            }
+        })
+        .run().then(resolve).catch(reject)
+    })
+}
+
+
+
+/**
+ * Functions for manupulating imported accunts. Assumes account importType
+ * @name accounts
+ * @inner
+ * @private
+ * @memberof js/import
+ * @property {Object} accounts
+ * @property {function} accounts.rollback - Deletes all accounts linked to a given import job
+ */
+var accounts = {};
+ /**
+ * Deletes all accounts linked to a given import job ID
+ * @function
+ * @memberof js/import
+ * @param {String} bulkID - Id of the bulk import.
+ * @param {Boolean} ignoreActivated - If true, activated accounts will be skipped.
+ * @returns {Promise} - Transaction Statement  
+ */
+ accounts.rollback = (bulkID, ignoreVerified) => {
+    return new Promise((resolve, reject) => {
+        return r_.table("accounts").filter((row) => {
+            return row("flags")("bulkImportID").eq(bulkID);
+        }).filter((row) => {
+            if(ignoreVerified) {
+                return row("isVerified").eq(false);
+            } else {
+                return true;
+            }
+        }).delete().run().then((trans) => {
+             if(trans.deleted > 0) {
+                r_.table("bulkImports").get(bulkID).update({rollback: {on: r_.now(), deleted: trans.deleted}}).run().then(() => {
+                    return resolve(trans);
+                }).catch((err)=>{return reject(err);});
+            } else {
+                return resolve(trans);
+            }
+        }).catch(reject);
+    })
+    
+    //
+ }
+
+//accounts.rollback("8e4a8ff9-5503-4e6f-920c-7b07f1109601", true).then((res)=>{console.log(res)}).catch((err)=>{console.error(err)});
+
+ /**
+ * Sends athe activation email to all unverified users.  
+ * @function
+ * @memberof js/import
+ * @param {String} bulkID - Id of the bulk import.
+ * @returns {Promise} - arg0: Accounts, arg1: sendActivationEmail Cursor
+ */
+accounts.sendActivation = (bulkID) => {
+    return new Promise((resolve, reject) => {
+        return r_.table("accounts")
+        .filter((row) => {
+            return row("flags")("bulkImportID").eq(bulkID);
+        })
+        .filter((row) => {
+            return row("isVerified").eq(false);
+        })
+        .withFields("id", "email", {name: "first"})
+        .map((doc) => {
+            return doc.merge({accountID: doc('id')}).without('id');
+        })
+        .map((doc) => {
+            return doc.merge({to: doc('email')}).without('email');
+        })
+        .run().then((accounts) => {
+            emailJS.sendActivationEmail(accounts).then((cur) => {
+                return resolve(accounts, cur)
+            }).catch(reject)
+            
+        }).catch(reject)
+    })
+}
+//accounts.sendActivation("089aa0ae-c8ab-42c2-9807-b6b6c6dc27de").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
+exports.accounts = accounts;
+
+//exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
+//exports.searchBulkLogs({name: "testFaculty"}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
+/** 
+* Takes in a flat array of messy named data and then maps it to a passport standard
+* @function mapAccounts
+* @link module:js/import
+* @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
+* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
+* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
+* @param {boolean} generatePassword - Will generate a password if the default rule for password is undefined.
+* @returns {Promise}
+*/
+exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePassword) {
+    return new Promise(function(resolve, reject) {
+        try {
+            var mappedData = arrayToMap.map(function(n) {
+                var returner = {};
+                returner.name = {};
+                if(!mapRule.name || !mapRule.name.first || !n[mapRule.name.first]) {
+                    if(defaultRule.name.first) {
+                        returner.name.first = defaultRule.name.first;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.first = n[mapRule.name.first];
+                }
+                if(!mapRule.name || !mapRule.name.last || !n[mapRule.name.last]) {
+                    if(defaultRule.name.last) {
+                        returner.name.last = defaultRule.name.last;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.last = n[mapRule.name.last];
+                }
+                if(!mapRule.name || !mapRule.name.salutation || !n[mapRule.name.salutation]) {
+                    if(defaultRule.name.salutation) {
+                        returner.name.salutation = defaultRule.name.salutation;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.name.salutation = n[mapRule.name.salutation];
+                }
+                if(!mapRule.schoolID  || !n[mapRule.schoolID]) {
+                    if(defaultRule.schoolID) {
+                        returner.schoolID = defaultRule.schoolID;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.schoolID = n[mapRule.schoolID];
+                }
+                if(!mapRule.email  || !n[mapRule.email]) {
+                    if(defaultRule.email) {
+                        returner.email = defaultRule.email;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.email = n[mapRule.email];
+                }
+                if(!mapRule.userGroup  || !n[mapRule.userGroup]) {
+                    if(defaultRule.userGroup) {
+                        returner.userGroup = defaultRule.userGroup;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.userGroup = n[mapRule.userGroup];
+                }
+                if(!mapRule.hasOwnProperty("isVerified")  || !n[mapRule.userGroup]) {
+                    if(defaultRule.hasOwnProperty("isVerified")) {
+                        returner.isVerified = defaultRule.isVerified;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.isVerified = n[mapRule.isVerified];
+                }
+
+                if(!mapRule.hasOwnProperty("graduationYear")  || !n[mapRule.graduationYear]) {
+                    if(defaultRule.hasOwnProperty("graduationYear")) {
+                        returner.graduationYear = defaultRule.graduationYear;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    returner.graduationYear = n[mapRule.graduationYear];
+                }
+
+                if(!mapRule.hasOwnProperty("password")  || !n[mapRule.password]) {
+                    if(defaultRule.hasOwnProperty("password")) {
+                        returner.password = defaultRule.password;
+                    } else {
+                        //generate password
+                        if(generatePassword == true) {
+                            returner.password = utils.generateSecureKey();
+                        } else {
+                           return null;
+                        }
+                        
+                    }
+                } else {
+                    returner.password = n[mapRule.password];
+                }
+
+                return returner;
+            })
+            results = mappedData.filter(function(v) {
+                return (v !== null);
+            })
+            return resolve(results);
+        } catch(err) {
+            return reject(err);
+        }
+
+
+    })
+
+    
+}
+
+/** 
+* Takes in an excel file and with some mapping rules, imports them to the accounts table
+* NOTE: Email domains are still must follow userGroup settings.
+* If the account cant be impoirted using the accountApi, the row is skipped
+* @function importAccountsExcel
+* @link module:js/import
+* @param {string} excelFilePath - The path to the excel file.
+* @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
+* @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}.  (NOTE: setting password to null will not initialize the account.  When the activation email is sent, the user will have to create a password)
+* @param {Object} jobProperties
+* @param {String} jobProperties.name - Name to identify this import as.
+* @param {boolean} jobProperties.generatePassword - Generates a password when no password is found in the excel sheet, and default rule is undefined for password.
+* @returns {Promise}
+*/
+exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobProperties) {
+    return new Promise(function(resolve, reject) {
+        if(Array.isArray(jobProperties) || typeof jobProperties != "object") {
+            var err = new TypeError("jobProperties must me an object");
+            return reject(err);
+        }
+        if(typeof jobProperties.name != "string") {
+            var err = new TypeError("jobProperties.name must me a string");
+            err.status = 400;
+            return reject(err);
+        }
+        //converting to json
+        convertExcel(excelFilePath, undefined, false, function(err, data) {
+            if(err) {
+                return reject(err);
+            }
+            exports.mapAccounts(data, mapRule, defaultRule, jobProperties.generatePassword).then(function(results) {
+                var errors = [];
+                var transPromice = [];
+                var imported = 0;
+                var initialized = 0;
+                if(results.length &lt;= 0) {
+                    var err = new TypeError("Excel can't be mapped");
+                    err.status = 500;
+                    return reject(err);
+                }
+                //logs this import job in the DB for easy rollback
+                newBulkLog(jobProperties.name, "account").then((jResp) => {
+                    if(jResp.inserted == 1) {
+                        //loop through mapped account data 
+                        for(var x = 0; x &lt; results.length; x++) {
+                            transPromice.push(new Promise(function(rRes, rRej) {
+                                var promRes = results[x];
+                                var flags = {}
+                                var newAccountOptions = {};
+                                newAccountOptions.skipEmail = true;
+                                newAccountOptions.allowNullPassword = true;
+                                newAccountOptions.generatePassword = false;
+                                flags.bulkImportID = jResp.generated_keys[0];
+
+
+                                accountAPI.createAccount({userGroup: results[x].userGroup, name: results[x].name, email: results[x].email, password: results[x].password, schoolID: results[x].schoolID, graduationYear: results[x].graduationYear, flags: flags}, newAccountOptions).then(function(transSummery) {
+                                    //promRes.password = undefined;
+                                    imported++;
+                                    if(promRes.password) {initialized++}
+                                    rRes({onUser: promRes, error: null});
+                            }).catch((err) => {
+                                if(err.status == 500) {
+                                    return reject(err); 
+                                } else {
+                                    //promRes.password = undefined;
+                                    errors.push(err)
+                                    rRes({onUser: promRes, error: err});
+                                }
+                            })}));
+
+                            //end 
+                            if(x >= results.length-1) {
+                                console.log(results.length, errors.length)
+                                Promise.all(transPromice).then(function(sumArray) {
+                                    var finalLog = [];
+                                    if(imported == 0) {
+                                        //deletes log if theere was nothing that could be imported
+                                        finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
+                                    } else {
+                                        //updates the log with more job info
+                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors, {totalInitialized: initialized}))
+                                    }
+                                    Promise.all(finalLog).then(() => {
+                                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported, totalInitialized: initialized});
+                                    }).catch((err) => {
+                                        return reject(err);
+                                    })
+                                    
+                                })
+                                //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
+                                
+                            }
+                        }
+                    } else {
+                        var err = new TypeError("Failed to log import job");
+                        err.status = 500;
+                        return reject(err);
+                    }
+                }).catch((err) => {
+                    return reject(err);
+                })
+                
+                
+            }).catch(function(err) {
+                return reject(err);
+            })
+        });
+    });
+}
+
+
+
+
+
+
+
+/**
+ * Json object that relates each required field to a key in another dataset.  If any key is null, it will fallback to the defaults.
+ * @typedef {Object} accountMapRule
+ * @property {Object} name
+ * @property {(string|null)} name.first - Key/Column name of the user's first name located in the unmapped json import source.
+ * @property {(string|null)} name.last - Key/Column name of the user's last name located in the unmapped json import source.
+ * @property {(string|null)} name.salutation - Key/Column name of the user's salutation located in the unmapped json import source.
+ * @property {(string|null)} schoolID - Key/Column name of the user's School ID located in the unmapped json import source.
+ * @property {(string|null)} graduationYear - Key/Column name of The user's Graduation Year located in the unmapped json import source.
+ * @property {(string|null)} email - Key/Column name of The user's email located in the unmapped json import source.
+ * @property {(string|null)} userGroup - Key/Column name of The user's userGroup constant from the configs located in the unmapped json import source.
+ * @property {(boolean|null)} isVerified - Because you are importing this, we recomend you set this to null.
+ * @property {(string|null)} password - Name of the Key/Column containing the passwords.
+ * @example
+ * {
+ *       name: {
+ *           first: "First Name",
+ *           last: "Last Name",
+ *           salutation: null
+ *       },
+ *       schoolID: "Faculty User Id",
+ *       graduationYear: null,
+ *       email: "E-Mail",
+ *       userGroup: null,
+ *       isVerified: null,
+ *       password: "Password"
+ *   }
+ */
+
+ /**
+ * Fallback for {@link accountMapRule}.
+ * If the key is undefined, and a user lacks a value from the array, the user will be skipped.
+ * @typedef {Object} accountDefaultRule
+ * @property {Object} name
+ * @property {(string|undefined)} name.first - The fallback first name
+ * @property {(string|undefined)} name.last - The fallback last name
+ * @property {(string|undefined)} name.salutation - The fallback salutation (We recommend Ind. as a good gender neutral salutation if you don't have the user's salutation on hand)
+ * @property {(string|undefined)} schoolID - The fallback schoolID,
+ * @property {(Number|undefined|null)} graduationYear - The fallback year the student graduates,
+ * @property {(string|undefined)} email - The fallback email,
+ * @property {(string|undefined|null)} userGroup - The fallback userGroup constant from your config files.
+ * @property {(boolean|undefined)} isVerified - Because you are importing this, we recomend you set this to true.
+ * @property {(string|undefined|null)} password - The fallback password to be hashed later.  Set this to null if you want the user to set their own passsword on account activation. (null is recommended)
+ * @example 
+ * {
+ *       name: {
+ *           salutation: "Ind."
+ *       },
+ *       userGroup: "teacher",
+ *       isVerified: true,
+ *       graduationYear: null,
+ *       isArchived: false,
+ *       password: null
+ *   }
+ */
+
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 30 2017 20:35:34 GMT+0000 (UTC) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
