@@ -26,6 +26,7 @@ var db = require("../db/index.js");
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 var validator = require("validator");
+var typeCheck = require("type-check").typeCheck;
 
 /**
     * Creates a new account
@@ -36,7 +37,7 @@ var validator = require("validator");
     * @param {userId} migrator - Id of the account moving between people
     * @param {userId} requester - Id of the account who requested the pass
     * @param {string} period
-    * @param {date} date
+    * @param {(date|ISOString)} date
     * @param {boolean} checkDupe - Sheck if there is an identical pass in the system already.
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
@@ -74,11 +75,11 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
             return done(err)
         }
     });
-    if(!moment(date, "Y-MM-DD", true).isValid()) {
-        var err = new Error("Date Not Valid");
+    if(!typeCheck("Date | ISODate", date, utils.typeCheck)) {
+        var err = new TypeError("date expected to be a \"Date\" or an ISODate. Got: " + typeof date);
             err.status = 400;
             return done(err)
-    } else {
+    } else if(typeCheck("Date", date)){
         date = moment(date).toISOString();
     }
     console.log(date)

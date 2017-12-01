@@ -64,7 +64,7 @@ function serializeUser(req, res, done) {
     *    "toPerson": (id Of Account)
     *    "migrator"; (id of account)
     *    "period": (a period constant)
-    *    "date": (an date in iso standered)
+    *    "date": (an date string in iso standered)
     * }
     *
     * @apiresponse {json} Returns rethink db action summery
