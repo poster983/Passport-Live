@@ -249,7 +249,14 @@ exports.distinctKeys = (arr) => {
     }, {}))
 }
 
-
+/**
+* Returns the current user's ID 
+* @link module:webpack/utils
+* @returns (String)
+*/
+exports.thisUser = () => {
+  return exports.getCookie("ACCOUNT-ID");
+}
 
 /***/ }),
 /* 1 */
@@ -2512,7 +2519,7 @@ var utils = __webpack_require__(0)
 var scheduleEditor = null;
 window.onload = function() {
 
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), false);
+    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), utils.thisUser());
     scheduleEditor.generate().catch(err => utils.throwError(err))
 }
 
@@ -2554,11 +2561,14 @@ class ScheduleEditor {
     generate() {
         return new Promise((resolve, reject) => {
             scheduleAPI.getSchedules(accountID).then((allSchedules) => {
-                console.log(allSchedules)
+                console.log(allSchedules);
+
             }).catch(reject);
         })
     }
 }
+
+module.exports = ScheduleEditor;
 
 /***/ }),
 /* 19 */

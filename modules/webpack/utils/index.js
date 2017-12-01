@@ -180,6 +180,11 @@ exports.distinctKeys = (arr) => {
     }, {}))
 }
 
+/**
+* Returns the current user's ID 
+* @link module:webpack/utils
+* @returns (String)
+*/
 exports.thisUser = () => {
-  //return exports.getCookie("")
+  return exports.getCookie("ACCOUNT-ID");
 }

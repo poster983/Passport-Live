@@ -33,8 +33,10 @@ class ScheduleEditor {
         return new Promise((resolve, reject) => {
             scheduleAPI.getSchedules(accountID).then((allSchedules) => {
                 console.log(allSchedules);
-                
+
             }).catch(reject);
         })
     }
 }
+
+module.exports = ScheduleEditor;

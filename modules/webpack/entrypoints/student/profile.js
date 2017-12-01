@@ -25,6 +25,6 @@ var utils = require("../../utils/index.js")
 var scheduleEditor = null;
 window.onload = function() {
 
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), false);
+    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), utils.thisUser());
     scheduleEditor.generate().catch(err => utils.throwError(err))
 }
