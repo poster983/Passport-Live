@@ -180,3 +180,6 @@ exports.distinctKeys = (arr) => {
     }, {}))
 }
 
+exports.thisUser = () => {
+  //return exports.getCookie("")
+}

@@ -32,7 +32,8 @@ class ScheduleEditor {
     generate() {
         return new Promise((resolve, reject) => {
             scheduleAPI.getSchedules(accountID).then((allSchedules) => {
-                console.log(allSchedules)
+                console.log(allSchedules);
+                
             }).catch(reject);
         })
     }
