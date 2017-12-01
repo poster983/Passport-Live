@@ -129,6 +129,39 @@ exports.throwError = (err) => {
 }
 
 /**
+* An wrapper for the fetch api to make code clean   
+* @link module:webpack/utils
+* @param (String) method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param (String) url - Url to send request to.
+* @param ({Object|undefined}) data
+* @param ({Object|undefined}) data.query - JSON key pair to add to the URL as a query
+* @param ({Object|undefined}) data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param ({Boolean|undefined}) data.head - Data to be sent as the header. Json object
+* @param ({Boolean|undefined}) data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns (Promise)
+*/
+exports.fetch = (method, url, data) => {
+  return new Promise((resolve, reject) => {
+    if(!data) {data = {}}
+    if(data.query) {data.query = "?" + utils.urlQuery(data.query)} else {data.query = ""}
+    if(!data.head) {data.head = {}}
+    if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
+    fetch(url + data.query, {
+          method: method,
+          headers: new Headers({
+            //"Content-Type": "application/json",
+            "x-xsrf-token": getCookie("XSRF-TOKEN")
+          }),
+          credentials: 'same-origin'
+      }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+        return resolve(json)
+      }).catch((err) => {
+        return reject(err);
+      })
+  })
+}
+
+/**
 * Parses a fetch response and either throws an error, or it returns a promise  
 * @link module:webpack/utils
 * @param (Response) response
@@ -142,7 +175,7 @@ exports.fetchStatus = (response) => {
     var error = new Error(response.statusText)
     error.isFetch = true;
     error.response = response;
-    errorHand(error)
+    //exports.throwError(error)
     throw error
   }
 }

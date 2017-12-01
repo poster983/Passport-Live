@@ -129,6 +129,39 @@ exports.throwError = (err) => {
 }
 
 /**
+* An wrapper for the fetch api to make code clean   
+* @link module:webpack/utils
+* @param (String) method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param (String) url - Url to send request to.
+* @param ({Object|undefined}) data
+* @param ({Object|undefined}) data.query - JSON key pair to add to the URL as a query
+* @param ({Object|undefined}) data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param ({Boolean|undefined}) data.head - Data to be sent as the header. Json object
+* @param ({Boolean|undefined}) data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns (Promise)
+*/
+exports.fetch = (method, url, data) => {
+  return new Promise((resolve, reject) => {
+    if(!data) {data = {}}
+    if(data.query) {data.query = "?" + utils.urlQuery(data.query)} else {data.query = ""}
+    if(!data.head) {data.head = {}}
+    if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
+    fetch(url + data.query, {
+          method: method,
+          headers: new Headers({
+            //"Content-Type": "application/json",
+            "x-xsrf-token": getCookie("XSRF-TOKEN")
+          }),
+          credentials: 'same-origin'
+      }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+        return resolve(json)
+      }).catch((err) => {
+        return reject(err);
+      })
+  })
+}
+
+/**
 * Parses a fetch response and either throws an error, or it returns a promise  
 * @link module:webpack/utils
 * @param (Response) response
@@ -142,7 +175,7 @@ exports.fetchStatus = (response) => {
     var error = new Error(response.statusText)
     error.isFetch = true;
     error.response = response;
-    errorHand(error)
+    //exports.throwError(error)
     throw error
   }
 }
@@ -2473,12 +2506,14 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var ScheduleEditor = __webpack_require__(18)
+var ScheduleEditor = __webpack_require__(18);
+var utils = __webpack_require__(0)
 
 var scheduleEditor = null;
 window.onload = function() {
 
-    scheduleEditor = new ScheduleEditor(false);
+    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), false);
+    scheduleEditor.generate().catch(err => utils.throwError(err))
 }
 
 /***/ }),
@@ -2508,12 +2543,64 @@ email: hi@josephhassell.com
 */
 
 var Table = __webpack_require__(10);
+var scheduleAPI = __webpack_require__(19);
 
 class ScheduleEditor {
-    constructor(isTeacher) {
+    constructor(formOutputContainer, accountID, isTeacher, options) {
+        this.container = formOutputContainer;
+        this.accountID = accountID;
         if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
-            
     }
+    generate() {
+        return new Promise((resolve, reject) => {
+            scheduleAPI.getSchedules(accountID).then((allSchedules) => {
+                console.log(allSchedules)
+            }).catch(reject);
+        })
+    }
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+/**
+* Browser Import Functions.
+* @module webpack/api/schedule
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule types for the user
+* @link module:webpack/api/schedule
+* @param {String} accountID
+* @returns {Promise}
+*/
+exports.getSchedules = (accountID) => {
+    return utils.fetch("GET", "/api/account/schedule/id/" + accountID, {auth: true})
 }
 
 /***/ })
