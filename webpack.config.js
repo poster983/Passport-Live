@@ -3,6 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
     entry: {
         administratorImport: "./modules/webpack/entrypoints/administrator/import.js",
+        studentProfile: "./modules/webpack/entrypoints/student/profile.js"
     },
     output: {
         path: __dirname + "/public/js/webpack",
