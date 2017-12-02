@@ -74,7 +74,7 @@ exports.throwError = (err) => {
 exports.fetch = (method, url, data) => {
   return new Promise((resolve, reject) => {
     if(!data) {data = {}}
-    if(data.query) {data.query = "?" + utils.urlQuery(data.query)} else {data.query = ""}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
     if(!data.head) {data.head = {}}
     if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
     fetch(url + data.query, {
@@ -84,7 +84,7 @@ exports.fetch = (method, url, data) => {
             "x-xsrf-token": getCookie("XSRF-TOKEN")
           }),
           credentials: 'same-origin'
-      }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
         return resolve(json)
       }).catch((err) => {
         return reject(err);
@@ -153,8 +153,8 @@ exports.setCookie = (cname, cvalue, exdays) => {
 * @param (String) cname - Name of the cookie
 * @returns (String)
 */
-exports.getCookie = (cname) => {
-    var name = cname + "=";
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -165,7 +165,11 @@ exports.getCookie = (cname) => {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
 }
 
 /**

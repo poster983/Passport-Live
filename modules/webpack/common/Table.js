@@ -103,6 +103,7 @@ class Table {
                         .append(tableHead)
                         .append(tableBody)
                     )
+                    resolve();
                 }).catch((err) => {
                     return reject(err);
                 })
@@ -173,7 +174,7 @@ class Table {
                     }, {})
                     
                 }
-                new Promise((resolve, reject) => {
+                new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
                         console.log("INJECTING")
@@ -181,22 +182,23 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
+                                    console.log(injected[a])
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
                                         row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
                                     }
                                     if(a >= injected.length-1) {
-                                        return resolve();
+                                        return resolveIn();
                                     }
                                 }
                             } else {
-                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
                             }
                             
                         })
                     } else {
-                        return resolve()
+                        return resolveIn()
                     }
                 }).then(() => {
                     let flatData = flat(row.shownData, {safe: true});

@@ -21,7 +21,7 @@ email: hi@josephhassell.com
 */
 
 /**
-* Browser Import Functions.
+* Browser Schedule Functions.
 * @module webpack/api/schedule
 */
 
@@ -30,9 +30,10 @@ var utils = require("../utils/index.js");
 /** 
 * Gets all schedule types for the user
 * @link module:webpack/api/schedule
-* @param {String} accountID
+* @param {(String|undefined)} accountID
 * @returns {Promise}
 */
 exports.getSchedules = (accountID) => {
-    return utils.fetch("GET", "/api/account/schedule/id/" + accountID, {auth: true})
+    if(accountID === undefined) {accountID = ""}
+    return utils.fetch("GET", "/api/account/schedule/" + accountID, {auth: true})
 }

@@ -551,21 +551,20 @@ router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: 
 
 
 /** GETs All account schedule types for an account
+    * If you dont give an ID, the user in the JWT will be assumed.
     * @function getAllSchedules
-    * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/id/:id/
+    * @api GET /api/account/schedule/{:id}
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+
+router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
     if(!req.params.id) {
-        var err = new Error("ID Required");
-        err.status = 400;
-        return next(err)
+        req.params.id = req.user.id;
     }
     var prom = [];
 
@@ -595,7 +594,6 @@ router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}),
         return next(err)
     });
 });
-
 
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation

@@ -143,7 +143,7 @@ exports.throwError = (err) => {
 exports.fetch = (method, url, data) => {
   return new Promise((resolve, reject) => {
     if(!data) {data = {}}
-    if(data.query) {data.query = "?" + utils.urlQuery(data.query)} else {data.query = ""}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
     if(!data.head) {data.head = {}}
     if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
     fetch(url + data.query, {
@@ -153,7 +153,7 @@ exports.fetch = (method, url, data) => {
             "x-xsrf-token": getCookie("XSRF-TOKEN")
           }),
           credentials: 'same-origin'
-      }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
         return resolve(json)
       }).catch((err) => {
         return reject(err);
@@ -222,8 +222,8 @@ exports.setCookie = (cname, cvalue, exdays) => {
 * @param (String) cname - Name of the cookie
 * @returns (String)
 */
-exports.getCookie = (cname) => {
-    var name = cname + "=";
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -234,7 +234,11 @@ exports.getCookie = (cname) => {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
 }
 
 /**
@@ -2058,6 +2062,7 @@ class Table {
                         .append(tableHead)
                         .append(tableBody)
                     )
+                    resolve();
                 }).catch((err) => {
                     return reject(err);
                 })
@@ -2128,7 +2133,7 @@ class Table {
                     }, {})
                     
                 }
-                new Promise((resolve, reject) => {
+                new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
                         console.log("INJECTING")
@@ -2136,22 +2141,23 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
+                                    console.log(injected[a])
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
                                         row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
                                     }
                                     if(a >= injected.length-1) {
-                                        return resolve();
+                                        return resolveIn();
                                     }
                                 }
                             } else {
-                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
                             }
                             
                         })
                     } else {
-                        return resolve()
+                        return resolveIn()
                     }
                 }).then(() => {
                     let flatData = flat(row.shownData, {safe: true});

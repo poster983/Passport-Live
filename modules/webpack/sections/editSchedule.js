@@ -22,18 +22,51 @@ email: hi@josephhassell.com
 
 var Table = require("../common/Table.js");
 var scheduleAPI = require("../api/schedule.js");
+var miscAPI = require("../api/misc.js");
+var utils = require("../utils/index.js");
 
 class ScheduleEditor {
-    constructor(formOutputContainer, accountID, isTeacher, options) {
+    constructor(formOutputContainer, isTeacher, options) {
         this.container = formOutputContainer;
-        this.accountID = accountID;
+        if(!options) {options = {}}
+        this.options = options;
         if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
     }
     generate() {
         return new Promise((resolve, reject) => {
-            scheduleAPI.getSchedules(accountID).then((allSchedules) => {
-                console.log(allSchedules);
-
+            let prom = [];
+            prom.push(miscAPI.getScheduleConfig());
+            prom.push(scheduleAPI.getSchedules(this.options.accountID))
+            Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
+                console.log(scheduleConfig, allSchedules);
+                if(this.type == "student") {
+                    let schedule = allSchedules.studentType;
+                    //data mapping 
+                    let tableArray = scheduleConfig.periods.map((per) => {
+                        return {Periods: per.toUpperCase()}
+                    })
+                    console.log(tableArray)
+                    //Table Gen
+                    let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
+                    let studentTable = new Table(this.container, tableArray, {
+                        inject: (row, callback) => {
+                            console.log("HI")
+                            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+                            return [
+                                {
+                                    column: "Teacher", 
+                                    strictColumn: true, 
+                                    dom: $("<span/>").append(
+                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass)
+                                    ).append(
+                                        $("<label/>").attr("for", autoID).html("Search Teachers")
+                                    )
+                                }
+                            ]
+                        }
+                    })
+                    studentTable.generate().then(() => console.log("done")).catch(reject)
+                }
             }).catch(reject);
         })
     }

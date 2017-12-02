@@ -294,7 +294,7 @@
         return new Promise(function(resolve, reject) {
           $.ajax({
             type: "get",
-            url: "/api/account/schedule/id/" + _userID.get(this) + "/",
+            url: "/api/account/schedule/" + _userID.get(this) + "/",
             dataType: "json",
             beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
             success: function(data) {resolve(data)}.bind(this),

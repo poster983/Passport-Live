@@ -143,7 +143,7 @@ exports.throwError = (err) => {
 exports.fetch = (method, url, data) => {
   return new Promise((resolve, reject) => {
     if(!data) {data = {}}
-    if(data.query) {data.query = "?" + utils.urlQuery(data.query)} else {data.query = ""}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
     if(!data.head) {data.head = {}}
     if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
     fetch(url + data.query, {
@@ -153,7 +153,7 @@ exports.fetch = (method, url, data) => {
             "x-xsrf-token": getCookie("XSRF-TOKEN")
           }),
           credentials: 'same-origin'
-      }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
         return resolve(json)
       }).catch((err) => {
         return reject(err);
@@ -222,8 +222,8 @@ exports.setCookie = (cname, cvalue, exdays) => {
 * @param (String) cname - Name of the cookie
 * @returns (String)
 */
-exports.getCookie = (cname) => {
-    var name = cname + "=";
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -234,7 +234,11 @@ exports.getCookie = (cname) => {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
 }
 
 /**
@@ -2058,6 +2062,7 @@ class Table {
                         .append(tableHead)
                         .append(tableBody)
                     )
+                    resolve();
                 }).catch((err) => {
                     return reject(err);
                 })
@@ -2128,7 +2133,7 @@ class Table {
                     }, {})
                     
                 }
-                new Promise((resolve, reject) => {
+                new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
                         console.log("INJECTING")
@@ -2136,22 +2141,23 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
+                                    console.log(injected[a])
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
                                         row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
                                     }
                                     if(a >= injected.length-1) {
-                                        return resolve();
+                                        return resolveIn();
                                     }
                                 }
                             } else {
-                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
                             }
                             
                         })
                     } else {
-                        return resolve()
+                        return resolveIn()
                     }
                 }).then(() => {
                     let flatData = flat(row.shownData, {safe: true});
@@ -2518,8 +2524,8 @@ var utils = __webpack_require__(0)
 
 var scheduleEditor = null;
 window.onload = function() {
-
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), utils.thisUser());
+    console.log(utils.thisUser())
+    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
     scheduleEditor.generate().catch(err => utils.throwError(err))
 }
 
@@ -2551,18 +2557,51 @@ email: hi@josephhassell.com
 
 var Table = __webpack_require__(10);
 var scheduleAPI = __webpack_require__(19);
+var miscAPI = __webpack_require__(20);
+var utils = __webpack_require__(0);
 
 class ScheduleEditor {
-    constructor(formOutputContainer, accountID, isTeacher, options) {
+    constructor(formOutputContainer, isTeacher, options) {
         this.container = formOutputContainer;
-        this.accountID = accountID;
+        if(!options) {options = {}}
+        this.options = options;
         if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
     }
     generate() {
         return new Promise((resolve, reject) => {
-            scheduleAPI.getSchedules(accountID).then((allSchedules) => {
-                console.log(allSchedules);
-
+            let prom = [];
+            prom.push(miscAPI.getScheduleConfig());
+            prom.push(scheduleAPI.getSchedules(this.options.accountID))
+            Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
+                console.log(scheduleConfig, allSchedules);
+                if(this.type == "student") {
+                    let schedule = allSchedules.studentType;
+                    //data mapping 
+                    let tableArray = scheduleConfig.periods.map((per) => {
+                        return {Periods: per.toUpperCase()}
+                    })
+                    console.log(tableArray)
+                    //Table Gen
+                    let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
+                    let studentTable = new Table(this.container, tableArray, {
+                        inject: (row, callback) => {
+                            console.log("HI")
+                            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+                            return [
+                                {
+                                    column: "Teacher", 
+                                    strictColumn: true, 
+                                    dom: $("<span/>").append(
+                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass)
+                                    ).append(
+                                        $("<label/>").attr("for", autoID).html("Search Teachers")
+                                    )
+                                }
+                            ]
+                        }
+                    })
+                    studentTable.generate().then(() => console.log("done")).catch(reject)
+                }
             }).catch(reject);
         })
     }
@@ -2597,7 +2636,7 @@ email: hi@josephhassell.com
 */
 
 /**
-* Browser Import Functions.
+* Browser Schedule Functions.
 * @module webpack/api/schedule
 */
 
@@ -2606,11 +2645,54 @@ var utils = __webpack_require__(0);
 /** 
 * Gets all schedule types for the user
 * @link module:webpack/api/schedule
-* @param {String} accountID
+* @param {(String|undefined)} accountID
 * @returns {Promise}
 */
 exports.getSchedules = (accountID) => {
-    return utils.fetch("GET", "/api/account/schedule/id/" + accountID, {auth: true})
+    if(accountID === undefined) {accountID = ""}
+    return utils.fetch("GET", "/api/account/schedule/" + accountID, {auth: true})
+}
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+/**
+* Browser Misc Functions.
+* @module webpack/api/misc
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule configs from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getScheduleConfig = () => {
+    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
 }
 
 /***/ })
