@@ -50,19 +50,18 @@ class ScheduleEditor {
                     let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
                     let studentTable = new Table(this.container, tableArray, {
                         inject: (row, callback) => {
-                            console.log("HI")
                             let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                            return [
+                            return callback([
                                 {
                                     column: "Teacher", 
                                     strictColumn: true, 
                                     dom: $("<span/>").append(
-                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass)
+                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass).attr("data-period", row.shownData.Periods.toLowerCase())
                                     ).append(
                                         $("<label/>").attr("for", autoID).html("Search Teachers")
                                     )
                                 }
-                            ]
+                            ])
                         }
                     })
                     studentTable.generate().then(() => console.log("done")).catch(reject)

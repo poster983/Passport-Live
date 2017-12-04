@@ -2039,7 +2039,7 @@ class Table {
                     for(let r = 0; r < rows.length; r++) {
                         let tr = $("<tr/>").attr("id", rows[r].rowID);
                         let bodyData = rows[r].getBody();
-                        console.log(bodyData)
+                        //console.log(bodyData)
                         //allign rows with correct columns 
                         for (let a = 0 ; a < columns.length; a++) {
                             tr.append($("<td/>").html(bodyData[columns[a]]));
@@ -2141,7 +2141,6 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
-                                    console.log(injected[a])
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
@@ -2162,7 +2161,7 @@ class Table {
                 }).then(() => {
                     let flatData = flat(row.shownData, {safe: true});
                     if(row.injectedData) {
-                        console.log(row.injectedData)
+                        //console.log(row.injectedData)
                         row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
                     } else {
                         row.shownKeys = Object.keys(flatData);
