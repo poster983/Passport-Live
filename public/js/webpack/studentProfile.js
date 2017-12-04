@@ -2650,6 +2650,7 @@ class ScheduleEditor {
                     let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
                     let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
                         inject: (row, callback) => {
+                            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
                             this._periodSelectElm(scheduleConfig.periods).then((sel) => {
                                 return callback([
                                     {
@@ -2659,8 +2660,36 @@ class ScheduleEditor {
                                         .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                                             $("#" + this.addRowButtonID).attr("disabled", false)
                                             studentTable.deleteRow(row.rowID)
-                                        }).append($("<i/>").addClass("material-icons").html("close")))
+                                        }).append($("<i/>").addClass("material-icons").html("delete")))
                                         .append(sel)
+                                    }, {
+                                        column: "Location",
+                                        strictColumn: true,
+                                        dom: $("<span/>")
+                                            /*.append($("<a/>").addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Teacher").on("click", () => {
+
+                                            }))*/
+                                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", false).css("transform", "translateY(0%)").on("click", (e) => {
+                                                if($(e.currentTarget).attr("data-location") == "true") {
+                                                    //close
+                                                    $("#" + this.addRowButtonID).attr("disabled", false)
+                                                    $("#" + autoID + "_DIV__").slideUp(500);
+                                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                                    $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                                } else {
+                                                    //open 
+                                                    $("#" + this.addRowButtonID).attr("disabled", true)
+                                                    $("#" + autoID + "_DIV__").slideDown(500);
+                                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                                    $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                                }
+                                                
+                                            }).append($("<i/>").addClass("material-icons").html("add_location")))
+                                            .append($("<p/>").html("  No set location").css("transform", "translateY(50%)"))
+                                            .append($("<div/>").addClass("input-field col s10").css("display", "none").attr("id", autoID + "_DIV__")
+                                                .append($("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass + " autocomplete").attr("data-autocomplete-period", null))
+                                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
+                                            )
                                     }
                                 ])
                             })
@@ -2713,28 +2742,19 @@ class ScheduleEditor {
 
     //checks every 
     _allSelectPeriodUnlockAdd() {
-        /*$("select." + this.periodSelectClass).each(function(i, e) {
-            console.log(this.value)
-            if(this.value.length < 1) {
-                $("#" + addRowButtonID).attr("disabled", true);
-                console.log("loop")
-                return false;
-            }
-        })*/
         let sel = $("select." + this.periodSelectClass);
         let prevVal = []
         for(let x = 0; x < sel.length; x++) {
-            console.log(sel[x])
-            console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))
+            /*console.log(sel[x])
+            console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))*/
             if(prevVal.includes(sel[x].value)){
                 $("#" + this.addRowButtonID).attr("disabled", true);
                 $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
                 $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");
-                console.log("no")
                 return false;
             } else {
                 $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close");
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete");
             }
             prevVal.push(sel[x].value)
             if(sel[x].value.length < 1) {
@@ -2744,7 +2764,7 @@ class ScheduleEditor {
                 return false;
             } else {
                 $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete")
             }
             if (x >= sel.length-1) {
                 $("#" + this.addRowButtonID).attr("disabled", false);
