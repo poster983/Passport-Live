@@ -2141,6 +2141,7 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
+                                    //console.log(injected)
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
@@ -2585,20 +2586,51 @@ class ScheduleEditor {
                     let studentTable = new Table(this.container, tableArray, {
                         inject: (row, callback) => {
                             let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+                            let enabledID = "__ACTIONS_ENABLED_" + utils.uuidv4()
+                            let enabledTeacherID = "__ACTIONS_ENABLED_TEACHER_" + utils.uuidv4()
                             return callback([
                                 {
                                     column: "Teacher", 
                                     strictColumn: true, 
                                     dom: $("<span/>").append(
-                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass).attr("data-period", row.shownData.Periods.toLowerCase())
+                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass + " autocomplete").attr("data-autocomplete-period", row.shownData.Periods.toLowerCase())
                                     ).append(
                                         $("<label/>").attr("for", autoID).html("Search Teachers")
+                                    )
+                                },
+                                {
+                                    column: "Actions", 
+                                    strictColumn: true,
+                                    dom: $("<span/>").append(
+                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-period", row.shownData.Periods.toLowerCase()).attr("id", enabledID).attr("checked", "checked")
+                                    ).append(
+                                        $("<label/>").attr("for", enabledID).html("Period Enabled")
+                                    ).append($("<br/>")).append(
+                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-teacher-period", row.shownData.Periods.toLowerCase()).attr("id", enabledTeacherID).attr("checked", "checked")
+                                    ).append(
+                                        $("<label/>").attr("for", enabledTeacherID).html("Have Teacher")
                                     )
                                 }
                             ])
                         }
                     })
-                    studentTable.generate().then(() => console.log("done")).catch(reject)
+                    studentTable.generate().then(() => {
+                        console.log("done");
+
+                        $('input.'+autocompleteClass).autocomplete({
+                            data: {
+                              "Apple": null,
+                              "Microsoft": null,
+                              "Google": 'https://placehold.it/250x250'
+                            },
+                            limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
+                            onAutocomplete: function(val) {
+                              // Callback function when value is autcompleted.
+                            },
+                            minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                        });
+        
+                    }).catch(reject)
                 }
             }).catch(reject);
         })

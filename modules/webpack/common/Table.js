@@ -129,6 +129,12 @@ class Table {
     parseRowID(TABLE_ROW_ID) {
         return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
     }
+    appendRow(data) {
+        this.addData(data);
+        this._sortData().then(({columns, rows}) => {
+            
+        })
+    }
     _sortData() {
         return new Promise((resolve, reject) => {
             var columnNames = [];
@@ -182,6 +188,7 @@ class Table {
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
                                 for(let a = 0; a < injected.length; a++) {
+                                    //console.log(injected)
                                     if(injected[a].strictColumn) {
                                         row.injectedData[injected[a].column] = injected[a].dom;
                                     } else {
@@ -230,9 +237,7 @@ class Table {
                         } else if(typeCheck("Function", this.options.sort)) {
                             columnNames.sort(this.options.sort);
                         }
-                        this.sortedColumns = columnNames;
-                        this.sortedData = rows;
-                        return resolve({columns: this.sortedColumns, rows: this.sortedData});
+                        return resolve({columns: columnNames, rows: rows});
                     }
                     
                 }).catch((err) => {throw err})
