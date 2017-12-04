@@ -1996,6 +1996,7 @@ var DeepKey = __webpack_require__(13);
 * @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
 * @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
 * @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {(Function|String[]|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -2009,12 +2010,13 @@ class Table {
         this.data = data;
         this.container = containerElement;
         this.options = options;
+        this.table = {};
     }
     generate() {
         return new Promise((resolve, reject) => {
-            this._sortData().then(({columns, rows}) => {
-                console.log(columns, "Col")
-                console.log(rows, "rows")
+            this._sortData(this.data).then(({columns, rows}) => {
+                /*console.log(columns, "Col")
+                console.log(rows, "rows")*/
                 var promises = [];
                 /**HEAD**/
                 let tableHead = $("<thead/>");
@@ -2032,11 +2034,13 @@ class Table {
                 }))
 
                 /**BODY**/
-                let tableBody = $("<tbody/>");
+                this.table.body = {};
+                this.table.body.id = "__TABLE_BODY_ID_" + utils.uuidv4() + "__"
+                let tableBody = $("<tbody/>").attr("id", this.table.body.id);
                 promises.push(new Promise((resolveRow, rejectRow) => {
 
                     //compile row
-                    for(let r = 0; r < rows.length; r++) {
+                    /*for(let r = 0; r < rows.length; r++) {
                         let tr = $("<tr/>").attr("id", rows[r].rowID);
                         let bodyData = rows[r].getBody();
                         //console.log(bodyData)
@@ -2054,7 +2058,11 @@ class Table {
 
                             }
                         }
-                    }
+                    }*/
+                    this._compileRow(columns, rows).then((tBody) => {
+                        tableBody.append(tBody);
+                        return resolveRow();
+                    }).catch(err => reject(err))
                 }))
 
                 Promise.all(promises).then(() => {
@@ -2062,12 +2070,45 @@ class Table {
                         .append(tableHead)
                         .append(tableBody)
                     )
+                    this.table.data = {
+                        head: columns,
+                        rows: rows
+                    }
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    
                     resolve();
                 }).catch((err) => {
                     return reject(err);
                 })
             });
         });
+    }
+    _compileRow(columns, rows) {
+        return new Promise((resolve, reject) => {
+            let tBody = [];
+            for(let r = 0; r < rows.length; r++) {
+                let tr = $("<tr/>").attr("id", rows[r].rowID);
+                let bodyData = rows[r].getBody();
+                //console.log(bodyData)
+                //allign rows with correct columns 
+                for (let a = 0 ; a < columns.length; a++) {
+                    tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                    if(a >= columns.length-1) {
+                        //push to body
+                        tBody.push(tr);
+                    }
+                    if(a >= columns.length-1 && r >= rows.length-1) {
+                        //push to body
+                        //console.log(tBody)
+                        return resolve(tBody);
+
+                    }
+                }
+            }
+        })
     }
     addData(newData) {
         if(!typeCheck("[Object]", newData)) {
@@ -2088,13 +2129,37 @@ class Table {
     parseRowID(TABLE_ROW_ID) {
         return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
     }
-    _sortData() {
+    getDirtyRowID(originalID) {
+        return "__TABLE_ROW_" + originalID + "__";
+    }
+    selectRowElm(TABLE_ROW_ID) {
+        return $("#"+TABLE_ROW_ID);
+    }
+    //no support for new columns yet.
+    appendRow(data) {
+        return new Promise((resolve, reject) => {
+            this.addData(data);
+            this._sortData(data).then(({rows}) => {
+                this._compileRow(this.table.data.head, rows).then((elements) => {
+                    $("#" + this.table.body.id).append(elements)
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    resolve();
+                })
+            })
+        })
+    }
+    deleteRow(TABLE_ROW_ID) {
+        this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    _sortData(data) {
         return new Promise((resolve, reject) => {
             var columnNames = [];
             var rows = [];
-            for(let x = 0; x < this.data.length; x++ ) {
+            for(let x = 0; x < data.length; x++ ) {
                 let row = {};
-                row.shownData = this.data[x];
+                row.shownData = data[x];
                 row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
                 //note ID
                 if(this.options.idKey && row.shownData[this.options.idKey]) {
@@ -2136,7 +2201,7 @@ class Table {
                 new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
-                        console.log("INJECTING")
+                        //console.log("INJECTING")
                         row.injectedData = {};
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
@@ -2177,7 +2242,7 @@ class Table {
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
-                    if(x >= this.data.length-1) {
+                    if(x >= data.length-1) {
                         //sort 
                         if(typeCheck("[String]", this.options.sort)) {
                             /*let reference_object = {};
@@ -2190,9 +2255,7 @@ class Table {
                         } else if(typeCheck("Function", this.options.sort)) {
                             columnNames.sort(this.options.sort);
                         }
-                        this.sortedColumns = columnNames;
-                        this.sortedData = rows;
-                        return resolve({columns: this.sortedColumns, rows: this.sortedData});
+                        return resolve({columns: columnNames, rows: rows});
                     }
                     
                 }).catch((err) => {throw err})
@@ -2566,22 +2629,138 @@ class ScheduleEditor {
         if(!options) {options = {}}
         this.options = options;
         if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
+        this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
+        this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
     }
     generate() {
         return new Promise((resolve, reject) => {
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
-            prom.push(scheduleAPI.getSchedules(this.options.accountID))
+            prom.push(scheduleAPI.getSchedules(this.options.accountID));
             Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
-                console.log(scheduleConfig, allSchedules);
+                //console.log(scheduleConfig, allSchedules);
                 if(this.type == "student") {
                     let schedule = allSchedules.studentType;
                     //data mapping 
-                    let tableArray = scheduleConfig.periods.map((per) => {
-                        return {Periods: per.toUpperCase()}
-                    })
-                    console.log(tableArray)
-                    //Table Gen
+                    /*let tableArray = scheduleConfig.periods.map((per) => {
+                        return {Periods: per.toUpperCase(), Location: ""}
+                    })*/
+                    //console.log(tableArray)
+
+                    let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
+                    let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
+                        inject: (row, callback) => {
+                            this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+                                return callback([
+                                    {
+                                        column: "Period",
+                                        strictColumn: true,
+                                        dom: $("<span/>")
+                                        .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
+                                            $("#" + this.addRowButtonID).attr("disabled", false)
+                                            studentTable.deleteRow(row.rowID)
+                                        }).append($("<i/>").addClass("material-icons").html("close")))
+                                        .append(sel)
+                                    }
+                                ])
+                            })
+                        },
+                        afterGenerate: () => {
+                            //INIT SELECT
+                            $('select').material_select();
+                        }
+                    });
+                    studentTable.generate().then(() => {
+                        //create new row button
+                        this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
+                            $("#" + this.addRowButtonID).attr("disabled", true)
+                            studentTable.appendRow([{}])
+                        }))
+
+                        this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+                            //
+                        })
+                    });
+                }
+            }).catch(reject);
+        })
+    }
+    _periodSelectElm(periods, selected) {
+        return new Promise((resolve, reject) => {
+            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
+                this._allSelectPeriodUnlockAdd();
+            });
+            if(selected) {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).html("Choose a period"));
+            } else {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).attr("selected", true).html("Choose a period"));
+            }
+            
+            for(let x = 0; x < periods.length; x++) {
+                if(periods[x] == selected) {
+                    sel.append($("<option/>").attr("value", periods[x]).attr("selected", true).html(periods[x].toUpperCase()))
+                } else {
+                    sel.append($("<option/>").attr("value", periods[x]).html(periods[x].toUpperCase()))
+                }
+                
+                if(x >= periods.length-1) {
+                    let div = $("<div/>").addClass("input-field col s10").append(sel);
+                    resolve(div);
+                }
+            }
+        });
+    }
+
+    //checks every 
+    _allSelectPeriodUnlockAdd() {
+        /*$("select." + this.periodSelectClass).each(function(i, e) {
+            console.log(this.value)
+            if(this.value.length < 1) {
+                $("#" + addRowButtonID).attr("disabled", true);
+                console.log("loop")
+                return false;
+            }
+        })*/
+        let sel = $("select." + this.periodSelectClass);
+        let prevVal = []
+        for(let x = 0; x < sel.length; x++) {
+            console.log(sel[x])
+            console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))
+            if(prevVal.includes(sel[x].value)){
+                $("#" + this.addRowButtonID).attr("disabled", true);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");
+                console.log("no")
+                return false;
+            } else {
+                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close");
+            }
+            prevVal.push(sel[x].value)
+            if(sel[x].value.length < 1) {
+                $("#" + this.addRowButtonID).attr("disabled", true);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline")
+                return false;
+            } else {
+                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close")
+            }
+            if (x >= sel.length-1) {
+                $("#" + this.addRowButtonID).attr("disabled", false);
+                return true;
+            }
+        }
+        
+
+    }
+}
+
+module.exports = ScheduleEditor;
+
+
+//STUDENT TEST CODE 
+/*//Table Gen
                     let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
                     let studentTable = new Table(this.container, tableArray, {
                         inject: (row, callback) => {
@@ -2602,7 +2781,7 @@ class ScheduleEditor {
                                     column: "Actions", 
                                     strictColumn: true,
                                     dom: $("<span/>").append(
-                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-period", row.shownData.Periods.toLowerCase()).attr("id", enabledID).attr("checked", "checked")
+                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-period", row.shownData.Periods.toLowerCase()).attr("id", enabledID).attr("checked", "checked").attr("onclick", "")
                                     ).append(
                                         $("<label/>").attr("for", enabledID).html("Period Enabled")
                                     ).append($("<br/>")).append(
@@ -2630,14 +2809,7 @@ class ScheduleEditor {
                             minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                         });
         
-                    }).catch(reject)
-                }
-            }).catch(reject);
-        })
-    }
-}
-
-module.exports = ScheduleEditor;
+                    }).catch(reject)*/
 
 /***/ }),
 /* 19 */

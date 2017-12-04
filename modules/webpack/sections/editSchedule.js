@@ -31,26 +31,121 @@ class ScheduleEditor {
         if(!options) {options = {}}
         this.options = options;
         if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
+        this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
+        this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
     }
     generate() {
         return new Promise((resolve, reject) => {
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
-            prom.push(scheduleAPI.getSchedules(this.options.accountID))
+            prom.push(scheduleAPI.getSchedules(this.options.accountID));
             Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
-                console.log(scheduleConfig, allSchedules);
+                //console.log(scheduleConfig, allSchedules);
                 if(this.type == "student") {
                     let schedule = allSchedules.studentType;
                     //data mapping 
-                    let tableArray = scheduleConfig.periods.map((per) => {
-                        return {Periods: per.toUpperCase()}
-                    })
-                    console.log(tableArray)
+                    /*let tableArray = scheduleConfig.periods.map((per) => {
+                        return {Periods: per.toUpperCase(), Location: ""}
+                    })*/
+                    //console.log(tableArray)
+
                     let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
-                    //let studentTable = new Table(this.container, tableArray, {
+                    let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
+                        inject: (row, callback) => {
+                            this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+                                return callback([
+                                    {
+                                        column: "Period",
+                                        strictColumn: true,
+                                        dom: $("<span/>")
+                                        .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
+                                            $("#" + this.addRowButtonID).attr("disabled", false)
+                                            studentTable.deleteRow(row.rowID)
+                                        }).append($("<i/>").addClass("material-icons").html("close")))
+                                        .append(sel)
+                                    }
+                                ])
+                            })
+                        },
+                        afterGenerate: () => {
+                            //INIT SELECT
+                            $('select').material_select();
+                        }
+                    });
+                    studentTable.generate().then(() => {
+                        //create new row button
+                        this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
+                            $("#" + this.addRowButtonID).attr("disabled", true)
+                            studentTable.appendRow([{}])
+                        }))
+
+                        this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+                            //
+                        })
+                    });
                 }
             }).catch(reject);
         })
+    }
+    _periodSelectElm(periods, selected) {
+        return new Promise((resolve, reject) => {
+            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
+                this._allSelectPeriodUnlockAdd();
+            });
+            if(selected) {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).html("Choose a period"));
+            } else {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).attr("selected", true).html("Choose a period"));
+            }
+            
+            for(let x = 0; x < periods.length; x++) {
+                if(periods[x] == selected) {
+                    sel.append($("<option/>").attr("value", periods[x]).attr("selected", true).html(periods[x].toUpperCase()))
+                } else {
+                    sel.append($("<option/>").attr("value", periods[x]).html(periods[x].toUpperCase()))
+                }
+                
+                if(x >= periods.length-1) {
+                    let div = $("<div/>").addClass("input-field col s10").append(sel);
+                    resolve(div);
+                }
+            }
+        });
+    }
+
+    //checks every 
+    _allSelectPeriodUnlockAdd() {
+        let sel = $("select." + this.periodSelectClass);
+        let prevVal = []
+        for(let x = 0; x < sel.length; x++) {
+            /*console.log(sel[x])
+            console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))*/
+            if(prevVal.includes(sel[x].value)){
+                $("#" + this.addRowButtonID).attr("disabled", true);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");
+                return false;
+            } else {
+                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close");
+            }
+            prevVal.push(sel[x].value)
+            if(sel[x].value.length < 1) {
+                $("#" + this.addRowButtonID).attr("disabled", true);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline")
+                return false;
+            } else {
+                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close")
+            }
+            if (x >= sel.length-1) {
+                $("#" + this.addRowButtonID).attr("disabled", false);
+                return true;
+            }
+        }
+        
+
     }
 }
 

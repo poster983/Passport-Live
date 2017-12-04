@@ -37,6 +37,7 @@ var DeepKey = require("deep-key");
 * @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
 * @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
 * @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {(Function|String[]|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -50,12 +51,13 @@ class Table {
         this.data = data;
         this.container = containerElement;
         this.options = options;
+        this.table = {};
     }
     generate() {
         return new Promise((resolve, reject) => {
-            this._sortData().then(({columns, rows}) => {
-                console.log(columns, "Col")
-                console.log(rows, "rows")
+            this._sortData(this.data).then(({columns, rows}) => {
+                /*console.log(columns, "Col")
+                console.log(rows, "rows")*/
                 var promises = [];
                 /**HEAD**/
                 let tableHead = $("<thead/>");
@@ -73,11 +75,13 @@ class Table {
                 }))
 
                 /**BODY**/
-                let tableBody = $("<tbody/>");
+                this.table.body = {};
+                this.table.body.id = "__TABLE_BODY_ID_" + utils.uuidv4() + "__"
+                let tableBody = $("<tbody/>").attr("id", this.table.body.id);
                 promises.push(new Promise((resolveRow, rejectRow) => {
 
                     //compile row
-                    for(let r = 0; r < rows.length; r++) {
+                    /*for(let r = 0; r < rows.length; r++) {
                         let tr = $("<tr/>").attr("id", rows[r].rowID);
                         let bodyData = rows[r].getBody();
                         //console.log(bodyData)
@@ -95,7 +99,11 @@ class Table {
 
                             }
                         }
-                    }
+                    }*/
+                    this._compileRow(columns, rows).then((tBody) => {
+                        tableBody.append(tBody);
+                        return resolveRow();
+                    }).catch(err => reject(err))
                 }))
 
                 Promise.all(promises).then(() => {
@@ -103,12 +111,45 @@ class Table {
                         .append(tableHead)
                         .append(tableBody)
                     )
+                    this.table.data = {
+                        head: columns,
+                        rows: rows
+                    }
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    
                     resolve();
                 }).catch((err) => {
                     return reject(err);
                 })
             });
         });
+    }
+    _compileRow(columns, rows) {
+        return new Promise((resolve, reject) => {
+            let tBody = [];
+            for(let r = 0; r < rows.length; r++) {
+                let tr = $("<tr/>").attr("id", rows[r].rowID);
+                let bodyData = rows[r].getBody();
+                //console.log(bodyData)
+                //allign rows with correct columns 
+                for (let a = 0 ; a < columns.length; a++) {
+                    tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                    if(a >= columns.length-1) {
+                        //push to body
+                        tBody.push(tr);
+                    }
+                    if(a >= columns.length-1 && r >= rows.length-1) {
+                        //push to body
+                        //console.log(tBody)
+                        return resolve(tBody);
+
+                    }
+                }
+            }
+        })
     }
     addData(newData) {
         if(!typeCheck("[Object]", newData)) {
@@ -129,19 +170,37 @@ class Table {
     parseRowID(TABLE_ROW_ID) {
         return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
     }
+    getDirtyRowID(originalID) {
+        return "__TABLE_ROW_" + originalID + "__";
+    }
+    selectRowElm(TABLE_ROW_ID) {
+        return $("#"+TABLE_ROW_ID);
+    }
+    //no support for new columns yet.
     appendRow(data) {
-        this.addData(data);
-        this._sortData().then(({columns, rows}) => {
-            
+        return new Promise((resolve, reject) => {
+            this.addData(data);
+            this._sortData(data).then(({rows}) => {
+                this._compileRow(this.table.data.head, rows).then((elements) => {
+                    $("#" + this.table.body.id).append(elements)
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    resolve();
+                })
+            })
         })
     }
-    _sortData() {
+    deleteRow(TABLE_ROW_ID) {
+        this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    _sortData(data) {
         return new Promise((resolve, reject) => {
             var columnNames = [];
             var rows = [];
-            for(let x = 0; x < this.data.length; x++ ) {
+            for(let x = 0; x < data.length; x++ ) {
                 let row = {};
-                row.shownData = this.data[x];
+                row.shownData = data[x];
                 row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
                 //note ID
                 if(this.options.idKey && row.shownData[this.options.idKey]) {
@@ -183,7 +242,7 @@ class Table {
                 new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
-                        console.log("INJECTING")
+                        //console.log("INJECTING")
                         row.injectedData = {};
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
@@ -224,7 +283,7 @@ class Table {
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
-                    if(x >= this.data.length-1) {
+                    if(x >= data.length-1) {
                         //sort 
                         if(typeCheck("[String]", this.options.sort)) {
                             /*let reference_object = {};
