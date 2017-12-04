@@ -61,7 +61,7 @@ class ScheduleEditor {
                                         .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                                             $("#" + this.addRowButtonID).attr("disabled", false)
                                             studentTable.deleteRow(row.rowID)
-                                        }).append($("<i/>").addClass("material-icons").html("close")))
+                                        }).append($("<i/>").addClass("material-icons").html("delete")))
                                         .append(sel)
                                     }
                                 ])
@@ -127,7 +127,7 @@ class ScheduleEditor {
                 return false;
             } else {
                 $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close");
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete");
             }
             prevVal.push(sel[x].value)
             if(sel[x].value.length < 1) {
@@ -137,7 +137,7 @@ class ScheduleEditor {
                 return false;
             } else {
                 $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("close")
+                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete")
             }
             if (x >= sel.length-1) {
                 $("#" + this.addRowButtonID).attr("disabled", false);
