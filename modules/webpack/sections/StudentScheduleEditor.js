@@ -58,36 +58,31 @@ class StudentScheduleEditor {
                     }
                 })
                 //console.log(scheduleConfig, allSchedules);
-                let schedule = allSchedules.studentType;
-                let initInject = {}
-                if(schedule) {
-                    let periods = Object.keys(schedule.schedule);
-                    for(var x = 0; x < periods.length; x++) {
-                        this._periodSelectElm(scheduleConfig.periods, periods[x]).then((sel) => {
-                            initInject.Periods = $("<")
-                        })
-                    }
-                }
+                
                 //data mapping 
                 
                 //console.log(tableArray)
 
-                
-                let studentTable = new Table(this.container, [{}], {
-                    preferInject: false,
-                    inject: (row, callback) => {
-                        let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                        this._periodSelectElm(scheduleConfig.periods).then((sel) => {
-                            return callback([
-                                {
-                                    column: "Period",
-                                    strictColumn: true,
-                                    dom: $("<span/>")
+                /*$("<span/>")
                                     .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                                         $("#" + this.addRowButtonID).attr("disabled", false)
                                         studentTable.deleteRow(row.rowID)
                                     }).append($("<i/>").addClass("material-icons").html("delete")))
-                                    .append(sel)
+                                    .append(sel)*/
+
+                let studentTable = new Table(this.container, [{}], {
+                    preferInject: false,
+                    idKey: "id",
+                    ignoredKeys: ["id"],
+                    inject: (row, callback) => {
+                        let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+                        this._periodDom(studentTable, row.rowID, scheduleConfig.periods).then((perDom) => {
+                            return callback([
+                                {
+                                    column: "Period",
+                                    strictColumn: true,
+                                    dom: perDom
+
                                 }, {
                                     column: "Location",
                                     strictColumn: true,
@@ -142,13 +137,31 @@ class StudentScheduleEditor {
                         }).catch(err => reject(err))
                     }
                 });
+
                 studentTable.generate().then(() => {
+                    //Import existing schedule
+                    let schedule = allSchedules.studentType;
+                    let initInject = []
+                    if(schedule) {
+                        let periods = Object.keys(schedule.schedule);
+                        for(var x = 0; x < periods.length; x++) {
+                            this._periodDom(studentTable, utils.uuidv4(), scheduleConfig.periods, periods[x]).then((sel) => {
+                                initInject.push({Periods: $("<span/>").append(sel).html()});
+                            })
+                            if(x >= periods.length-1) {
+                                // console.log(initInject)
+                                studentTable.appendRow(initInject)
+                            }
+                        }
+                    }
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
                         studentTable.appendRow([{}])
                     }))
                 });
+
+
             }).catch(reject);
         })
     }
@@ -179,7 +192,7 @@ class StudentScheduleEditor {
     }
     _periodDom(tableObject, rowID, periods, selected) {
         return new Promise((resolve, reject) => {
-            this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+            this._periodSelectElm(periods).then((sel) => {
                 return resolve($("<span/>")
                 .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                     $("#" + this.addRowButtonID).attr("disabled", false)
@@ -187,7 +200,7 @@ class StudentScheduleEditor {
                 }).append($("<i/>").addClass("material-icons").html("delete")))
                 .append(sel));
             }).catch(err => reject(err))
-        }
+        })
     }
 
     //checks every 

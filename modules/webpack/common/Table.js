@@ -182,14 +182,16 @@ class Table {
         return new Promise((resolve, reject) => {
             this.addData(data);
             this._sortData(data).then(({rows}) => {
+                console.log(rows, "row")
                 this._compileRow(this.table.data.head, rows).then((elements) => {
                     $("#" + this.table.body.id).append(elements)
+                    console.log(elements)
                     if(typeCheck("Function", this.options.afterGenerate)) {
                         this.options.afterGenerate();
                     }
                     resolve();
-                })
-            })
+                }).catch(err => reject(err))
+            }).catch(err => reject(err))
         })
     }
     deleteRow(TABLE_ROW_ID) {
