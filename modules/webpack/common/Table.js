@@ -37,7 +37,8 @@ var DeepKey = require("deep-key");
 * @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
 * @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
 * @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
-* @param {(Function|String[]|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -269,7 +270,12 @@ class Table {
                     let flatData = flat(row.shownData, {safe: true});
                     if(row.injectedData) {
                         //console.log(row.injectedData)
-                        row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        if(this.options.preferInject) {
+                            row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        } else {
+                            row.shownKeys = [...new Set([...Object.keys(row.injectedData), ...Object.keys(flatData)])];
+                        }
+                        
                     } else {
                         row.shownKeys = Object.keys(flatData);
                     }
@@ -279,7 +285,7 @@ class Table {
 
 
                     // add helper functions
-                    row.getBody = () => {return Object.assign(flatData, row.injectedData)}
+                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")

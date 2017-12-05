@@ -1996,7 +1996,8 @@ var DeepKey = __webpack_require__(13);
 * @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
 * @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
 * @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
-* @param {(Function|String[]|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -2228,7 +2229,12 @@ class Table {
                     let flatData = flat(row.shownData, {safe: true});
                     if(row.injectedData) {
                         //console.log(row.injectedData)
-                        row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        if(this.options.preferInject) {
+                            row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        } else {
+                            row.shownKeys = [...new Set([...Object.keys(row.injectedData), ...Object.keys(flatData)])];
+                        }
+                        
                     } else {
                         row.shownKeys = Object.keys(flatData);
                     }
@@ -2238,7 +2244,7 @@ class Table {
 
 
                     // add helper functions
-                    row.getBody = () => {return Object.assign(flatData, row.injectedData)}
+                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
@@ -2632,6 +2638,7 @@ class StudentScheduleEditor {
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
+        this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
     }
     generate() {
         return new Promise((resolve, reject) => {
@@ -2656,15 +2663,20 @@ class StudentScheduleEditor {
                 })
                 //console.log(scheduleConfig, allSchedules);
                 let schedule = allSchedules.studentType;
+                if(schedule) {
+                    let periods = Object.keys(schedule.schedule);
+                    //for()
+                }
                 //data mapping 
                 
                 //console.log(tableArray)
 
                 
-                let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
+                let studentTable = new Table(this.container, [{}], {
+                    preferInject: false,
                     inject: (row, callback) => {
                         let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                        this._periodSelectElm(scheduleConfig.periods).then((sel) => {
+                        this._periodSelectElm(scheduleConfig.periods, ).then((sel) => {
                             return callback([
                                 {
                                     column: "Period",
@@ -2719,9 +2731,10 @@ class StudentScheduleEditor {
                             $('input.'+this.autocompleteClass).autocomplete({
                                 data: locationAutocompleteData,
                                 limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
-                                onAutocomplete: function(val) {
+                                onAutocomplete: (val) => {
                                   // Callback function when value is autcompleted.
                                   console.log(val)
+                                  this.checkValidity().catch(err => reject(err))
                                 },
                                 minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
                             });
@@ -2770,29 +2783,14 @@ class StudentScheduleEditor {
             let sel = $("select." + this.periodSelectClass);
             let prevVal = []
             for(let x = 0; x < sel.length; x++) {
-                /*console.log(sel[x])
-                console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))*/
                 if(prevVal.includes(sel[x].value)){
-                    /*$("#" + this.addRowButtonID).attr("disabled", true);
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");*/
                     return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
-                } /*else {
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete");
-                }*/
+                }
                 prevVal.push(sel[x].value)
                 if(sel[x].value.length < 1) {
-                    /*$("#" + this.addRowButtonID).attr("disabled", true);
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline")*/
                     return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")});
-                } /*else {
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete")
-                }*/
+                }
                 if (x >= sel.length-1) {
-                   
                     return resolve({valid: true});
                 }
             }
@@ -2806,7 +2804,7 @@ class StudentScheduleEditor {
                 let button = $(sel[x]).parentsUntil("td").find("a[data-location]");
                 if(button.attr("data-location") == "true") {
                     //location enabled
-                    if(sel[x].value.length < 1) {
+                    if(sel[x].value.length < 1 || sel[x].value.search(this.autocompleteREGEX) < 0) {
                         return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
                     }
                 }
