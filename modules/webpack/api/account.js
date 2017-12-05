@@ -19,12 +19,19 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var ScheduleEditor = require("../../sections/StudentScheduleEditor.js");
-var utils = require("../../utils/index.js")
+/**
+* Browser Import Functions.
+* @module webpack/api/accounts
+*/
 
-var scheduleEditor = null;
-window.onload = function() {
-    console.log(utils.thisUser())
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-    scheduleEditor.generate().catch(err => utils.throwError(err))
+var utils = require("../utils/index.js");
+
+
+/** 
+* Gets all accounts with classes from the server.
+* @link module:webpack/api/accounts
+* @returns {Promise}
+*/
+exports.getWithClasses = () => {
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
 }

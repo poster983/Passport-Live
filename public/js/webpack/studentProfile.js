@@ -2620,16 +2620,17 @@ email: hi@josephhassell.com
 
 var Table = __webpack_require__(10);
 var scheduleAPI = __webpack_require__(19);
-var miscAPI = __webpack_require__(20);
+var accountAPI = __webpack_require__(20);
+var miscAPI = __webpack_require__(21);
 var utils = __webpack_require__(0);
 
-class ScheduleEditor {
-    constructor(formOutputContainer, isTeacher, options) {
+class StudentScheduleEditor {
+    constructor(formOutputContainer, options) {
         this.container = formOutputContainer;
         if(!options) {options = {}}
         this.options = options;
-        if(isTeacher) {this.type = "teacher"} else {this.type = "student"}
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
+        this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
     }
     generate() {
@@ -2637,87 +2638,110 @@ class ScheduleEditor {
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
             prom.push(scheduleAPI.getSchedules(this.options.accountID));
-            Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
-                //console.log(scheduleConfig, allSchedules);
-                if(this.type == "student") {
-                    let schedule = allSchedules.studentType;
-                    //data mapping 
-                    /*let tableArray = scheduleConfig.periods.map((per) => {
-                        return {Periods: per.toUpperCase(), Location: ""}
-                    })*/
-                    //console.log(tableArray)
-
-                    let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
-                    let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
-                        inject: (row, callback) => {
-                            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                            this._periodSelectElm(scheduleConfig.periods).then((sel) => {
-                                return callback([
-                                    {
-                                        column: "Period",
-                                        strictColumn: true,
-                                        dom: $("<span/>")
-                                        .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
-                                            $("#" + this.addRowButtonID).attr("disabled", false)
-                                            studentTable.deleteRow(row.rowID)
-                                        }).append($("<i/>").addClass("material-icons").html("delete")))
-                                        .append(sel)
-                                    }, {
-                                        column: "Location",
-                                        strictColumn: true,
-                                        dom: $("<span/>")
-                                            /*.append($("<a/>").addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Teacher").on("click", () => {
-
-                                            }))*/
-                                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", false).css("transform", "translateY(0%)").on("click", (e) => {
-                                                if($(e.currentTarget).attr("data-location") == "true") {
-                                                    //close
-                                                    $("#" + this.addRowButtonID).attr("disabled", false)
-                                                    $("#" + autoID + "_DIV__").slideUp(500);
-                                                    $(e.currentTarget).siblings("p").slideDown(500)
-                                                    $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
-                                                } else {
-                                                    //open 
-                                                    $("#" + this.addRowButtonID).attr("disabled", true)
-                                                    $("#" + autoID + "_DIV__").slideDown(500);
-                                                    $(e.currentTarget).siblings("p").slideUp(500)
-                                                    $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
-                                                }
-                                                
-                                            }).append($("<i/>").addClass("material-icons").html("add_location")))
-                                            .append($("<p/>").html("  No set location").css("transform", "translateY(50%)"))
-                                            .append($("<div/>").addClass("input-field col s10").css("display", "none").attr("id", autoID + "_DIV__")
-                                                .append($("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass + " autocomplete").attr("data-autocomplete-period", null))
-                                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
-                                            )
-                                    }
-                                ])
-                            })
-                        },
-                        afterGenerate: () => {
-                            //INIT SELECT
-                            $('select').material_select();
+            prom.push(accountAPI.getWithClasses());
+            Promise.all(prom).then(([scheduleConfig, allSchedules, allClassAccounts]) => {
+                this.allClassAccounts = allClassAccounts;
+                let locationAutocompleteData = {};
+                let doneMappingAutoData = new Promise((res) => {
+                    for(let x = 0; x < this.allClassAccounts.length; x++) {
+                        if(this.allClassAccounts[x].name.salutation) {
+                            locationAutocompleteData[this.allClassAccounts[x].name.salutation + ' ' + this.allClassAccounts[x].name.first + ' ' + this.allClassAccounts[x].name.last + ' --- ' + this.allClassAccounts[x].email] = null;
+                        } else {
+                            locationAutocompleteData[this.allClassAccounts[x].name.first + ' ' + this.allClassAccounts[x].name.last + ' --- ' + this.allClassAccounts[x].email] = null;
                         }
-                    });
-                    studentTable.generate().then(() => {
-                        //create new row button
-                        this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
-                            $("#" + this.addRowButtonID).attr("disabled", true)
-                            studentTable.appendRow([{}])
-                        }))
+                        if(x >= this.allClassAccounts.length-1) {
+                            return res();
+                        }
+                    }
+                })
+                //console.log(scheduleConfig, allSchedules);
+                let schedule = allSchedules.studentType;
+                //data mapping 
+                
+                //console.log(tableArray)
 
+                
+                let studentTable = new Table(this.container, [{Period: " ", Location: "dkslfjafkjsdklafjlkasdjfasjdflk"}], {
+                    inject: (row, callback) => {
+                        let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
                         this._periodSelectElm(scheduleConfig.periods).then((sel) => {
-                            //
+                            return callback([
+                                {
+                                    column: "Period",
+                                    strictColumn: true,
+                                    dom: $("<span/>")
+                                    .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
+                                        $("#" + this.addRowButtonID).attr("disabled", false)
+                                        studentTable.deleteRow(row.rowID)
+                                    }).append($("<i/>").addClass("material-icons").html("delete")))
+                                    .append(sel)
+                                }, {
+                                    column: "Location",
+                                    strictColumn: true,
+                                    dom: $("<span/>")
+                                        /*.append($("<a/>").addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Teacher").on("click", () => {
+
+                                        }))*/
+                                        .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", false).css("transform", "translateY(0%)").on("click", (e) => {
+                                            if($(e.currentTarget).attr("data-location") == "true") {
+                                                //close
+                                                
+                                                //$("#" + this.addRowButtonID).attr("disabled", false)
+                                                $("#" + autoID + "_DIV__").slideUp(500);
+                                                $(e.currentTarget).siblings("p").slideDown(500)
+                                                $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                                this.checkValidity().catch(err => reject(err))
+                                            } else {
+                                                //open 
+                                                
+                                                $("#" + autoID + "_DIV__").slideDown(500);
+                                                $(e.currentTarget).siblings("p").slideUp(500)
+                                                $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                                this.checkValidity().catch(err => reject(err))
+                                            }
+                                            
+                                        }).append($("<i/>").addClass("material-icons").html("add_location")))
+                                        .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)"))
+                                        .append($("<div/>").addClass("input-field col s10").css("display", "none").attr("id", autoID + "_DIV__")
+                                            .append($("<input/>").attr("type", "text").attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").attr("data-autocomplete-period", null).on("keyup", (e) => {
+                                                this.checkValidity().catch(err => reject(err))
+                                            }))
+                                            .append($("<label/>").attr("for", autoID).html("Search Teachers"))
+                                        )
+                                }
+                            ])
                         })
-                    });
-                }
+                    },
+                    afterGenerate: () => {
+                        //INIT SELECT
+                        $('select').material_select();
+                        doneMappingAutoData.then(() => {
+                            $('input.'+this.autocompleteClass).autocomplete({
+                                data: locationAutocompleteData,
+                                limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
+                                onAutocomplete: function(val) {
+                                  // Callback function when value is autcompleted.
+                                  console.log(val)
+                                },
+                                minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                            });
+                        }).catch(err => reject(err))
+                    }
+                });
+                studentTable.generate().then(() => {
+                    //create new row button
+                    this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
+                        $("#" + this.addRowButtonID).attr("disabled", true)
+                        studentTable.appendRow([{}])
+                    }))
+                });
             }).catch(reject);
         })
     }
     _periodSelectElm(periods, selected) {
         return new Promise((resolve, reject) => {
             let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
-                this._allSelectPeriodUnlockAdd();
+                this.checkValidity().catch(err => reject(err))
             });
             if(selected) {
                 sel.append($("<option/>").attr("value", "").attr("disabled", true).html("Choose a period"));
@@ -2741,42 +2765,89 @@ class ScheduleEditor {
     }
 
     //checks every 
-    _allSelectPeriodUnlockAdd() {
-        let sel = $("select." + this.periodSelectClass);
-        let prevVal = []
-        for(let x = 0; x < sel.length; x++) {
-            /*console.log(sel[x])
-            console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))*/
-            if(prevVal.includes(sel[x].value)){
-                $("#" + this.addRowButtonID).attr("disabled", true);
-                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");
-                return false;
-            } else {
-                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete");
+    _checkPeriodSelect() {
+        return new Promise((resolve, reject) => {
+            let sel = $("select." + this.periodSelectClass);
+            let prevVal = []
+            for(let x = 0; x < sel.length; x++) {
+                /*console.log(sel[x])
+                console.log($(sel[x]).parentsUntil("td").find("a.delete-row").find("i"))*/
+                if(prevVal.includes(sel[x].value)){
+                    /*$("#" + this.addRowButtonID).attr("disabled", true);
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline");*/
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                } /*else {
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete");
+                }*/
+                prevVal.push(sel[x].value)
+                if(sel[x].value.length < 1) {
+                    /*$("#" + this.addRowButtonID).attr("disabled", true);
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline")*/
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")});
+                } /*else {
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
+                    $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete")
+                }*/
+                if (x >= sel.length-1) {
+                   
+                    return resolve({valid: true});
+                }
             }
-            prevVal.push(sel[x].value)
-            if(sel[x].value.length < 1) {
-                $("#" + this.addRowButtonID).attr("disabled", true);
-                $(sel[x]).parentsUntil("td").find("a.delete-row").addClass("pulse red").fadeIn(1000);
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("error_outline")
-                return false;
-            } else {
-                $(sel[x]).parentsUntil("td").find("a.delete-row").removeClass("pulse red")
-                $(sel[x]).parentsUntil("td").find("a.delete-row").find("i").html("delete")
+        });
+    }
+    _checkLocation() {
+        return new Promise((resolve, reject) => {
+            let sel = $("input." + this.autocompleteClass);
+            for(let x = 0; x < sel.length; x++) {
+                //console.log("CURRENT ELEMENT", sel);
+                let button = $(sel[x]).parentsUntil("td").find("a[data-location]");
+                if(button.attr("data-location") == "true") {
+                    //location enabled
+                    if(sel[x].value.length < 1) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                }
+                //is finished
+                if(x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
             }
-            if (x >= sel.length-1) {
+        });
+    }
+    checkValidity() {
+        return new Promise((resolve, reject) => {
+            let prom = [];
+            prom.push(this._checkPeriodSelect());
+            prom.push(this._checkLocation());
+            
+            Promise.all(prom).then(([periodRes, locationRes]) => {
+                console.log(locationRes)
+                $("a[data-location]").removeClass("pulse red").fadeIn(1000);
+                $("a.delete-row").removeClass("pulse red").fadeIn(1000);
+                if(!locationRes.valid) {
+                    locationRes.problemRowElement.find("a[data-location]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(locationRes);
+                } 
+                if(!periodRes.valid) {
+                    periodRes.problemRowElement.find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(periodRes);
+                }
+                
+                
                 $("#" + this.addRowButtonID).attr("disabled", false);
-                return true;
-            }
-        }
+                return resolve({valid: true});
+            }).catch(err => reject(err));
         
-
+        })
     }
 }
 
-module.exports = ScheduleEditor;
+module.exports = StudentScheduleEditor;
 
 
 //STUDENT TEST CODE 
@@ -2877,6 +2948,48 @@ exports.getSchedules = (accountID) => {
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser Import Functions.
+* @module webpack/api/accounts
+*/
+
+var utils = __webpack_require__(0);
+
+
+/** 
+* Gets all accounts with classes from the server.
+* @link module:webpack/api/accounts
+* @returns {Promise}
+*/
+exports.getWithClasses = () => {
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
+}
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
