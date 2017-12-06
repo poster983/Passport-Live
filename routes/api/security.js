@@ -112,6 +112,7 @@ router.post('/key/API', function handleNewApiKey(req, res, next) {
 
 router.get('/key/:type', function getPermissionKeyData(req, res, next) {
     var key = req.query.key;
+    var type = req.params.type;
     if(!typeCheck("String", key)) {
         var err = TypeError("Query \"key\" must be a string.  Got " + typeof key);
         err.status = 400;
