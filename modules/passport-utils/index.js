@@ -108,24 +108,6 @@ exports.dscm = function(req, res, next) {
     
 }
 
- /**
-    * Checks if period is a period constant  
-    * @function checkPeriod
-    * @link module:js/utils
-    * @param {string} period - a single period to check against the configs. 
-    * @param {function} done - callback. 
-    * @returns {done} Includes error, and a boolean.  True for valid period, false for not
-    */
-exports.checkPeriod = function(period, done) {
-    var periodConst = config.get("schedule.periods");
-    if(periodConst.includes(period)) {
-        return done(null, true);
-    } else {
-        return done(null, false);
-    }
-}
-
-
      /**
         * Checks if period is a period constant  
         * @function checkPeriod

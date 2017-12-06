@@ -31,7 +31,7 @@ var config = require("config");
 var ssarv = require("ssarv")
 
 var miscApi = require("../../modules/passport-api/index.js");
-
+var securityJS = require("../../modules/passport-api/security.js")
 
 var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passApi = require("../../modules/passport-api/passes.js");
@@ -103,19 +103,20 @@ function serializeUser(req, res, done) {
                         err.status = 403;
                         reject(err);
                 }
-                miscApi.checkPermissionKey(r.conn(), permissionKey, function(err, data) {
-                    if(err) {
-                        reject(err);
-                    } 
+                securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.NEW_ACCOUNT, permissionKey).then((data) => {
                     //CHeck  if usergroup is present
-                    else if(!data.permissions.userGroups.includes(userGroup)) {
+                    if(!data) {
+                        var err = new Error("Invalid Key");
+                        err.status = 400;
+                        return reject(err);
+                    } else if(!data.permissions.userGroups.includes(userGroup)) {
                         var err = new Error("Permission Needed");
                         err.status = 403;
-                        reject(err);
+                        return reject(err);
                     } else {
-                        resolve();
+                        securityJS.keyUsed(securityJS.permissionKeyType.NEW_ACCOUNT, permissionKey).then(() => {return resolve();}).catch(err => reject(err));
                     }
-                });
+                }).catch(err => reject(err));
             } else {
                 resolve();
             }
