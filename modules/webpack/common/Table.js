@@ -54,9 +54,9 @@ class Table {
         this.options = options;
         this.table = {};
     }
-    generate() {
+    generate(injectOnce) {
         return new Promise((resolve, reject) => {
-            this._sortData(this.data).then(({columns, rows}) => {
+            this._sortData(this.data, injectOnce).then(({columns, rows}) => {
                 /*console.log(columns, "Col")
                 console.log(rows, "rows")*/
                 var promises = [];
@@ -178,14 +178,12 @@ class Table {
         return $("#"+TABLE_ROW_ID);
     }
     //no support for new columns yet.
-    appendRow(data) {
+    appendRow(data, injectOnce) {
         return new Promise((resolve, reject) => {
             this.addData(data);
-            this._sortData(data).then(({rows}) => {
-                console.log(rows, "row")
+            this._sortData(data, injectOnce).then(({rows}) => {
                 this._compileRow(this.table.data.head, rows).then((elements) => {
                     $("#" + this.table.body.id).append(elements)
-                    console.log(elements)
                     if(typeCheck("Function", this.options.afterGenerate)) {
                         this.options.afterGenerate();
                     }
@@ -197,7 +195,7 @@ class Table {
     deleteRow(TABLE_ROW_ID) {
         this.selectRowElm(TABLE_ROW_ID).remove();
     }
-    _sortData(data) {
+    _sortData(data, injectOnce) {
         return new Promise((resolve, reject) => {
             var columnNames = [];
             var rows = [];
@@ -242,24 +240,18 @@ class Table {
                     }, {})
                     
                 }
-                new Promise((resolveIn, rejectIn) => {
+                let promInj = []
+                //row.injectedData = {};
+                promInj.push(new Promise((resolveIn, rejectIn) => {
                     //Generate Actions 
                     if(typeCheck("Function", this.options.inject)) {
                         //console.log("INJECTING")
-                        row.injectedData = {};
                         this.options.inject(row, (injected) => {
                             if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
-                                for(let a = 0; a < injected.length; a++) {
-                                    //console.log(injected)
-                                    if(injected[a].strictColumn) {
-                                        row.injectedData[injected[a].column] = injected[a].dom;
-                                    } else {
-                                        row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
-                                    }
-                                    if(a >= injected.length-1) {
-                                        return resolveIn();
-                                    }
-                                }
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
                             } else {
                                 return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
                             }
@@ -268,10 +260,38 @@ class Table {
                     } else {
                         return resolveIn()
                     }
-                }).then(() => {
+                }))
+                //inject once
+                promInj.push(new Promise((resolveIn, rejectIn) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", injectOnce)) {
+                        //console.log("INJECTING")
+                        injectOnce(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
+                            } else {
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolveIn()
+                    }
+                }))
+
+
+                Promise.all(promInj).then(([injectGlobal, injectOnce]) => {
+                    if(injectGlobal && injectOnce) {
+                        row.injectedData = Object.assign(injectGlobal, injectOnce);
+                    } else if(injectGlobal) {row.injectedData = injectGlobal} else if(injectOnce){row.injectedData = injectOnce}
+
                     let flatData = flat(row.shownData, {safe: true});
                     if(row.injectedData) {
                         //console.log(row.injectedData)
+                        //remove dupe and combine
                         if(this.options.preferInject) {
                             row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
                         } else {
@@ -308,6 +328,22 @@ class Table {
                     }
                     
                 }).catch((err) => {throw err})
+            }
+        });
+    }
+    _compileInject(injected) {
+        return new Promise((resolve) => {
+            let injectedData = {};
+            if(injected.length < 1) {return resolve(injectedData);}
+            for(let a = 0; a < injected.length; a++) {
+                if(injected[a].strictColumn) {
+                    injectedData[injected[a].column] = injected[a].dom;
+                } else {
+                    injectedData = Object.assign(injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
+                }
+                if(a >= injected.length-1) {
+                    return resolve(injectedData);
+                }
             }
         });
     }

@@ -87,9 +87,6 @@ class StudentScheduleEditor {
                                     column: "Location",
                                     strictColumn: true,
                                     dom: $("<span/>")
-                                        /*.append($("<a/>").addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Teacher").on("click", () => {
-
-                                        }))*/
                                         .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", false).css("transform", "translateY(0%)").on("click", (e) => {
                                             if($(e.currentTarget).attr("data-location") == "true") {
                                                 //close
@@ -144,14 +141,15 @@ class StudentScheduleEditor {
                     let initInject = []
                     if(schedule) {
                         let periods = Object.keys(schedule.schedule);
-                        for(var x = 0; x < periods.length; x++) {
-                            this._periodDom(studentTable, utils.uuidv4(), scheduleConfig.periods, periods[x]).then((sel) => {
-                                initInject.push({Periods: $("<span/>").append(sel).html()});
-                            })
-                            if(x >= periods.length-1) {
-                                // console.log(initInject)
-                                studentTable.appendRow(initInject)
-                            }
+                        for(let x = 0; x < periods.length; x++) {
+                            let existingID = utils.uuidv4();
+                            this._periodDom(studentTable, existingID, scheduleConfig.periods, periods[x]).then((sel) => {
+                                initInject.push({Period: $("<span/>").append(sel).html(), id: existingID});
+                                if(x >= periods.length-1) {
+                                    // console.log(initInject)
+                                    studentTable.appendRow(initInject)
+                                }
+                            }).catch(err => reject(err))
                         }
                     }
                     //create new row button
@@ -192,7 +190,7 @@ class StudentScheduleEditor {
     }
     _periodDom(tableObject, rowID, periods, selected) {
         return new Promise((resolve, reject) => {
-            this._periodSelectElm(periods).then((sel) => {
+            this._periodSelectElm(periods, selected).then((sel) => {
                 return resolve($("<span/>")
                 .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                     $("#" + this.addRowButtonID).attr("disabled", false)
