@@ -118,7 +118,7 @@ router.get('/key/:type', function getPermissionKeyData(req, res, next) {
         err.status = 400;
         return next(err)
     }
-    if(type !== api.permissionKeyType.NEW_ACCOUNT || type !== api.permissionKeyType.UNKNOWN) {
+    if(type !== api.permissionKeyType.NEW_ACCOUNT && type !== api.permissionKeyType.UNKNOWN) {
         var err = TypeError("Forbidden");
         err.status = 403;
         return next(err)
