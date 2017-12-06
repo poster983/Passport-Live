@@ -2757,7 +2757,7 @@ class StudentScheduleEditor {
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
-                        studentTable.appendRow([{}])
+                        this.studentTable.appendRow([{}])
                     }))
                 });
 
