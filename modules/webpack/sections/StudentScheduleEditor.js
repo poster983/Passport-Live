@@ -47,11 +47,7 @@ class StudentScheduleEditor {
                 let locationAutocompleteData = {};
                 let doneMappingAutoData = new Promise((res) => {
                     for(let x = 0; x < this.allClassAccounts.length; x++) {
-                        if(this.allClassAccounts[x].name.salutation) {
-                            locationAutocompleteData[this.allClassAccounts[x].name.salutation + ' ' + this.allClassAccounts[x].name.first + ' ' + this.allClassAccounts[x].name.last + ' --- ' + this.allClassAccounts[x].email] = null;
-                        } else {
-                            locationAutocompleteData[this.allClassAccounts[x].name.first + ' ' + this.allClassAccounts[x].name.last + ' --- ' + this.allClassAccounts[x].email] = null;
-                        }
+                        locationAutocompleteData[this._autocompleteNameFormat(this.allClassAccounts[x].name, this.allClassAccounts[x].email)] = null;
                         if(x >= this.allClassAccounts.length-1) {
                             return res();
                         }
@@ -70,52 +66,14 @@ class StudentScheduleEditor {
                                     }).append($("<i/>").addClass("material-icons").html("delete")))
                                     .append(sel)*/
 
-                let studentTable = new Table(this.container, [{}], {
+                this.studentTable = new Table(this.container, [{}], {
                     preferInject: false,
                     idKey: "id",
                     ignoredKeys: ["id"],
                     inject: (row, callback) => {
-                        let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                        this._periodDom(studentTable, row.rowID, scheduleConfig.periods).then((perDom) => {
-                            return callback([
-                                {
-                                    column: "Period",
-                                    strictColumn: true,
-                                    dom: perDom
-
-                                }, {
-                                    column: "Location",
-                                    strictColumn: true,
-                                    dom: $("<span/>")
-                                        .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", false).css("transform", "translateY(0%)").on("click", (e) => {
-                                            if($(e.currentTarget).attr("data-location") == "true") {
-                                                //close
-                                                
-                                                //$("#" + this.addRowButtonID).attr("disabled", false)
-                                                $("#" + autoID + "_DIV__").slideUp(500);
-                                                $(e.currentTarget).siblings("p").slideDown(500)
-                                                $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
-                                                this.checkValidity().catch(err => reject(err))
-                                            } else {
-                                                //open 
-                                                
-                                                $("#" + autoID + "_DIV__").slideDown(500);
-                                                $(e.currentTarget).siblings("p").slideUp(500)
-                                                $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
-                                                this.checkValidity().catch(err => reject(err))
-                                            }
-                                            
-                                        }).append($("<i/>").addClass("material-icons").html("add_location")))
-                                        .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)"))
-                                        .append($("<div/>").addClass("input-field col s10").css("display", "none").attr("id", autoID + "_DIV__")
-                                            .append($("<input/>").attr("type", "text").attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").attr("data-autocomplete-period", null).on("keyup", (e) => {
-                                                this.checkValidity().catch(err => reject(err))
-                                            }))
-                                            .append($("<label/>").attr("for", autoID).html("Search Teachers"))
-                                        )
-                                }
-                            ])
-                        })
+                        this._injectDOM(scheduleConfig.periods, row).then((arr) => {
+                            return callback(arr);
+                        }).catch(err => reject(err))
                     },
                     afterGenerate: () => {
                         //INIT SELECT
@@ -135,21 +93,23 @@ class StudentScheduleEditor {
                     }
                 });
 
-                studentTable.generate().then(() => {
+                this.studentTable.generate().then(() => {
                     //Import existing schedule
                     let schedule = allSchedules.studentType;
-                    let initInject = []
                     if(schedule) {
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
-                            let existingID = utils.uuidv4();
-                            this._periodDom(studentTable, existingID, scheduleConfig.periods, periods[x]).then((sel) => {
-                                initInject.push({Period: $("<span/>").append(sel).html(), id: existingID});
-                                if(x >= periods.length-1) {
-                                    // console.log(initInject)
-                                    studentTable.appendRow(initInject)
-                                }
-                            }).catch(err => reject(err))
+                            if(schedule.schedule[periods[x]]) {
+                                this.studentTable.appendRow([{}], (row, callback) => {
+                                    let nameInj = null;
+                                    if(schedule.schedule[periods[x]].teacher && schedule.schedule[periods[x]].teacher.name) {
+                                        nameInj = this._autocompleteNameFormat(schedule.schedule[periods[x]].teacher.name, schedule.schedule[periods[x]].teacher.email);
+                                    }
+                                    this._injectDOM(scheduleConfig.periods, row, periods[x], nameInj).then((arr) => {
+                                        return callback(arr);
+                                    }).catch(err => reject(err))
+                                })
+                            }
                         }
                     }
                     //create new row button
@@ -162,6 +122,13 @@ class StudentScheduleEditor {
 
             }).catch(reject);
         })
+    }
+    _autocompleteNameFormat(nameObject, email) {
+        if(nameObject.salutation) {
+            return nameObject.salutation + " " + nameObject.first + " " + nameObject.last + " --- " + email;
+        } else {
+            return nameObject.first + " " + nameObject.last + " --- " + email;
+        }
     }
     _periodSelectElm(periods, selected) {
         return new Promise((resolve, reject) => {
@@ -188,19 +155,68 @@ class StudentScheduleEditor {
             }
         });
     }
-    _periodDom(tableObject, rowID, periods, selected) {
+    _periodDom(rowID, periods, selected) {
         return new Promise((resolve, reject) => {
             this._periodSelectElm(periods, selected).then((sel) => {
                 return resolve($("<span/>")
                 .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
                     $("#" + this.addRowButtonID).attr("disabled", false)
-                    tableObject.deleteRow(rowID)
+                    this.studentTable.deleteRow(rowID)
                 }).append($("<i/>").addClass("material-icons").html("delete")))
                 .append(sel));
             }).catch(err => reject(err))
         })
     }
+    _injectDOM(periodArray, row, period, locationValue) {
+        return new Promise((resolve, reject) => {
+            let locationCSS = "block"; 
+            let buttonCSS = "none";
+            let locationIcon = "location_off";
+            if(!locationValue) {
+                locationValue = "";
+                locationCSS = "none"; 
+                buttonCSS = "block";
+                locationIcon = "add_location"
+            }
+                
+            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+            this._periodDom(row.rowID, periodArray, period).then((perDom) => {
+                return resolve([
+                    {
+                        column: "Period",
+                        strictColumn: true,
+                        dom: perDom
 
+                    }, {
+                        column: "Location",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", (!!locationValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-location") == "true") {
+                                    $("#" + autoID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                    this.checkValidity().catch(err => reject(err))
+                                } else {
+                                    $("#" + autoID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                    this.checkValidity().catch(err => reject(err))
+                                }
+                                
+                            }).append($("<i/>").addClass("material-icons").html(locationIcon)))
+                            .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)").css("display", buttonCSS))
+                            .append($("<div/>").addClass("input-field col s10").css("display", locationCSS).attr("id", autoID + "_DIV__")
+                                .append($("<input/>").attr("type", "text").val(locationValue).attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").on("keyup", (e) => {
+                                    this.checkValidity().catch(err => reject(err))
+                                }))
+                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
+                            )
+                    }
+                ])
+            }).catch(err => reject(err))
+        })
+    }
     //checks every 
     _checkPeriodSelect() {
         return new Promise((resolve, reject) => {
@@ -270,56 +286,3 @@ class StudentScheduleEditor {
 }
 
 module.exports = StudentScheduleEditor;
-
-
-//STUDENT TEST CODE 
-/*//Table Gen
-                    let autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
-                    let studentTable = new Table(this.container, tableArray, {
-                        inject: (row, callback) => {
-                            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
-                            let enabledID = "__ACTIONS_ENABLED_" + utils.uuidv4()
-                            let enabledTeacherID = "__ACTIONS_ENABLED_TEACHER_" + utils.uuidv4()
-                            return callback([
-                                {
-                                    column: "Teacher", 
-                                    strictColumn: true, 
-                                    dom: $("<span/>").append(
-                                        $("<input/>").attr("type", "text").attr("id", autoID).addClass(autocompleteClass + " autocomplete").attr("data-autocomplete-period", row.shownData.Periods.toLowerCase())
-                                    ).append(
-                                        $("<label/>").attr("for", autoID).html("Search Teachers")
-                                    )
-                                },
-                                {
-                                    column: "Actions", 
-                                    strictColumn: true,
-                                    dom: $("<span/>").append(
-                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-period", row.shownData.Periods.toLowerCase()).attr("id", enabledID).attr("checked", "checked").attr("onclick", "")
-                                    ).append(
-                                        $("<label/>").attr("for", enabledID).html("Period Enabled")
-                                    ).append($("<br/>")).append(
-                                        $("<input/>").attr("type", "checkbox").addClass("filled-in").attr("data-action-enabled-teacher-period", row.shownData.Periods.toLowerCase()).attr("id", enabledTeacherID).attr("checked", "checked")
-                                    ).append(
-                                        $("<label/>").attr("for", enabledTeacherID).html("Have Teacher")
-                                    )
-                                }
-                            ])
-                        }
-                    })
-                    studentTable.generate().then(() => {
-                        console.log("done");
-
-                        $('input.'+autocompleteClass).autocomplete({
-                            data: {
-                              "Apple": null,
-                              "Microsoft": null,
-                              "Google": 'https://placehold.it/250x250'
-                            },
-                            limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
-                            onAutocomplete: function(val) {
-                              // Callback function when value is autcompleted.
-                            },
-                            minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-                        });
-        
-                    }).catch(reject)*/

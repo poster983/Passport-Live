@@ -723,6 +723,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     "teacher": true
                 }, 
                 "name": true, 
+                "email": true,
                 "id": true
             }).run(db.conn(), function(err, teacherAccount) {
                 if(err) {
@@ -735,6 +736,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     student.schedule[keys[0]].teacher = {};
                     student.schedule[keys[0]].teacher.id = teacherAccount.id;
                     student.schedule[keys[0]].teacher.name = teacherAccount.name;
+                    student.schedule[keys[0]].teacher.email = teacherAccount.email;
                     student.schedule[keys[0]].teacher.scheduleID = null;
                     //console.log(keys[0], "teacherid is Null")
 

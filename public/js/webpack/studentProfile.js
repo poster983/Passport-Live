@@ -1,1 +1,3061 @@
-!function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=17)}([function(t,e){e.urlQuery=(t=>query=Object.keys(t).filter(function(e){return void 0!==t[e]&&null!==t[e]}).map(e=>encodeURIComponent(e)+"="+encodeURIComponent(t[e])).join("&")),e.throwError=(t=>{if(t.isFetch)e=$("<span> ERROR: "+t.response.status+" "+t.message+"</span>").append($("<br/> <span> <strong>"+decodeURIComponent(t.response.headers.get("errormessage"))+"</strong> </span>"));else if(t.status)e=$("<span> ERROR: "+t.status+" "+t.statusText+"</span>").append($("<br/> <span> <strong>"+decodeURIComponent(t.getResponseHeader("errormessage"))+"</strong> </span>"));else if(t.message)e=$("<span> ERROR: "+t.message+"</span>");else var e=$("<span> ERROR! Check The Console For More Details.</span>");Materialize.toast(e,4e3),console.error(t)}),e.fetch=((t,n,r)=>new Promise((i,o)=>{r||(r={}),r.query?r.query="?"+e.urlQuery(r.query):r.query="",r.head||(r.head={}),r.auth&&(r.head["x-xsrf-token"]=getCookie("XSRF-TOKEN")),fetch(n+r.query,{method:t,headers:new Headers({"x-xsrf-token":getCookie("XSRF-TOKEN")}),credentials:"same-origin"}).then(e.fetchStatus).then(e.fetchJSON).then(t=>i(t)).catch(t=>o(t))})),e.fetchStatus=(t=>{if(t.status>=200&&t.status<300)return t;var e=new Error(t.statusText);throw e.isFetch=!0,e.response=t,e}),e.fetchJSON=(t=>t.json()),e.uuidv4=(()=>([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,t=>(t^crypto.getRandomValues(new Uint8Array(1))[0]&15>>t/4).toString(16))),e.setCookie=((t,e,n)=>{var r=new Date;r.setTime(r.getTime()+24*n*60*60*1e3);var i="expires="+r.toUTCString();document.cookie=t+"="+e+";"+i+";path=/"}),e.getCookie=(t=>{var e=("; "+document.cookie).split("; "+t+"=");if(2==e.length)return e.pop().split(";").shift()}),e.distinctKeys=(t=>Object.keys(t.reduce(function(t,e){return Object.assign(t,e)},{}))),e.thisUser=(()=>e.getCookie("ACCOUNT-ID"))},function(t,e,n){(function(){var e,r,i;e=n(2),r=n(3),i=function(t,n,i){return r(e(t),n,i)},t.exports={VERSION:"0.3.2",typeCheck:i,parsedTypeCheck:r,parseType:e}}).call(this)},function(t,e){(function(){function e(t){var e;if(null==(e=t[0]))throw new Error("Unexpected end of input.");return e}function n(t){var n;if(n=e(t),!c.test(n))throw new Error("Expected text, got '"+n+"' instead.");return t.shift()}function r(t,n){var r;if((r=e(t))!==n)throw new Error("Expected '"+n+"', got '"+r+"' instead.");return t.shift()}function i(t,e){return t[0]===e?t.shift():null}function o(t){var o,a,s,c,l;for(o={},r(t,"{"),a=!1;;){if(i(t,"...")){a=!0;break}if(s=function(t){var e,i;return e=n(t),r(t,":"),i=u(t),[e,i]}(t),c=s[0],l=s[1],o[c]=l,i(t,","),"}"===e(t))break}return r(t,"}"),{structure:"fields",of:o,subset:a}}function a(t){switch(t[0]){case"[":return function(t){var n;if(r(t,"["),"]"===e(t))throw new Error("Must specify type of Array - eg. [Type], got [] instead.");return n=u(t),r(t,"]"),{structure:"array",of:n}}(t);case"(":return function(t){var n;if(n=[],r(t,"("),")"===e(t))throw new Error("Tuple must be of at least length 1 - eg. (Type), got () instead.");for(;n.push(u(t)),i(t,","),")"!==e(t););return r(t,")"),{structure:"tuple",of:n}}(t);case"{":return o(t)}}function s(t){var i,o,s,u;if(i=e(t),(o="*"===i)||c.test(i))return s=o?r(t,"*"):n(t),(u=a(t))?(u.type=s,u):{type:s};if(!(u=a(t)))throw new Error("Unexpected character: "+i);return u}function u(t){var n,r,o,a,u;if("::"===e(t))throw new Error("No comment before comment separator '::' found.");for(null!=(n=t[1])&&"::"===n&&(t.shift(),t.shift()),r=[],o={},"Maybe"===e(t)&&(t.shift(),r=[{type:"Undefined"},{type:"Null"}],o={Undefined:!0,Null:!0});a=s(t),u=a.type,o[u]||r.push(a),o[u]=!0,i(t,"|"););return r}var c,l;c=/[\$\w]+/,l=RegExp("\\.\\.\\.|::|->|"+c.source+"|\\S","g"),t.exports=function(t){var e,n;if(!t.length)throw new Error("No type specified.");if(e=t.match(l)||[],function(t,e){for(var n=-1,r=e.length>>>0;++n<r;)if(t===e[n])return!0;return!1}("->",e))throw new Error("Function types are not supported. To validate that something is a function, you may use 'Function'.");try{return u(e)}catch(r){throw n=r,new Error(n.message+" - Remaining tokens: "+JSON.stringify(e)+" - Initial input: '"+t+"'")}}}).call(this)},function(t,e,n){(function(){function e(t,e){if(!(t instanceof Object))return!1;switch(e.structure){case"fields":return function(t,e){var n,i,o,a,s,u,c;n={},i=0;for(o in t)n[o]=!0,i++;a=0;for(s in u=e.of){if(c=u[s],!r(t[s],c))return!1;n[s]&&a++}return e.subset||i===a}(t,e);case"array":return function(t,e){return a(function(t){return r(t,e.of)},t)}(t,e);case"tuple":return function(t,e){var n,i,o,a,s;for(n=0,i=0,a=(o=e.of).length;i<a;++i){if(s=o[i],!r(t[n],s))return!1;n++}return t.length<=n}(t,e)}}function r(t,n){if("Array"!==f.call(n).slice(8,-1))throw new Error("Types must be in an array. Input: "+t+".");return o(function(n){return function(t,n){var r,i,o,a;if(r=n.type,i=n.structure,r)return"*"===r||((o=l[r]||u[r])?o.typeOf===f.call(t).slice(8,-1)&&o.validate(t):r===f.call(t).slice(8,-1)&&(!i||e(t,n)));if(i)return(!(a=c[i])||a===f.call(t).slice(8,-1))&&e(t,n);throw new Error("No type defined. Input: "+t+".")}(t,n)},n)}var i,o,a,s,u,c,l,f={}.toString;i=n(4),o=i.any,a=i.all,s=i.isItNaN,u={Number:{typeOf:"Number",validate:function(t){return!s(t)}},NaN:{typeOf:"Number",validate:s},Int:{typeOf:"Number",validate:function(t){return!s(t)&&t%1==0}},Float:{typeOf:"Number",validate:function(t){return!s(t)}},Date:{typeOf:"Date",validate:function(t){return!s(t.getTime())}}},c={array:"Array",tuple:"Array"},t.exports=function(t,e,n){return null==n&&(n={}),l=n.customTypes||{},r(e,t)}}).call(this)},function(t,e,n){function r(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}var i,o,a,s,u,c,l,f,h,p={}.toString;i=n(5),o=n(6),a=n(7),s=n(8),u=n(9),c=function(t){return t},l=r(function(t,e){return p.call(e).slice(8,-1)===t}),f=r(function(t,e){var n,r=[];for(n=0;n<t;++n)r.push(e);return r}),s.empty=o.empty,s.slice=o.slice,s.take=o.take,s.drop=o.drop,s.splitAt=o.splitAt,s.takeWhile=o.takeWhile,s.dropWhile=o.dropWhile,s.span=o.span,s.breakStr=o.breakList,(h={Func:i,List:o,Obj:a,Str:s,Num:u,id:c,isType:l,replicate:f}).each=o.each,h.map=o.map,h.filter=o.filter,h.compact=o.compact,h.reject=o.reject,h.partition=o.partition,h.find=o.find,h.head=o.head,h.first=o.first,h.tail=o.tail,h.last=o.last,h.initial=o.initial,h.empty=o.empty,h.reverse=o.reverse,h.difference=o.difference,h.intersection=o.intersection,h.union=o.union,h.countBy=o.countBy,h.groupBy=o.groupBy,h.fold=o.fold,h.foldl=o.foldl,h.fold1=o.fold1,h.foldl1=o.foldl1,h.foldr=o.foldr,h.foldr1=o.foldr1,h.unfoldr=o.unfoldr,h.andList=o.andList,h.orList=o.orList,h.any=o.any,h.all=o.all,h.unique=o.unique,h.uniqueBy=o.uniqueBy,h.sort=o.sort,h.sortWith=o.sortWith,h.sortBy=o.sortBy,h.sum=o.sum,h.product=o.product,h.mean=o.mean,h.average=o.average,h.concat=o.concat,h.concatMap=o.concatMap,h.flatten=o.flatten,h.maximum=o.maximum,h.minimum=o.minimum,h.maximumBy=o.maximumBy,h.minimumBy=o.minimumBy,h.scan=o.scan,h.scanl=o.scanl,h.scan1=o.scan1,h.scanl1=o.scanl1,h.scanr=o.scanr,h.scanr1=o.scanr1,h.slice=o.slice,h.take=o.take,h.drop=o.drop,h.splitAt=o.splitAt,h.takeWhile=o.takeWhile,h.dropWhile=o.dropWhile,h.span=o.span,h.breakList=o.breakList,h.zip=o.zip,h.zipWith=o.zipWith,h.zipAll=o.zipAll,h.zipAllWith=o.zipAllWith,h.at=o.at,h.elemIndex=o.elemIndex,h.elemIndices=o.elemIndices,h.findIndex=o.findIndex,h.findIndices=o.findIndices,h.apply=i.apply,h.curry=i.curry,h.flip=i.flip,h.fix=i.fix,h.over=i.over,h.split=s.split,h.join=s.join,h.lines=s.lines,h.unlines=s.unlines,h.words=s.words,h.unwords=s.unwords,h.chars=s.chars,h.unchars=s.unchars,h.repeat=s.repeat,h.capitalize=s.capitalize,h.camelize=s.camelize,h.dasherize=s.dasherize,h.values=a.values,h.keys=a.keys,h.pairsToObj=a.pairsToObj,h.objToPairs=a.objToPairs,h.listsToObj=a.listsToObj,h.objToLists=a.objToLists,h.max=u.max,h.min=u.min,h.negate=u.negate,h.abs=u.abs,h.signum=u.signum,h.quot=u.quot,h.rem=u.rem,h.div=u.div,h.mod=u.mod,h.recip=u.recip,h.pi=u.pi,h.tau=u.tau,h.exp=u.exp,h.sqrt=u.sqrt,h.ln=u.ln,h.pow=u.pow,h.sin=u.sin,h.tan=u.tan,h.cos=u.cos,h.acos=u.acos,h.asin=u.asin,h.atan=u.atan,h.atan2=u.atan2,h.truncate=u.truncate,h.round=u.round,h.ceiling=u.ceiling,h.floor=u.floor,h.isItNaN=u.isItNaN,h.even=u.even,h.odd=u.odd,h.gcd=u.gcd,h.lcm=u.lcm,h.VERSION="1.1.2",t.exports=h},function(t,e){function n(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}var r,i,o,a,s,u,c=[].slice,l={}.toString;r=n(function(t,e){return t.apply(null,e)}),i=function(t){return n(t)},o=n(function(t,e,n){return t(n,e)}),a=function(t){return function(e){return function(){return t(e(e)).apply(null,arguments)}}(function(e){return function(){return t(e(e)).apply(null,arguments)}})},s=n(function(t,e,n,r){return t(e(n),e(r))}),u=function(t){var e;return e={},function(){var n,r,i;return n=c.call(arguments),r=function(){var t,e,r,o=[];for(t=0,r=(e=n).length;t<r;++t)i=e[t],o.push(i+l.call(i).slice(8,-1));return o}().join(""),e[r]=r in e?e[r]:t.apply(null,n)}},t.exports={curry:i,flip:o,fix:a,apply:r,over:s,memoize:u}},function(t,e){function n(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}function r(t,e){for(var n=-1,r=e.length>>>0;++n<r;)if(t===e[n])return!0;return!1}function i(t){return!t}var o,a,s,u,c,l,f,h,p,d,m,g,v,y,b,w,x,j,_,C,O,E,I,k,D,$,R,T,A,S,B,P,M,N,z,L,U,W,K,q,F,V,G,Y,X,H,J,Z,Q,tt,et,nt,rt,it,ot,at,st,ut,ct,lt,ft,ht,pt,dt,mt,gt,vt,yt,bt,wt={}.toString,xt=[].slice;o=n(function(t,e){var n,r;for(n=0,r=e.length;n<r;++n)t(e[n]);return e}),a=n(function(t,e){var n,r,i,o=[];for(n=0,r=e.length;n<r;++n)i=e[n],o.push(t(i));return o}),s=function(t){var e,n,r,i=[];for(e=0,n=t.length;e<n;++e)(r=t[e])&&i.push(r);return i},u=n(function(t,e){var n,r,i,o=[];for(n=0,r=e.length;n<r;++n)t(i=e[n])&&o.push(i);return o}),c=n(function(t,e){var n,r,i,o=[];for(n=0,r=e.length;n<r;++n)t(i=e[n])||o.push(i);return o}),l=n(function(t,e){var n,r,i,o,a;for(n=[],r=[],i=0,o=e.length;i<o;++i)(t(a=e[i])?n:r).push(a);return[n,r]}),f=n(function(t,e){var n,r,i;for(n=0,r=e.length;n<r;++n)if(i=e[n],t(i))return i}),h=p=function(t){return t[0]},d=function(t){if(t.length)return t.slice(1)},m=function(t){return t[t.length-1]},g=function(t){if(t.length)return t.slice(0,-1)},v=function(t){return!t.length},y=function(t){return t.concat().reverse()},b=function(t){var e,n,i,o;for(e=[],n=0,i=t.length;n<i;++n)r(o=t[n],e)||e.push(o);return e},w=n(function(t,e){var n,i,o,a,s,u=[];for(n=[],i=0,o=e.length;i<o;++i)r(s=t(a=e[i]),n)||(n.push(s),u.push(a));return u}),x=j=n(function(t,e,n){var r,i;for(r=0,i=n.length;r<i;++r)e=t(e,n[r]);return e}),_=C=n(function(t,e){return x(t,e[0],e.slice(1))}),O=n(function(t,e,n){var r;for(r=n.length-1;r>=0;--r)e=t(n[r],e);return e}),E=n(function(t,e){return O(t,e[e.length-1],e.slice(0,-1))}),I=n(function(t,e){var n,r,i;for(n=[],r=e;null!=(i=t(r));)n.push(i[0]),r=i[1];return n}),k=function(t){return[].concat.apply([],t)},D=n(function(t,e){var n;return[].concat.apply([],function(){var r,i,o,a=[];for(r=0,o=(i=e).length;r<o;++r)n=i[r],a.push(t(n));return a}())}),$=function(t){var e;return[].concat.apply([],function(){var n,r,i,o=[];for(n=0,i=(r=t).length;n<i;++n)e=r[n],"Array"===wt.call(e).slice(8,-1)?o.push($(e)):o.push(e);return o}())},R=function(t){var e,n,i,o,a,s,u,c;e=xt.call(arguments,1),n=[];t:for(i=0,o=t.length;i<o;++i){for(a=t[i],s=0,u=e.length;s<u;++s)if(c=e[s],r(a,c))continue t;n.push(a)}return n},T=function(t){var e,n,i,o,a,s,u,c;e=xt.call(arguments,1),n=[];t:for(i=0,o=t.length;i<o;++i){for(a=t[i],s=0,u=e.length;s<u;++s)if(c=e[s],!r(a,c))continue t;n.push(a)}return n},A=function(){var t,e,n,i,o,a,s,u;for(e=[],n=0,i=(t=xt.call(arguments)).length;n<i;++n)for(a=0,s=(o=t[n]).length;a<s;++a)r(u=o[a],e)||e.push(u);return e},S=n(function(t,e){var n,r,i,o;for(n={},r=0,i=e.length;r<i;++r)(o=t(e[r]))in n?n[o]+=1:n[o]=1;return n}),B=n(function(t,e){var n,r,i,o,a;for(n={},r=0,i=e.length;r<i;++r)(a=t(o=e[r]))in n?n[a].push(o):n[a]=[o];return n}),P=function(t){var e,n;for(e=0,n=t.length;e<n;++e)if(!t[e])return!1;return!0},M=function(t){var e,n;for(e=0,n=t.length;e<n;++e)if(t[e])return!0;return!1},N=n(function(t,e){var n,r,i;for(n=0,r=e.length;n<r;++n)if(i=e[n],t(i))return!0;return!1}),z=n(function(t,e){var n,r,i;for(n=0,r=e.length;n<r;++n)if(i=e[n],!t(i))return!1;return!0}),L=function(t){return t.concat().sort(function(t,e){return t>e?1:t<e?-1:0})},U=n(function(t,e){return e.concat().sort(t)}),W=n(function(t,e){return e.concat().sort(function(e,n){return t(e)>t(n)?1:t(e)<t(n)?-1:0})}),K=function(t){var e,n,r;for(e=0,n=0,r=t.length;n<r;++n)e+=t[n];return e},q=function(t){var e,n,r;for(e=1,n=0,r=t.length;n<r;++n)e*=t[n];return e},F=V=function(t){var e,n,r;for(e=0,n=0,r=t.length;n<r;++n)e+=t[n];return e/t.length},G=function(t){var e,n,r,i,o;for(e=t[0],n=0,i=(r=t.slice(1)).length;n<i;++n)(o=r[n])>e&&(e=o);return e},Y=function(t){var e,n,r,i,o;for(e=t[0],n=0,i=(r=t.slice(1)).length;n<i;++n)(o=r[n])<e&&(e=o);return e},X=n(function(t,e){var n,r,i,o,a;for(n=e[0],r=0,o=(i=e.slice(1)).length;r<o;++r)t(a=i[r])>t(n)&&(n=a);return n}),H=n(function(t,e){var n,r,i,o,a;for(n=e[0],r=0,o=(i=e.slice(1)).length;r<o;++r)t(a=i[r])<t(n)&&(n=a);return n}),J=Z=n(function(t,e,n){var r,i;return r=e,[e].concat(function(){var e,o,a,s=[];for(e=0,a=(o=n).length;e<a;++e)i=o[e],s.push(r=t(r,i));return s}())}),Q=tt=n(function(t,e){if(e.length)return J(t,e[0],e.slice(1))}),et=n(function(t,e,n){return n=n.concat().reverse(),J(t,e,n).reverse()}),nt=n(function(t,e){if(e.length)return e=e.concat().reverse(),J(t,e[0],e.slice(1)).reverse()}),rt=n(function(t,e,n){return n.slice(t,e)}),it=n(function(t,e){return t<=0?e.slice(0,0):e.slice(0,t)}),ot=n(function(t,e){return t<=0?e:e.slice(t)}),at=n(function(t,e){return[it(t,e),ot(t,e)]}),st=n(function(t,e){var n,r;if(!(n=e.length))return e;for(r=0;r<n&&t(e[r]);)r+=1;return e.slice(0,r)}),ut=n(function(t,e){var n,r;if(!(n=e.length))return e;for(r=0;r<n&&t(e[r]);)r+=1;return e.slice(r)}),ct=n(function(t,e){return[st(t,e),ut(t,e)]}),lt=n(function(t,e){return ct(function(){var t=arguments;return function(){var e,n;for(n=t[0].apply(this,arguments),e=1;e<t.length;++e)n=t[e](n);return n}}(t,i),e)}),ft=n(function(t,e){var n,r,i,o,a,s;for(n=[],r=e.length,i=0,o=t.length;i<o&&(a=i,s=t[i],a!==r);++i)n.push([s,e[a]]);return n}),ht=n(function(t,e,n){var r,i,o,a,s,u;for(r=[],i=n.length,o=0,a=e.length;o<a&&(s=o,u=e[o],s!==i);++o)r.push(t(u,n[s]));return r}),pt=function(){var t,e,n,r,i,o,a,s,u,c=[];for(e=void 0,n=0,r=(t=xt.call(arguments)).length;n<r;++n)e<=(o=(i=t[n]).length)||(e=o);for(n=0;n<e;++n){for(a=n,s=[],u=0,r=t.length;u<r;++u)i=t[u],s.push(i[a]);c.push(s)}return c},dt=function(t){var e,n,r,i,o,a,s,u=[];for(n=void 0,r=0,i=(e=xt.call(arguments,1)).length;r<i;++r)n<=(a=(o=e[r]).length)||(n=a);for(r=0;r<n;++r)s=r,u.push(t.apply(null,function(){var t,n,r,i=[];for(t=0,r=(n=e).length;t<r;++t)o=n[t],i.push(o[s]);return i}()));return u},mt=n(function(t,e){return t<0?e[e.length+t]:e[t]}),gt=n(function(t,e){var n,r,i;for(n=0,r=e.length;n<r;++n)if(i=n,e[n]===t)return i}),vt=n(function(t,e){var n,r,i,o=[];for(n=0,r=e.length;n<r;++n)i=n,e[n]===t&&o.push(i);return o}),yt=n(function(t,e){var n,r,i,o;for(n=0,r=e.length;n<r;++n)if(i=n,o=e[n],t(o))return i}),bt=n(function(t,e){var n,r,i,o=[];for(n=0,r=e.length;n<r;++n)i=n,t(e[n])&&o.push(i);return o}),t.exports={each:o,map:a,filter:u,compact:s,reject:c,partition:l,find:f,head:h,first:p,tail:d,last:m,initial:g,empty:v,reverse:y,difference:R,intersection:T,union:A,countBy:S,groupBy:B,fold:x,fold1:_,foldl:j,foldl1:C,foldr:O,foldr1:E,unfoldr:I,andList:P,orList:M,any:N,all:z,unique:b,uniqueBy:w,sort:L,sortWith:U,sortBy:W,sum:K,product:q,mean:F,average:V,concat:k,concatMap:D,flatten:$,maximum:G,minimum:Y,maximumBy:X,minimumBy:H,scan:J,scan1:Q,scanl:Z,scanl1:tt,scanr:et,scanr1:nt,slice:rt,take:it,drop:ot,splitAt:at,takeWhile:st,dropWhile:ut,span:ct,breakList:lt,zip:ft,zipWith:ht,zipAll:pt,zipAllWith:dt,at:mt,elemIndex:gt,elemIndices:vt,findIndex:yt,findIndices:bt}},function(t,e){function n(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}var r,i,o,a,s,u,c,l,f,h,p,d,m,g;r=function(t){var e,n,r=[];for(e in t)n=t[e],r.push(n);return r},i=function(t){var e,n=[];for(e in t)n.push(e);return n},o=function(t){var e,n,r,i={};for(e=0,n=t.length;e<n;++e)i[(r=t[e])[0]]=r[1];return i},a=function(t){var e,n,r=[];for(e in t)n=t[e],r.push([e,n]);return r},s=n(function(t,e){var n,r,i,o={};for(n=0,r=t.length;n<r;++n)i=n,o[t[n]]=e[i];return o}),u=function(t){var e,n,r,i;e=[],n=[];for(r in t)i=t[r],e.push(r),n.push(i);return[e,n]},c=function(t){var e;for(e in t)return!1;return!0},l=n(function(t,e){var n;for(n in e)t(e[n]);return e}),f=n(function(t,e){var n,r,i={};for(n in e)r=e[n],i[n]=t(r);return i}),h=function(t){var e,n,r={};for(e in t)(n=t[e])&&(r[e]=n);return r},p=n(function(t,e){var n,r,i={};for(n in e)t(r=e[n])&&(i[n]=r);return i}),d=n(function(t,e){var n,r,i={};for(n in e)t(r=e[n])||(i[n]=r);return i}),m=n(function(t,e){var n,r,i,o;n={},r={};for(i in e)(t(o=e[i])?n:r)[i]=o;return[n,r]}),g=n(function(t,e){var n,r;for(n in e)if(r=e[n],t(r))return r}),t.exports={values:r,keys:i,pairsToObj:o,objToPairs:a,listsToObj:s,objToLists:u,empty:c,each:l,map:f,filter:p,compact:h,reject:d,partition:m,find:g}},function(t,e){function n(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}var r,i,o,a,s,u,c,l,f,h,p,d,m;r=n(function(t,e){return e.split(t)}),i=n(function(t,e){return e.join(t)}),o=function(t){return t.length?t.split("\n"):[]},a=function(t){return t.join("\n")},s=function(t){return t.length?t.split(/[ ]+/):[]},u=function(t){return t.join(" ")},c=function(t){return t.split("")},l=function(t){return t.join("")},f=function(t){return t.split("").reverse().join("")},h=n(function(t,e){var n,r;for(n="",r=0;r<t;++r)n+=e;return n}),p=function(t){return t.charAt(0).toUpperCase()+t.slice(1)},d=function(t){return t.replace(/[-_]+(.)?/g,function(t,e){return(null!=e?e:"").toUpperCase()})},m=function(t){return t.replace(/([^-A-Z])([A-Z]+)/g,function(t,e,n){return e+"-"+(n.length>1?n:n.toLowerCase())}).replace(/^([A-Z]+)/,function(t,e){return e.length>1?e+"-":e.toLowerCase()})},t.exports={split:r,join:i,lines:o,unlines:a,words:s,unwords:u,chars:c,unchars:l,reverse:f,repeat:h,capitalize:p,camelize:d,dasherize:m}},function(t,e){function n(t,e){var n,r=function(i){return t.length>1?function(){var o=i?i.concat():[];return n=e?n||this:this,o.push.apply(o,arguments)<t.length&&arguments.length?r.call(n,o):t.apply(n,o)}:t};return r()}var r,i,o,a,s,u,c,l,f,h,p,d,m,g,v,y,b,w,x,j,_,C,O,E,I,k,D,$,R,T,A,S;r=n(function(t,e){return t>e?t:e}),i=n(function(t,e){return t<e?t:e}),o=function(t){return-t},a=Math.abs,s=function(t){return t<0?-1:t>0?1:0},u=n(function(t,e){return~~(t/e)}),c=n(function(t,e){return t%e}),l=n(function(t,e){return Math.floor(t/e)}),f=n(function(t,e){var n;return(t%(n=e)+n)%n}),h=function(t){return 1/t},d=2*(p=Math.PI),m=Math.exp,g=Math.sqrt,v=Math.log,y=n(function(t,e){return Math.pow(t,e)}),b=Math.sin,w=Math.tan,x=Math.cos,j=Math.asin,_=Math.acos,C=Math.atan,O=n(function(t,e){return Math.atan2(t,e)}),E=function(t){return~~t},I=Math.round,k=Math.ceil,D=Math.floor,$=function(t){return t!=t},R=function(t){return t%2==0},T=function(t){return t%2!=0},A=n(function(t,e){var n;for(t=Math.abs(t),e=Math.abs(e);0!==e;)n=t%e,t=e,e=n;return t}),S=n(function(t,e){return Math.abs(Math.floor(t/A(t,e)*e))}),t.exports={max:r,min:i,negate:o,abs:a,signum:s,quot:u,rem:c,div:l,mod:f,recip:h,pi:p,tau:d,exp:m,sqrt:g,ln:v,pow:y,sin:b,tan:w,cos:x,acos:_,asin:j,atan:C,atan2:O,truncate:E,round:I,ceiling:k,floor:D,isItNaN:$,even:R,odd:T,gcd:A,lcm:S}},function(t,e,n){var r=n(11),i=n(0),o=n(1).typeCheck,a=n(13);class s{constructor(t,e,n){if(n||(n={}),!o("[Object]",e))throw new TypeError("data must be an array of objects");this.data=e,this.container=t,this.options=n,this.table={}}generate(t){return new Promise((e,n)=>{this._sortData(this.data,t).then(({columns:t,rows:r})=>{var a=[];let s=$("<thead/>");a.push(new Promise((e,n)=>{let r=$("<tr/>");for(let n=0;n<t.length;n++)if(r.append($("<th/>").html(t[n])),n>=t.length-1)return s.append(r),e()})),this.table.body={},this.table.body.id="__TABLE_BODY_ID_"+i.uuidv4()+"__";let u=$("<tbody/>").attr("id",this.table.body.id);a.push(new Promise((e,i)=>{this._compileRow(t,r).then(t=>(u.append(t),e())).catch(t=>n(t))})),Promise.all(a).then(()=>{this.container.append($("<table/>").addClass(this.options.tableClasses).append(s).append(u)),this.table.data={head:t,rows:r},o("Function",this.options.afterGenerate)&&this.options.afterGenerate(),e()}).catch(t=>n(t))})})}_compileRow(t,e){return new Promise((n,r)=>{let i=[];for(let r=0;r<e.length;r++){let o=$("<tr/>").attr("id",e[r].rowID),a=e[r].getBody();for(let s=0;s<t.length;s++)if(o.append($("<td/>").html(a[t[s]])),s>=t.length-1&&i.push(o),s>=t.length-1&&r>=e.length-1)return n(i)}})}addData(t){if(!o("[Object]",t))throw new TypeError("data must be an array of objects");this.data=this.data.concat(t)}replaceData(t){if(!o("[Object]",t))throw new TypeError("data must be an array of objects");this.data=t}destroyTable(){this.data=[],containerElement.empty()}parseRowID(t){return t.substring(12,t.length-2)}getDirtyRowID(t){return"__TABLE_ROW_"+t+"__"}selectRowElm(t){return $("#"+t)}appendRow(t,e){return new Promise((n,r)=>{this.addData(t),this._sortData(t,e).then(({rows:t})=>{this._compileRow(this.table.data.head,t).then(t=>{$("#"+this.table.body.id).append(t),o("Function",this.options.afterGenerate)&&this.options.afterGenerate(),n()}).catch(t=>r(t))}).catch(t=>r(t))})}deleteRow(t){this.selectRowElm(t).remove()}_sortData(t,e){return new Promise((n,s)=>{var u=[],c=[];for(let s=0;s<t.length;s++){let l={};l.shownData=t[s],l.rowID="__TABLE_ROW_"+i.uuidv4()+"__",this.options.idKey&&l.shownData[this.options.idKey]&&(l.rowID="__TABLE_ROW_"+a.get(l.shownData,this.options.idKey.split("."))+"__"),l.getRowID=(()=>this.parseRowID(l.rowID)),this.options.hiddenKeys&&(l.hiddenData=a.keys(l.shownData,{filter:t=>this.options.hiddenKeys.includes(t.join("."))}).reduce((t,e)=>(a.set(t,e,a.get(l.shownData,e)),t),{}),this.options.ignoredKeys?this.options.ignoredKeys=this.options.ignoredKeys.concat(this.options.hiddenKeys):this.options.ignoredKeys=this.options.hiddenKeys),this.options.ignoredKeys&&(l.shownData=a.keys(l.shownData,{filter:t=>!this.options.ignoredKeys.includes(t.join("."))}).reduce((t,e)=>(a.set(t,e,a.get(l.shownData,e)),t),{}));let f=[];f.push(new Promise((t,e)=>{if(!o("Function",this.options.inject))return t();this.options.inject(l,n=>{if(!o("[{column: String, strictColumn: Maybe Boolean, dom: *}]",n))return e(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));this._compileInject(n).then(e=>t(e))})})),f.push(new Promise((t,n)=>{if(!o("Function",e))return t();e(l,e=>{if(!o("[{column: String, strictColumn: Maybe Boolean, dom: *}]",e))return n(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));this._compileInject(e).then(e=>t(e))})})),Promise.all(f).then(([e,i])=>{e&&i?l.injectedData=Object.assign(e,i):e?l.injectedData=e:i&&(l.injectedData=i);let a=r(l.shownData,{safe:!0});if(l.injectedData?this.options.preferInject?l.shownKeys=[...new Set([...Object.keys(a),...Object.keys(l.injectedData)])]:l.shownKeys=[...new Set([...Object.keys(l.injectedData),...Object.keys(a)])]:l.shownKeys=Object.keys(a),u=[...new Set([...u,...l.shownKeys])],l.getBody=(()=>this.options.preferInject?Object.assign(a,l.injectedData):Object.assign(l.injectedData,a)),c.push(l),s>=t.length-1)return o("[String]",this.options.sort)?u.sort((t,e)=>this.options.sort.indexOf(t)-this.options.sort.indexOf(e)):o("Function",this.options.sort)&&u.sort(this.options.sort),n({columns:u,rows:c})}).catch(t=>{throw t})}})}_compileInject(t){return new Promise(e=>{let n={};if(t.length<1)return e(n);for(let i=0;i<t.length;i++)if(t[i].strictColumn?n[t[i].column]=t[i].dom:n=Object.assign(n,r({[t[i].column.split(".")]:t[i].dom},{safe:!0})),i>=t.length-1)return e(n)})}}t.exports=s},function(t,e,n){function r(t,e){function n(t,s,u){u=u||1,Object.keys(t).forEach(function(c){var l=t[c],f=e.safe&&Array.isArray(l),h=Object.prototype.toString.call(l),p=o(l),d=s?s+r+c:c;if(!f&&!p&&("[object Object]"===h||"[object Array]"===h)&&Object.keys(l).length&&(!e.maxDepth||u<i))return n(l,d,u+1);a[d]=l})}var r=(e=e||{}).delimiter||".",i=e.maxDepth,a={};return n(t),a}function i(t,e){function n(t){var n=Number(t);return isNaN(n)||-1!==t.indexOf(".")||e.object?t:n}var r=(e=e||{}).delimiter||".",a=e.overwrite||!1,s={};if(o(t)||"[object Object]"!==Object.prototype.toString.call(t))return t;return Object.keys(t).sort(function(t,e){return t.length-e.length}).forEach(function(o){for(var u=o.split(r),c=n(u.shift()),l=n(u[0]),f=s;void 0!==l;){var h=Object.prototype.toString.call(f[c]),p="[object Object]"===h||"[object Array]"===h;if(!a&&!p&&void 0!==f[c])return;(a&&!p||!a&&null==f[c])&&(f[c]="number"!=typeof l||e.object?{}:[]),f=f[c],u.length>0&&(c=n(u.shift()),l=n(u[0]))}f[c]=i(t[o],e)}),s}var o=n(12);t.exports=r,r.flatten=r,r.unflatten=i},function(t,e){function n(t){return!!t.constructor&&"function"==typeof t.constructor.isBuffer&&t.constructor.isBuffer(t)}t.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeof t.readFloatLE&&"function"==typeof t.slice&&n(t.slice(0,0))}(t)||!!t._isBuffer)}},function(t,e,n){"use strict";function*r(t,e,n){if(null!==t&&void 0!==t&&!(e.depth>0&&n&&n.length>=e.depth)&&"string"!=typeof t){n=n||[];for(var i of e.all?Object.getOwnPropertyNames(t):Object.keys(t))if(!(e.noindex&&t instanceof Array&&/^[0-9]+$/.test(i))){var o=n.slice(0);if(o.push(i),!e.filter||e.filter(o,t[i],!e.all||t.propertyIsEnumerable(i))){var a=r(t[i],e,o),s=a.next();e.leaf?s.done?yield o:(yield s.value,yield*a):(yield o,s.done||(yield s.value,yield*a))}}}}function i(t,e,n){for(var r=t,i=0;i<e.length;i++){if(i==e.length-1)return[r,e[i]];if(!(e[i]in r)||void 0===r[e[i]]){if(!n)return;if(!Object.isExtensible(r))throw`Inextensible object: ${e.slice(0,i).join(".")}`;r[e[i]]={}}if("null"===(r=r[e[i]])||"object"!=typeof r&&"function"!=typeof r){if(n)throw`Inextensible object: ${e.slice(0,i+1).join(".")}`;return}}}function o(t,e){var n=i(t,e,!1);if(n){var r=n[0][n[1]];return delete n[0][n[1]],r}}function a(t,e,n){var r=i(t,e,!0);return r[0][r[1]]=n}function s(t,e){var n=i(t,e,!1);return n?n[0][n[1]]:void 0}t.exports={keys:function(t,e){var n;(n="number"==typeof e?{depth:e}:"function"==typeof e?{filter:e}:"object"==typeof e&&null!==e?e:{}).depth=n.depth||0;var i=[];for(var o of r(t,n))i.push(o);return i},set:a,get:s,touch:function(t,e,n){var r=i(t,e,!0);if(r[1]in r[0])return r[0][r[1]];if(!Object.isExtensible(r[0]))throw`Inextensible object: ${e.slice(0,e.length-1).join(".")}`;return r[0][r[1]]=n},type:function(t,e){return typeof s(t,e)},rename:function(t,e,n){return a(t,n,o(t,e))},delete:o,exists:function(t,e){var n=i(t,e,!1);return!!n&&n[0].propertyIsEnumerable(n[1])},accessor:function(t,e){var n=i(t,e,!0);if(n)return{get:()=>n[0][n[1]],set:t=>n[0][n[1]]=t}}}},,,,function(t,e,n){var r=n(18),i=n(0),o=null;window.onload=function(){console.log(i.thisUser()),(o=new r($("#editScheduleContainer"))).generate().catch(t=>i.throwError(t))}},function(t,e,n){var r=n(10),i=n(19),o=n(20),a=n(21),s=n(0);class u{constructor(t,e){this.container=t,e||(e={}),this.options=e,this.periodSelectClass="__PERIOD_SELECT_"+s.uuidv4()+"__",this.autocompleteClass="__SCHEDULE_AUTOCOMPLETE_"+s.uuidv4()+"__",this.addRowButtonID="__ADD_ROW_PERIOD_"+s.uuidv4()+"__",this.autocompleteREGEX=new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)}generate(){return new Promise((t,e)=>{let n=[];n.push(a.getScheduleConfig()),n.push(i.getSchedules(this.options.accountID)),n.push(o.getWithClasses()),Promise.all(n).then(([t,n,i])=>{this.allClassAccounts=i;let o={},a=new Promise(t=>{for(let e=0;e<this.allClassAccounts.length;e++)if(this.allClassAccounts[e].name.salutation?o[this.allClassAccounts[e].name.salutation+" "+this.allClassAccounts[e].name.first+" "+this.allClassAccounts[e].name.last+" --- "+this.allClassAccounts[e].email]=null:o[this.allClassAccounts[e].name.first+" "+this.allClassAccounts[e].name.last+" --- "+this.allClassAccounts[e].email]=null,e>=this.allClassAccounts.length-1)return t()}),u=new r(this.container,[{}],{preferInject:!1,idKey:"id",ignoredKeys:["id"],inject:(n,r)=>{let i="__AUTOCOMPLETE_"+s.uuidv4();this._periodDom(u,n.rowID,t.periods).then(t=>r([{column:"Period",strictColumn:!0,dom:t},{column:"Location",strictColumn:!0,dom:$("<span/>").prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location",!1).css("transform","translateY(0%)").on("click",t=>{"true"==$(t.currentTarget).attr("data-location")?($("#"+i+"_DIV__").slideUp(500),$(t.currentTarget).siblings("p").slideDown(500),$(t.currentTarget).attr("data-location",!1).css("transform","translateY(0%)").find("i").html("add_location"),this.checkValidity().catch(t=>e(t))):($("#"+i+"_DIV__").slideDown(500),$(t.currentTarget).siblings("p").slideUp(500),$(t.currentTarget).attr("data-location",!0).css("transform","translateY(50%)").find("i").html("location_off"),this.checkValidity().catch(t=>e(t)))}).append($("<i/>").addClass("material-icons").html("add_location"))).append($("<p/>").html(" &nbsp; No set location").css("transform","translateY(50%)")).append($("<div/>").addClass("input-field col s10").css("display","none").attr("id",i+"_DIV__").append($("<input/>").attr("type","text").attr("id",i).addClass(this.autocompleteClass+" autocomplete").attr("data-autocomplete-period",null).on("keyup",t=>{this.checkValidity().catch(t=>e(t))})).append($("<label/>").attr("for",i).html("Search Teachers")))}]))},afterGenerate:()=>{$("select").material_select(),a.then(()=>{$("input."+this.autocompleteClass).autocomplete({data:o,limit:5,onAutocomplete:t=>{console.log(t),this.checkValidity().catch(t=>e(t))},minLength:1})}).catch(t=>e(t))}});u.generate().then(()=>{let r=n.studentType,i=[];if(r){let n=Object.keys(r.schedule);for(let r=0;r<n.length;r++){let o=s.uuidv4();this._periodDom(u,o,t.periods,n[r]).then(t=>{i.push({Period:$("<span/>").append(t).html(),id:o}),r>=n.length-1&&u.appendRow(i)}).catch(t=>e(t))}}this.container.append($("<a/>").attr("id",this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click",()=>{$("#"+this.addRowButtonID).attr("disabled",!0),u.appendRow([{}])}))})}).catch(e)})}_periodSelectElm(t,e){return new Promise((n,r)=>{let i=$("<select/>").addClass(this.periodSelectClass).on("change",()=>{this.checkValidity().catch(t=>r(t))});e?i.append($("<option/>").attr("value","").attr("disabled",!0).html("Choose a period")):i.append($("<option/>").attr("value","").attr("disabled",!0).attr("selected",!0).html("Choose a period"));for(let r=0;r<t.length;r++)if(t[r]==e?i.append($("<option/>").attr("value",t[r]).attr("selected",!0).html(t[r].toUpperCase())):i.append($("<option/>").attr("value",t[r]).html(t[r].toUpperCase())),r>=t.length-1){n($("<div/>").addClass("input-field col s10").append(i))}})}_periodDom(t,e,n,r){return new Promise((i,o)=>{this._periodSelectElm(n,r).then(n=>i($("<span/>").prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform","translateY(50%)").on("click",()=>{$("#"+this.addRowButtonID).attr("disabled",!1),t.deleteRow(e)}).append($("<i/>").addClass("material-icons").html("delete"))).append(n))).catch(t=>o(t))})}_checkPeriodSelect(){return new Promise((t,e)=>{let n=$("select."+this.periodSelectClass),r=[];for(let e=0;e<n.length;e++){if(r.includes(n[e].value))return t({valid:!1,problemRowElement:$(n[e]).parentsUntil("td")});if(r.push(n[e].value),n[e].value.length<1)return t({valid:!1,problemRowElement:$(n[e]).parentsUntil("td")});if(e>=n.length-1)return t({valid:!0})}})}_checkLocation(){return new Promise((t,e)=>{let n=$("input."+this.autocompleteClass);for(let e=0;e<n.length;e++){if("true"==$(n[e]).parentsUntil("td").find("a[data-location]").attr("data-location")&&(n[e].value.length<1||n[e].value.search(this.autocompleteREGEX)<0))return t({valid:!1,problemRowElement:$(n[e]).parentsUntil("td")});if(e>=n.length-1)return t({valid:!0})}})}checkValidity(){return new Promise((t,e)=>{let n=[];n.push(this._checkPeriodSelect()),n.push(this._checkLocation()),Promise.all(n).then(([e,n])=>(console.log(n),$("a[data-location]").removeClass("pulse red").fadeIn(1e3),$("a.delete-row").removeClass("pulse red").fadeIn(1e3),n.valid?e.valid?($("#"+this.addRowButtonID).attr("disabled",!1),t({valid:!0})):(e.problemRowElement.find("a.delete-row").addClass("pulse red").fadeIn(1e3),$("#"+this.addRowButtonID).attr("disabled",!0),t(e)):(n.problemRowElement.find("a[data-location]").addClass("pulse red").fadeIn(1e3),$("#"+this.addRowButtonID).attr("disabled",!0),t(n)))).catch(t=>e(t))})}}t.exports=u},function(t,e,n){var r=n(0);e.getSchedules=(t=>(void 0===t&&(t=""),r.fetch("GET","/api/account/schedule/"+t,{auth:!0})))},function(t,e,n){var r=n(0);e.getWithClasses=(()=>r.fetch("GET","/api/account/hasClasses",{auth:!0}))},function(t,e,n){var r=n(0);e.getScheduleConfig=(()=>r.fetch("GET","/api/server/config/schedule/",{auth:!1}))}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser Utilities.
+* @module webpack/utils
+*/
+
+/**
+* Takes an Object and returns a URL Query string
+* @link module:webpack/utils
+* @param (Object) params
+* @returns (String)
+*/
+exports.urlQuery = (params) => {
+    return query = Object.keys(params)
+    .filter(function(e) { return ((params[e] !== undefined) && params[e] !== null) }) //removes 
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+}
+
+/**
+* Parses an error, and triggers a toast 
+* @link module:webpack/utils
+* @param (Error) err
+* @returns (undefined)
+*/
+exports.throwError = (err) => {
+  //Do more Later
+  if(err.isFetch) {
+    var $toastHTML = $("<span> ERROR: " + err.response.status + " " + err.message + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.response.headers.get("errormessage")) + "</strong> </span>"))
+  } else if(err.status) {
+    //AJAX ERROR
+    var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.getResponseHeader("errormessage")) + "</strong> </span>"))
+  } else if(err.message) {
+    var $toastHTML = $("<span> ERROR: " + err.message + "</span>")
+  } else {
+    var $toastHTML = $("<span> ERROR! Check The Console For More Details.</span>")
+  }
+  Materialize.toast($toastHTML, 4000)
+  console.error(err);
+}
+
+/**
+* An wrapper for the fetch api to make code clean   
+* @link module:webpack/utils
+* @param (String) method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param (String) url - Url to send request to.
+* @param ({Object|undefined}) data
+* @param ({Object|undefined}) data.query - JSON key pair to add to the URL as a query
+* @param ({Object|undefined}) data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param ({Boolean|undefined}) data.head - Data to be sent as the header. Json object
+* @param ({Boolean|undefined}) data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns (Promise)
+*/
+exports.fetch = (method, url, data) => {
+  return new Promise((resolve, reject) => {
+    if(!data) {data = {}}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
+    if(!data.head) {data.head = {}}
+    if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
+    fetch(url + data.query, {
+          method: method,
+          headers: new Headers({
+            //"Content-Type": "application/json",
+            "x-xsrf-token": getCookie("XSRF-TOKEN")
+          }),
+          credentials: 'same-origin'
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
+        return resolve(json)
+      }).catch((err) => {
+        return reject(err);
+      })
+  })
+}
+
+/**
+* Parses a fetch response and either throws an error, or it returns a promise  
+* @link module:webpack/utils
+* @param (Response) response
+* @returns (Promise)
+*/
+exports.fetchStatus = (response) => {
+  //console.log(response)
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.statusText)
+    error.isFetch = true;
+    error.response = response;
+    //exports.throwError(error)
+    throw error
+  }
+}
+
+/**
+* Converts response to json   
+* @link module:webpack/utils
+* @param (Response) response
+* @returns (Promise)
+*/
+exports.fetchJSON = (response) => {
+  return response.json()
+}
+
+/**
+* Creates a UUID V4 Id    
+* @link module:webpack/utils
+* @returns (String)
+*/
+exports.uuidv4 = () => {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  )
+}
+
+/**
+* Sets a browser cookie   
+* @link module:webpack/utils
+* @param (String) cname - Value to name the cookie
+* @param (String) cvalue - Value of the cookie
+* @param (Number) exdays - Days until expired
+* @returns (undefined)
+*/
+exports.setCookie = (cname, cvalue, exdays) => {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+/**
+* Gets a browser cookie   
+* @link module:webpack/utils
+* @param (String) cname - Name of the cookie
+* @returns (String)
+*/
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
+}
+
+/**
+* Returns a list of every distinct key in the object   
+* @link module:webpack/utils
+* @param (Object[]) arr - Array of the json objects with keys to test
+* @returns (String[])
+*/
+exports.distinctKeys = (arr) => {
+    return Object.keys(arr.reduce(function(result, obj) {
+      return Object.assign(result, obj);
+    }, {}))
+}
+
+/**
+* Returns the current user's ID 
+* @link module:webpack/utils
+* @returns (String)
+*/
+exports.thisUser = () => {
+  return exports.getCookie("ACCOUNT-ID");
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Generated by LiveScript 1.4.0
+(function(){
+  var VERSION, parseType, parsedTypeCheck, typeCheck;
+  VERSION = '0.3.2';
+  parseType = __webpack_require__(2);
+  parsedTypeCheck = __webpack_require__(3);
+  typeCheck = function(type, input, options){
+    return parsedTypeCheck(parseType(type), input, options);
+  };
+  module.exports = {
+    VERSION: VERSION,
+    typeCheck: typeCheck,
+    parsedTypeCheck: parsedTypeCheck,
+    parseType: parseType
+  };
+}).call(this);
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+(function(){
+  var identifierRegex, tokenRegex;
+  identifierRegex = /[\$\w]+/;
+  function peek(tokens){
+    var token;
+    token = tokens[0];
+    if (token == null) {
+      throw new Error('Unexpected end of input.');
+    }
+    return token;
+  }
+  function consumeIdent(tokens){
+    var token;
+    token = peek(tokens);
+    if (!identifierRegex.test(token)) {
+      throw new Error("Expected text, got '" + token + "' instead.");
+    }
+    return tokens.shift();
+  }
+  function consumeOp(tokens, op){
+    var token;
+    token = peek(tokens);
+    if (token !== op) {
+      throw new Error("Expected '" + op + "', got '" + token + "' instead.");
+    }
+    return tokens.shift();
+  }
+  function maybeConsumeOp(tokens, op){
+    var token;
+    token = tokens[0];
+    if (token === op) {
+      return tokens.shift();
+    } else {
+      return null;
+    }
+  }
+  function consumeArray(tokens){
+    var types;
+    consumeOp(tokens, '[');
+    if (peek(tokens) === ']') {
+      throw new Error("Must specify type of Array - eg. [Type], got [] instead.");
+    }
+    types = consumeTypes(tokens);
+    consumeOp(tokens, ']');
+    return {
+      structure: 'array',
+      of: types
+    };
+  }
+  function consumeTuple(tokens){
+    var components;
+    components = [];
+    consumeOp(tokens, '(');
+    if (peek(tokens) === ')') {
+      throw new Error("Tuple must be of at least length 1 - eg. (Type), got () instead.");
+    }
+    for (;;) {
+      components.push(consumeTypes(tokens));
+      maybeConsumeOp(tokens, ',');
+      if (')' === peek(tokens)) {
+        break;
+      }
+    }
+    consumeOp(tokens, ')');
+    return {
+      structure: 'tuple',
+      of: components
+    };
+  }
+  function consumeFields(tokens){
+    var fields, subset, ref$, key, types;
+    fields = {};
+    consumeOp(tokens, '{');
+    subset = false;
+    for (;;) {
+      if (maybeConsumeOp(tokens, '...')) {
+        subset = true;
+        break;
+      }
+      ref$ = consumeField(tokens), key = ref$[0], types = ref$[1];
+      fields[key] = types;
+      maybeConsumeOp(tokens, ',');
+      if ('}' === peek(tokens)) {
+        break;
+      }
+    }
+    consumeOp(tokens, '}');
+    return {
+      structure: 'fields',
+      of: fields,
+      subset: subset
+    };
+  }
+  function consumeField(tokens){
+    var key, types;
+    key = consumeIdent(tokens);
+    consumeOp(tokens, ':');
+    types = consumeTypes(tokens);
+    return [key, types];
+  }
+  function maybeConsumeStructure(tokens){
+    switch (tokens[0]) {
+    case '[':
+      return consumeArray(tokens);
+    case '(':
+      return consumeTuple(tokens);
+    case '{':
+      return consumeFields(tokens);
+    }
+  }
+  function consumeType(tokens){
+    var token, wildcard, type, structure;
+    token = peek(tokens);
+    wildcard = token === '*';
+    if (wildcard || identifierRegex.test(token)) {
+      type = wildcard
+        ? consumeOp(tokens, '*')
+        : consumeIdent(tokens);
+      structure = maybeConsumeStructure(tokens);
+      if (structure) {
+        return structure.type = type, structure;
+      } else {
+        return {
+          type: type
+        };
+      }
+    } else {
+      structure = maybeConsumeStructure(tokens);
+      if (!structure) {
+        throw new Error("Unexpected character: " + token);
+      }
+      return structure;
+    }
+  }
+  function consumeTypes(tokens){
+    var lookahead, types, typesSoFar, typeObj, type;
+    if ('::' === peek(tokens)) {
+      throw new Error("No comment before comment separator '::' found.");
+    }
+    lookahead = tokens[1];
+    if (lookahead != null && lookahead === '::') {
+      tokens.shift();
+      tokens.shift();
+    }
+    types = [];
+    typesSoFar = {};
+    if ('Maybe' === peek(tokens)) {
+      tokens.shift();
+      types = [
+        {
+          type: 'Undefined'
+        }, {
+          type: 'Null'
+        }
+      ];
+      typesSoFar = {
+        Undefined: true,
+        Null: true
+      };
+    }
+    for (;;) {
+      typeObj = consumeType(tokens), type = typeObj.type;
+      if (!typesSoFar[type]) {
+        types.push(typeObj);
+      }
+      typesSoFar[type] = true;
+      if (!maybeConsumeOp(tokens, '|')) {
+        break;
+      }
+    }
+    return types;
+  }
+  tokenRegex = RegExp('\\.\\.\\.|::|->|' + identifierRegex.source + '|\\S', 'g');
+  module.exports = function(input){
+    var tokens, e;
+    if (!input.length) {
+      throw new Error('No type specified.');
+    }
+    tokens = input.match(tokenRegex) || [];
+    if (in$('->', tokens)) {
+      throw new Error("Function types are not supported.\ To validate that something is a function, you may use 'Function'.");
+    }
+    try {
+      return consumeTypes(tokens);
+    } catch (e$) {
+      e = e$;
+      throw new Error(e.message + " - Remaining tokens: " + JSON.stringify(tokens) + " - Initial input: '" + input + "'");
+    }
+  };
+  function in$(x, xs){
+    var i = -1, l = xs.length >>> 0;
+    while (++i < l) if (x === xs[i]) return true;
+    return false;
+  }
+}).call(this);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Generated by LiveScript 1.4.0
+(function(){
+  var ref$, any, all, isItNaN, types, defaultType, customTypes, toString$ = {}.toString;
+  ref$ = __webpack_require__(4), any = ref$.any, all = ref$.all, isItNaN = ref$.isItNaN;
+  types = {
+    Number: {
+      typeOf: 'Number',
+      validate: function(it){
+        return !isItNaN(it);
+      }
+    },
+    NaN: {
+      typeOf: 'Number',
+      validate: isItNaN
+    },
+    Int: {
+      typeOf: 'Number',
+      validate: function(it){
+        return !isItNaN(it) && it % 1 === 0;
+      }
+    },
+    Float: {
+      typeOf: 'Number',
+      validate: function(it){
+        return !isItNaN(it);
+      }
+    },
+    Date: {
+      typeOf: 'Date',
+      validate: function(it){
+        return !isItNaN(it.getTime());
+      }
+    }
+  };
+  defaultType = {
+    array: 'Array',
+    tuple: 'Array'
+  };
+  function checkArray(input, type){
+    return all(function(it){
+      return checkMultiple(it, type.of);
+    }, input);
+  }
+  function checkTuple(input, type){
+    var i, i$, ref$, len$, types;
+    i = 0;
+    for (i$ = 0, len$ = (ref$ = type.of).length; i$ < len$; ++i$) {
+      types = ref$[i$];
+      if (!checkMultiple(input[i], types)) {
+        return false;
+      }
+      i++;
+    }
+    return input.length <= i;
+  }
+  function checkFields(input, type){
+    var inputKeys, numInputKeys, k, numOfKeys, key, ref$, types;
+    inputKeys = {};
+    numInputKeys = 0;
+    for (k in input) {
+      inputKeys[k] = true;
+      numInputKeys++;
+    }
+    numOfKeys = 0;
+    for (key in ref$ = type.of) {
+      types = ref$[key];
+      if (!checkMultiple(input[key], types)) {
+        return false;
+      }
+      if (inputKeys[key]) {
+        numOfKeys++;
+      }
+    }
+    return type.subset || numInputKeys === numOfKeys;
+  }
+  function checkStructure(input, type){
+    if (!(input instanceof Object)) {
+      return false;
+    }
+    switch (type.structure) {
+    case 'fields':
+      return checkFields(input, type);
+    case 'array':
+      return checkArray(input, type);
+    case 'tuple':
+      return checkTuple(input, type);
+    }
+  }
+  function check(input, typeObj){
+    var type, structure, setting, that;
+    type = typeObj.type, structure = typeObj.structure;
+    if (type) {
+      if (type === '*') {
+        return true;
+      }
+      setting = customTypes[type] || types[type];
+      if (setting) {
+        return setting.typeOf === toString$.call(input).slice(8, -1) && setting.validate(input);
+      } else {
+        return type === toString$.call(input).slice(8, -1) && (!structure || checkStructure(input, typeObj));
+      }
+    } else if (structure) {
+      if (that = defaultType[structure]) {
+        if (that !== toString$.call(input).slice(8, -1)) {
+          return false;
+        }
+      }
+      return checkStructure(input, typeObj);
+    } else {
+      throw new Error("No type defined. Input: " + input + ".");
+    }
+  }
+  function checkMultiple(input, types){
+    if (toString$.call(types).slice(8, -1) !== 'Array') {
+      throw new Error("Types must be in an array. Input: " + input + ".");
+    }
+    return any(function(it){
+      return check(input, it);
+    }, types);
+  }
+  module.exports = function(parsedType, input, options){
+    options == null && (options = {});
+    customTypes = options.customTypes || {};
+    return checkMultiple(input, parsedType);
+  };
+}).call(this);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Generated by LiveScript 1.4.0
+var Func, List, Obj, Str, Num, id, isType, replicate, prelude, toString$ = {}.toString;
+Func = __webpack_require__(5);
+List = __webpack_require__(6);
+Obj = __webpack_require__(7);
+Str = __webpack_require__(8);
+Num = __webpack_require__(9);
+id = function(x){
+  return x;
+};
+isType = curry$(function(type, x){
+  return toString$.call(x).slice(8, -1) === type;
+});
+replicate = curry$(function(n, x){
+  var i$, results$ = [];
+  for (i$ = 0; i$ < n; ++i$) {
+    results$.push(x);
+  }
+  return results$;
+});
+Str.empty = List.empty;
+Str.slice = List.slice;
+Str.take = List.take;
+Str.drop = List.drop;
+Str.splitAt = List.splitAt;
+Str.takeWhile = List.takeWhile;
+Str.dropWhile = List.dropWhile;
+Str.span = List.span;
+Str.breakStr = List.breakList;
+prelude = {
+  Func: Func,
+  List: List,
+  Obj: Obj,
+  Str: Str,
+  Num: Num,
+  id: id,
+  isType: isType,
+  replicate: replicate
+};
+prelude.each = List.each;
+prelude.map = List.map;
+prelude.filter = List.filter;
+prelude.compact = List.compact;
+prelude.reject = List.reject;
+prelude.partition = List.partition;
+prelude.find = List.find;
+prelude.head = List.head;
+prelude.first = List.first;
+prelude.tail = List.tail;
+prelude.last = List.last;
+prelude.initial = List.initial;
+prelude.empty = List.empty;
+prelude.reverse = List.reverse;
+prelude.difference = List.difference;
+prelude.intersection = List.intersection;
+prelude.union = List.union;
+prelude.countBy = List.countBy;
+prelude.groupBy = List.groupBy;
+prelude.fold = List.fold;
+prelude.foldl = List.foldl;
+prelude.fold1 = List.fold1;
+prelude.foldl1 = List.foldl1;
+prelude.foldr = List.foldr;
+prelude.foldr1 = List.foldr1;
+prelude.unfoldr = List.unfoldr;
+prelude.andList = List.andList;
+prelude.orList = List.orList;
+prelude.any = List.any;
+prelude.all = List.all;
+prelude.unique = List.unique;
+prelude.uniqueBy = List.uniqueBy;
+prelude.sort = List.sort;
+prelude.sortWith = List.sortWith;
+prelude.sortBy = List.sortBy;
+prelude.sum = List.sum;
+prelude.product = List.product;
+prelude.mean = List.mean;
+prelude.average = List.average;
+prelude.concat = List.concat;
+prelude.concatMap = List.concatMap;
+prelude.flatten = List.flatten;
+prelude.maximum = List.maximum;
+prelude.minimum = List.minimum;
+prelude.maximumBy = List.maximumBy;
+prelude.minimumBy = List.minimumBy;
+prelude.scan = List.scan;
+prelude.scanl = List.scanl;
+prelude.scan1 = List.scan1;
+prelude.scanl1 = List.scanl1;
+prelude.scanr = List.scanr;
+prelude.scanr1 = List.scanr1;
+prelude.slice = List.slice;
+prelude.take = List.take;
+prelude.drop = List.drop;
+prelude.splitAt = List.splitAt;
+prelude.takeWhile = List.takeWhile;
+prelude.dropWhile = List.dropWhile;
+prelude.span = List.span;
+prelude.breakList = List.breakList;
+prelude.zip = List.zip;
+prelude.zipWith = List.zipWith;
+prelude.zipAll = List.zipAll;
+prelude.zipAllWith = List.zipAllWith;
+prelude.at = List.at;
+prelude.elemIndex = List.elemIndex;
+prelude.elemIndices = List.elemIndices;
+prelude.findIndex = List.findIndex;
+prelude.findIndices = List.findIndices;
+prelude.apply = Func.apply;
+prelude.curry = Func.curry;
+prelude.flip = Func.flip;
+prelude.fix = Func.fix;
+prelude.over = Func.over;
+prelude.split = Str.split;
+prelude.join = Str.join;
+prelude.lines = Str.lines;
+prelude.unlines = Str.unlines;
+prelude.words = Str.words;
+prelude.unwords = Str.unwords;
+prelude.chars = Str.chars;
+prelude.unchars = Str.unchars;
+prelude.repeat = Str.repeat;
+prelude.capitalize = Str.capitalize;
+prelude.camelize = Str.camelize;
+prelude.dasherize = Str.dasherize;
+prelude.values = Obj.values;
+prelude.keys = Obj.keys;
+prelude.pairsToObj = Obj.pairsToObj;
+prelude.objToPairs = Obj.objToPairs;
+prelude.listsToObj = Obj.listsToObj;
+prelude.objToLists = Obj.objToLists;
+prelude.max = Num.max;
+prelude.min = Num.min;
+prelude.negate = Num.negate;
+prelude.abs = Num.abs;
+prelude.signum = Num.signum;
+prelude.quot = Num.quot;
+prelude.rem = Num.rem;
+prelude.div = Num.div;
+prelude.mod = Num.mod;
+prelude.recip = Num.recip;
+prelude.pi = Num.pi;
+prelude.tau = Num.tau;
+prelude.exp = Num.exp;
+prelude.sqrt = Num.sqrt;
+prelude.ln = Num.ln;
+prelude.pow = Num.pow;
+prelude.sin = Num.sin;
+prelude.tan = Num.tan;
+prelude.cos = Num.cos;
+prelude.acos = Num.acos;
+prelude.asin = Num.asin;
+prelude.atan = Num.atan;
+prelude.atan2 = Num.atan2;
+prelude.truncate = Num.truncate;
+prelude.round = Num.round;
+prelude.ceiling = Num.ceiling;
+prelude.floor = Num.floor;
+prelude.isItNaN = Num.isItNaN;
+prelude.even = Num.even;
+prelude.odd = Num.odd;
+prelude.gcd = Num.gcd;
+prelude.lcm = Num.lcm;
+prelude.VERSION = '1.1.2';
+module.exports = prelude;
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+var apply, curry, flip, fix, over, memoize, slice$ = [].slice, toString$ = {}.toString;
+apply = curry$(function(f, list){
+  return f.apply(null, list);
+});
+curry = function(f){
+  return curry$(f);
+};
+flip = curry$(function(f, x, y){
+  return f(y, x);
+});
+fix = function(f){
+  return function(g){
+    return function(){
+      return f(g(g)).apply(null, arguments);
+    };
+  }(function(g){
+    return function(){
+      return f(g(g)).apply(null, arguments);
+    };
+  });
+};
+over = curry$(function(f, g, x, y){
+  return f(g(x), g(y));
+});
+memoize = function(f){
+  var memo;
+  memo = {};
+  return function(){
+    var args, key, arg;
+    args = slice$.call(arguments);
+    key = (function(){
+      var i$, ref$, len$, results$ = [];
+      for (i$ = 0, len$ = (ref$ = args).length; i$ < len$; ++i$) {
+        arg = ref$[i$];
+        results$.push(arg + toString$.call(arg).slice(8, -1));
+      }
+      return results$;
+    }()).join('');
+    return memo[key] = key in memo
+      ? memo[key]
+      : f.apply(null, args);
+  };
+};
+module.exports = {
+  curry: curry,
+  flip: flip,
+  fix: fix,
+  apply: apply,
+  over: over,
+  memoize: memoize
+};
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+var each, map, compact, filter, reject, partition, find, head, first, tail, last, initial, empty, reverse, unique, uniqueBy, fold, foldl, fold1, foldl1, foldr, foldr1, unfoldr, concat, concatMap, flatten, difference, intersection, union, countBy, groupBy, andList, orList, any, all, sort, sortWith, sortBy, sum, product, mean, average, maximum, minimum, maximumBy, minimumBy, scan, scanl, scan1, scanl1, scanr, scanr1, slice, take, drop, splitAt, takeWhile, dropWhile, span, breakList, zip, zipWith, zipAll, zipAllWith, at, elemIndex, elemIndices, findIndex, findIndices, toString$ = {}.toString, slice$ = [].slice;
+each = curry$(function(f, xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    f(x);
+  }
+  return xs;
+});
+map = curry$(function(f, xs){
+  var i$, len$, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    results$.push(f(x));
+  }
+  return results$;
+});
+compact = function(xs){
+  var i$, len$, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (x) {
+      results$.push(x);
+    }
+  }
+  return results$;
+};
+filter = curry$(function(f, xs){
+  var i$, len$, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (f(x)) {
+      results$.push(x);
+    }
+  }
+  return results$;
+});
+reject = curry$(function(f, xs){
+  var i$, len$, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (!f(x)) {
+      results$.push(x);
+    }
+  }
+  return results$;
+});
+partition = curry$(function(f, xs){
+  var passed, failed, i$, len$, x;
+  passed = [];
+  failed = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    (f(x) ? passed : failed).push(x);
+  }
+  return [passed, failed];
+});
+find = curry$(function(f, xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (f(x)) {
+      return x;
+    }
+  }
+});
+head = first = function(xs){
+  return xs[0];
+};
+tail = function(xs){
+  if (!xs.length) {
+    return;
+  }
+  return xs.slice(1);
+};
+last = function(xs){
+  return xs[xs.length - 1];
+};
+initial = function(xs){
+  if (!xs.length) {
+    return;
+  }
+  return xs.slice(0, -1);
+};
+empty = function(xs){
+  return !xs.length;
+};
+reverse = function(xs){
+  return xs.concat().reverse();
+};
+unique = function(xs){
+  var result, i$, len$, x;
+  result = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (!in$(x, result)) {
+      result.push(x);
+    }
+  }
+  return result;
+};
+uniqueBy = curry$(function(f, xs){
+  var seen, i$, len$, x, val, results$ = [];
+  seen = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    val = f(x);
+    if (in$(val, seen)) {
+      continue;
+    }
+    seen.push(val);
+    results$.push(x);
+  }
+  return results$;
+});
+fold = foldl = curry$(function(f, memo, xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    memo = f(memo, x);
+  }
+  return memo;
+});
+fold1 = foldl1 = curry$(function(f, xs){
+  return fold(f, xs[0], xs.slice(1));
+});
+foldr = curry$(function(f, memo, xs){
+  var i$, x;
+  for (i$ = xs.length - 1; i$ >= 0; --i$) {
+    x = xs[i$];
+    memo = f(x, memo);
+  }
+  return memo;
+});
+foldr1 = curry$(function(f, xs){
+  return foldr(f, xs[xs.length - 1], xs.slice(0, -1));
+});
+unfoldr = curry$(function(f, b){
+  var result, x, that;
+  result = [];
+  x = b;
+  while ((that = f(x)) != null) {
+    result.push(that[0]);
+    x = that[1];
+  }
+  return result;
+});
+concat = function(xss){
+  return [].concat.apply([], xss);
+};
+concatMap = curry$(function(f, xs){
+  var x;
+  return [].concat.apply([], (function(){
+    var i$, ref$, len$, results$ = [];
+    for (i$ = 0, len$ = (ref$ = xs).length; i$ < len$; ++i$) {
+      x = ref$[i$];
+      results$.push(f(x));
+    }
+    return results$;
+  }()));
+});
+flatten = function(xs){
+  var x;
+  return [].concat.apply([], (function(){
+    var i$, ref$, len$, results$ = [];
+    for (i$ = 0, len$ = (ref$ = xs).length; i$ < len$; ++i$) {
+      x = ref$[i$];
+      if (toString$.call(x).slice(8, -1) === 'Array') {
+        results$.push(flatten(x));
+      } else {
+        results$.push(x);
+      }
+    }
+    return results$;
+  }()));
+};
+difference = function(xs){
+  var yss, results, i$, len$, x, j$, len1$, ys;
+  yss = slice$.call(arguments, 1);
+  results = [];
+  outer: for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    for (j$ = 0, len1$ = yss.length; j$ < len1$; ++j$) {
+      ys = yss[j$];
+      if (in$(x, ys)) {
+        continue outer;
+      }
+    }
+    results.push(x);
+  }
+  return results;
+};
+intersection = function(xs){
+  var yss, results, i$, len$, x, j$, len1$, ys;
+  yss = slice$.call(arguments, 1);
+  results = [];
+  outer: for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    for (j$ = 0, len1$ = yss.length; j$ < len1$; ++j$) {
+      ys = yss[j$];
+      if (!in$(x, ys)) {
+        continue outer;
+      }
+    }
+    results.push(x);
+  }
+  return results;
+};
+union = function(){
+  var xss, results, i$, len$, xs, j$, len1$, x;
+  xss = slice$.call(arguments);
+  results = [];
+  for (i$ = 0, len$ = xss.length; i$ < len$; ++i$) {
+    xs = xss[i$];
+    for (j$ = 0, len1$ = xs.length; j$ < len1$; ++j$) {
+      x = xs[j$];
+      if (!in$(x, results)) {
+        results.push(x);
+      }
+    }
+  }
+  return results;
+};
+countBy = curry$(function(f, xs){
+  var results, i$, len$, x, key;
+  results = {};
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    key = f(x);
+    if (key in results) {
+      results[key] += 1;
+    } else {
+      results[key] = 1;
+    }
+  }
+  return results;
+});
+groupBy = curry$(function(f, xs){
+  var results, i$, len$, x, key;
+  results = {};
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    key = f(x);
+    if (key in results) {
+      results[key].push(x);
+    } else {
+      results[key] = [x];
+    }
+  }
+  return results;
+});
+andList = function(xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (!x) {
+      return false;
+    }
+  }
+  return true;
+};
+orList = function(xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (x) {
+      return true;
+    }
+  }
+  return false;
+};
+any = curry$(function(f, xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (f(x)) {
+      return true;
+    }
+  }
+  return false;
+});
+all = curry$(function(f, xs){
+  var i$, len$, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    if (!f(x)) {
+      return false;
+    }
+  }
+  return true;
+});
+sort = function(xs){
+  return xs.concat().sort(function(x, y){
+    if (x > y) {
+      return 1;
+    } else if (x < y) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+};
+sortWith = curry$(function(f, xs){
+  return xs.concat().sort(f);
+});
+sortBy = curry$(function(f, xs){
+  return xs.concat().sort(function(x, y){
+    if (f(x) > f(y)) {
+      return 1;
+    } else if (f(x) < f(y)) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+});
+sum = function(xs){
+  var result, i$, len$, x;
+  result = 0;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    result += x;
+  }
+  return result;
+};
+product = function(xs){
+  var result, i$, len$, x;
+  result = 1;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    result *= x;
+  }
+  return result;
+};
+mean = average = function(xs){
+  var sum, i$, len$, x;
+  sum = 0;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    x = xs[i$];
+    sum += x;
+  }
+  return sum / xs.length;
+};
+maximum = function(xs){
+  var max, i$, ref$, len$, x;
+  max = xs[0];
+  for (i$ = 0, len$ = (ref$ = xs.slice(1)).length; i$ < len$; ++i$) {
+    x = ref$[i$];
+    if (x > max) {
+      max = x;
+    }
+  }
+  return max;
+};
+minimum = function(xs){
+  var min, i$, ref$, len$, x;
+  min = xs[0];
+  for (i$ = 0, len$ = (ref$ = xs.slice(1)).length; i$ < len$; ++i$) {
+    x = ref$[i$];
+    if (x < min) {
+      min = x;
+    }
+  }
+  return min;
+};
+maximumBy = curry$(function(f, xs){
+  var max, i$, ref$, len$, x;
+  max = xs[0];
+  for (i$ = 0, len$ = (ref$ = xs.slice(1)).length; i$ < len$; ++i$) {
+    x = ref$[i$];
+    if (f(x) > f(max)) {
+      max = x;
+    }
+  }
+  return max;
+});
+minimumBy = curry$(function(f, xs){
+  var min, i$, ref$, len$, x;
+  min = xs[0];
+  for (i$ = 0, len$ = (ref$ = xs.slice(1)).length; i$ < len$; ++i$) {
+    x = ref$[i$];
+    if (f(x) < f(min)) {
+      min = x;
+    }
+  }
+  return min;
+});
+scan = scanl = curry$(function(f, memo, xs){
+  var last, x;
+  last = memo;
+  return [memo].concat((function(){
+    var i$, ref$, len$, results$ = [];
+    for (i$ = 0, len$ = (ref$ = xs).length; i$ < len$; ++i$) {
+      x = ref$[i$];
+      results$.push(last = f(last, x));
+    }
+    return results$;
+  }()));
+});
+scan1 = scanl1 = curry$(function(f, xs){
+  if (!xs.length) {
+    return;
+  }
+  return scan(f, xs[0], xs.slice(1));
+});
+scanr = curry$(function(f, memo, xs){
+  xs = xs.concat().reverse();
+  return scan(f, memo, xs).reverse();
+});
+scanr1 = curry$(function(f, xs){
+  if (!xs.length) {
+    return;
+  }
+  xs = xs.concat().reverse();
+  return scan(f, xs[0], xs.slice(1)).reverse();
+});
+slice = curry$(function(x, y, xs){
+  return xs.slice(x, y);
+});
+take = curry$(function(n, xs){
+  if (n <= 0) {
+    return xs.slice(0, 0);
+  } else {
+    return xs.slice(0, n);
+  }
+});
+drop = curry$(function(n, xs){
+  if (n <= 0) {
+    return xs;
+  } else {
+    return xs.slice(n);
+  }
+});
+splitAt = curry$(function(n, xs){
+  return [take(n, xs), drop(n, xs)];
+});
+takeWhile = curry$(function(p, xs){
+  var len, i;
+  len = xs.length;
+  if (!len) {
+    return xs;
+  }
+  i = 0;
+  while (i < len && p(xs[i])) {
+    i += 1;
+  }
+  return xs.slice(0, i);
+});
+dropWhile = curry$(function(p, xs){
+  var len, i;
+  len = xs.length;
+  if (!len) {
+    return xs;
+  }
+  i = 0;
+  while (i < len && p(xs[i])) {
+    i += 1;
+  }
+  return xs.slice(i);
+});
+span = curry$(function(p, xs){
+  return [takeWhile(p, xs), dropWhile(p, xs)];
+});
+breakList = curry$(function(p, xs){
+  return span(compose$(p, not$), xs);
+});
+zip = curry$(function(xs, ys){
+  var result, len, i$, len$, i, x;
+  result = [];
+  len = ys.length;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (i === len) {
+      break;
+    }
+    result.push([x, ys[i]]);
+  }
+  return result;
+});
+zipWith = curry$(function(f, xs, ys){
+  var result, len, i$, len$, i, x;
+  result = [];
+  len = ys.length;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (i === len) {
+      break;
+    }
+    result.push(f(x, ys[i]));
+  }
+  return result;
+});
+zipAll = function(){
+  var xss, minLength, i$, len$, xs, ref$, i, lresult$, j$, results$ = [];
+  xss = slice$.call(arguments);
+  minLength = undefined;
+  for (i$ = 0, len$ = xss.length; i$ < len$; ++i$) {
+    xs = xss[i$];
+    minLength <= (ref$ = xs.length) || (minLength = ref$);
+  }
+  for (i$ = 0; i$ < minLength; ++i$) {
+    i = i$;
+    lresult$ = [];
+    for (j$ = 0, len$ = xss.length; j$ < len$; ++j$) {
+      xs = xss[j$];
+      lresult$.push(xs[i]);
+    }
+    results$.push(lresult$);
+  }
+  return results$;
+};
+zipAllWith = function(f){
+  var xss, minLength, i$, len$, xs, ref$, i, results$ = [];
+  xss = slice$.call(arguments, 1);
+  minLength = undefined;
+  for (i$ = 0, len$ = xss.length; i$ < len$; ++i$) {
+    xs = xss[i$];
+    minLength <= (ref$ = xs.length) || (minLength = ref$);
+  }
+  for (i$ = 0; i$ < minLength; ++i$) {
+    i = i$;
+    results$.push(f.apply(null, (fn$())));
+  }
+  return results$;
+  function fn$(){
+    var i$, ref$, len$, results$ = [];
+    for (i$ = 0, len$ = (ref$ = xss).length; i$ < len$; ++i$) {
+      xs = ref$[i$];
+      results$.push(xs[i]);
+    }
+    return results$;
+  }
+};
+at = curry$(function(n, xs){
+  if (n < 0) {
+    return xs[xs.length + n];
+  } else {
+    return xs[n];
+  }
+});
+elemIndex = curry$(function(el, xs){
+  var i$, len$, i, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (x === el) {
+      return i;
+    }
+  }
+});
+elemIndices = curry$(function(el, xs){
+  var i$, len$, i, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (x === el) {
+      results$.push(i);
+    }
+  }
+  return results$;
+});
+findIndex = curry$(function(f, xs){
+  var i$, len$, i, x;
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (f(x)) {
+      return i;
+    }
+  }
+});
+findIndices = curry$(function(f, xs){
+  var i$, len$, i, x, results$ = [];
+  for (i$ = 0, len$ = xs.length; i$ < len$; ++i$) {
+    i = i$;
+    x = xs[i$];
+    if (f(x)) {
+      results$.push(i);
+    }
+  }
+  return results$;
+});
+module.exports = {
+  each: each,
+  map: map,
+  filter: filter,
+  compact: compact,
+  reject: reject,
+  partition: partition,
+  find: find,
+  head: head,
+  first: first,
+  tail: tail,
+  last: last,
+  initial: initial,
+  empty: empty,
+  reverse: reverse,
+  difference: difference,
+  intersection: intersection,
+  union: union,
+  countBy: countBy,
+  groupBy: groupBy,
+  fold: fold,
+  fold1: fold1,
+  foldl: foldl,
+  foldl1: foldl1,
+  foldr: foldr,
+  foldr1: foldr1,
+  unfoldr: unfoldr,
+  andList: andList,
+  orList: orList,
+  any: any,
+  all: all,
+  unique: unique,
+  uniqueBy: uniqueBy,
+  sort: sort,
+  sortWith: sortWith,
+  sortBy: sortBy,
+  sum: sum,
+  product: product,
+  mean: mean,
+  average: average,
+  concat: concat,
+  concatMap: concatMap,
+  flatten: flatten,
+  maximum: maximum,
+  minimum: minimum,
+  maximumBy: maximumBy,
+  minimumBy: minimumBy,
+  scan: scan,
+  scan1: scan1,
+  scanl: scanl,
+  scanl1: scanl1,
+  scanr: scanr,
+  scanr1: scanr1,
+  slice: slice,
+  take: take,
+  drop: drop,
+  splitAt: splitAt,
+  takeWhile: takeWhile,
+  dropWhile: dropWhile,
+  span: span,
+  breakList: breakList,
+  zip: zip,
+  zipWith: zipWith,
+  zipAll: zipAll,
+  zipAllWith: zipAllWith,
+  at: at,
+  elemIndex: elemIndex,
+  elemIndices: elemIndices,
+  findIndex: findIndex,
+  findIndices: findIndices
+};
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+function in$(x, xs){
+  var i = -1, l = xs.length >>> 0;
+  while (++i < l) if (x === xs[i]) return true;
+  return false;
+}
+function compose$() {
+  var functions = arguments;
+  return function() {
+    var i, result;
+    result = functions[0].apply(this, arguments);
+    for (i = 1; i < functions.length; ++i) {
+      result = functions[i](result);
+    }
+    return result;
+  };
+}
+function not$(x){ return !x; }
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+var values, keys, pairsToObj, objToPairs, listsToObj, objToLists, empty, each, map, compact, filter, reject, partition, find;
+values = function(object){
+  var i$, x, results$ = [];
+  for (i$ in object) {
+    x = object[i$];
+    results$.push(x);
+  }
+  return results$;
+};
+keys = function(object){
+  var x, results$ = [];
+  for (x in object) {
+    results$.push(x);
+  }
+  return results$;
+};
+pairsToObj = function(object){
+  var i$, len$, x, resultObj$ = {};
+  for (i$ = 0, len$ = object.length; i$ < len$; ++i$) {
+    x = object[i$];
+    resultObj$[x[0]] = x[1];
+  }
+  return resultObj$;
+};
+objToPairs = function(object){
+  var key, value, results$ = [];
+  for (key in object) {
+    value = object[key];
+    results$.push([key, value]);
+  }
+  return results$;
+};
+listsToObj = curry$(function(keys, values){
+  var i$, len$, i, key, resultObj$ = {};
+  for (i$ = 0, len$ = keys.length; i$ < len$; ++i$) {
+    i = i$;
+    key = keys[i$];
+    resultObj$[key] = values[i];
+  }
+  return resultObj$;
+});
+objToLists = function(object){
+  var keys, values, key, value;
+  keys = [];
+  values = [];
+  for (key in object) {
+    value = object[key];
+    keys.push(key);
+    values.push(value);
+  }
+  return [keys, values];
+};
+empty = function(object){
+  var x;
+  for (x in object) {
+    return false;
+  }
+  return true;
+};
+each = curry$(function(f, object){
+  var i$, x;
+  for (i$ in object) {
+    x = object[i$];
+    f(x);
+  }
+  return object;
+});
+map = curry$(function(f, object){
+  var k, x, resultObj$ = {};
+  for (k in object) {
+    x = object[k];
+    resultObj$[k] = f(x);
+  }
+  return resultObj$;
+});
+compact = function(object){
+  var k, x, resultObj$ = {};
+  for (k in object) {
+    x = object[k];
+    if (x) {
+      resultObj$[k] = x;
+    }
+  }
+  return resultObj$;
+};
+filter = curry$(function(f, object){
+  var k, x, resultObj$ = {};
+  for (k in object) {
+    x = object[k];
+    if (f(x)) {
+      resultObj$[k] = x;
+    }
+  }
+  return resultObj$;
+});
+reject = curry$(function(f, object){
+  var k, x, resultObj$ = {};
+  for (k in object) {
+    x = object[k];
+    if (!f(x)) {
+      resultObj$[k] = x;
+    }
+  }
+  return resultObj$;
+});
+partition = curry$(function(f, object){
+  var passed, failed, k, x;
+  passed = {};
+  failed = {};
+  for (k in object) {
+    x = object[k];
+    (f(x) ? passed : failed)[k] = x;
+  }
+  return [passed, failed];
+});
+find = curry$(function(f, object){
+  var i$, x;
+  for (i$ in object) {
+    x = object[i$];
+    if (f(x)) {
+      return x;
+    }
+  }
+});
+module.exports = {
+  values: values,
+  keys: keys,
+  pairsToObj: pairsToObj,
+  objToPairs: objToPairs,
+  listsToObj: listsToObj,
+  objToLists: objToLists,
+  empty: empty,
+  each: each,
+  map: map,
+  filter: filter,
+  compact: compact,
+  reject: reject,
+  partition: partition,
+  find: find
+};
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+var split, join, lines, unlines, words, unwords, chars, unchars, reverse, repeat, capitalize, camelize, dasherize;
+split = curry$(function(sep, str){
+  return str.split(sep);
+});
+join = curry$(function(sep, xs){
+  return xs.join(sep);
+});
+lines = function(str){
+  if (!str.length) {
+    return [];
+  }
+  return str.split('\n');
+};
+unlines = function(it){
+  return it.join('\n');
+};
+words = function(str){
+  if (!str.length) {
+    return [];
+  }
+  return str.split(/[ ]+/);
+};
+unwords = function(it){
+  return it.join(' ');
+};
+chars = function(it){
+  return it.split('');
+};
+unchars = function(it){
+  return it.join('');
+};
+reverse = function(str){
+  return str.split('').reverse().join('');
+};
+repeat = curry$(function(n, str){
+  var result, i$;
+  result = '';
+  for (i$ = 0; i$ < n; ++i$) {
+    result += str;
+  }
+  return result;
+});
+capitalize = function(str){
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+camelize = function(it){
+  return it.replace(/[-_]+(.)?/g, function(arg$, c){
+    return (c != null ? c : '').toUpperCase();
+  });
+};
+dasherize = function(str){
+  return str.replace(/([^-A-Z])([A-Z]+)/g, function(arg$, lower, upper){
+    return lower + "-" + (upper.length > 1
+      ? upper
+      : upper.toLowerCase());
+  }).replace(/^([A-Z]+)/, function(arg$, upper){
+    if (upper.length > 1) {
+      return upper + "-";
+    } else {
+      return upper.toLowerCase();
+    }
+  });
+};
+module.exports = {
+  split: split,
+  join: join,
+  lines: lines,
+  unlines: unlines,
+  words: words,
+  unwords: unwords,
+  chars: chars,
+  unchars: unchars,
+  reverse: reverse,
+  repeat: repeat,
+  capitalize: capitalize,
+  camelize: camelize,
+  dasherize: dasherize
+};
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+// Generated by LiveScript 1.4.0
+var max, min, negate, abs, signum, quot, rem, div, mod, recip, pi, tau, exp, sqrt, ln, pow, sin, tan, cos, asin, acos, atan, atan2, truncate, round, ceiling, floor, isItNaN, even, odd, gcd, lcm;
+max = curry$(function(x$, y$){
+  return x$ > y$ ? x$ : y$;
+});
+min = curry$(function(x$, y$){
+  return x$ < y$ ? x$ : y$;
+});
+negate = function(x){
+  return -x;
+};
+abs = Math.abs;
+signum = function(x){
+  if (x < 0) {
+    return -1;
+  } else if (x > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+quot = curry$(function(x, y){
+  return ~~(x / y);
+});
+rem = curry$(function(x$, y$){
+  return x$ % y$;
+});
+div = curry$(function(x, y){
+  return Math.floor(x / y);
+});
+mod = curry$(function(x$, y$){
+  var ref$;
+  return (((x$) % (ref$ = y$) + ref$) % ref$);
+});
+recip = (function(it){
+  return 1 / it;
+});
+pi = Math.PI;
+tau = pi * 2;
+exp = Math.exp;
+sqrt = Math.sqrt;
+ln = Math.log;
+pow = curry$(function(x$, y$){
+  return Math.pow(x$, y$);
+});
+sin = Math.sin;
+tan = Math.tan;
+cos = Math.cos;
+asin = Math.asin;
+acos = Math.acos;
+atan = Math.atan;
+atan2 = curry$(function(x, y){
+  return Math.atan2(x, y);
+});
+truncate = function(x){
+  return ~~x;
+};
+round = Math.round;
+ceiling = Math.ceil;
+floor = Math.floor;
+isItNaN = function(x){
+  return x !== x;
+};
+even = function(x){
+  return x % 2 === 0;
+};
+odd = function(x){
+  return x % 2 !== 0;
+};
+gcd = curry$(function(x, y){
+  var z;
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while (y !== 0) {
+    z = x % y;
+    x = y;
+    y = z;
+  }
+  return x;
+});
+lcm = curry$(function(x, y){
+  return Math.abs(Math.floor(x / gcd(x, y) * y));
+});
+module.exports = {
+  max: max,
+  min: min,
+  negate: negate,
+  abs: abs,
+  signum: signum,
+  quot: quot,
+  rem: rem,
+  div: div,
+  mod: mod,
+  recip: recip,
+  pi: pi,
+  tau: tau,
+  exp: exp,
+  sqrt: sqrt,
+  ln: ln,
+  pow: pow,
+  sin: sin,
+  tan: tan,
+  cos: cos,
+  acos: acos,
+  asin: asin,
+  atan: atan,
+  atan2: atan2,
+  truncate: truncate,
+  round: round,
+  ceiling: ceiling,
+  floor: floor,
+  isItNaN: isItNaN,
+  even: even,
+  odd: odd,
+  gcd: gcd,
+  lcm: lcm
+};
+function curry$(f, bound){
+  var context,
+  _curry = function(args) {
+    return f.length > 1 ? function(){
+      var params = args ? args.concat() : [];
+      context = bound ? context || this : this;
+      return params.push.apply(params, arguments) <
+          f.length && arguments.length ?
+        _curry.call(context, params) : f.apply(context, params);
+    } : f;
+  };
+  return _curry();
+}
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var flat = __webpack_require__(11);
+var utils = __webpack_require__(0);
+var typeCheck = __webpack_require__(1).typeCheck;
+var DeepKey = __webpack_require__(13);
+
+/**
+* Takes structured data and makes a table from it. call this.generate() to create a table
+* @link module:webpack/framework
+* @class 
+* @param {Selector} containerElement - The table container.
+* @param {Object} data - The data to be added to the table.
+* @param {(Object|undefined)} options - The clickable element.
+* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
+* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
+* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
+* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
+*/
+class Table {
+    constructor(containerElement, data, options) {
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function, ...}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
+        }*/
+        if(!options){options = {};}
+        if(!typeCheck("[Object]", data)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = data;
+        this.container = containerElement;
+        this.options = options;
+        this.table = {};
+    }
+    generate(injectOnce) {
+        return new Promise((resolve, reject) => {
+            this._sortData(this.data, injectOnce).then(({columns, rows}) => {
+                /*console.log(columns, "Col")
+                console.log(rows, "rows")*/
+                var promises = [];
+                /**HEAD**/
+                let tableHead = $("<thead/>");
+                promises.push(new Promise((resolveCol, rejectCol) => {
+                    let tr = $("<tr/>");
+                    //compile Head
+                    for(let x = 0; x < columns.length; x++) {
+                        tr.append($("<th/>").html(columns[x]));
+                        if(x >= columns.length-1) {
+                            //done 
+                            tableHead.append(tr);
+                            return resolveCol()
+                        }
+                    }
+                }))
+
+                /**BODY**/
+                this.table.body = {};
+                this.table.body.id = "__TABLE_BODY_ID_" + utils.uuidv4() + "__"
+                let tableBody = $("<tbody/>").attr("id", this.table.body.id);
+                promises.push(new Promise((resolveRow, rejectRow) => {
+
+                    //compile row
+                    /*for(let r = 0; r < rows.length; r++) {
+                        let tr = $("<tr/>").attr("id", rows[r].rowID);
+                        let bodyData = rows[r].getBody();
+                        //console.log(bodyData)
+                        //allign rows with correct columns 
+                        for (let a = 0 ; a < columns.length; a++) {
+                            tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                            if(a >= columns.length-1) {
+                                //push to body
+                                tableBody.append(tr);
+                            }
+                            if(a >= columns.length-1 && r >= rows.length-1) {
+                                //push to body
+                                return resolveRow();
+
+                            }
+                        }
+                    }*/
+                    this._compileRow(columns, rows).then((tBody) => {
+                        tableBody.append(tBody);
+                        return resolveRow();
+                    }).catch(err => reject(err))
+                }))
+
+                Promise.all(promises).then(() => {
+                    this.container.append($("<table/>").addClass(this.options.tableClasses)
+                        .append(tableHead)
+                        .append(tableBody)
+                    )
+                    this.table.data = {
+                        head: columns,
+                        rows: rows
+                    }
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    
+                    resolve();
+                }).catch((err) => {
+                    return reject(err);
+                })
+            });
+        });
+    }
+    _compileRow(columns, rows) {
+        return new Promise((resolve, reject) => {
+            let tBody = [];
+            for(let r = 0; r < rows.length; r++) {
+                let tr = $("<tr/>").attr("id", rows[r].rowID);
+                let bodyData = rows[r].getBody();
+                //console.log(bodyData)
+                //allign rows with correct columns 
+                for (let a = 0 ; a < columns.length; a++) {
+                    tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                    if(a >= columns.length-1) {
+                        //push to body
+                        tBody.push(tr);
+                    }
+                    if(a >= columns.length-1 && r >= rows.length-1) {
+                        //push to body
+                        //console.log(tBody)
+                        return resolve(tBody);
+
+                    }
+                }
+            }
+        })
+    }
+    addData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = this.data.concat(newData)
+    }
+    replaceData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = newData;
+    }
+    destroyTable() {
+        this.data = [];
+        containerElement.empty();
+    }
+    parseRowID(TABLE_ROW_ID) {
+        return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
+    }
+    getDirtyRowID(originalID) {
+        return "__TABLE_ROW_" + originalID + "__";
+    }
+    selectRowElm(TABLE_ROW_ID) {
+        return $("#"+TABLE_ROW_ID);
+    }
+    //no support for new columns yet.
+    appendRow(data, injectOnce) {
+        return new Promise((resolve, reject) => {
+            this.addData(data);
+            this._sortData(data, injectOnce).then(({rows}) => {
+                this._compileRow(this.table.data.head, rows).then((elements) => {
+                    $("#" + this.table.body.id).append(elements)
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    resolve();
+                }).catch(err => reject(err))
+            }).catch(err => reject(err))
+        })
+    }
+    deleteRow(TABLE_ROW_ID) {
+        this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    _sortData(data, injectOnce) {
+        return new Promise((resolve, reject) => {
+            var columnNames = [];
+            var rows = [];
+            for(let x = 0; x < data.length; x++ ) {
+                let row = {};
+                row.shownData = data[x];
+                row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
+                //note ID
+                if(this.options.idKey && row.shownData[this.options.idKey]) {
+                    row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
+                }
+                //Store Untouched ID for dev
+                row.getRowID = () => {return this.parseRowID(row.rowID);}
+
+                //Filter out hidden keys for later 
+                if(this.options.hiddenKeys) {
+                    row.hiddenData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return this.options.hiddenKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    if(this.options.ignoredKeys) {
+                        this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                    } else {
+                        this.options.ignoredKeys = this.options.hiddenKeys;
+                    }
+                }
+
+                //filter out unwanted Keys
+                //should error in constructor if not array
+                if(this.options.ignoredKeys) {
+                    row.shownData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return !this.options.ignoredKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    
+                }
+                let promInj = []
+                //row.injectedData = {};
+                promInj.push(new Promise((resolveIn, rejectIn) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", this.options.inject)) {
+                        //console.log("INJECTING")
+                        this.options.inject(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
+                            } else {
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolveIn()
+                    }
+                }))
+                //inject once
+                promInj.push(new Promise((resolveIn, rejectIn) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", injectOnce)) {
+                        //console.log("INJECTING")
+                        injectOnce(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
+                            } else {
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolveIn()
+                    }
+                }))
+
+
+                Promise.all(promInj).then(([injectGlobal, injectOnce]) => {
+                    if(injectGlobal && injectOnce) {
+                        row.injectedData = Object.assign(injectGlobal, injectOnce);
+                    } else if(injectGlobal) {row.injectedData = injectGlobal} else if(injectOnce){row.injectedData = injectOnce}
+
+                    let flatData = flat(row.shownData, {safe: true});
+                    if(row.injectedData) {
+                        //console.log(row.injectedData)
+                        //remove dupe and combine
+                        if(this.options.preferInject) {
+                            row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        } else {
+                            row.shownKeys = [...new Set([...Object.keys(row.injectedData), ...Object.keys(flatData)])];
+                        }
+                        
+                    } else {
+                        row.shownKeys = Object.keys(flatData);
+                    }
+                    columnNames = [...new Set([...columnNames, ...row.shownKeys])];
+
+
+
+
+                    // add helper functions
+                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
+                    //Waitfor end of loop
+                    rows.push(row);
+                    //console.log(rows, "loop Row")
+                    if(x >= data.length-1) {
+                        //sort 
+                        if(typeCheck("[String]", this.options.sort)) {
+                            /*let reference_object = {};
+                            for (let i = 0; i < this.options.sort.length; i++) {
+                                reference_object[this.options.sort[i]] = i;
+                            }*/
+                            columnNames.sort((a, b) => {
+                              return this.options.sort.indexOf(a) - this.options.sort.indexOf(b);
+                            });
+                        } else if(typeCheck("Function", this.options.sort)) {
+                            columnNames.sort(this.options.sort);
+                        }
+                        return resolve({columns: columnNames, rows: rows});
+                    }
+                    
+                }).catch((err) => {throw err})
+            }
+        });
+    }
+    _compileInject(injected) {
+        return new Promise((resolve) => {
+            let injectedData = {};
+            if(injected.length < 1) {return resolve(injectedData);}
+            for(let a = 0; a < injected.length; a++) {
+                if(injected[a].strictColumn) {
+                    injectedData[injected[a].column] = injected[a].dom;
+                } else {
+                    injectedData = Object.assign(injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
+                }
+                if(a >= injected.length-1) {
+                    return resolve(injectedData);
+                }
+            }
+        });
+    }
+}
+
+module.exports = Table;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isBuffer = __webpack_require__(12)
+
+module.exports = flatten
+flatten.flatten = flatten
+flatten.unflatten = unflatten
+
+function flatten (target, opts) {
+  opts = opts || {}
+
+  var delimiter = opts.delimiter || '.'
+  var maxDepth = opts.maxDepth
+  var output = {}
+
+  function step (object, prev, currentDepth) {
+    currentDepth = currentDepth || 1
+    Object.keys(object).forEach(function (key) {
+      var value = object[key]
+      var isarray = opts.safe && Array.isArray(value)
+      var type = Object.prototype.toString.call(value)
+      var isbuffer = isBuffer(value)
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      var newKey = prev
+        ? prev + delimiter + key
+        : key
+
+      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
+        (!opts.maxDepth || currentDepth < maxDepth)) {
+        return step(value, newKey, currentDepth + 1)
+      }
+
+      output[newKey] = value
+    })
+  }
+
+  step(target)
+
+  return output
+}
+
+function unflatten (target, opts) {
+  opts = opts || {}
+
+  var delimiter = opts.delimiter || '.'
+  var overwrite = opts.overwrite || false
+  var result = {}
+
+  var isbuffer = isBuffer(target)
+  if (isbuffer || Object.prototype.toString.call(target) !== '[object Object]') {
+    return target
+  }
+
+  // safely ensure that the key is
+  // an integer.
+  function getkey (key) {
+    var parsedKey = Number(key)
+
+    return (
+      isNaN(parsedKey) ||
+      key.indexOf('.') !== -1 ||
+      opts.object
+    ) ? key
+      : parsedKey
+  }
+
+  var sortedKeys = Object.keys(target).sort(function (keyA, keyB) {
+    return keyA.length - keyB.length
+  })
+
+  sortedKeys.forEach(function (key) {
+    var split = key.split(delimiter)
+    var key1 = getkey(split.shift())
+    var key2 = getkey(split[0])
+    var recipient = result
+
+    while (key2 !== undefined) {
+      var type = Object.prototype.toString.call(recipient[key1])
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      // do not write over falsey, non-undefined values if overwrite is false
+      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
+        return
+      }
+
+      if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
+        recipient[key1] = (
+          typeof key2 === 'number' &&
+          !opts.object ? [] : {}
+        )
+      }
+
+      recipient = recipient[key1]
+      if (split.length > 0) {
+        key1 = getkey(split.shift())
+        key2 = getkey(split[0])
+      }
+    }
+
+    // unflatten again for 'messy objects'
+    recipient[key1] = unflatten(target[key], opts)
+  })
+
+  return result
+}
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function* iterateKeys(obj, opt, parent) {
+  if (obj === null || obj === undefined)
+    return;
+  if (opt.depth > 0 && parent && parent.length >= opt.depth)
+    return;
+  if (typeof(obj) === 'string')
+    return;
+  parent = parent || [];
+  for (var key of opt.all ? Object.getOwnPropertyNames(obj) : Object.keys(obj)) {
+    if (opt.noindex && obj instanceof Array && /^[0-9]+$/.test(key))
+      continue;
+    var child = parent.slice(0);
+    child.push(key);
+    if (opt.filter && !opt.filter(child, obj[key], !opt.all || obj.propertyIsEnumerable(key)))
+      continue;
+    var descend = iterateKeys(obj[key], opt, child);
+    var dfirst = descend.next();
+    if (opt.leaf) {
+      if (!dfirst.done) {
+        yield dfirst.value;
+        yield* descend;
+      }
+      else
+        yield child;
+    }
+    else {
+      yield child;
+      if (!dfirst.done) {
+        yield dfirst.value;
+        yield* descend;
+      }
+    }
+  }
+}
+function traverse(obj, deepkey, force) {
+  var leaf = obj;
+  for (var c = 0; c < deepkey.length; c++)
+    if (c == deepkey.length - 1) {
+      return [leaf, deepkey[c]];
+    }
+    else {
+      if (!(deepkey[c] in leaf) || leaf[deepkey[c]] === undefined) {
+        if (force) {
+          // if creating intermediate object, its parent must not be sealed
+          if (!Object.isExtensible(leaf))
+            throw `Inextensible object: ${ deepkey.slice(0, c).join('.') }`;
+          leaf[deepkey[c]] = { };
+        }
+        else
+          return undefined;
+      }
+      leaf = leaf[deepkey[c]];
+      // intermediate object must be non-null object or function
+      // note that typeof(null) returns 'object'
+      if (leaf === 'null' || (typeof(leaf) !== 'object' && typeof(leaf) !== 'function')) {
+        if (force)
+          throw `Inextensible object: ${ deepkey.slice(0, c + 1).join('.') }`;
+        else
+          return undefined;
+      }
+    }
+  return undefined;
+}
+function accessor(obj, deepkey) {
+  var t = traverse(obj, deepkey, true);
+  if (!t) return undefined;
+  return {
+    get: () => { return (t[0])[t[1]]; },
+    set: v => { return (t[0])[t[1]] = v;  },
+  }
+}
+function keys(obj, option) {
+  var opt;
+  if (typeof(option) === 'number')
+    opt = { depth: option };
+  else if (typeof(option) === 'function')
+    opt = { filter: option };
+  else if (typeof(option) === 'object' && option !== null)
+    opt = option;
+  else
+    opt = {}
+  opt.depth = opt.depth || 0;
+  var array = [];
+  for (var path of iterateKeys(obj, opt))
+    array.push(path);
+  return array;
+}
+function rename(obj, src, dest) {
+  return set(obj, dest, del(obj, src));
+}
+function del(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  if (!t) return undefined;
+  var v = (t[0])[t[1]];
+  delete (t[0])[t[1]];
+  return v;
+}
+function set(obj, deepkey, value) {
+  var t = traverse(obj, deepkey, true);
+  // The following codes is unneeded, traverse will check them
+  // if (!(t[1] in t[0]) && !Object.isExtensible(t[0]))
+  //   throw `Inextensible object: ${ deepkey.slice(0, deepkey.length - 1).join('.') }`;
+  return (t[0])[t[1]] = value;
+}
+function get(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  return t ? (t[0])[t[1]] : undefined;
+}
+function touch(obj, deepkey, value) {
+  var t = traverse(obj, deepkey, true);
+  if (!(t[1] in t[0])) {
+    if (!Object.isExtensible(t[0]))
+      throw `Inextensible object: ${ deepkey.slice(0, deepkey.length -1).join('.') }`;
+    return (t[0])[t[1]] = value;
+  }
+  else
+    return (t[0])[t[1]];
+}
+function type(obj, deepkey) {
+  return typeof(get(obj, deepkey));
+}
+function exists(obj, deepkey) {
+  var t = traverse(obj, deepkey, false);
+  return t ? t[0].propertyIsEnumerable(t[1]) : false;
+}
+module.exports = {
+  keys: keys,
+  set: set,
+  get: get,
+  touch: touch,
+  type: type,
+  rename: rename,
+  delete: del,
+  exists: exists,
+  accessor: accessor,
+};
+
+
+/***/ }),
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var ScheduleEditor = __webpack_require__(18);
+var utils = __webpack_require__(0)
+
+var scheduleEditor = null;
+window.onload = function() {
+    console.log(utils.thisUser())
+    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
+    scheduleEditor.generate().catch(err => utils.throwError(err))
+}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+var Table = __webpack_require__(10);
+var scheduleAPI = __webpack_require__(19);
+var accountAPI = __webpack_require__(20);
+var miscAPI = __webpack_require__(21);
+var utils = __webpack_require__(0);
+
+class StudentScheduleEditor {
+    constructor(formOutputContainer, options) {
+        this.container = formOutputContainer;
+        if(!options) {options = {}}
+        this.options = options;
+        this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
+        this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
+        this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
+        this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
+    }
+    generate() {
+        return new Promise((resolve, reject) => {
+            let prom = [];
+            prom.push(miscAPI.getScheduleConfig());
+            prom.push(scheduleAPI.getSchedules(this.options.accountID));
+            prom.push(accountAPI.getWithClasses());
+            Promise.all(prom).then(([scheduleConfig, allSchedules, allClassAccounts]) => {
+                this.allClassAccounts = allClassAccounts;
+                let locationAutocompleteData = {};
+                let doneMappingAutoData = new Promise((res) => {
+                    for(let x = 0; x < this.allClassAccounts.length; x++) {
+                        locationAutocompleteData[this._autocompleteNameFormat(this.allClassAccounts[x].name, this.allClassAccounts[x].email)] = null;
+                        if(x >= this.allClassAccounts.length-1) {
+                            return res();
+                        }
+                    }
+                })
+                //console.log(scheduleConfig, allSchedules);
+                
+                //data mapping 
+                
+                //console.log(tableArray)
+
+                /*$("<span/>")
+                                    .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
+                                        $("#" + this.addRowButtonID).attr("disabled", false)
+                                        studentTable.deleteRow(row.rowID)
+                                    }).append($("<i/>").addClass("material-icons").html("delete")))
+                                    .append(sel)*/
+
+                this.studentTable = new Table(this.container, [{}], {
+                    preferInject: false,
+                    idKey: "id",
+                    ignoredKeys: ["id"],
+                    inject: (row, callback) => {
+                        this._injectDOM(scheduleConfig.periods, row).then((arr) => {
+                            return callback(arr);
+                        }).catch(err => reject(err))
+                    },
+                    afterGenerate: () => {
+                        //INIT SELECT
+                        $('select').material_select();
+                        doneMappingAutoData.then(() => {
+                            $('input.'+this.autocompleteClass).autocomplete({
+                                data: locationAutocompleteData,
+                                limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
+                                onAutocomplete: (val) => {
+                                  // Callback function when value is autcompleted.
+                                  console.log(val)
+                                  this.checkValidity().catch(err => reject(err))
+                                },
+                                minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                            });
+                        }).catch(err => reject(err))
+                    }
+                });
+
+                this.studentTable.generate().then(() => {
+                    //Import existing schedule
+                    let schedule = allSchedules.studentType;
+                    if(schedule) {
+                        let periods = Object.keys(schedule.schedule);
+                        for(let x = 0; x < periods.length; x++) {
+                            if(schedule.schedule[periods[x]]) {
+                                this.studentTable.appendRow([{}], (row, callback) => {
+                                    let nameInj = null;
+                                    if(schedule.schedule[periods[x]].teacher && schedule.schedule[periods[x]].teacher.name) {
+                                        nameInj = this._autocompleteNameFormat(schedule.schedule[periods[x]].teacher.name, schedule.schedule[periods[x]].teacher.email);
+                                    }
+                                    this._injectDOM(scheduleConfig.periods, row, periods[x], nameInj).then((arr) => {
+                                        return callback(arr);
+                                    }).catch(err => reject(err))
+                                })
+                            }
+                        }
+                    }
+                    //create new row button
+                    this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
+                        $("#" + this.addRowButtonID).attr("disabled", true)
+                        studentTable.appendRow([{}])
+                    }))
+                });
+
+
+            }).catch(reject);
+        })
+    }
+    _autocompleteNameFormat(nameObject, email) {
+        if(nameObject.salutation) {
+            return nameObject.salutation + " " + nameObject.first + " " + nameObject.last + " --- " + email;
+        } else {
+            return nameObject.first + " " + nameObject.last + " --- " + email;
+        }
+    }
+    _periodSelectElm(periods, selected) {
+        return new Promise((resolve, reject) => {
+            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
+                this.checkValidity().catch(err => reject(err))
+            });
+            if(selected) {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).html("Choose a period"));
+            } else {
+                sel.append($("<option/>").attr("value", "").attr("disabled", true).attr("selected", true).html("Choose a period"));
+            }
+            
+            for(let x = 0; x < periods.length; x++) {
+                if(periods[x] == selected) {
+                    sel.append($("<option/>").attr("value", periods[x]).attr("selected", true).html(periods[x].toUpperCase()))
+                } else {
+                    sel.append($("<option/>").attr("value", periods[x]).html(periods[x].toUpperCase()))
+                }
+                
+                if(x >= periods.length-1) {
+                    let div = $("<div/>").addClass("input-field col s10").append(sel);
+                    resolve(div);
+                }
+            }
+        });
+    }
+    _periodDom(rowID, periods, selected) {
+        return new Promise((resolve, reject) => {
+            this._periodSelectElm(periods, selected).then((sel) => {
+                return resolve($("<span/>")
+                .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
+                    $("#" + this.addRowButtonID).attr("disabled", false)
+                    this.studentTable.deleteRow(rowID)
+                }).append($("<i/>").addClass("material-icons").html("delete")))
+                .append(sel));
+            }).catch(err => reject(err))
+        })
+    }
+    _injectDOM(periodArray, row, period, locationValue) {
+        return new Promise((resolve, reject) => {
+            let locationCSS = "block"; 
+            let buttonCSS = "none";
+            let locationIcon = "location_off";
+            if(!locationValue) {
+                locationValue = "";
+                locationCSS = "none"; 
+                buttonCSS = "block";
+                locationIcon = "add_location"
+            }
+                
+            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+            this._periodDom(row.rowID, periodArray, period).then((perDom) => {
+                return resolve([
+                    {
+                        column: "Period",
+                        strictColumn: true,
+                        dom: perDom
+
+                    }, {
+                        column: "Location",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", (!!locationValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-location") == "true") {
+                                    $("#" + autoID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                    this.checkValidity().catch(err => reject(err))
+                                } else {
+                                    $("#" + autoID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                    this.checkValidity().catch(err => reject(err))
+                                }
+                                
+                            }).append($("<i/>").addClass("material-icons").html(locationIcon)))
+                            .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)").css("display", buttonCSS))
+                            .append($("<div/>").addClass("input-field col s10").css("display", locationCSS).attr("id", autoID + "_DIV__")
+                                .append($("<input/>").attr("type", "text").val(locationValue).attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").on("keyup", (e) => {
+                                    this.checkValidity().catch(err => reject(err))
+                                }))
+                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
+                            )
+                    }
+                ])
+            }).catch(err => reject(err))
+        })
+    }
+    //checks every 
+    _checkPeriodSelect() {
+        return new Promise((resolve, reject) => {
+            let sel = $("select." + this.periodSelectClass);
+            let prevVal = []
+            for(let x = 0; x < sel.length; x++) {
+                if(prevVal.includes(sel[x].value)){
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                }
+                prevVal.push(sel[x].value)
+                if(sel[x].value.length < 1) {
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")});
+                }
+                if (x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }
+    _checkLocation() {
+        return new Promise((resolve, reject) => {
+            let sel = $("input." + this.autocompleteClass);
+            for(let x = 0; x < sel.length; x++) {
+                //console.log("CURRENT ELEMENT", sel);
+                let button = $(sel[x]).parentsUntil("td").find("a[data-location]");
+                if(button.attr("data-location") == "true") {
+                    //location enabled
+                    if(sel[x].value.length < 1 || sel[x].value.search(this.autocompleteREGEX) < 0) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                }
+                //is finished
+                if(x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }
+    checkValidity() {
+        return new Promise((resolve, reject) => {
+            let prom = [];
+            prom.push(this._checkPeriodSelect());
+            prom.push(this._checkLocation());
+            
+            Promise.all(prom).then(([periodRes, locationRes]) => {
+                console.log(locationRes)
+                $("a[data-location]").removeClass("pulse red").fadeIn(1000);
+                $("a.delete-row").removeClass("pulse red").fadeIn(1000);
+                if(!locationRes.valid) {
+                    locationRes.problemRowElement.find("a[data-location]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(locationRes);
+                } 
+                if(!periodRes.valid) {
+                    periodRes.problemRowElement.find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(periodRes);
+                }
+                
+                
+                $("#" + this.addRowButtonID).attr("disabled", false);
+                return resolve({valid: true});
+            }).catch(err => reject(err));
+        
+        })
+    }
+}
+
+module.exports = StudentScheduleEditor;
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+/**
+* Browser Schedule Functions.
+* @module webpack/api/schedule
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule types for the user
+* @link module:webpack/api/schedule
+* @param {(String|undefined)} accountID
+* @returns {Promise}
+*/
+exports.getSchedules = (accountID) => {
+    if(accountID === undefined) {accountID = ""}
+    return utils.fetch("GET", "/api/account/schedule/" + accountID, {auth: true})
+}
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser Import Functions.
+* @module webpack/api/accounts
+*/
+
+var utils = __webpack_require__(0);
+
+
+/** 
+* Gets all accounts with classes from the server.
+* @link module:webpack/api/accounts
+* @returns {Promise}
+*/
+exports.getWithClasses = () => {
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
+}
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+/**
+* Browser Misc Functions.
+* @module webpack/api/misc
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule configs from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getScheduleConfig = () => {
+    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
+}
+
+/***/ })
+/******/ ]);
