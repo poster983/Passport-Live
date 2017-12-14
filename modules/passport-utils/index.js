@@ -204,9 +204,9 @@ exports.getBrowserSupport = function(userAgent) {
         if(ua && ua.browser && ua.browser.name && ua.browser.major) {
             var returnObj = {
                 supported: false,
-                untested: false,
-                blocked:  false,
-                outdated: false,
+                untested:  false,
+                blocked:   false,
+                outdated:  false,
                 ua: ua
             } 
             if(bS.supported && bS.supported[ua.browser.name]) {
@@ -232,7 +232,7 @@ exports.getBrowserSupport = function(userAgent) {
             }
             return resolve(returnObj);
         } else {
-            return reject(new TypeError("userAgent.browser Undefined"));
+            return resolve({untested: true, supported: false, blocked: false, outdated: false, ua: ua});
             
         }
     })  

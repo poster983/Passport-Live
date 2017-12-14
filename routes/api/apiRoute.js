@@ -174,7 +174,7 @@ router.get('/schedule/definition', passport.authenticate('jwt', { session: false
 })
 
 //get Schedule Definition
-router.get('/schedule/definition/:id', function(req, res, next) {
+router.get('/schedule/definition/:id', passport.authenticate('jwt', { session: false}), function(req, res, next) {
     var id=req.params.id;
 
     api.getScheduleDefinition(connection, id, function(err, data) {
@@ -186,7 +186,7 @@ router.get('/schedule/definition/:id', function(req, res, next) {
 })
 //schedule Single Schedule Definition
 
-router.post('/schedule/date', ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
+router.post('/schedule/date', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -218,7 +218,7 @@ router.get('/schedule/repeat/:id', function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.get('/schedule/for/:date', function(req, res, next) {
+router.get('/schedule/for/:date', passport.authenticate('jwt', { session: false}), function(req, res, next) {
     var date=req.params.date;
     api.getScheduleOfADate(connection, date, false, function(err, data) {
         if(err) {
@@ -244,7 +244,7 @@ SERVER
     * @apiresponse {object} Returns Array with all constants
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/schedule/', function getScheduleConstants(req, res, next) {
+router.get('/server/config/schedule/', utils.rateLimit.publicApiBruteforce.prevent, function getScheduleConstants(req, res, next) {
     try {
         res.json(config.get('schedule'));
     } catch (e) {
@@ -263,7 +263,7 @@ router.get('/server/config/schedule/', function getScheduleConstants(req, res, n
     * @apiresponse {json} All usergroup data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/userGroups/', function getUserGroups(req, res, next) {
+router.get('/server/config/userGroups/', utils.rateLimit.publicApiBruteforce.prevent, function getUserGroups(req, res, next) {
     try {
         res.json(config.get('userGroups'));
     } catch (e) {
@@ -271,7 +271,7 @@ router.get('/server/config/userGroups/', function getUserGroups(req, res, next) 
     }
 })
 
-router.get('/server/config/passGroup', getPassGroups);
+router.get('/server/config/passGroup', utils.rateLimit.publicApiBruteforce.prevent, getPassGroups);
 /**
     * GETs pass groups defined in the config
     * @function handleGetAccountsByName

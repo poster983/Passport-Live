@@ -43,9 +43,9 @@ var handleStoreError = function (error) {
 
 //console.log(module.exports.generateSecureKey())
 /**
-    * Middleware to prevent brute force attacks For any Public API.  100 requests per 10 min.
+    * Middleware to prevent brute force attacks For any Public API. 
     * Requests/Retries: 100
-    * Remembers for 10 min.
+    * Remembers for 5 min.
     * @link module:js/utils/rateLimit
     * @function loginBruteforce
     */
@@ -55,7 +55,7 @@ exports.publicApiBruteforce = new ExpressBrute(db.brute(), {
     refreshTimeoutOnRequest: false,
     minWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
     maxWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
-    lifetime: 10*60, // 10 min (seconds not milliseconds) 
+    lifetime: 5*60, // 10 min (seconds not milliseconds) 
     failCallback: failCallback,
     handleStoreError: handleStoreError
 });
