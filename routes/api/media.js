@@ -28,7 +28,7 @@ var GeoPattern = require("geopattern");
 var jdenticon = require("jdenticon");
 var crypto = require("crypto");
 var cors = require("cors");
-var utils = require("../../modules/passport-utilss/index.js");
+var utils = require("../../modules/passport-utils/index.js");
 
 router.use(cors());
 router.options('*', cors())
