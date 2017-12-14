@@ -100,6 +100,26 @@ exports.emailPasswordResetBruteforce = new ExpressBrute(db.brute(), {
     },
     handleStoreError: handleStoreError
 });
+/**
+    * Middleware to prevent brute force attacks With returning avatars and backgrounds 
+    * Retries: 500
+    * Remembers for 1 min
+    * @link module:js/utils/rateLimit
+    * @function emailPasswordResetBruteforce
+    */
+exports.mediaBruteforce = new ExpressBrute(db.brute(), {
+    freeRetries: 500,
+    attachResetToRequest: false,
+    refreshTimeoutOnRequest: false,
+    maxWait: 30*1000, // 30 seconds
+    lifetime: 60, // 1 min (seconds not milliseconds) 
+    failCallback: function (req, res, next, nextValidRequestDate) {
+        var err = new Error("You've made too many requests, please try again "+moment(nextValidRequestDate).fromNow());
+        err.status = 429;
+        return next(err);
+    },
+    handleStoreError: handleStoreError
+});
 // No more than 5000 requests per day 
 /**
     * Middleware to prevent brute force attacks with authentecated APIs  

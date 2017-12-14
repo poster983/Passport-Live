@@ -28,6 +28,7 @@ var GeoPattern = require("geopattern");
 var jdenticon = require("jdenticon");
 var crypto = require("crypto");
 var cors = require("cors");
+var utils = require("../../modules/passport-utilss/index.js");
 
 router.use(cors());
 router.options('*', cors())
@@ -53,7 +54,7 @@ jdenticon.config = {
 * @apiresponse {image/svg\u002Bxml} Returnes the unique svg image
 * @todo move rethink db to passport-api module
 */
-router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
+router.get("/background/:id.svg", utils.rateLimit.mediaBruteforce.prevent, function generateBackdrop(req, res, next) {
     r.table("accounts").get(req.params.id).run(db.conn(), function(err, data) {
         if (err) {
             return next(err);
@@ -87,7 +88,7 @@ router.get("/background/:id.svg", function generateBackdrop(req, res, next) {
 * @apiresponse {image/svg\u002Bxml} Returnes the avatar png
 * @todo move rethink db to passport-api module
 */
-router.get("/avatar/:id/:size.svg", function getAvatar(req, res, next) {
+router.get("/avatar/:id/:size.svg", utils.rateLimit.mediaBruteforce.prevent, function getAvatar(req, res, next) {
     var size = parseInt(req.params.size)
     if(isNaN(size)) {
          var err = new Error("Size must be a number");
