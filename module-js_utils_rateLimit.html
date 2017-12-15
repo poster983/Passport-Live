@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>js/emailTemplates - Documentation</title>
+    <title>js/utils/rateLimit - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">js/emailTemplates</h1>
+    <h1 class="page-title">js/utils/rateLimit</h1>
     
 
     <!--container.tmpl-->
@@ -49,21 +49,51 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: js/emailTemplates</h2>
-        
-            
+      <h2>Module: js/utils/rateLimit</h2>
         
     
 
     
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li>
+            
+            <li><a href="#emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li>
+            
+            <li><a href="#emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li>
+            
+            <li><a href="#loginBruteforce">loginBruteforce</a></li>
+            
+            <li><a href="#loginBruteforce">loginBruteforce</a></li>
+            </ul></dd></dl></div>
 </header>
 
 <article>
     <div class="container-overview">
     
         
-            <div class="description"><p>Apis for generating templeted email html</p></div>
+
         
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             <!--method.tmpl-->
@@ -77,8 +107,39 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
+    <a href="modules_passport-utils_rateLimit.js.html">rateLimit.js</a>:<a href="modules_passport-utils_rateLimit.js.html#line124">124</a>
   </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~emailPasswordResetBruteforce">
+      <a href="#params-emailPasswordResetBruteforce"><span class="type-signature">(inner) </span>emailPasswordResetBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks with authentecated APIs<br>Requests/Retries: 1000
+Remembers for 1 day</p>
 </div>
 
 
@@ -88,22 +149,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-js/emailTemplates">
+<div class="collapse_" id="methodCollapse-emailPasswordResetBruteforce">
 
   
 
@@ -111,17 +157,6 @@
 
 <!-- details.tmpl -->
 
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
-  </code>
-</div>
 
 
 
@@ -185,27 +220,536 @@
 
 <!--
 <pre>
-{"comment":"/** \n* Apis for generating templeted email html \n* @module js/emailTemplates\n*/","meta":{"filename":"index.js","lineno":20,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api/emailTemplates","code":{},"shortpath":"modules/passport-api/emailTemplates/index.js"},"description":"<p>Apis for generating templeted email html</p>","kind":"module","name":"js/emailTemplates","longname":"module:js/emailTemplates","___id":"T000002R000334","___s":true,"attribs":"","id":"js/emailTemplates","ancestors":[]}
+{"comment":"/**\n    * Middleware to prevent brute force attacks with authentecated APIs  \n    * Requests/Retries: 1000\n    * Remembers for 1 day\n    * @link module:js/utils/rateLimit\n    * @function emailPasswordResetBruteforce\n    */","meta":{"filename":"rateLimit.js","lineno":124,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/rateLimit.js"},"description":"<p>Middleware to prevent brute force attacks with authentecated APIs<br>Requests/Retries: 1000\nRemembers for 1 day</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils/rateLimit","value":"module:js/utils/rateLimit"}],"kind":"function","name":"emailPasswordResetBruteforce","longname":"module:js/utils/rateLimit~emailPasswordResetBruteforce","scope":"inner","memberof":"module:js/utils/rateLimit","___id":"T000002R000868","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~emailPasswordResetBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils_rateLimit.html\">js/utils/rateLimit</a>~"]}
 </pre>
 -->
 </div>
 
         
-    
-    </div>
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_rateLimit.js.html">rateLimit.js</a>:<a href="modules_passport-utils_rateLimit.js.html#line103">103</a>
+  </code>
+</div>
+
+
+
 
     
 
     
 
+    <h4 class="name" id="~emailPasswordResetBruteforce">
+      <a href="#params-emailPasswordResetBruteforce"><span class="type-signature">(inner) </span>emailPasswordResetBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
     
 
-     
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks With returning avatars and backgrounds 
+Retries: 500
+Remembers for 1 min</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-emailPasswordResetBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks With returning avatars and backgrounds \n    * Retries: 500\n    * Remembers for 1 min\n    * @link module:js/utils/rateLimit\n    * @function emailPasswordResetBruteforce\n    */","meta":{"filename":"rateLimit.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/rateLimit.js"},"description":"<p>Middleware to prevent brute force attacks With returning avatars and backgrounds \nRetries: 500\nRemembers for 1 min</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils/rateLimit","value":"module:js/utils/rateLimit"}],"kind":"function","name":"emailPasswordResetBruteforce","longname":"module:js/utils/rateLimit~emailPasswordResetBruteforce","scope":"inner","memberof":"module:js/utils/rateLimit","___id":"T000002R000857","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~emailPasswordResetBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils_rateLimit.html\">js/utils/rateLimit</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_rateLimit.js.html">rateLimit.js</a>:<a href="modules_passport-utils_rateLimit.js.html#line82">82</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~emailPasswordResetBruteforce">
+      <a href="#params-emailPasswordResetBruteforce"><span class="type-signature">(inner) </span>emailPasswordResetBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks when requesing a password reset email 
+Retries: 3
+Remembers for 1 day</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-emailPasswordResetBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks when requesing a password reset email \n    * Retries: 3\n    * Remembers for 1 day\n    * @link module:js/utils/rateLimit\n    * @function emailPasswordResetBruteforce\n    */","meta":{"filename":"rateLimit.js","lineno":82,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/rateLimit.js"},"description":"<p>Middleware to prevent brute force attacks when requesing a password reset email \nRetries: 3\nRemembers for 1 day</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils/rateLimit","value":"module:js/utils/rateLimit"}],"kind":"function","name":"emailPasswordResetBruteforce","longname":"module:js/utils/rateLimit~emailPasswordResetBruteforce","scope":"inner","memberof":"module:js/utils/rateLimit","___id":"T000002R000845","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~emailPasswordResetBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils_rateLimit.html\">js/utils/rateLimit</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_rateLimit.js.html">rateLimit.js</a>:<a href="modules_passport-utils_rateLimit.js.html#line62">62</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~loginBruteforce">
+      <a href="#params-loginBruteforce"><span class="type-signature">(inner) </span>loginBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks when logging in
+Retries: 5
+Remembers for a dynamic time.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-loginBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks when logging in\n    * Retries: 5\n    * Remembers for a dynamic time.\n    * @link module:js/utils/rateLimit\n    * @function loginBruteforce\n    */","meta":{"filename":"rateLimit.js","lineno":62,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/rateLimit.js"},"description":"<p>Middleware to prevent brute force attacks when logging in\nRetries: 5\nRemembers for a dynamic time.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils/rateLimit","value":"module:js/utils/rateLimit"}],"kind":"function","name":"loginBruteforce","longname":"module:js/utils/rateLimit~loginBruteforce","scope":"inner","memberof":"module:js/utils/rateLimit","___id":"T000002R000834","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~loginBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils_rateLimit.html\">js/utils/rateLimit</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-utils_rateLimit.js.html">rateLimit.js</a>:<a href="modules_passport-utils_rateLimit.js.html#line45">45</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~loginBruteforce">
+      <a href="#params-loginBruteforce"><span class="type-signature">(inner) </span>loginBruteforce</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Middleware to prevent brute force attacks For any Public API. 
+Requests/Retries: 100
+Remembers for 5 min.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-loginBruteforce">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n    * Middleware to prevent brute force attacks For any Public API. \n    * Requests/Retries: 100\n    * Remembers for 5 min.\n    * @link module:js/utils/rateLimit\n    * @function loginBruteforce\n    */","meta":{"filename":"rateLimit.js","lineno":45,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-utils","code":{},"shortpath":"modules/passport-utils/rateLimit.js"},"description":"<p>Middleware to prevent brute force attacks For any Public API. \nRequests/Retries: 100\nRemembers for 5 min.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/utils/rateLimit","value":"module:js/utils/rateLimit"}],"kind":"function","name":"loginBruteforce","longname":"module:js/utils/rateLimit~loginBruteforce","scope":"inner","memberof":"module:js/utils/rateLimit","___id":"T000002R000824","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~loginBruteforce","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-js_utils_rateLimit.html\">js/utils/rateLimit</a>~"]}
+</pre>
+-->
+</div>
+
+        
     
 
     
