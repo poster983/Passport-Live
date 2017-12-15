@@ -81,7 +81,7 @@ function serializeUser(req, res, done) {
     *    "permissionKey": HJhd38
     * }
     */
-    router.post("/new/:userGroup/", function handleNewAccount(req, res, next) {
+    router.post("/new/:userGroup/", utils.rateLimit.publicApiBruteforce.prevent, function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;

@@ -22,7 +22,8 @@ email: hi@josephhassell.com
 
 var express = require('express');
 var securityJS = require('../../modules/passport-api/security.js');
-var emailApi = require("../../modules/passport-api/email.js")
+var emailApi = require("../../modules/passport-api/email.js");
+var utils = require('../../modules/passport-utils/index.js');
 var emailTracker = require('pixel-tracker');
 var router = express.Router();
 
@@ -73,5 +74,15 @@ router.get("/checkPermKeyValidity", (req, res, next) => {
         res.send(key);
     }).catch((err) => {return next(err);})
 })
+
+
+/*Brute Forse */
+router.get("/brute/test", utils.rateLimit.testBruteForse.prevent, function(req, res, next) {
+    res.json({num: Math.random(), brute: req.brute});
+})
+router.get("/brute", utils.rateLimit.testBruteForse.prevent, function(req, res, next) {
+    res.json({num: Math.random(), brute: req.brute});
+})
+
 
 module.exports = router;

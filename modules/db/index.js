@@ -90,11 +90,16 @@ let bruteStore = new BruteRethinkdb(rdash, {table: 'brute'});
 
 var connection = null;
 
-
-exports.setup = function(noDefaultDB) {
+/*
+* @param {Object} options
+* @param {Boolean} options.noDefaultDB - Will not include a default DB in the connection object
+* @param {Boolean} options.skipGlobal -  Will not set the connection object to the clobal context.
+*/
+exports.setup = function(options) {
         return new Promise(function(resolve, reject) {
+          if(!options) {options = {};}
             var connOpt = {};
-            if(!noDefaultDB) {
+            if(!options.noDefaultDB) {
                 connOpt.db = config.get('rethinkdb.database');
             }
             connOpt.host = config.get('rethinkdb.host');
@@ -105,7 +110,10 @@ exports.setup = function(noDefaultDB) {
                     throw err;
                 }
                 console.log("DB Connected")
-                connection = conn;
+                if(!options.skipGlobal) {
+                  connection = conn;
+                }
+                
                 resolve(conn);
             });
         }) 

@@ -53,11 +53,6 @@ router.post('/callback/multiDashRoute/', function(req, res, next) {
 
 });*/
 
-router.get("/test", utils.testBruteForse.prevent, function(req, res, next) {
-    res.json({num: Math.random(), brute: req.brute});
-})
-router.get("/brute", utils.testBruteForse.prevent, function(req, res, next) {
-    res.json({num: Math.random(), brute: req.brute});
-})
+
 
 module.exports = router;
