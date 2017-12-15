@@ -353,14 +353,6 @@ router.get("/test/date/:dateTime", function(req, res, next) {
         return res.send(resp)
     })
 })*/
-router.get("/test/teacherSchedule/:id", function(req, res, next) {
-    accountApi.getTeacherSchedule(req.params.id, function(err, resp) {
-        if(err) {
-            return next(err)
-        }
-        return res.send(resp)
-    })
-})
 
 
 //default Responce
