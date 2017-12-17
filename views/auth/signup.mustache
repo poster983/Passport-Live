@@ -308,8 +308,7 @@ email: hi@josephhassell.com
                     success: function(data) {
 
                         materialResponse("check", "success", function() {
-                            window.location.href = "/auth/login?msgHead="+encodeURIComponent("Account created")+"&msg="+encodeURIComponent(`Your should recieve an activation email soon. 
-                                Please remember to check your spam`);
+                            window.location.href = "/auth/login?msgHead="+encodeURIComponent("Account created")+"&msg="+encodeURIComponent("Your should recieve an activation email soon. Please remember to check your spam");
                         })
                     },
                     error: function(jqXHR) {
