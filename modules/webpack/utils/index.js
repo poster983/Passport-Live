@@ -76,12 +76,12 @@ exports.fetch = (method, url, data) => {
     if(!data) {data = {}}
     if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
     if(!data.head) {data.head = {}}
-    if(data.auth) {data.head["x-xsrf-token"] = getCookie("XSRF-TOKEN")}
+    if(data.auth) {data.head["x-xsrf-token"] = exports.getCookie("XSRF-TOKEN")}
     fetch(url + data.query, {
           method: method,
           headers: new Headers({
             //"Content-Type": "application/json",
-            "x-xsrf-token": getCookie("XSRF-TOKEN")
+            "x-xsrf-token": exports.getCookie("XSRF-TOKEN")
           }),
           credentials: 'same-origin'
       }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
