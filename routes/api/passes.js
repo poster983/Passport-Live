@@ -355,15 +355,6 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     
 })
 
-//tracking email
-var emailTracker = require('pixel-tracker');
-emailTracker.use(function (error, result) {
-  console.log(result)
-});
 
-router.get("/email/pixel.gif", function(req, res, next) {
-    console.log(req)
-    return next();
-}, emailTracker.middleware);
 
 module.exports = router;

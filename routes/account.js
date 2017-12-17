@@ -34,7 +34,7 @@ var db = require('../modules/db/index.js');
 
 //RaTE LIMIT RATE LIMIT!!
 //Reset Password 
-router.get("/resetPassword", (req, res, next) => {
+router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
     var permissionKey = req.query.key;
     var notif = req.query.notif;
     if(typeof permissionKey === "string") {
@@ -62,7 +62,7 @@ router.get("/resetPassword", (req, res, next) => {
     }
 })
 //RaTE LIMIT RATE LIMIT!!
-router.patch("/resetPassword", (req, res, next) => {
+router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
     //console.log(req.signedCookies.JWT);
     if(req.header("authorization")) {
         jwt.verify(req.header("authorization").substring(4), config.get('secrets.api-secret-key'), (err, decode) => {
@@ -117,7 +117,7 @@ router.patch("/resetPassword", (req, res, next) => {
 //RaTE LIMIT RATE LIMIT!!
 //Account Activation
 //localhost:3000/account/activate
-router.get("/activate", function(req, res, next) {
+router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
   var permissionKey = req.query.key; //Activation Key (permission key)
   if(typeof permissionKey === "string") {
     securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
@@ -187,7 +187,7 @@ router.get("/activate", function(req, res, next) {
     * @apiresponse {json} Sends Status code of 202, or the error.
     */
 
-router.post("/sendResetPasswordEmail", function sendResetPasswordEmail(req, res, next) {
+router.post("/sendResetPasswordEmail", utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.emailPasswordResetBruteforce.prevent, function sendResetPasswordEmail(req, res, next) {
     if(!typeCheck("{email: String, ...}", req.body)) {
         var err = new Error("body.email expected a string"); err.status = 400; return next(err);
     }

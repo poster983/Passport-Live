@@ -170,7 +170,7 @@ email: hi@josephhassell.com
                   showMessage("Email sent", "Allow up to 10 minutes for the email to arrive. <br> Please remember to check your spam.");
                 },
                 error: function(jqXHR) {
-                  showMessage("Error sending email", "Please refresh the page and try again. <br> Error log dumped in console.");
+                  showMessage("Error sending email", decodeURIComponent(jqXHR.getResponseHeader("errormessage")) + "<br> Please refresh the page and try again. <br> Error log dumped in console.");
                   console.error(jqXHR);
                 }                      
               });
@@ -189,13 +189,7 @@ email: hi@josephhassell.com
                 $("#login-inputs").removeClass("load").addClass("animate");
             }
         }
-        //handle submit
-        $('body').keypress(function (e) {
-          if (e.which == 13) {
-            login();
-            return false;   
-          }
-        });
+        
 
 
         $(window).on('hashchange', function() {
@@ -212,9 +206,18 @@ email: hi@josephhassell.com
           //reset event listeners 
           $("#email").off();
           $("#password").off();
+          $("body").off();
           
           //show and init pages 
           if(window.location.hash == "#resetPassword") {
+            //handle submit
+            $('body').on("keypress", function (e) {
+              if (e.which == 13) {
+                sendPasswordResetEmail();
+                return false;   
+              }
+            });
+
             $("#back-button > a").attr("href", "#");
             $("#password-div").slideUp(500);
             $("#login-btn-container").slideUp(500);
@@ -249,6 +252,13 @@ email: hi@josephhassell.com
             $("#logo").removeClass("animate").addClass("load");
             $("#login-inputs").removeClass("animate").addClass("load");
           } else {
+            //handle submit
+            $('body').on("keypress", function (e) {
+              if (e.which == 13) {
+                login();
+                return false;   
+              }
+            });
             $("#email").on( "keyup", function(){checkFormFill();})
             $("#password").on( "keyup", function(){checkFormFill();})
             

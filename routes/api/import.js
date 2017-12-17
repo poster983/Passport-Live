@@ -59,7 +59,7 @@ router.get("/log", passport.authenticate('jwt', { session: false}), ssarv(["admi
 
 //passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}),
 
-router.post('/accounts', upload.single('excelImport'), function (req, res, next) {
+/*router.post('/accounts', upload.single('excelImport'), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   res.send(req.file)
@@ -123,6 +123,6 @@ router.post('/test/student', function (req, res, next) {
             console.error(err);
             res.json(err)
         });
-})
+})*/
 
 module.exports = router;

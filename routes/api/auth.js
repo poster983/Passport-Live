@@ -26,6 +26,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var api = require('../../modules/passport-api/auth.js');
+var utils = require('../../modules/passport-utils/index.js');
 
 var cors = require('cors');
 
@@ -64,10 +65,14 @@ function serializeUser(req, res, done) {
     * @todo Test application/json
     * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
     */
-router.post('/login', passport.authenticate('local-login', {
+router.post('/login', utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.loginBruteforce.getMiddleware({
+    key: function(req, res, next) {
+        next(req.body.email);
+    }
+}), passport.authenticate('local-login', {
   session: false
 }), function handleAuthLogin(req, res, next) {
-
+    req.brute.reset();
     api.newJWT(req.user[0].id, function(err, jwt) {
         if(err) {
             return next(err);
@@ -98,9 +103,14 @@ router.post('/login', passport.authenticate('local-login', {
     * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth
     */
 
-router.post('/login/dscm', passport.authenticate('local-login', {
+router.post('/login/dscm', utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.loginBruteforce.getMiddleware({
+    key: function(req, res, next) {
+        next(req.body.email);
+    }
+}), passport.authenticate('local-login', {
   session: true
 }), function loginDSCM(req, res, next) {
+    req.brute.reset();
     api.newJWTForCookies(req.user[0].id, function(err, jwtData) {
         if(err) {
             return next(err);
@@ -119,7 +129,7 @@ router.post('/login/dscm', passport.authenticate('local-login', {
 
 
 
-router.get("/google/callback", passport.authenticate( 'google', { 
+router.get("/google/callback", utils.rateLimit.publicApiBruteforce.prevent, passport.authenticate( 'google', { 
         failureRedirect: '/auth/login?failGoogle=true'
 }), function(req, res, next) {
     console.log(req.user, "USER RETURNED")

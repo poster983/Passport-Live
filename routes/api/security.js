@@ -27,6 +27,7 @@ var cors = require('cors');
 var passport = require("passport");
 var config = require("config");
 var api = require("../../modules/passport-api/security.js");
+var utils = require("../../modules/passport-utils/index.js");
 var typeCheck = require("type-check").typeCheck;
 var ssarv = require("ssarv");
 
@@ -107,10 +108,9 @@ router.post('/key/API', function handleNewApiKey(req, res, next) {
     * @apiquery {string} key - permission key
     * @apiresponse {json} Returns the permission key data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Rate Limit DONT USE JWT
     */
 
-router.get('/key/:type', function getPermissionKeyData(req, res, next) {
+router.get('/key/:type', utils.rateLimit.publicApiBruteforce.prevent, function getPermissionKeyData(req, res, next) {
     var key = req.query.key;
     var type = req.params.type;
     if(!typeCheck("String", key)) {
