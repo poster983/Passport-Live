@@ -23,7 +23,7 @@
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
-    "webpack": "webpack --progress --colors"
+    "build": "webpack --progress --colors"
   },
   "repository": {
     "type": "git",
