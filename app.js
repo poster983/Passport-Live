@@ -80,7 +80,7 @@ app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
 
 
 //config 
-console.log(process.env.NODE_ENV)
+console.log("Environment:", process.env.NODE_ENV)
 if(process.env.NODE_ENV == "production") {
   app.use(logger('dev'));
 } else {

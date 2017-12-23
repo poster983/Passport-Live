@@ -56,18 +56,6 @@ class StudentScheduleEditor {
                         }
                     }
                 })
-                //console.log(scheduleConfig, allSchedules);
-                
-                //data mapping 
-                
-                //console.log(tableArray)
-
-                /*$("<span/>")
-                                    .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
-                                        $("#" + this.addRowButtonID).attr("disabled", false)
-                                        studentTable.deleteRow(row.rowID)
-                                    }).append($("<i/>").addClass("material-icons").html("delete")))
-                                    .append(sel)*/
 
                 this.studentTable = new Table(this.container, [{}], {
                     preferInject: false,
@@ -299,7 +287,19 @@ class StudentScheduleEditor {
     }
     _compileFormData() {
         return new Promise((resolve, reject) => {
-            return resolve(this.studentTable.getTableBody());
+            let formData = {};
+            let tableBody = this.studentTable.getTableBody().children();
+            console.log(this.studentTable.getTableBody());
+            for(let x = 0; x < tableBody.length; x++) {
+                console.log("Table Rows:", tableBody[x])
+                console.log("Period Select:", $(tableBody[x]).find("select." + this.periodSelectClass))
+                if($(tableBody[x]).find("select." + this.periodSelectClass).val()) {
+                    console.log("Period Select Value:", $(tableBody[x]).find("select." + this.periodSelectClass).val())
+                    console.log(x, "has period")
+                } else {
+                    return reject(new Error("Form not valid. Missing Period."));
+                }
+            }
         })
     }
 }
