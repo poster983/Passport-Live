@@ -27,7 +27,7 @@ var miscAPI = require("../api/misc.js");
 var utils = require("../utils/index.js");
 
 class StudentScheduleEditor {
-    constructor(formOutputContainer, options) {
+    constructor(formOutputContainer, submitButtonElm, options) {
         this.container = formOutputContainer;
         if(!options) {options = {}}
         this.options = options;
@@ -35,6 +35,9 @@ class StudentScheduleEditor {
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
         this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
+    }
+    clearContainer() {
+        $(this.container).empty();
     }
     generate() {
         return new Promise((resolve, reject) => {
@@ -112,11 +115,15 @@ class StudentScheduleEditor {
                             }
                         }
                     }
+                    
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
                         this.studentTable.appendRow([{}])
                     }))
+
+                    //generation done
+                    return resolve();
                 });
 
 
@@ -281,6 +288,18 @@ class StudentScheduleEditor {
                 return resolve({valid: true});
             }).catch(err => reject(err));
         
+        })
+    }
+    submit() {
+        return new Promise((resolve, reject) => {
+            this._compileFormData().then((form) => {
+                return resolve(form);
+            }).catch((err) => {return reject(err)});
+        })
+    }
+    _compileFormData() {
+        return new Promise((resolve, reject) => {
+            return resolve(this.studentTable.getTableBody());
         })
     }
 }

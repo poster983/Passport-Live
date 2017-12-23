@@ -2145,6 +2145,8 @@ class Table {
             this._sortData(data, injectOnce).then(({rows}) => {
                 this._compileRow(this.table.data.head, rows).then((elements) => {
                     $("#" + this.table.body.id).append(elements)
+                    //update table object
+                    this.table.data.rows.push(rows);
                     if(typeCheck("Function", this.options.afterGenerate)) {
                         this.options.afterGenerate();
                     }
@@ -2155,6 +2157,9 @@ class Table {
     }
     deleteRow(TABLE_ROW_ID) {
         this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    getTableBody() {
+        return $("#" + this.table.body.id);
     }
     _sortData(data, injectOnce) {
         return new Promise((resolve, reject) => {
@@ -2635,7 +2640,14 @@ var scheduleEditor = null;
 window.onload = function() {
     console.log(utils.thisUser())
     scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-    scheduleEditor.generate().catch(err => utils.throwError(err))
+    scheduleEditor.generate().then(() => {
+        $("#tempSubmit").on("click", (e) => {
+            scheduleEditor.submit().then((resp) => {
+                console.log(resp);
+            }).catch((err) => {utils.throwError(err)})
+        })
+    }).catch(err => utils.throwError(err))
+
 }
 
 /***/ }),
@@ -2671,7 +2683,7 @@ var miscAPI = __webpack_require__(21);
 var utils = __webpack_require__(0);
 
 class StudentScheduleEditor {
-    constructor(formOutputContainer, options) {
+    constructor(formOutputContainer, submitButtonElm, options) {
         this.container = formOutputContainer;
         if(!options) {options = {}}
         this.options = options;
@@ -2679,6 +2691,9 @@ class StudentScheduleEditor {
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
         this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
+    }
+    clearContainer() {
+        $(this.container).empty();
     }
     generate() {
         return new Promise((resolve, reject) => {
@@ -2756,11 +2771,15 @@ class StudentScheduleEditor {
                             }
                         }
                     }
+                    
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
                         this.studentTable.appendRow([{}])
                     }))
+
+                    //generation done
+                    return resolve();
                 });
 
 
@@ -2925,6 +2944,18 @@ class StudentScheduleEditor {
                 return resolve({valid: true});
             }).catch(err => reject(err));
         
+        })
+    }
+    submit() {
+        return new Promise((resolve, reject) => {
+            this._compileFormData().then((form) => {
+                return resolve(form);
+            }).catch((err) => {return reject(err)});
+        })
+    }
+    _compileFormData() {
+        return new Promise((resolve, reject) => {
+            return resolve(this.studentTable.getTableBody());
         })
     }
 }

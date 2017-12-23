@@ -184,6 +184,8 @@ class Table {
             this._sortData(data, injectOnce).then(({rows}) => {
                 this._compileRow(this.table.data.head, rows).then((elements) => {
                     $("#" + this.table.body.id).append(elements)
+                    //update table object
+                    this.table.data.rows.push(rows);
                     if(typeCheck("Function", this.options.afterGenerate)) {
                         this.options.afterGenerate();
                     }
@@ -194,6 +196,9 @@ class Table {
     }
     deleteRow(TABLE_ROW_ID) {
         this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    getTableBody() {
+        return $("#" + this.table.body.id);
     }
     _sortData(data, injectOnce) {
         return new Promise((resolve, reject) => {

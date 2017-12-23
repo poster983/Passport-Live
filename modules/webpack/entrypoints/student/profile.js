@@ -26,5 +26,12 @@ var scheduleEditor = null;
 window.onload = function() {
     console.log(utils.thisUser())
     scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-    scheduleEditor.generate().catch(err => utils.throwError(err))
+    scheduleEditor.generate().then(() => {
+        $("#tempSubmit").on("click", (e) => {
+            scheduleEditor.submit().then((resp) => {
+                console.log(resp);
+            }).catch((err) => {utils.throwError(err)})
+        })
+    }).catch(err => utils.throwError(err))
+
 }
