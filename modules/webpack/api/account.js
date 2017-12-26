@@ -35,3 +35,4 @@ var utils = require("../utils/index.js");
 exports.getWithClasses = () => {
     return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
 }
+

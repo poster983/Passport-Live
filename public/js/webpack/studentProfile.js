@@ -2944,18 +2944,41 @@ class StudentScheduleEditor {
     _compileFormData() {
         return new Promise((resolve, reject) => {
             let formData = {};
+            let loopPromise = [];
             let tableBody = this.studentTable.getTableBody().children();
             console.log(this.studentTable.getTableBody());
             for(let x = 0; x < tableBody.length; x++) {
-                console.log("Table Rows:", tableBody[x])
-                console.log("Period Select:", $(tableBody[x]).find("select." + this.periodSelectClass))
-                if($(tableBody[x]).find("select." + this.periodSelectClass).val()) {
-                    console.log("Period Select Value:", $(tableBody[x]).find("select." + this.periodSelectClass).val())
-                    console.log(x, "has period")
-                } else {
-                    return reject(new Error("Form not valid. Missing Period."));
-                }
+                loopPromise.push(new Promise((resolve, reject) => {
+                    console.log("Table Rows:", tableBody[x])
+                    console.log("Period Select:", $(tableBody[x]).find("select." + this.periodSelectClass))
+                    let period = $(tableBody[x]).find("select." + this.periodSelectClass).val();
+                    if(period) {
+                        //set var.
+                        formData[period] = {};
+                        console.log("Period Select Value:", $(tableBody[x]).find("select." + this.periodSelectClass).val())
+                        console.log(x, "has period")
+                        //ROW HAS PERIOD, CONTINUE
+                        console.log("Location Toggle:", $(tableBody[x]).find("a[data-location]"))
+                        if($(tableBody[x]).find("a[data-location]").attr("data-location") === "true") {
+                            console.log(x, "has Location")
+                            let autoVal = $(tableBody[x]).find("input."+ this.autocompleteClass).val();
+                            console.log("Aucocomplete Value:", autoVal);
+                            //Validate Autocomplete Val 
+
+                            return resolve();
+                        } else {
+                            formData[period].teacherID = null;
+                            //Done
+                            return resolve();
+                        }
+                    } else {
+                        return reject(new Error("Form not valid. Missing Period."));
+                    }
+                }));
             }
+            Promise.all(loopPromise).then(() => {
+                return resolve(formData);
+            }).catch((err) => {return reject(err);})
         })
     }
 }

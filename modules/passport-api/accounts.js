@@ -25,6 +25,7 @@ email: hi@josephhassell.com
 */
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+var r_ = db.dash()
 var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
 var utils = require("../passport-utils/index.js")
@@ -40,7 +41,7 @@ var emailJS = require("./email.js");
 /** 
     * Creates An Account 
     * @function createAccount
-    * @link module:passportApi
+    * @link module:js/accounts
     * @async
     * @example
     * api.createAccount({userGroup: "student", name: {first: "Student", last: "McStudentface", salutation: "Mx." } email: "james.smith@gmail.com", schoolID: "123456", {studentID: 01236, isArchived: false }, function(err){
@@ -290,8 +291,57 @@ exports.createAccount = function(user, options) {
     * @param {object} err - Returns an error object if any.
     */
 
+/** 
+    * Searches accounts that match the query
+    * @link module:js/accounts
+    * @param {Object} query
+    * @param {string} query.id - Primary Key.  Uses getAll.  
+    * @param {string} query.email
+    * @param {userGroup} query.userGroup
+    * @param {Object} query.name
+    * @param {string} query.name.salutation - User's prefix/salutation
+    * @param {string} query.name.first - User's given name
+    * @param {string} query.name.last - User's family name
+    * @returns {Promise} Includes an object or null if the id key is given, an array if not.
+    */
+exports.get = (query) => {
+    return new Promise((resolve, reject) => {
+        let typeStruct = `{
+            id: Maybe String, 
+            email: Maybe String, 
+            userGroup: Maybe userGroup,
+            name: Maybe {
+                salutation: Maybe String,
+                first: Maybe String,
+                last: Maybe String
+            }
+        }`;
+        if(!typeCheck(typeStruct, query, utils.typeCheck)) {
+            return reject(new TypeError("Expected \"query\" to have structure of: \"" + typeStruct + "\""));
+        }
+        let dbquery = r_.table("accounts");
+        if(query.id) {
+            dbquery = dbquery.getAll(query.id);
+            delete query.id;
+        }
+        dbquery = dbquery.filter(query);
+        //run query
+        dbquery.run().then(resolve).catch(reject)
+    })
+}
 
-
+setTimeout(() => {
+exports.get({
+    id: "sdhjfajaklsdf",
+    /*name: {
+        first: "Hi"
+    }*/
+}).then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.error(err);
+})
+}, 500);
 /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName
