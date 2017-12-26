@@ -141,6 +141,49 @@ function serializeUser(req, res, done) {
     })
 });
 
+/**
+    * Searches Accounts
+    * @function searchAccounts
+    * @api GET /api/account/
+    * @apiquery {(string|undefined)} id - The id of the user. A Primary Key. Uses getAll.
+    * @apiquery {(string|undefined)} email
+    * @apiquery {(userGroup|undefined)} userGroup
+    * @apiquery {(string|undefined)} name - If a string, any other name query (name_salutation, name_first, name_last) will be ignored 
+    * @apiquery {(string|undefined)} name_salutation - User's prefix/salutation
+    * @apiquery {(string|undefined)} name_first - User's given name
+    * @apiquery {(string|undefined)} name_last - User's family name
+    * @apiquery {(string|undefined)} schoolID
+    * @apiquery {(number|undefined)} graduationYear - Will be typecast
+    * @apiresponse {Object[]} Returnes the safe info
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+router.get("/", passport.authenticate('jwt', { session: false}), function searchAccounts(req, res, next) {
+    if(!req.query.name) {
+        if(req.query.name_salutation || req.query.name_first || req.query.name_last) {
+            req.query.name = {};
+            if(req.query.name_salutation) {
+                req.query.name.salutation = req.query.name_salutation;
+            }
+            if(req.query.name_first) {
+                req.query.name.first = req.query.name_first;
+            }
+            if(req.query.name_last) {
+                req.query.name.last = req.query.name_last;
+            }
+        }
+    }
+    if(typeof req.query.graduationYear === "string") {
+        req.query.graduationYear = parseInt(req.query.graduationYear);
+    }
+    delete req.query.name_salutation;
+    delete req.query.name_first;
+    delete req.query.name_last;
+    api.get(req.query).then((users) => {
+        return res.json(users)
+    }).catch((err) => {
+        return next(err);
+    })
+})
 
 /**
     * GETs accounts by id

@@ -135,6 +135,8 @@ exports.createAccount = function(user, options) {
 
         if(!user.schoolID || user.schoolID == "") {
             user.schoolID = null;
+        } else {
+            user.schoolID = user.schoolID + "";
         }
         if(!user.graduationYear || user.graduationYear == "") {
             if(config.has('userGroups.' + user.userGroup + '.graduates') && config.get('userGroups.' + user.userGroup + '.graduates') == true) {
@@ -295,14 +297,16 @@ exports.createAccount = function(user, options) {
     * Searches accounts that match the query
     * @link module:js/accounts
     * @param {Object} query
-    * @param {string} query.id - Primary Key.  Uses getAll.  
-    * @param {string} query.email
-    * @param {userGroup} query.userGroup
-    * @param {Object} query.name
-    * @param {string} query.name.salutation - User's prefix/salutation
-    * @param {string} query.name.first - User's given name
-    * @param {string} query.name.last - User's family name
-    * @returns {Promise} Includes an object or null if the id key is given, an array if not.
+    * @param {(string|undefined)} query.id - Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email
+    * @param {(userGroup|undefined)} query.userGroup
+    * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
+    * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
+    * @param {(string|undefined)} query.name.first - User's given name
+    * @param {(string|undefined)} query.name.last - User's family name
+    * @param {(string|number|undefined)} query.schoolID
+    * @param {(number|undefined)} query.graduationYear
+    * @returns {Promise} Includes array.
     */
 exports.get = (query) => {
     return new Promise((resolve, reject) => {
@@ -310,38 +314,59 @@ exports.get = (query) => {
             id: Maybe String, 
             email: Maybe String, 
             userGroup: Maybe userGroup,
-            name: Maybe {
+            name: Maybe String | {
                 salutation: Maybe String,
                 first: Maybe String,
                 last: Maybe String
-            }
+            },
+            schoolID: Maybe String | Number
+            graduationYear: Maybe Number
         }`;
         if(!typeCheck(typeStruct, query, utils.typeCheck)) {
             return reject(new TypeError("Expected \"query\" to have structure of: \"" + typeStruct + "\""));
         }
+        if(typeof query.schoolID === "number") {
+            query.schoolID = query.schoolID.toString();
+        }
         let dbquery = r_.table("accounts");
         if(query.id) {
-            dbquery = dbquery.getAll(query.id);
+            let queryID = query.id;
             delete query.id;
+            dbquery = dbquery.getAll(queryID);
+            
         }
+        //Samrt Name Search
+        if(typeof query.name === "string") {
+            let nameStr = query.name;
+            delete query.name;
+            dbquery = dbquery.filter(function(doc){
+                return r_.or(doc('name')('first').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
+                            doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
+                            doc('name')('salutation').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,''))
+                        )
+            })
+
+        }
+        //leftover query
         dbquery = dbquery.filter(query);
         //run query
         dbquery.run().then(resolve).catch(reject)
     })
 }
-
+/*
 setTimeout(() => {
 exports.get({
-    id: "sdhjfajaklsdf",
-    /*name: {
-        first: "Hi"
-    }*/
+    //name: "ass"
+    //id: "sdhjfajaklsdf",
+    name: {
+        first: "Joseph"
+    }
 }).then((res) => {
     console.log(res)
 }).catch((err) => {
     console.error(err);
 })
-}, 500);
+}, 500);*/
 /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName

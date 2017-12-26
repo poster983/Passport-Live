@@ -36,3 +36,21 @@ exports.getWithClasses = () => {
     return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
 }
 
+/** 
+    * Searches accounts that match the query
+    * @link webpack/api/accounts
+    * @param {Object} query
+    * @param {(string|undefined)} query.id - Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email
+    * @param {(userGroup|undefined)} query.userGroup
+    * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
+    * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
+    * @param {(string|undefined)} query.name.first - User's given name
+    * @param {(string|undefined)} query.name.last - User's family name
+    * @param {(string|number|undefined)} query.schoolID
+    * @param {(number|undefined)} query.graduationYear
+    * @returns {Promise} Includes array.
+    */
+exports.get = (query) => {
+
+}
