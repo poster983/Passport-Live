@@ -2800,7 +2800,9 @@ email: hi@josephhassell.com
 */
 var ScheduleEditor = __webpack_require__(19);
 var utils = __webpack_require__(0);
-var scheduleJS = __webpack_require__(14)
+var scheduleJS = __webpack_require__(14);
+var unsavedWork = __webpack_require__(22)
+
 
 var scheduleEditor = null;
 window.onload = function() {
@@ -2812,7 +2814,30 @@ window.onload = function() {
         responsive: true,
     });
     loadMySchedules();
+
+    unsavedWork.button("#tempBack", {
+        onAction: () => {
+            console.log("discarded")
+        },
+        onWarn: () => {
+            console.log("Warning")
+        },
+        onSave: () => {
+            console.log("Saved")
+        }
+    })
+    $("#tempChanges").on("click", (e) => {
+        unsavedWork.changed("#tempBack");
+    })
+    $("#tempSave").on("click", (e) => {
+        unsavedWork.saved("#tempBack");
+    })
+     $("#tempDestroy").on("click", (e) => {
+        unsavedWork.destroy("#tempBack");
+    })
 }
+
+
 
 //Router
 window.addEventListener("hashchange", routeHash);
@@ -2822,9 +2847,11 @@ function routeHash() {
     switch(hash) {
         case "#editSchedule": 
             utils.openPage("scheduleEditor");
+            $("#mixenSESave").removeClass("disabled");
             initScheduleEditor();
             break;
         default: 
+            $("#mixenSESave").addClass("disabled");
             utils.closePage("scheduleEditor");
     }
 }
@@ -2834,7 +2861,7 @@ function initScheduleEditor() {
     if(!scheduleEditor) {
         scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
         scheduleEditor.generate().then(() => {
-            $("#tempSubmit").on("click", (e) => {
+            $("#mixenSESave").on("click", (e) => {
                 scheduleEditor.submit().then((resp) => {
                     console.log(resp);
                     if(resp.transaction && resp.transaction.unchanged >= 1) {
@@ -2939,20 +2966,14 @@ function saveSettings() {
     console.log("Not Implemented")
 }
 
-//const game = new IconGame("avatar");
-/*window.addEventListener("keydown", keydown, false)
-window.addEventListener("keyup", keyup, false)*/
-//EE (I'm a nerd :P)
+
+// (I'm a nerd :P)
 //call key press function 
 document.onkeydown = checkKey;
 var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 var konamiUser = 0;
 function checkKey(e) {
     e = e || window.event;
-    //check if game is running
-    /*if(game.isRunning) {
-        console.log("runn")
-    }*/
     if(konami[konamiUser] != e.keyCode) {
         konamiUser = 0;
     } else {
@@ -2960,7 +2981,11 @@ function checkKey(e) {
     }
     if (konami.length == konamiUser) {
         konamiUser = 0;
-        console.log("TODO")
+        Materialize.toast('THIS IS AN EASTER EGG!', 6000)
+        setTimeout(function() {
+            Materialize.toast('I need ideas!', 6000)
+        }, 1000);
+        console.log("TODO EASTER EGG")
     }
     
 }
@@ -3448,6 +3473,130 @@ var utils = __webpack_require__(0);
 */
 exports.getScheduleConfig = () => {
     return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
+}
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser module for storing if work is unsaved and then notifying the user.
+* This is ment to be used with the back buttons on the mustache mixen pages.
+* If the button is clicked and there is unsaved work, the button will need to be pressed again for the button action to go through.
+* @module webpack/unsavedWork
+*/
+
+/**
+* Initiates a button for tracking if work is unsaved.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to initiate for trackeing
+* @param {Object} [callbacks] 
+* @param {function} [callbacks.onAction] - called when the button action goes through. IE The page is discarded. The click event and the element are passed
+* @param {function} [callbacks.onWarn] - called when the button action is canceled and a warning should be showed. The click event and the element are passed 
+* @param {function} [callbacks.onSave] - called when the element is saved and it is save to discard. The Element is passed
+*/
+exports.button = (element, callbacks) => {
+    if(!callbacks || typeof callbacks !== "object") {callbacks = {};}
+    element = $(element);
+    //bind callback to element
+    if(typeof callbacks.onSave === "function") {
+        element.data("onSave", callbacks.onSave);
+    }
+    element.attr("data-unsaved", false);
+    element.attr("data-willdiscard", false);
+    element.on("click", (event) => {
+        if(element.attr("data-willdiscard") === "true") {
+            if(typeof callbacks.onAction === "function") {
+                return callbacks.onAction({event: event, element: element});
+            }
+        }
+        if(element.attr("data-unsaved") === "true") {
+            element.attr("data-willdiscard", true);
+            //stop any href or onclick.
+            if(typeof callbacks.onWarn === "function") {
+                return callbacks.onWarn({event: event, element: element});
+            }
+            event.preventDefault();
+        } else {
+            if(typeof callbacks.onAction === "function") {
+                return callbacks.onAction({event: event, element: element});
+            }
+        }
+    })
+}
+
+
+/**
+* Call this when data is changed and thus unsaved.
+* [Button]{@link module:webpack/unsavedWork.button} must be called first.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to notify about the change.
+*/
+exports.changed = (element) => {
+    element = $(element);
+    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
+        throw new Error("Please call .button(element, ondiscard) on this element before calling .changed(element)");
+    }
+    element.attr("data-unsaved", true);
+    element.attr("data-willdiscard", false);
+}
+
+
+/**
+* Call this when data is saved and it is ok to click the button. IE. a reset
+* [Button]{@link module:webpack/unsavedWork.button} must be called first.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to notify about the change.
+*/
+
+exports.saved = (element) => {
+    element = $(element);
+    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
+        throw new Error("Please call .button(element, ondiscard) on this element before calling .saved(element)");
+    }
+    element.attr("data-unsaved", false);
+    element.attr("data-willdiscard", false);
+    if(typeof element.data("onSave") === "function") {
+        element.data("onSave")(element);
+    }
+}
+
+/**
+* Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted
+* [Button]{@link module:webpack/unsavedWork.button} must be called first.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to destroy.
+*/
+exports.destroy = (element) => {
+    element = $(element);
+    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
+        throw new Error("Please call .button(element, ondiscard) on this element before calling .destroy(element)");
+    }
+    element.attr("data-unsaved", null);
+    element.attr("data-willdiscard", null);
+    element.data("onSave", null);
+    element.off("click");
 }
 
 /***/ })

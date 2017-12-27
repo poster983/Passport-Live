@@ -21,7 +21,9 @@ email: hi@josephhassell.com
 */
 var ScheduleEditor = require("../../sections/StudentScheduleEditor.js");
 var utils = require("../../utils/index.js");
-var scheduleJS = require("../../api/schedule.js")
+var scheduleJS = require("../../api/schedule.js");
+var unsavedWork = require("../../common/unsavedWork.js")
+
 
 var scheduleEditor = null;
 window.onload = function() {
@@ -33,7 +35,30 @@ window.onload = function() {
         responsive: true,
     });
     loadMySchedules();
+
+    unsavedWork.button("#tempBack", {
+        onAction: () => {
+            console.log("discarded")
+        },
+        onWarn: () => {
+            console.log("Warning")
+        },
+        onSave: () => {
+            console.log("Saved")
+        }
+    })
+    $("#tempChanges").on("click", (e) => {
+        unsavedWork.changed("#tempBack");
+    })
+    $("#tempSave").on("click", (e) => {
+        unsavedWork.saved("#tempBack");
+    })
+     $("#tempDestroy").on("click", (e) => {
+        unsavedWork.destroy("#tempBack");
+    })
 }
+
+
 
 //Router
 window.addEventListener("hashchange", routeHash);
@@ -43,9 +68,11 @@ function routeHash() {
     switch(hash) {
         case "#editSchedule": 
             utils.openPage("scheduleEditor");
+            $("#mixenSESave").removeClass("disabled");
             initScheduleEditor();
             break;
         default: 
+            $("#mixenSESave").addClass("disabled");
             utils.closePage("scheduleEditor");
     }
 }
@@ -55,7 +82,7 @@ function initScheduleEditor() {
     if(!scheduleEditor) {
         scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
         scheduleEditor.generate().then(() => {
-            $("#tempSubmit").on("click", (e) => {
+            $("#mixenSESave").on("click", (e) => {
                 scheduleEditor.submit().then((resp) => {
                     console.log(resp);
                     if(resp.transaction && resp.transaction.unchanged >= 1) {
@@ -160,20 +187,14 @@ function saveSettings() {
     console.log("Not Implemented")
 }
 
-//const game = new IconGame("avatar");
-/*window.addEventListener("keydown", keydown, false)
-window.addEventListener("keyup", keyup, false)*/
-//EE (I'm a nerd :P)
+
+// (I'm a nerd :P)
 //call key press function 
 document.onkeydown = checkKey;
 var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 var konamiUser = 0;
 function checkKey(e) {
     e = e || window.event;
-    //check if game is running
-    /*if(game.isRunning) {
-        console.log("runn")
-    }*/
     if(konami[konamiUser] != e.keyCode) {
         konamiUser = 0;
     } else {
@@ -181,7 +202,11 @@ function checkKey(e) {
     }
     if (konami.length == konamiUser) {
         konamiUser = 0;
-        console.log("TODO")
+        Materialize.toast('THIS IS AN EASTER EGG!', 6000)
+        setTimeout(function() {
+            Materialize.toast('I need ideas!', 6000)
+        }, 1000);
+        console.log("TODO EASTER EGG")
     }
     
 }
