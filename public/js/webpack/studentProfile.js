@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,8 +96,8 @@ email: hi@josephhassell.com
 /**
 * Takes an Object and returns a URL Query string
 * @link module:webpack/utils
-* @param (Object) params
-* @returns (String)
+* @param {Object} params
+* @returns {String}
 */
 exports.urlQuery = (params) => {
     return query = Object.keys(params)
@@ -109,8 +109,8 @@ exports.urlQuery = (params) => {
 /**
 * Parses an error, and triggers a toast 
 * @link module:webpack/utils
-* @param (Error) err
-* @returns (undefined)
+* @param {Error} err
+* @returns {undefined}
 */
 exports.throwError = (err) => {
   //Do more Later
@@ -131,14 +131,14 @@ exports.throwError = (err) => {
 /**
 * An wrapper for the fetch api to make code clean   
 * @link module:webpack/utils
-* @param (String) method - GET, POST, PATCH, PUT, DELETE, ect.
-* @param (String) url - Url to send request to.
-* @param ({Object|undefined}) data
-* @param ({Object|undefined}) data.query - JSON key pair to add to the URL as a query
-* @param ({Object|undefined}) data.body - Data to send in the body of the request.  May not work with GET and DELETE
-* @param ({Boolean|undefined}) data.head - Data to be sent as the header. Json object
-* @param ({Boolean|undefined}) data.auth - If true, it will send the XSRF-TOKEN to the server
-* @returns (Promise)
+* @param {String} method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param {String} url - Url to send request to.
+* @param {(Object|undefined)} data
+* @param {(Object|undefined)} data.query - JSON key pair to add to the URL as a query
+* @param {(Object|undefined)} data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param {(Boolean|undefined)} data.head - Data to be sent as the header. Json object
+* @param {(Boolean|undefined)} data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns {Promise}
 */
 exports.fetch = (method, url, data) => {
   return new Promise((resolve, reject) => {
@@ -166,8 +166,8 @@ exports.fetch = (method, url, data) => {
 /**
 * Parses a fetch response and either throws an error, or it returns a promise  
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchStatus = (response) => {
   //console.log(response)
@@ -185,8 +185,8 @@ exports.fetchStatus = (response) => {
 /**
 * Converts response to json   
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchJSON = (response) => {
   return response.json()
@@ -195,7 +195,7 @@ exports.fetchJSON = (response) => {
 /**
 * Creates a UUID V4 Id    
 * @link module:webpack/utils
-* @returns (String)
+* @returns {String}
 */
 exports.uuidv4 = () => {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
@@ -206,10 +206,10 @@ exports.uuidv4 = () => {
 /**
 * Sets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Value to name the cookie
-* @param (String) cvalue - Value of the cookie
-* @param (Number) exdays - Days until expired
-* @returns (undefined)
+* @param {String} cname - Value to name the cookie
+* @param {String} cvalue - Value of the cookie
+* @param {Number} exdays - Days until expired
+* @returns {undefined}
 */
 exports.setCookie = (cname, cvalue, exdays) => {
     var d = new Date();
@@ -221,8 +221,8 @@ exports.setCookie = (cname, cvalue, exdays) => {
 /**
 * Gets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Name of the cookie
-* @returns (String)
+* @param {String} cname - Name of the cookie
+* @returns {String}
 */
 exports.getCookie = (name) => {
     /*var name = cname + "=";
@@ -246,8 +246,8 @@ exports.getCookie = (name) => {
 /**
 * Returns a list of every distinct key in the object   
 * @link module:webpack/utils
-* @param (Object[]) arr - Array of the json objects with keys to test
-* @returns (String[])
+* @param {Object[]} arr - Array of the json objects with keys to test
+* @returns {String[]}
 */
 exports.distinctKeys = (arr) => {
     return Object.keys(arr.reduce(function(result, obj) {
@@ -258,10 +258,108 @@ exports.distinctKeys = (arr) => {
 /**
 * Returns the current user's ID 
 * @link module:webpack/utils
-* @returns (String)
+* @returns {String}
 */
 exports.thisUser = () => {
   return exports.getCookie("ACCOUNT-ID");
+}
+
+/**
+* Material full screen response for major actions
+* @link module:webpack/utils
+* @param {string} icon - Can be "check" or "cancel"
+* @param {string} colorClass - Either a css class to apply to the background or presets: "success" "error" or "warning"
+* @returns {function} done
+*/
+exports.materialResponse = (icon, colorClass, done) => {
+  switch(colorClass){
+    case "success": 
+      colorClass = "green accent-3";
+      break;
+     case "error": 
+      colorClass = "red accent-4";
+      break;
+    case "warning": 
+      colorClass = "orange accent-4";
+      break;
+  }
+
+  //Set the elements 
+  $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
+    //setup green grow
+    if(icon == "check") {
+      $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
+        //Check marks 
+      $('#Cleft').addClass('Cleft CleftIn');
+      $('#Cright').addClass('Cright CrightIn');
+    }
+    if(icon == "cancel") {
+        //X marks 
+      $('#Xleft').addClass('Xleft XleftIn');
+      $('#Xright').addClass('Xright XrightIn');
+    }
+
+    $("#circleThing").removeClass().addClass("circleThing circleGrow");
+    //addcolor
+    $("#circleThing").addClass(colorClass);
+
+    //on circle complete 
+    $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+      
+      $("#circleThingContainer").addClass(colorClass)
+      $('#circleThing').removeClass().addClass('circleThing');
+      //wait for 1 second
+      setTimeout(function() {
+        if(icon == "check") {
+          $('#checkmarkContainer').removeClass('checkmarkContainerIn').addClass('checkmarkContainerOut');
+          $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
+          $('#Cright').removeClass('CrightIn').addClass("CrightOut");
+        }
+        if(icon == "cancel") {
+            //X marks 
+          $('#Xleft').removeClass('XleftIn').addClass("XLeftOut");
+          $('#Xright').removeClass('XrightIn').addClass("XrightOut");
+        }
+
+        $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+        //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+        //when final one ends
+        $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+          $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4")
+          setTimeout(function() {
+            $('#Xleft').remove();
+            $('#Xright').remove();
+            $('#Cleft').remove();
+            $('#Cright').remove();
+            $('#checkmarkContainer').remove();
+            $("#circleThingContainer").fadeOut("fast", function() {
+              $("#circleThingContainer").remove();
+            });
+            $("#circleThing").remove();
+            if(typeof done == "function") {
+              return done();
+            }
+          }, 500);
+        });
+      }, 1000);
+    });
+}
+
+/** 
+* Opens a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.openPage = (pageID) => {
+  $("#" + pageID).addClass("active");
+}
+/** 
+* close a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.closePage = (pageID) => {
+  $("#" + pageID).removeClass("active");
 }
 
 /***/ }),
@@ -2606,10 +2704,7 @@ module.exports = {
 
 
 /***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2633,25 +2728,245 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var ScheduleEditor = __webpack_require__(18);
-var utils = __webpack_require__(0)
 
-var scheduleEditor = null;
-window.onload = function() {
-    console.log(utils.thisUser())
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-    scheduleEditor.generate().then(() => {
-        $("#tempSubmit").on("click", (e) => {
-            scheduleEditor.submit().then((resp) => {
-                console.log(resp);
-            }).catch((err) => {utils.throwError(err)})
-        })
-    }).catch(err => utils.throwError(err))
+/**
+* Browser Schedule Functions.
+* @module webpack/api/schedule
+*/
 
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule types for the user
+* @link module:webpack/api/schedule
+* @param {(String|undefined)} accountID
+* @returns {Promise}
+*/
+exports.getSchedules = (accountID) => {
+    if(accountID === undefined) {accountID = ""}
+    return utils.fetch("GET", "/api/account/schedule/" + accountID, {auth: true})
+}
+
+/** 
+* Sets a new schedule for the logged in user
+* @link module:webpack/api/schedule
+* @param {String} dashboard - can be "student" or "teacher"
+* @param {Object} schedule - Please see {@link setUserSchedule}
+* @returns {Promise}
+*/
+exports.newSchedule = (dashboard, schedule) => {
+    return utils.fetch("POST", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
+}
+
+
+/** 
+* Replaces the schedule for the logged in user
+* @link module:webpack/api/schedule
+* @param {String} dashboard - can be "student" or "teacher"
+* @param {Object} schedule - Please see {@link setUserSchedule}
+* @returns {Promise}
+*/
+exports.updateSchedule = (dashboard, schedule) => {
+    return utils.fetch("PATCH", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
 }
 
 /***/ }),
+/* 15 */,
+/* 16 */,
+/* 17 */,
 /* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var ScheduleEditor = __webpack_require__(19);
+var utils = __webpack_require__(0);
+var scheduleJS = __webpack_require__(14)
+
+var scheduleEditor = null;
+window.onload = function() {
+    routeHash();
+    console.log(utils.thisUser())
+    
+    $(".button-collapse").sideNav();
+    $(window).stellar({
+        responsive: true,
+    });
+    loadMySchedules();
+}
+
+//Router
+window.addEventListener("hashchange", routeHash);
+function routeHash() {
+    let hash = window.location.hash;
+    console.log(hash)
+    switch(hash) {
+        case "#editSchedule": 
+            utils.openPage("scheduleEditor");
+            initScheduleEditor();
+            break;
+        default: 
+            utils.closePage("scheduleEditor");
+    }
+}
+
+
+function initScheduleEditor() {
+    if(!scheduleEditor) {
+        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
+        scheduleEditor.generate().then(() => {
+            $("#tempSubmit").on("click", (e) => {
+                scheduleEditor.submit().then((resp) => {
+                    console.log(resp);
+                    if(resp.transaction && resp.transaction.unchanged >= 1) {
+                        Materialize.toast('Nothing changed', 4000)
+                        window.location.hash = "";
+                    } else {
+                        Materialize.toast('Updated schedule', 4000)
+                        loadMySchedules();
+                        window.location.hash = "";
+                        utils.materialResponse("check", "success")
+                    }
+                    
+                    
+                }).catch((err) => {utils.throwError(err)})
+            })
+        }).catch(err => utils.throwError(err))
+    }
+}
+var idOfUser = utils.thisUser();
+
+
+
+
+function loadMySchedules() {
+scheduleJS.getSchedules(utils.thisUser()).then((data) => {
+    data = data.studentType;
+    if(data && data.schedule) {
+        //clear area
+        $("#scheduleBody").empty();
+        //do stuff with schedule 
+        console.log(data)
+        var keys = Object.keys(data.schedule);
+        for(var i = 0; i < keys.length; i++) {
+          //set defaults 
+          /*
+          if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
+            data.schedule = {
+              [keys[i]]: {
+                className: undefined
+              }
+            }
+          }*/
+          if(data.schedule[keys[i]]) {
+            var tr = document.createElement("TR");
+            //create elements
+            var idEl = document.createElement("TD");
+            var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+
+            var classEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
+              var classElText = document.createTextNode(data.schedule[keys[i]].className);
+            } else {
+              var classElText = document.createTextNode(" ");
+            }
+
+            var teacherEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
+              var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+            } else {
+              var teacherElText = document.createTextNode(" ");
+            }
+            var roomEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
+              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+            } else {
+              var roomElText = document.createTextNode(" ");
+            }
+            //append
+            idEl.appendChild(idElText);
+            tr.appendChild(idEl);
+
+            classEl.appendChild(classElText);
+            tr.appendChild(classEl);
+
+            teacherEl.appendChild(teacherElText);
+            tr.appendChild(teacherEl);
+
+            roomEl.appendChild(roomElText);
+            tr.appendChild(roomEl);
+
+            //set
+            $('#scheduleBody').append(tr);
+          }
+        }
+
+      } else {
+        err = new Error("Data is Undefined");
+        err.status = 500;
+        return errorHand(err);
+      }
+    }).catch((err) => {
+        return utils.throwError(err);
+    })
+}   
+
+
+function setingNeedsSaving() {
+
+    $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
+}
+function saveSettings() {
+    console.log("Not Implemented")
+}
+
+//const game = new IconGame("avatar");
+/*window.addEventListener("keydown", keydown, false)
+window.addEventListener("keyup", keyup, false)*/
+//EE (I'm a nerd :P)
+//call key press function 
+document.onkeydown = checkKey;
+var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+var konamiUser = 0;
+function checkKey(e) {
+    e = e || window.event;
+    //check if game is running
+    /*if(game.isRunning) {
+        console.log("runn")
+    }*/
+    if(konami[konamiUser] != e.keyCode) {
+        konamiUser = 0;
+    } else {
+        konamiUser++;
+    }
+    if (konami.length == konamiUser) {
+        konamiUser = 0;
+        console.log("TODO")
+    }
+    
+}
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2677,7 +2992,7 @@ email: hi@josephhassell.com
 */
 
 var Table = __webpack_require__(10);
-var scheduleAPI = __webpack_require__(19);
+var scheduleAPI = __webpack_require__(14);
 var accountAPI = __webpack_require__(20);
 var miscAPI = __webpack_require__(21);
 var utils = __webpack_require__(0);
@@ -2687,6 +3002,7 @@ class StudentScheduleEditor {
         this.container = formOutputContainer;
         if(!options) {options = {}}
         this.options = options;
+        this.hasSchedule = false;
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
@@ -2744,6 +3060,7 @@ class StudentScheduleEditor {
                     //Import existing schedule
                     let schedule = allSchedules.studentType;
                     if(schedule) {
+                        this.hasSchedule = true;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
@@ -2913,7 +3230,6 @@ class StudentScheduleEditor {
             prom.push(this._checkLocation());
             
             Promise.all(prom).then(([periodRes, locationRes]) => {
-                console.log(locationRes)
                 $("a[data-location]").removeClass("pulse red").fadeIn(1000);
                 $("a.delete-row").removeClass("pulse red").fadeIn(1000);
                 if(!locationRes.valid) {
@@ -2936,9 +3252,21 @@ class StudentScheduleEditor {
     }
     submit() {
         return new Promise((resolve, reject) => {
-            this._compileFormData().then((form) => {
-                return resolve(form);
-            }).catch((err) => {return reject(err)});
+            this.checkValidity().then((validResp) => {
+                if(validResp.valid) {
+                    this._compileFormData().then((form) => {
+                        if(this.hasSchedule) {
+                            scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                        } else {
+                            scheduleAPI.newSchedule("student", form).then((res) => {
+                                this.hasSchedule = true;
+                                return resolve({transaction: res, formData: form})
+                            }).catch((err) => {return reject(err)});
+                        }
+                    }).catch((err) => {return reject(err)});
+                }
+            })
+            
         })
     }
     _compileFormData() {
@@ -2962,10 +3290,25 @@ class StudentScheduleEditor {
                         if($(tableBody[x]).find("a[data-location]").attr("data-location") === "true") {
                             console.log(x, "has Location")
                             let autoVal = $(tableBody[x]).find("input."+ this.autocompleteClass).val();
-                            console.log("Aucocomplete Value:", autoVal);
+                            console.log("Autocomplete Value:", autoVal);
                             //Validate Autocomplete Val 
-
-                            return resolve();
+                            if(autoVal.length < 1 || autoVal.search(this.autocompleteREGEX) < 0) {
+                                //Fail
+                                return reject(new Error("Form not valid. Location Invalid."));
+                            }
+                            console.log(autoVal.search(this.autocompleteREGEX))
+                            //Exchange email for ID
+                            accountAPI.get({ 
+                                email: autoVal.substring(autoVal.search(this.autocompleteREGEX)+5)
+                            }).then((user) => {
+                                if(user.length > 1) {
+                                    //More than one user for that email 
+                                    console.error("Conflicting Accounts:", user)
+                                    throw new Error("There are multiple users with that email in the DB. Emails should be unique. Please see IT. The users are logged in this console.");
+                                }
+                                formData[period].teacherID = user[0].id;
+                                return resolve();
+                            }).catch((err) => {return reject(err)})
                         } else {
                             formData[period].teacherID = null;
                             //Done
@@ -2984,50 +3327,6 @@ class StudentScheduleEditor {
 }
 
 module.exports = StudentScheduleEditor;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-
-Passport-Live is a modern web app for schools that helps them manage passes.
-    Copyright (C) 2017  Joseph Hassell
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-email: hi@josephhassell.com
-
-*/
-
-/**
-* Browser Schedule Functions.
-* @module webpack/api/schedule
-*/
-
-var utils = __webpack_require__(0);
-
-/** 
-* Gets all schedule types for the user
-* @link module:webpack/api/schedule
-* @param {(String|undefined)} accountID
-* @returns {Promise}
-*/
-exports.getSchedules = (accountID) => {
-    if(accountID === undefined) {accountID = ""}
-    return utils.fetch("GET", "/api/account/schedule/" + accountID, {auth: true})
-}
 
 /***/ }),
 /* 20 */
@@ -3069,6 +3368,44 @@ var utils = __webpack_require__(0);
 */
 exports.getWithClasses = () => {
     return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
+}
+
+/** 
+    * Searches accounts that match the query
+    * @link webpack/api/accounts
+    * @param {Object} query
+    * @param {(string|undefined)} query.id - Unique Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email - Unique Key
+    * @param {(userGroup|undefined)} query.userGroup
+    * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
+    * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
+    * @param {(string|undefined)} query.name.first - User's given name
+    * @param {(string|undefined)} query.name.last - User's family name
+    * @param {(string|number|undefined)} query.schoolID
+    * @param {(number|undefined)} query.graduationYear
+    * @returns {Promise} Includes array.
+    */
+exports.get = (query) => {
+    return new Promise((resolve, reject) => {
+        if(!query) {
+            return reject(new TypeError("query must be an object"));
+        }
+        if(query.name && typeof query.name === "object") {
+            if(query.name.salutation) {
+                query.name_salutation = query.name.salutation;
+                delete query.name.salutation;
+            }
+            if(query.name.first) {
+                query.name_first = query.name.first;
+                delete query.name.first;
+            }
+            if(query.name.last) {
+                query.name_last = query.name.last;
+                delete query.name.last;
+            }
+        }
+        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject)
+    })   
 }
 
 /***/ }),

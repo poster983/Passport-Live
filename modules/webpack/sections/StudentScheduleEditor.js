@@ -31,6 +31,7 @@ class StudentScheduleEditor {
         this.container = formOutputContainer;
         if(!options) {options = {}}
         this.options = options;
+        this.hasSchedule = false;
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
@@ -88,6 +89,7 @@ class StudentScheduleEditor {
                     //Import existing schedule
                     let schedule = allSchedules.studentType;
                     if(schedule) {
+                        this.hasSchedule = true;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
@@ -257,7 +259,6 @@ class StudentScheduleEditor {
             prom.push(this._checkLocation());
             
             Promise.all(prom).then(([periodRes, locationRes]) => {
-                console.log(locationRes)
                 $("a[data-location]").removeClass("pulse red").fadeIn(1000);
                 $("a.delete-row").removeClass("pulse red").fadeIn(1000);
                 if(!locationRes.valid) {
@@ -280,9 +281,21 @@ class StudentScheduleEditor {
     }
     submit() {
         return new Promise((resolve, reject) => {
-            this._compileFormData().then((form) => {
-                return resolve(form);
-            }).catch((err) => {return reject(err)});
+            this.checkValidity().then((validResp) => {
+                if(validResp.valid) {
+                    this._compileFormData().then((form) => {
+                        if(this.hasSchedule) {
+                            scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                        } else {
+                            scheduleAPI.newSchedule("student", form).then((res) => {
+                                this.hasSchedule = true;
+                                return resolve({transaction: res, formData: form})
+                            }).catch((err) => {return reject(err)});
+                        }
+                    }).catch((err) => {return reject(err)});
+                }
+            })
+            
         })
     }
     _compileFormData() {
@@ -308,12 +321,23 @@ class StudentScheduleEditor {
                             let autoVal = $(tableBody[x]).find("input."+ this.autocompleteClass).val();
                             console.log("Autocomplete Value:", autoVal);
                             //Validate Autocomplete Val 
-                            if(sel[x].value.length < 1 || sel[x].value.search(this.autocompleteREGEX) < 0) {
+                            if(autoVal.length < 1 || autoVal.search(this.autocompleteREGEX) < 0) {
                                 //Fail
                                 return reject(new Error("Form not valid. Location Invalid."));
                             }
-                            
-                            return resolve();
+                            console.log(autoVal.search(this.autocompleteREGEX))
+                            //Exchange email for ID
+                            accountAPI.get({ 
+                                email: autoVal.substring(autoVal.search(this.autocompleteREGEX)+5)
+                            }).then((user) => {
+                                if(user.length > 1) {
+                                    //More than one user for that email 
+                                    console.error("Conflicting Accounts:", user)
+                                    throw new Error("There are multiple users with that email in the DB. Emails should be unique. Please see IT. The users are logged in this console.");
+                                }
+                                formData[period].teacherID = user[0].id;
+                                return resolve();
+                            }).catch((err) => {return reject(err)})
                         } else {
                             formData[period].teacherID = null;
                             //Done

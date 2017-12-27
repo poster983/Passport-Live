@@ -20,18 +20,168 @@ email: hi@josephhassell.com
 
 */
 var ScheduleEditor = require("../../sections/StudentScheduleEditor.js");
-var utils = require("../../utils/index.js")
+var utils = require("../../utils/index.js");
+var scheduleJS = require("../../api/schedule.js")
 
 var scheduleEditor = null;
 window.onload = function() {
+    routeHash();
     console.log(utils.thisUser())
-    scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-    scheduleEditor.generate().then(() => {
-        $("#tempSubmit").on("click", (e) => {
-            scheduleEditor.submit().then((resp) => {
-                console.log(resp);
-            }).catch((err) => {utils.throwError(err)})
-        })
-    }).catch(err => utils.throwError(err))
+    
+    $(".button-collapse").sideNav();
+    $(window).stellar({
+        responsive: true,
+    });
+    loadMySchedules();
+}
 
+//Router
+window.addEventListener("hashchange", routeHash);
+function routeHash() {
+    let hash = window.location.hash;
+    console.log(hash)
+    switch(hash) {
+        case "#editSchedule": 
+            utils.openPage("scheduleEditor");
+            initScheduleEditor();
+            break;
+        default: 
+            utils.closePage("scheduleEditor");
+    }
+}
+
+
+function initScheduleEditor() {
+    if(!scheduleEditor) {
+        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
+        scheduleEditor.generate().then(() => {
+            $("#tempSubmit").on("click", (e) => {
+                scheduleEditor.submit().then((resp) => {
+                    console.log(resp);
+                    if(resp.transaction && resp.transaction.unchanged >= 1) {
+                        Materialize.toast('Nothing changed', 4000)
+                        window.location.hash = "";
+                    } else {
+                        Materialize.toast('Updated schedule', 4000)
+                        loadMySchedules();
+                        window.location.hash = "";
+                        utils.materialResponse("check", "success")
+                    }
+                    
+                    
+                }).catch((err) => {utils.throwError(err)})
+            })
+        }).catch(err => utils.throwError(err))
+    }
+}
+var idOfUser = utils.thisUser();
+
+
+
+
+function loadMySchedules() {
+scheduleJS.getSchedules(utils.thisUser()).then((data) => {
+    data = data.studentType;
+    if(data && data.schedule) {
+        //clear area
+        $("#scheduleBody").empty();
+        //do stuff with schedule 
+        console.log(data)
+        var keys = Object.keys(data.schedule);
+        for(var i = 0; i < keys.length; i++) {
+          //set defaults 
+          /*
+          if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
+            data.schedule = {
+              [keys[i]]: {
+                className: undefined
+              }
+            }
+          }*/
+          if(data.schedule[keys[i]]) {
+            var tr = document.createElement("TR");
+            //create elements
+            var idEl = document.createElement("TD");
+            var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+
+            var classEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
+              var classElText = document.createTextNode(data.schedule[keys[i]].className);
+            } else {
+              var classElText = document.createTextNode(" ");
+            }
+
+            var teacherEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
+              var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+            } else {
+              var teacherElText = document.createTextNode(" ");
+            }
+            var roomEl = document.createElement("TD");
+            if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
+              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+            } else {
+              var roomElText = document.createTextNode(" ");
+            }
+            //append
+            idEl.appendChild(idElText);
+            tr.appendChild(idEl);
+
+            classEl.appendChild(classElText);
+            tr.appendChild(classEl);
+
+            teacherEl.appendChild(teacherElText);
+            tr.appendChild(teacherEl);
+
+            roomEl.appendChild(roomElText);
+            tr.appendChild(roomEl);
+
+            //set
+            $('#scheduleBody').append(tr);
+          }
+        }
+
+      } else {
+        err = new Error("Data is Undefined");
+        err.status = 500;
+        return errorHand(err);
+      }
+    }).catch((err) => {
+        return utils.throwError(err);
+    })
+}   
+
+
+function setingNeedsSaving() {
+
+    $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
+}
+function saveSettings() {
+    console.log("Not Implemented")
+}
+
+//const game = new IconGame("avatar");
+/*window.addEventListener("keydown", keydown, false)
+window.addEventListener("keyup", keyup, false)*/
+//EE (I'm a nerd :P)
+//call key press function 
+document.onkeydown = checkKey;
+var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+var konamiUser = 0;
+function checkKey(e) {
+    e = e || window.event;
+    //check if game is running
+    /*if(game.isRunning) {
+        console.log("runn")
+    }*/
+    if(konami[konamiUser] != e.keyCode) {
+        konamiUser = 0;
+    } else {
+        konamiUser++;
+    }
+    if (konami.length == konamiUser) {
+        konamiUser = 0;
+        console.log("TODO")
+    }
+    
 }

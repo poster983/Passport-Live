@@ -40,8 +40,8 @@ exports.getWithClasses = () => {
     * Searches accounts that match the query
     * @link webpack/api/accounts
     * @param {Object} query
-    * @param {(string|undefined)} query.id - Primary Key.  Uses getAll.  
-    * @param {(string|undefined)} query.email
+    * @param {(string|undefined)} query.id - Unique Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email - Unique Key
     * @param {(userGroup|undefined)} query.userGroup
     * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
     * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
@@ -52,5 +52,24 @@ exports.getWithClasses = () => {
     * @returns {Promise} Includes array.
     */
 exports.get = (query) => {
-
+    return new Promise((resolve, reject) => {
+        if(!query) {
+            return reject(new TypeError("query must be an object"));
+        }
+        if(query.name && typeof query.name === "object") {
+            if(query.name.salutation) {
+                query.name_salutation = query.name.salutation;
+                delete query.name.salutation;
+            }
+            if(query.name.first) {
+                query.name_first = query.name.first;
+                delete query.name.first;
+            }
+            if(query.name.last) {
+                query.name_last = query.name.last;
+                delete query.name.last;
+            }
+        }
+        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject)
+    })   
 }

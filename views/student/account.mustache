@@ -55,14 +55,14 @@ email: hi@josephhassell.com
     <!--Main Info-->
      <div class="row">
         <div class="col s12 m12 l6 push-l3">
-          <div class="card small">
+          <div class="card small z-depth-5">
             <div class="card-image">
               <img src="/api/media/background/{{user.id}}.svg">
               
             </div>
             <div class="card-content">
               <div class="card-avatar">
-                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img">
+                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img z-depth-3 hoverable">
               </div>
               <br>
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
@@ -76,7 +76,7 @@ email: hi@josephhassell.com
           <div class="card" >
              
             <div class="card-content">
-            <span class="right waves-effect" onclick="openPage('scheduleEditor'); se.initSchedulePage();"><i class="material-icons md-48 md-light">edit</i></span>
+            <a href="#editSchedule" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
              <span class="card-title">Schedules</span>
 
                <table class="highlight responsive-table">
@@ -144,143 +144,6 @@ email: hi@josephhassell.com
         {{>student/editSchedule}}
       </div>
     </div>
-    <script type="text/javascript">
-        var idOfUser = "{{user.id}}";
-        $(document).ready(function(){
-            $(".button-collapse").sideNav();
-            $(window).stellar({
-                responsive: true,
-            });
-            loadMySchedules();
-            //navMorphInit("SBmorphBox");
-        });
-
-        
-
-       //GET SCHEDULES//
-       function getMySchedules(done) {
-         $.ajax({
-            type: "get",
-            url: "/api/account/schedule/student/id/" + idOfUser,
-            dataType: "json",
-            beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-            success: function(data) {done(null, data)},
-            error: function(jqXHR) {done(jqXHR)}                      
-          });
-       }
-
-       function loadMySchedules() {
-        getMySchedules(function(err, data) {
-          if(err) {
-            if(err.status == 404) {
-              se.hasExistingSchedule = false;
-            }
-            
-            return errorHand(err);
-          }
-          if(data && data.schedule) {
-            //clear area
-            $("#scheduleBody").empty();
-            //do stuff with schedule 
-            console.log(data)
-            var keys = Object.keys(data.schedule);
-            for(var i = 0; i < keys.length; i++) {
-              //set defaults 
-              /*
-              if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
-                data.schedule = {
-                  [keys[i]]: {
-                    className: undefined
-                  }
-                }
-              }*/
-              if(data.schedule[keys[i]]) {
-                var tr = document.createElement("TR");
-                //create elements
-                var idEl = document.createElement("TD");
-                var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
-
-                var classEl = document.createElement("TD");
-                if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
-                  var classElText = document.createTextNode(data.schedule[keys[i]].className);
-                } else {
-                  var classElText = document.createTextNode(" ");
-                }
-
-                var teacherEl = document.createElement("TD");
-                if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
-                  var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
-                } else {
-                  var teacherElText = document.createTextNode(" ");
-                }
-                var roomEl = document.createElement("TD");
-                if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
-                  var roomElText = document.createTextNode(data.schedule[keys[i]].room);
-                } else {
-                  var roomElText = document.createTextNode(" ");
-                }
-                //append
-                idEl.appendChild(idElText);
-                tr.appendChild(idEl);
-
-                classEl.appendChild(classElText);
-                tr.appendChild(classEl);
-
-                teacherEl.appendChild(teacherElText);
-                tr.appendChild(teacherEl);
-
-                roomEl.appendChild(roomElText);
-                tr.appendChild(roomEl);
-
-                //set
-                $('#scheduleBody').append(tr);
-              }
-            }
-
-          } else {
-            err = new Error("Data is Undefined");
-            err.status = 500;
-            return errorHand(err);
-          }
-        })
-      }   
-
-        
-      function setingNeedsSaving() {
-
-        $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
-      }
-      function saveSettings() {
-        console.log("Not Implemented")
-      }
-
-        //const game = new IconGame("avatar");
-        /*window.addEventListener("keydown", keydown, false)
-        window.addEventListener("keyup", keyup, false)*/
-        //EE (I'm a nerd :P)
-        //call key press function 
-        document.onkeydown = checkKey;
-        var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-        var konamiUser = 0;
-        function checkKey(e) {
-            e = e || window.event;
-            //check if game is running
-            /*if(game.isRunning) {
-                console.log("runn")
-            }*/
-            if(konami[konamiUser] != e.keyCode) {
-                konamiUser = 0;
-            } else {
-                konamiUser++;
-            }
-            if (konami.length == konamiUser) {
-                konamiUser = 0;
-                console.log("TODO")
-            }
-            
-        }
-        
-    </script>
 
 </body>
 
