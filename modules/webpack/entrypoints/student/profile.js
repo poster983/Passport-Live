@@ -96,6 +96,7 @@ function initScheduleEditor() {
 function genScheduleEditor() {
     scheduleEditor.generate().then(() => {
         $("#mixenSESave").on("click", (e) => {
+            $("#mixenSESave").addClass("disabled");
             scheduleEditor.submit().then((resp) => {
                 console.log(resp);
                 if(resp.transaction && resp.transaction.unchanged >= 1) {
@@ -111,7 +112,7 @@ function genScheduleEditor() {
                 }
                 
                 
-            }).catch((err) => {utils.throwError(err)})
+            }).catch((err) => {$("#mixenSESave").removeClass("disabled"); utils.throwError(err)})
         })
     }).catch(err => utils.throwError(err))
 }

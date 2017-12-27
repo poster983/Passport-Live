@@ -38,7 +38,6 @@ class StudentScheduleEditor {
         this.container = $(formOutputContainer);
         if(!options) {options = {}}
         this.options = options;
-        this.hasSchedule = false;
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
@@ -102,7 +101,6 @@ class StudentScheduleEditor {
                     //Import existing schedule
                     let schedule = allSchedules.studentType;
                     if(schedule) {
-                        this.hasSchedule = true;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
@@ -312,14 +310,16 @@ class StudentScheduleEditor {
             this.checkValidity().then((validResp) => {
                 if(validResp.valid) {
                     this._compileFormData().then((form) => {
-                        if(this.hasSchedule) {
+                        console.log(form)
+                        scheduleAPI.replaceSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                        /*if(this.hasSchedule) {
                             scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                         } else {
                             scheduleAPI.newSchedule("student", form).then((res) => {
                                 this.hasSchedule = true;
                                 return resolve({transaction: res, formData: form})
                             }).catch((err) => {return reject(err)});
-                        }
+                        }*/
                     }).catch((err) => {return reject(err)});
                 }
             })

@@ -522,18 +522,52 @@ router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: fals
 router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
-    if(!req.user.schedules || !req.user.schedules[dashboard]) {
-        var err = new Error("Schedule refrence not found");
-        err.status = 404;
-        return next(err)
-    }
     console.log(dashboard)
-    api.updateUserSchedule(req.user.schedules[dashboard], dashboard, schedule, function(err, data) {
+    api.updateUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
         if(err) {
             return next(err);
         }
         res.send(data)
     })
+});
+
+/** Creates or Replaces the user's schedule for a dashboard
+    * @function updateUserSchedule
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PUT /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.put("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    console.log(req.user)
+    if(req.user.schedules && req.user.schedules[dashboard]) {
+        console.log(true)
+        api.replaceUserSchedule(req.user.id, dashboard, schedule).then((trans) => {
+            res.json(trans)
+        }).catch((err) => {return next(err);})
+    } else {
+        api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+            if(err) {
+                return next(err);
+            }
+            res.json(data)
+        })
+    }
+
 });
 
 /** GETs account schedules for student dash

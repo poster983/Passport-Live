@@ -2760,7 +2760,7 @@ exports.newSchedule = (dashboard, schedule) => {
 
 
 /** 
-* Replaces the schedule for the logged in user
+* Updates the schedule for the logged in user
 * @link module:webpack/api/schedule
 * @param {String} dashboard - can be "student" or "teacher"
 * @param {Object} schedule - Please see {@link setUserSchedule}
@@ -2768,6 +2768,17 @@ exports.newSchedule = (dashboard, schedule) => {
 */
 exports.updateSchedule = (dashboard, schedule) => {
     return utils.fetch("PATCH", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
+}
+
+/** 
+* Replaces the schedule for the logged in user
+* @link module:webpack/api/schedule
+* @param {String} dashboard - can be "student" or "teacher"
+* @param {Object} schedule - Please see {@link setUserSchedule}
+* @returns {Promise}
+*/
+exports.replaceSchedule = (dashboard, schedule) => {
+    return utils.fetch("PUT", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
 }
 
 /***/ }),
@@ -2875,6 +2886,7 @@ function initScheduleEditor() {
 function genScheduleEditor() {
     scheduleEditor.generate().then(() => {
         $("#mixenSESave").on("click", (e) => {
+            $("#mixenSESave").addClass("disabled");
             scheduleEditor.submit().then((resp) => {
                 console.log(resp);
                 if(resp.transaction && resp.transaction.unchanged >= 1) {
@@ -2890,7 +2902,7 @@ function genScheduleEditor() {
                 }
                 
                 
-            }).catch((err) => {utils.throwError(err)})
+            }).catch((err) => {$("#mixenSESave").removeClass("disabled"); utils.throwError(err)})
         })
     }).catch(err => utils.throwError(err))
 }
@@ -3049,7 +3061,6 @@ class StudentScheduleEditor {
         this.container = $(formOutputContainer);
         if(!options) {options = {}}
         this.options = options;
-        this.hasSchedule = false;
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
@@ -3113,7 +3124,6 @@ class StudentScheduleEditor {
                     //Import existing schedule
                     let schedule = allSchedules.studentType;
                     if(schedule) {
-                        this.hasSchedule = true;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
@@ -3323,14 +3333,16 @@ class StudentScheduleEditor {
             this.checkValidity().then((validResp) => {
                 if(validResp.valid) {
                     this._compileFormData().then((form) => {
-                        if(this.hasSchedule) {
+                        console.log(form)
+                        scheduleAPI.replaceSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                        /*if(this.hasSchedule) {
                             scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                         } else {
                             scheduleAPI.newSchedule("student", form).then((res) => {
                                 this.hasSchedule = true;
                                 return resolve({transaction: res, formData: form})
                             }).catch((err) => {return reject(err)});
-                        }
+                        }*/
                     }).catch((err) => {return reject(err)});
                 }
             })

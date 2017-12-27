@@ -601,7 +601,7 @@ function verifyStudentSchedule(schedule, done) {
         }
     }
 }
-function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
+function verifyUserSchedule(dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     var promise = new Promise(function(resolve, reject) {
         switch(dashboard) {
@@ -649,40 +649,101 @@ function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
 
 /** 
     * Updates a user schedule 
-    * @function updateUserSchedule
-    * @link module:passportAccountsApi
-    * @async
-    * @param {string} id - ID of Schedule.
-    * @param {constant} dashboard - may be either "student" or "teacher"
-    * @param {json} schedule_UIN  - The schedule.
+    * @link module:js/accounts
+    * @param {string} userID - User id to update.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
     * @param {function} done - Callback
     * @returns {callback}
     */
-exports.updateUserSchedule = function(id, dashboard, schedule_UIN, done) {
+exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
     //param checks
     
-     verifyUserSchedule(id, dashboard, schedule_UIN, function(err, dbSafe) {
+     verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
         if(err) {
             return done(err)
         }
-
-        r.table("userSchedules").get(id).update(dbSafe).run(db.conn(), function(err, data) {
-            if(err) {
-                return done(err)
+        r_.table("accounts").get(userID).run().then((user) => {
+            if(!user) {
+                var err = new Error("User not found");
+                err.status = 404;
+                return done(err);
+            } 
+            if(user.schedules && user.schedules[dashboard]) {
+                r_.table("userSchedules").get(user.schedules[dashboard]).update(dbSafe).run(function(err, data) {
+                    if(err) {
+                        return done(err)
+                    }
+                    return done(null, data)
+                });
+            } else {
+                var err = new Error("User schedule not found");
+                err.status = 404;
+                return done(err);
             }
-            return done(null, data)
-        });
+        }).catch((err) => {return done(err);})
+        
     })
 }
 
+
+/** 
+    * Replaces a user schedule 
+    * @link module:js/accounts
+    * @param {string} userID - Userid to replace the schedule.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
+    * @returns {callback}
+    */
+exports.replaceUserSchedule = (userID, dashboard, schedule) => {
+    return new Promise((resolve, reject) => {
+        if(typeCheck("Null", schedule)) {
+            var err = new TypeError("To delete a user schedule, please use .deleteUserSchedule");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!typeCheck("Object", schedule)) {
+            var err = new TypeError("schedule expected to be an object, got " + typeof schedule);
+            err.status = 400;
+            return reject(err);
+        }
+
+        verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
+            if(err) {
+                return reject(err)
+            }
+            r_.table("accounts").get(userID).run().then((user) => {
+                if(!user) {
+                    var err = new Error("User not found");
+                    err.status = 404;
+                    return reject(err);
+                } 
+                if(user.schedules && user.schedules[dashboard]) {
+                    r_.table("userSchedules").get(user.schedules[dashboard]).replace(dbSafe).run(function(err, data) {
+                        if(err) {
+                            return reject(err)
+                        }
+                        return resolve(data)
+                    });
+                } else {
+                    var err = new Error("User schedule not found");
+                    err.status = 404;
+                    return reject(err);
+                }
+            }).catch((err) => {return reject(err);})
+            
+        })
+    })
+}
+
+
+
 /** 
     * Creates a new user schedule 
-    * @function newUserSchedule
-    * @link module:passportAccountsApi
-    * @async
+    * @link module:js/accounts
     * @param {string} userID - ID of User.
     * @param {constant} dashboard - may be either "student" or "teacher"
-    * @param {json} schedule_UIN  - The schedule.
+    * @param {object} schedule_UIN  - The schedule.
     * @param {function} done - Callback
     * @returns {callback}
     */
@@ -697,7 +758,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
             return done(err);
         }
     }
-    verifyUserSchedule(userID, dashboard, schedule_UIN, function(err, dbSafe) {
+    verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err);
         }

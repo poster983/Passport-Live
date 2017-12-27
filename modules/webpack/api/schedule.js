@@ -51,7 +51,7 @@ exports.newSchedule = (dashboard, schedule) => {
 
 
 /** 
-* Replaces the schedule for the logged in user
+* Updates the schedule for the logged in user
 * @link module:webpack/api/schedule
 * @param {String} dashboard - can be "student" or "teacher"
 * @param {Object} schedule - Please see {@link setUserSchedule}
@@ -59,4 +59,15 @@ exports.newSchedule = (dashboard, schedule) => {
 */
 exports.updateSchedule = (dashboard, schedule) => {
     return utils.fetch("PATCH", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
+}
+
+/** 
+* Replaces the schedule for the logged in user
+* @link module:webpack/api/schedule
+* @param {String} dashboard - can be "student" or "teacher"
+* @param {Object} schedule - Please see {@link setUserSchedule}
+* @returns {Promise}
+*/
+exports.replaceSchedule = (dashboard, schedule) => {
+    return utils.fetch("PUT", "/api/account/schedule/" + dashboard, {body: schedule, auth: true})
 }
