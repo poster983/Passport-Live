@@ -2815,26 +2815,7 @@ window.onload = function() {
     });
     loadMySchedules();
 
-    unsavedWork.button("#tempBack", {
-        onAction: () => {
-            console.log("discarded")
-        },
-        onWarn: () => {
-            console.log("Warning")
-        },
-        onSave: () => {
-            console.log("Saved")
-        }
-    })
-    $("#tempChanges").on("click", (e) => {
-        unsavedWork.changed("#tempBack");
-    })
-    $("#tempSave").on("click", (e) => {
-        unsavedWork.saved("#tempBack");
-    })
-     $("#tempDestroy").on("click", (e) => {
-        unsavedWork.destroy("#tempBack");
-    })
+    $("#settingsCard").find("input").on("change", settingNeedsSaving);
 }
 
 
@@ -2858,27 +2839,60 @@ function routeHash() {
 
 
 function initScheduleEditor() {
-    if(!scheduleEditor) {
-        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-        scheduleEditor.generate().then(() => {
-            $("#mixenSESave").on("click", (e) => {
-                scheduleEditor.submit().then((resp) => {
-                    console.log(resp);
-                    if(resp.transaction && resp.transaction.unchanged >= 1) {
-                        Materialize.toast('Nothing changed', 4000)
-                        window.location.hash = "";
-                    } else {
-                        Materialize.toast('Updated schedule', 4000)
-                        loadMySchedules();
-                        window.location.hash = "";
-                        utils.materialResponse("check", "success")
-                    }
-                    
-                    
-                }).catch((err) => {utils.throwError(err)})
-            })
-        }).catch(err => utils.throwError(err))
+    if($("#editScheduleContainer").children().length <=0) {
+        unsavedWork.button("#mixenSEBack", {
+            onAction: () => {
+                console.log("action")
+            },
+            onDiscard: () => {
+                unsavedWork.reset("#mixenSEBack");
+                scheduleEditor.clearContainer();
+                console.log("discard")
+            },
+            onWarn: (event) => {
+                event.element.find("i").html("backspace");
+                Materialize.toast($("<span>You have unsaved work</span>").append($("<br/>")).append("<span>Click back again to discard</span>"), 10000)
+                console.log("Warning")
+            },
+            onSave: (element) => {
+                console.log("Saved")
+            },
+            onReset: (element) => {
+                element.find("i").html("arrow_back");
+                console.log("Reset")
+            }
+        })
+        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), {
+            onChange: (e) => {
+                console.log("changed")
+                unsavedWork.changed("#mixenSEBack");
+            }
+        });
+        genScheduleEditor();
     }
+}
+
+function genScheduleEditor() {
+    scheduleEditor.generate().then(() => {
+        $("#mixenSESave").on("click", (e) => {
+            scheduleEditor.submit().then((resp) => {
+                console.log(resp);
+                if(resp.transaction && resp.transaction.unchanged >= 1) {
+                    Materialize.toast('Nothing changed', 4000)
+                    unsavedWork.saved("#mixenSEBack");
+                    window.location.hash = "";
+                } else {
+                    Materialize.toast('Updated schedule', 4000)
+                    unsavedWork.saved("#mixenSEBack");
+                    loadMySchedules();
+                    window.location.hash = "";
+                    utils.materialResponse("check", "success")
+                }
+                
+                
+            }).catch((err) => {utils.throwError(err)})
+        })
+    }).catch(err => utils.throwError(err))
 }
 var idOfUser = utils.thisUser();
 
@@ -2958,11 +2972,12 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
 }   
 
 
-function setingNeedsSaving() {
 
-    $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
+function settingNeedsSaving(e) {
+    $("#saveSettings").removeClass("disabled").addClass("pulse").attr("onclick");
+    $("#saveSettings").on("click", saveSettings);
 }
-function saveSettings() {
+function saveSettings(e) {
     console.log("Not Implemented")
 }
 
@@ -3021,10 +3036,17 @@ var scheduleAPI = __webpack_require__(14);
 var accountAPI = __webpack_require__(20);
 var miscAPI = __webpack_require__(21);
 var utils = __webpack_require__(0);
-
+/**
+* Class that Generates a Schedule editor for students.
+* @class 
+* @param {Object} formOutputContainer - Where to put the scheduele editor.
+* @param {Object} [options] 
+* @param {string} [options.accountID] - Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.
+* @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.
+*/
 class StudentScheduleEditor {
-    constructor(formOutputContainer, submitButtonElm, options) {
-        this.container = formOutputContainer;
+    constructor(formOutputContainer, options) {
+        this.container = $(formOutputContainer);
         if(!options) {options = {}}
         this.options = options;
         this.hasSchedule = false;
@@ -3033,11 +3055,14 @@ class StudentScheduleEditor {
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
         this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
     }
+    /*Events*/
+
     clearContainer() {
         $(this.container).empty();
     }
     generate() {
         return new Promise((resolve, reject) => {
+            this.clearContainer();
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
             prom.push(scheduleAPI.getSchedules(this.options.accountID));
@@ -3073,6 +3098,9 @@ class StudentScheduleEditor {
                                 onAutocomplete: (val) => {
                                   // Callback function when value is autcompleted.
                                   console.log(val)
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(null);
+                                    }
                                   this.checkValidity().catch(err => reject(err))
                                 },
                                 minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
@@ -3125,7 +3153,10 @@ class StudentScheduleEditor {
     }
     _periodSelectElm(periods, selected) {
         return new Promise((resolve, reject) => {
-            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
+            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", (e) => {
+                if(typeof this.options.onChange === "function") {
+                    this.options.onChange(e);
+                }
                 this.checkValidity().catch(err => reject(err))
             });
             if(selected) {
@@ -3152,9 +3183,12 @@ class StudentScheduleEditor {
         return new Promise((resolve, reject) => {
             this._periodSelectElm(periods, selected).then((sel) => {
                 return resolve($("<span/>")
-                .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
-                    $("#" + this.addRowButtonID).attr("disabled", false)
+                .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", (e) => {
                     this.studentTable.deleteRow(rowID)
+                    if(typeof this.options.onChange === "function") {
+                        this.options.onChange(e);
+                    }
+                    this.checkValidity().catch(err => reject(err))
                 }).append($("<i/>").addClass("material-icons").html("delete")))
                 .append(sel));
             }).catch(err => reject(err))
@@ -3189,11 +3223,17 @@ class StudentScheduleEditor {
                                     $("#" + autoID + "_DIV__").slideUp(500);
                                     $(e.currentTarget).siblings("p").slideDown(500)
                                     $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 } else {
                                     $("#" + autoID + "_DIV__").slideDown(500);
                                     $(e.currentTarget).siblings("p").slideUp(500)
                                     $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 }
                                 
@@ -3201,6 +3241,9 @@ class StudentScheduleEditor {
                             .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)").css("display", buttonCSS))
                             .append($("<div/>").addClass("input-field col s10").css("display", locationCSS).attr("id", autoID + "_DIV__")
                                 .append($("<input/>").attr("type", "text").val(locationValue).attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 }))
                                 .append($("<label/>").attr("for", autoID).html("Search Teachers"))
@@ -3513,8 +3556,10 @@ email: hi@josephhassell.com
 * @param {(Object|string)} element - The element to initiate for trackeing
 * @param {Object} [callbacks] 
 * @param {function} [callbacks.onAction] - called when the button action goes through. IE The page is discarded. The click event and the element are passed
+* @param {function} [callbacks.onDiscard] - called when the button is pressed after being warned. Like callbacks.onAction, but not called if everything is saved.
 * @param {function} [callbacks.onWarn] - called when the button action is canceled and a warning should be showed. The click event and the element are passed 
 * @param {function} [callbacks.onSave] - called when the element is saved and it is save to discard. The Element is passed
+* @param {function} [callbacks.onReset] - called when the element is reset to default values. The Element is passed
 */
 exports.button = (element, callbacks) => {
     if(!callbacks || typeof callbacks !== "object") {callbacks = {};}
@@ -3523,24 +3568,32 @@ exports.button = (element, callbacks) => {
     if(typeof callbacks.onSave === "function") {
         element.data("onSave", callbacks.onSave);
     }
+    if(typeof callbacks.onReset === "function") {
+        element.data("onReset", callbacks.onReset);
+    }
     element.attr("data-unsaved", false);
     element.attr("data-willdiscard", false);
+    element.off("click");
     element.on("click", (event) => {
         if(element.attr("data-willdiscard") === "true") {
             if(typeof callbacks.onAction === "function") {
-                return callbacks.onAction({event: event, element: element});
+                callbacks.onAction({event: event, element: element});
             }
-        }
-        if(element.attr("data-unsaved") === "true") {
-            element.attr("data-willdiscard", true);
-            //stop any href or onclick.
-            if(typeof callbacks.onWarn === "function") {
-                return callbacks.onWarn({event: event, element: element});
+            if(typeof callbacks.onDiscard === "function") {
+                callbacks.onDiscard({event: event, element: element});
             }
-            event.preventDefault();
         } else {
-            if(typeof callbacks.onAction === "function") {
-                return callbacks.onAction({event: event, element: element});
+            if(element.attr("data-unsaved") === "true") {
+                element.attr("data-willdiscard", true);
+                //stop any href or onclick.
+                event.preventDefault();
+                if(typeof callbacks.onWarn === "function") {
+                    return callbacks.onWarn({event: event, element: element});
+                }
+            } else {
+                if(typeof callbacks.onAction === "function") {
+                    return callbacks.onAction({event: event, element: element});
+                }
             }
         }
     })
@@ -3564,7 +3617,26 @@ exports.changed = (element) => {
 
 
 /**
-* Call this when data is saved and it is ok to click the button. IE. a reset
+* Resets the values to a saved state.
+* [Button]{@link module:webpack/unsavedWork.button} must be called first.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to notify about the change.
+*/
+exports.reset = (element) => {
+    element = $(element);
+    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
+        throw new Error("Please call .button(element, ondiscard) on this element before calling .saved(element)");
+    }
+    element.attr("data-unsaved", false);
+    element.attr("data-willdiscard", false);
+    if(typeof element.data("onReset") === "function") {
+        element.data("onReset")(element);
+    }
+}
+
+/**
+* Call this when data is saved and it is ok to click the button. IE. a [reset]{@link module:webpack/unsavedWork.reset}
+* Also calles the "onSave" and "onReset" callbacks.
 * [Button]{@link module:webpack/unsavedWork.button} must be called first.
 * @link module:webpack/unsavedWork
 * @param {(Object|string)} element - The element to notify about the change.
@@ -3572,15 +3644,12 @@ exports.changed = (element) => {
 
 exports.saved = (element) => {
     element = $(element);
-    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
-        throw new Error("Please call .button(element, ondiscard) on this element before calling .saved(element)");
-    }
-    element.attr("data-unsaved", false);
-    element.attr("data-willdiscard", false);
+    exports.reset(element);
     if(typeof element.data("onSave") === "function") {
         element.data("onSave")(element);
     }
 }
+
 
 /**
 * Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted
@@ -3596,6 +3665,7 @@ exports.destroy = (element) => {
     element.attr("data-unsaved", null);
     element.attr("data-willdiscard", null);
     element.data("onSave", null);
+    element.data("onReset", null);
     element.off("click");
 }
 

@@ -66,10 +66,6 @@ email: hi@josephhassell.com
               </div>
               <br>
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
-              <button id="tempChanges">Changes</button>
-              <button id="tempSave">Save</button>
-              <button id="tempDestroy">Destroy</button>
-              <a href="#hrefTest" id="tempBack"><i class="material-icons">arrow_back</i></a>
             </div>
           </div>
         </div>
@@ -106,19 +102,19 @@ email: hi@josephhassell.com
         <div class="col s12 m12 l3 push-l3">
           <div class="card">
              
-            <div class="card-content">
+            <div class="card-content" id="settingsCard">
 
              <span class="card-title">Settings</span>
-               <div class="switch">
+               <div class="switch" id="settings-emailReminders">
                Email Reminders:
                 <label>
-                  <input type="checkbox" onchange="setingNeedsSaving();">
+                  <input type="checkbox"">
                   <span class="lever"></span>
                 </label>
               </div>
             </div>
             <div class="card-action">
-              <a class="waves-effect waves-light btn disabled" id="saveSetings" ><i class="material-icons left">cloud</i>Save</a>
+              <a class="waves-effect waves-light btn disabled" id="saveSettings" ><i class="material-icons left">cloud</i>Save</a>
             </div>
           </div>
         </div>

@@ -32,8 +32,10 @@ email: hi@josephhassell.com
 * @param {(Object|string)} element - The element to initiate for trackeing
 * @param {Object} [callbacks] 
 * @param {function} [callbacks.onAction] - called when the button action goes through. IE The page is discarded. The click event and the element are passed
+* @param {function} [callbacks.onDiscard] - called when the button is pressed after being warned. Like callbacks.onAction, but not called if everything is saved.
 * @param {function} [callbacks.onWarn] - called when the button action is canceled and a warning should be showed. The click event and the element are passed 
 * @param {function} [callbacks.onSave] - called when the element is saved and it is save to discard. The Element is passed
+* @param {function} [callbacks.onReset] - called when the element is reset to default values. The Element is passed
 */
 exports.button = (element, callbacks) => {
     if(!callbacks || typeof callbacks !== "object") {callbacks = {};}
@@ -42,24 +44,32 @@ exports.button = (element, callbacks) => {
     if(typeof callbacks.onSave === "function") {
         element.data("onSave", callbacks.onSave);
     }
+    if(typeof callbacks.onReset === "function") {
+        element.data("onReset", callbacks.onReset);
+    }
     element.attr("data-unsaved", false);
     element.attr("data-willdiscard", false);
+    element.off("click");
     element.on("click", (event) => {
         if(element.attr("data-willdiscard") === "true") {
             if(typeof callbacks.onAction === "function") {
-                return callbacks.onAction({event: event, element: element});
+                callbacks.onAction({event: event, element: element});
             }
-        }
-        if(element.attr("data-unsaved") === "true") {
-            element.attr("data-willdiscard", true);
-            //stop any href or onclick.
-            if(typeof callbacks.onWarn === "function") {
-                return callbacks.onWarn({event: event, element: element});
+            if(typeof callbacks.onDiscard === "function") {
+                callbacks.onDiscard({event: event, element: element});
             }
-            event.preventDefault();
         } else {
-            if(typeof callbacks.onAction === "function") {
-                return callbacks.onAction({event: event, element: element});
+            if(element.attr("data-unsaved") === "true") {
+                element.attr("data-willdiscard", true);
+                //stop any href or onclick.
+                event.preventDefault();
+                if(typeof callbacks.onWarn === "function") {
+                    return callbacks.onWarn({event: event, element: element});
+                }
+            } else {
+                if(typeof callbacks.onAction === "function") {
+                    return callbacks.onAction({event: event, element: element});
+                }
             }
         }
     })
@@ -83,7 +93,26 @@ exports.changed = (element) => {
 
 
 /**
-* Call this when data is saved and it is ok to click the button. IE. a reset
+* Resets the values to a saved state.
+* [Button]{@link module:webpack/unsavedWork.button} must be called first.
+* @link module:webpack/unsavedWork
+* @param {(Object|string)} element - The element to notify about the change.
+*/
+exports.reset = (element) => {
+    element = $(element);
+    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
+        throw new Error("Please call .button(element, ondiscard) on this element before calling .saved(element)");
+    }
+    element.attr("data-unsaved", false);
+    element.attr("data-willdiscard", false);
+    if(typeof element.data("onReset") === "function") {
+        element.data("onReset")(element);
+    }
+}
+
+/**
+* Call this when data is saved and it is ok to click the button. IE. a [reset]{@link module:webpack/unsavedWork.reset}
+* Also calles the "onSave" and "onReset" callbacks.
 * [Button]{@link module:webpack/unsavedWork.button} must be called first.
 * @link module:webpack/unsavedWork
 * @param {(Object|string)} element - The element to notify about the change.
@@ -91,15 +120,12 @@ exports.changed = (element) => {
 
 exports.saved = (element) => {
     element = $(element);
-    if(typeof element.attr("data-unsaved") === "undefined" || typeof element.attr("data-willdiscard") === "undefined") {
-        throw new Error("Please call .button(element, ondiscard) on this element before calling .saved(element)");
-    }
-    element.attr("data-unsaved", false);
-    element.attr("data-willdiscard", false);
+    exports.reset(element);
     if(typeof element.data("onSave") === "function") {
         element.data("onSave")(element);
     }
 }
+
 
 /**
 * Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted
@@ -115,5 +141,6 @@ exports.destroy = (element) => {
     element.attr("data-unsaved", null);
     element.attr("data-willdiscard", null);
     element.data("onSave", null);
+    element.data("onReset", null);
     element.off("click");
 }

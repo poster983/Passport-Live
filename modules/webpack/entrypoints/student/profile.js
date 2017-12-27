@@ -36,26 +36,7 @@ window.onload = function() {
     });
     loadMySchedules();
 
-    unsavedWork.button("#tempBack", {
-        onAction: () => {
-            console.log("discarded")
-        },
-        onWarn: () => {
-            console.log("Warning")
-        },
-        onSave: () => {
-            console.log("Saved")
-        }
-    })
-    $("#tempChanges").on("click", (e) => {
-        unsavedWork.changed("#tempBack");
-    })
-    $("#tempSave").on("click", (e) => {
-        unsavedWork.saved("#tempBack");
-    })
-     $("#tempDestroy").on("click", (e) => {
-        unsavedWork.destroy("#tempBack");
-    })
+    $("#settingsCard").find("input").on("change", settingNeedsSaving);
 }
 
 
@@ -79,27 +60,60 @@ function routeHash() {
 
 
 function initScheduleEditor() {
-    if(!scheduleEditor) {
-        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"));
-        scheduleEditor.generate().then(() => {
-            $("#mixenSESave").on("click", (e) => {
-                scheduleEditor.submit().then((resp) => {
-                    console.log(resp);
-                    if(resp.transaction && resp.transaction.unchanged >= 1) {
-                        Materialize.toast('Nothing changed', 4000)
-                        window.location.hash = "";
-                    } else {
-                        Materialize.toast('Updated schedule', 4000)
-                        loadMySchedules();
-                        window.location.hash = "";
-                        utils.materialResponse("check", "success")
-                    }
-                    
-                    
-                }).catch((err) => {utils.throwError(err)})
-            })
-        }).catch(err => utils.throwError(err))
+    if($("#editScheduleContainer").children().length <=0) {
+        unsavedWork.button("#mixenSEBack", {
+            onAction: () => {
+                console.log("action")
+            },
+            onDiscard: () => {
+                unsavedWork.reset("#mixenSEBack");
+                scheduleEditor.clearContainer();
+                console.log("discard")
+            },
+            onWarn: (event) => {
+                event.element.find("i").html("backspace");
+                Materialize.toast($("<span>You have unsaved work</span>").append($("<br/>")).append("<span>Click back again to discard</span>"), 10000)
+                console.log("Warning")
+            },
+            onSave: (element) => {
+                console.log("Saved")
+            },
+            onReset: (element) => {
+                element.find("i").html("arrow_back");
+                console.log("Reset")
+            }
+        })
+        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), {
+            onChange: (e) => {
+                console.log("changed")
+                unsavedWork.changed("#mixenSEBack");
+            }
+        });
+        genScheduleEditor();
     }
+}
+
+function genScheduleEditor() {
+    scheduleEditor.generate().then(() => {
+        $("#mixenSESave").on("click", (e) => {
+            scheduleEditor.submit().then((resp) => {
+                console.log(resp);
+                if(resp.transaction && resp.transaction.unchanged >= 1) {
+                    Materialize.toast('Nothing changed', 4000)
+                    unsavedWork.saved("#mixenSEBack");
+                    window.location.hash = "";
+                } else {
+                    Materialize.toast('Updated schedule', 4000)
+                    unsavedWork.saved("#mixenSEBack");
+                    loadMySchedules();
+                    window.location.hash = "";
+                    utils.materialResponse("check", "success")
+                }
+                
+                
+            }).catch((err) => {utils.throwError(err)})
+        })
+    }).catch(err => utils.throwError(err))
 }
 var idOfUser = utils.thisUser();
 
@@ -179,11 +193,12 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
 }   
 
 
-function setingNeedsSaving() {
 
-    $("#saveSetings").removeClass("disabled").addClass("pulse").attr("onclick", "saveSettings()");
+function settingNeedsSaving(e) {
+    $("#saveSettings").removeClass("disabled").addClass("pulse").attr("onclick");
+    $("#saveSettings").on("click", saveSettings);
 }
-function saveSettings() {
+function saveSettings(e) {
     console.log("Not Implemented")
 }
 

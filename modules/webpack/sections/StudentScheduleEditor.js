@@ -25,10 +25,17 @@ var scheduleAPI = require("../api/schedule.js");
 var accountAPI = require("../api/account.js");
 var miscAPI = require("../api/misc.js");
 var utils = require("../utils/index.js");
-
+/**
+* Class that Generates a Schedule editor for students.
+* @class 
+* @param {Object} formOutputContainer - Where to put the scheduele editor.
+* @param {Object} [options] 
+* @param {string} [options.accountID] - Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.
+* @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.
+*/
 class StudentScheduleEditor {
-    constructor(formOutputContainer, submitButtonElm, options) {
-        this.container = formOutputContainer;
+    constructor(formOutputContainer, options) {
+        this.container = $(formOutputContainer);
         if(!options) {options = {}}
         this.options = options;
         this.hasSchedule = false;
@@ -37,11 +44,14 @@ class StudentScheduleEditor {
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
         this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
     }
+    /*Events*/
+
     clearContainer() {
         $(this.container).empty();
     }
     generate() {
         return new Promise((resolve, reject) => {
+            this.clearContainer();
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
             prom.push(scheduleAPI.getSchedules(this.options.accountID));
@@ -77,6 +87,9 @@ class StudentScheduleEditor {
                                 onAutocomplete: (val) => {
                                   // Callback function when value is autcompleted.
                                   console.log(val)
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(null);
+                                    }
                                   this.checkValidity().catch(err => reject(err))
                                 },
                                 minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
@@ -129,7 +142,10 @@ class StudentScheduleEditor {
     }
     _periodSelectElm(periods, selected) {
         return new Promise((resolve, reject) => {
-            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", () => {
+            let sel = $("<select/>").addClass(this.periodSelectClass).on("change", (e) => {
+                if(typeof this.options.onChange === "function") {
+                    this.options.onChange(e);
+                }
                 this.checkValidity().catch(err => reject(err))
             });
             if(selected) {
@@ -156,9 +172,12 @@ class StudentScheduleEditor {
         return new Promise((resolve, reject) => {
             this._periodSelectElm(periods, selected).then((sel) => {
                 return resolve($("<span/>")
-                .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", () => {
-                    $("#" + this.addRowButtonID).attr("disabled", false)
+                .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", (e) => {
                     this.studentTable.deleteRow(rowID)
+                    if(typeof this.options.onChange === "function") {
+                        this.options.onChange(e);
+                    }
+                    this.checkValidity().catch(err => reject(err))
                 }).append($("<i/>").addClass("material-icons").html("delete")))
                 .append(sel));
             }).catch(err => reject(err))
@@ -193,11 +212,17 @@ class StudentScheduleEditor {
                                     $("#" + autoID + "_DIV__").slideUp(500);
                                     $(e.currentTarget).siblings("p").slideDown(500)
                                     $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 } else {
                                     $("#" + autoID + "_DIV__").slideDown(500);
                                     $(e.currentTarget).siblings("p").slideUp(500)
                                     $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 }
                                 
@@ -205,6 +230,9 @@ class StudentScheduleEditor {
                             .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)").css("display", buttonCSS))
                             .append($("<div/>").addClass("input-field col s10").css("display", locationCSS).attr("id", autoID + "_DIV__")
                                 .append($("<input/>").attr("type", "text").val(locationValue).attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
                                     this.checkValidity().catch(err => reject(err))
                                 }))
                                 .append($("<label/>").attr("for", autoID).html("Search Teachers"))
