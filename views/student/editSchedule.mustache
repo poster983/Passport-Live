@@ -44,7 +44,26 @@ email: hi@josephhassell.com
       <div class="col s12">
         <div class="card">
           <div class="card-content">
+            <a id="se-advancedOptionsCaret" data-position="left" data-tooltip="More Options" class="right waves-effect waves-circle waves-light btn-floating grey darken-2 tooltipped" ><i class="material-icons">expand_less</i></a>
             <span class="card-title">My Schedule</span>
+            <!--Advanced Options -->
+            <div id="se-advancedOptionsDIV" class="row">
+              <div class="col s12">
+                <div class="card-panel grey darken-4 white-text">
+                  <h5 class="">Advanced Options</h5>
+                  <!-- Recovery Switch -->
+                  <div class="switch">
+                    Recovery Mode:
+                    <label>
+                      Off
+                      <input id="se-advancedOptions" type="checkbox" value="true">
+                      <span class="lever"></span>
+                      On
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div id="editScheduleContainer"></div>
           </div>
         </div>

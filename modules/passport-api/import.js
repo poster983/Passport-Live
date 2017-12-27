@@ -166,8 +166,6 @@ var accounts = {};
             }
         }).catch(reject);
     })
-    
-    //
  }
 
 //accounts.rollback("8e4a8ff9-5503-4e6f-920c-7b07f1109601", true).then((res)=>{console.log(res)}).catch((err)=>{console.error(err)});

@@ -719,6 +719,7 @@ exports.replaceUserSchedule = (userID, dashboard, schedule) => {
                     return reject(err);
                 } 
                 if(user.schedules && user.schedules[dashboard]) {
+                    dbSafe.id = user.schedules[dashboard];
                     r_.table("userSchedules").get(user.schedules[dashboard]).replace(dbSafe).run(function(err, data) {
                         if(err) {
                             return reject(err)
@@ -749,7 +750,7 @@ exports.replaceUserSchedule = (userID, dashboard, schedule) => {
     */
 exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
     //makesure no extra periods were left out 
-    var requiredPeriods = config.get('schedule.periods');
+    /*var requiredPeriods = config.get('schedule.periods');
     var givenPeriods = Object.keys(schedule_UIN);
     for(var x = 0; x < requiredPeriods.length; x++) {
         if(!givenPeriods.includes(requiredPeriods[x])) {
@@ -757,7 +758,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
             err.status = 400;
             return done(err);
         }
-    }
+    }*/
     verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err);

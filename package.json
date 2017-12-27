@@ -33,6 +33,7 @@
     "url": "https://github.com/poster983/Passport-Live/issues"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.2",
     "brute-rethinkdb": "^2.0.1",

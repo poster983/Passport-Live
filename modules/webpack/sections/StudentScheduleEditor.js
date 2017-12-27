@@ -34,6 +34,7 @@ var utils = require("../utils/index.js");
 * @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.
 */
 class StudentScheduleEditor {
+    /** @constructor */
     constructor(formOutputContainer, options) {
         this.container = $(formOutputContainer);
         if(!options) {options = {}}
@@ -48,14 +49,23 @@ class StudentScheduleEditor {
     clearContainer() {
         $(this.container).empty();
     }
-    generate() {
+    /** Creates the table 
+    * @param {bool} [startClean] - If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.
+    * @returns {Promise}
+    */
+    generate(startClean) {
         return new Promise((resolve, reject) => {
             this.clearContainer();
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
-            prom.push(scheduleAPI.getSchedules(this.options.accountID));
             prom.push(accountAPI.getWithClasses());
-            Promise.all(prom).then(([scheduleConfig, allSchedules, allClassAccounts]) => {
+            if(startClean) {
+                prom.push(new Promise((resolve) => {return resolve()}));
+            } else {
+                prom.push(scheduleAPI.getSchedules(this.options.accountID));
+            }
+            
+            Promise.all(prom).then(([scheduleConfig, allClassAccounts, allSchedules]) => {
                 this.allClassAccounts = allClassAccounts;
                 let locationAutocompleteData = {};
                 let doneMappingAutoData = new Promise((res) => {
@@ -99,8 +109,9 @@ class StudentScheduleEditor {
 
                 this.studentTable.generate().then(() => {
                     //Import existing schedule
-                    let schedule = allSchedules.studentType;
-                    if(schedule) {
+                    
+                    if(allSchedules && allSchedules.studentType) {
+                        let schedule = allSchedules.studentType;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
@@ -278,6 +289,9 @@ class StudentScheduleEditor {
             }
         });
     }
+    /** This checks to see if each field is valid.  If not it will change the dom to reflect that.
+    * @returns {Promise} - Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}
+    */
     checkValidity() {
         return new Promise((resolve, reject) => {
             let prom = [];
@@ -305,6 +319,10 @@ class StudentScheduleEditor {
         
         })
     }
+
+    /** Submits the form
+    * @returns {Promise} - {transaction: res, formData: form}
+    */
     submit() {
         return new Promise((resolve, reject) => {
             this.checkValidity().then((validResp) => {
@@ -312,6 +330,7 @@ class StudentScheduleEditor {
                     this._compileFormData().then((form) => {
                         console.log(form)
                         scheduleAPI.replaceSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                        //scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                         /*if(this.hasSchedule) {
                             scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                         } else {

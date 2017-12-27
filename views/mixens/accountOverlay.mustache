@@ -249,7 +249,7 @@
         var promise = new Promise(function(resolve, reject) {
           var prom = [];
           prom.push(this.loadUser());
-          prom.push(this.loadLocation("2017-09-07T10:55:30.652-05:00"));
+          prom.push(this.loadLocation(new Date().toISOString()));
           prom.push(this.loadSchedule());
   //2017-09-07T10:55:30.652-05:00
   //" + new Date().toISOString() + "

@@ -19,24 +19,30 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
+var Caret = require("../../common/Caret.js");
 var ScheduleEditor = require("../../sections/StudentScheduleEditor.js");
 var utils = require("../../utils/index.js");
 var scheduleJS = require("../../api/schedule.js");
 var unsavedWork = require("../../common/unsavedWork.js")
-
+var anime = require("animejs");
 
 var scheduleEditor = null;
 window.onload = function() {
     routeHash();
     console.log(utils.thisUser())
-    
+    $('.tooltipped').tooltip({delay: 50});
     $(".button-collapse").sideNav();
     $(window).stellar({
         responsive: true,
     });
     loadMySchedules();
-
+    //check for changes on settings card
     $("#settingsCard").find("input").on("change", settingNeedsSaving);
+
+    
+    //Advanced Options for schedule editor 
+    var ADVschedule = new Caret($("#se-advancedOptionsCaret"), $("#se-advancedOptionsDIV"));
+    ADVschedule.initialize();
 }
 
 
@@ -61,6 +67,8 @@ function routeHash() {
 
 function initScheduleEditor() {
     if($("#editScheduleContainer").children().length <=0) {
+        
+
         unsavedWork.button("#mixenSEBack", {
             onAction: () => {
                 console.log("action")
@@ -90,11 +98,22 @@ function initScheduleEditor() {
             }
         });
         genScheduleEditor();
+        /* Schedule Editor Options */
+        
+        $("#se-advancedOptions").off("click");
+        $("#se-advancedOptions").on("change", (e) => {
+            if($(e.currentTarget).prop('checked')) {
+                genScheduleEditor(true);
+            } else {
+                genScheduleEditor();
+            }
+            
+        })
     }
 }
 
-function genScheduleEditor() {
-    scheduleEditor.generate().then(() => {
+function genScheduleEditor(startClean) {
+    scheduleEditor.generate(startClean).then(() => {
         $("#mixenSESave").on("click", (e) => {
             $("#mixenSESave").addClass("disabled");
             scheduleEditor.submit().then((resp) => {
@@ -123,6 +142,7 @@ var idOfUser = utils.thisUser();
 
 function loadMySchedules() {
 scheduleJS.getSchedules(utils.thisUser()).then((data) => {
+    console.log(data)
     data = data.studentType;
     if(data && data.schedule) {
         //clear area
@@ -184,9 +204,21 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
         }
 
       } else {
-        err = new Error("Data is Undefined");
-        err.status = 500;
-        return errorHand(err);
+        var err = new Error("Please click on the edit (pencil) button and add a schedule.");
+        anime({
+            targets: '#openScheduleEditor',
+            rotateZ: {
+                value: "+=360",
+                duration: 1000,
+            },
+            scale: [                
+                {value: 2, duration: 500},
+                {value: 1, duration: 500}
+            ],
+            easing: 'easeInCubic',
+            loop: 1
+        });
+        return utils.throwError(err);
       }
     }).catch((err) => {
         return utils.throwError(err);
