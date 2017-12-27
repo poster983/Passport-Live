@@ -3176,6 +3176,7 @@ class StudentScheduleEditor {
     /*Events*/
 
     clearContainer() {
+        $(this.container).children().off();
         $(this.container).empty();
     }
     /** Creates the table 
