@@ -763,7 +763,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
         if(err) {
             return done(err);
         }
-        dbSafe.userId = userID
+        //dbSafe.userId = userID;
         //chesk for existing 
         r.table('accounts').get(userID).hasFields({schedules: {[dashboard]: true}}).run(db.conn(), function(err, doc) {
             if(err) {

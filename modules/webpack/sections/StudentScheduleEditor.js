@@ -298,7 +298,9 @@ class StudentScheduleEditor {
             let prom = [];
             prom.push(this._checkPeriodSelect());
             prom.push(this._checkLocation());
-            
+            if(this.studentTable.getTableBody().children().length < 1) {
+                return resolve({valid: false});
+            }
             Promise.all(prom).then(([periodRes, locationRes]) => {
                 $("a[data-location]").removeClass("pulse red").fadeIn(1000);
                 $("a.delete-row").removeClass("pulse red").fadeIn(1000);
@@ -341,6 +343,8 @@ class StudentScheduleEditor {
                             }).catch((err) => {return reject(err)});
                         }*/
                     }).catch((err) => {return reject(err)});
+                } else {
+                    return reject(new Error("Invalid form. Please see the marked rows"))
                 }
             })
             

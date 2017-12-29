@@ -2919,11 +2919,11 @@ function routeHash() {
     switch(hash) {
         case "#editSchedule": 
             utils.openPage("scheduleEditor");
-            $("#mixenSESave").removeClass("disabled");
+            $(".mixenSESave").removeClass("disabled");
             initScheduleEditor();
             break;
         default: 
-            $("#mixenSESave").addClass("disabled");
+            $(".mixenSESave").addClass("disabled");
             utils.closePage("scheduleEditor");
     }
 }
@@ -2978,8 +2978,9 @@ function initScheduleEditor() {
 
 function genScheduleEditor(startClean) {
     scheduleEditor.generate(startClean).then(() => {
-        $("#mixenSESave").on("click", (e) => {
-            $("#mixenSESave").addClass("disabled");
+        $("a.mixenSESave").off("click");
+        $("a.mixenSESave").on("click", (e) => {
+            $("a.mixenSESave").addClass("disabled");
             scheduleEditor.submit().then((resp) => {
                 console.log(resp);
                 if(resp.transaction && resp.transaction.unchanged >= 1) {
@@ -2995,7 +2996,7 @@ function genScheduleEditor(startClean) {
                 }
                 
                 
-            }).catch((err) => {$("#mixenSESave").removeClass("disabled"); utils.throwError(err)})
+            }).catch((err) => {$("a.mixenSESave").removeClass("disabled"); utils.throwError(err)})
         })
     }).catch(err => utils.throwError(err))
 }
@@ -3069,19 +3070,7 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
 
       } else {
         var err = new Error("Please click on the edit (pencil) button and add a schedule.");
-        anime({
-            targets: '#openScheduleEditor',
-            rotateZ: {
-                value: "+=360",
-                duration: 1000,
-            },
-            scale: [                
-                {value: 2, duration: 500},
-                {value: 1, duration: 500}
-            ],
-            easing: 'easeInCubic',
-            loop: 1
-        });
+        markScheduleEditButton(1);
         return utils.throwError(err);
       }
     }).catch((err) => {
@@ -3089,7 +3078,39 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
     })
 }   
 
-
+function markScheduleEditButton(loop) {
+    let frequency = .3;
+    
+    $("#openScheduleEditor").removeClass("black-text").css("transition", "all 0s")
+    anime({
+        targets: '#openScheduleEditor',
+        rotateZ: {
+            value: "+=720",
+            duration: 1200,
+        },
+        /*color: function(el, i) {
+            console.log(el)
+            let red   = Math.sin(frequency*i + 0) * 127 + 128;
+            let green = Math.sin(frequency*i + 2) * 127 + 128;
+            let blue  = Math.sin(frequency*i + 4) * 127 + 128;
+            return "rgb(" + red + "," + green + "," + blue + ")";
+        },*/
+        color: [
+            {value: "rgb(0,255,0)", duration: 300},
+            {value: "rgb(255,0,0)", duration: 400},
+            {value: "rgb(0,0,255)", duration: 500},
+            {value: "rgb(0,0,0)", duration: 100}
+        ],
+        scale: [                
+            {value: 3, duration: 500},
+            {value: 3, duration: 200},
+            {value: 1, duration: 500}
+        ],
+        easing: [.91,-0.54,.29,1.56],
+        elasticity: 400,
+        loop: loop
+    });
+}
 
 function settingNeedsSaving(e) {
     $("#saveSettings").removeClass("disabled").addClass("pulse").attr("onclick");
@@ -3114,13 +3135,54 @@ function checkKey(e) {
     }
     if (konami.length == konamiUser) {
         konamiUser = 0;
-        Materialize.toast('THIS IS AN EASTER EGG!', 6000)
+        spinneyMcSpinFace();
+        /*Materialize.toast('THIS IS AN EASTER EGG!', 6000)
         setTimeout(function() {
             Materialize.toast('I need ideas!', 6000)
         }, 1000);
-        console.log("TODO EASTER EGG")
+        console.log("TODO EASTER EGG")*/
     }
     
+}
+
+function spinneyMcSpinFace() {
+    markScheduleEditButton(5);
+    anime({
+        targets: 'img#avatar',
+        rotateZ: {
+            value: "+=720",
+            duration: 5000,
+        },
+        backgroundColor: [
+            {value: "rgb(0,255,0)", duration: 1000},
+            {value: "rgb(255,0,0)", duration: 1500},
+            {value: "rgb(0,0,255)", duration: 1500},
+            {value: "#e0e0e0", duration: 1000}
+        ],
+        translateY: [
+            {value: "100%", duration: 1500},
+            {value: "100%", duration: 4000},
+            {value: "0%", duration: 1500}
+        ],
+        scale: [                
+            {value: 10, duration: 3000},
+            {value: 10, duration: 1000},
+            {value: 1, duration: 500}
+        ],
+        easing: [.91,-0.54,.29,1.56],
+        elasticity: 400,
+        loop: 1
+    });
+    anime({
+        targets: 'img#user-bg',
+        translateY: [
+            {value: "+=100", duration: 4500},
+            {value: "-=100", duration: 500}
+        ],
+        easing: [.91,-0.54,.29,1.56],
+        elasticity: 400,
+        loop: 1
+    })
 }
 
 /***/ }),
@@ -3427,7 +3489,9 @@ class StudentScheduleEditor {
             let prom = [];
             prom.push(this._checkPeriodSelect());
             prom.push(this._checkLocation());
-            
+            if(this.studentTable.getTableBody().children().length < 1) {
+                return resolve({valid: false});
+            }
             Promise.all(prom).then(([periodRes, locationRes]) => {
                 $("a[data-location]").removeClass("pulse red").fadeIn(1000);
                 $("a.delete-row").removeClass("pulse red").fadeIn(1000);
@@ -3470,6 +3534,8 @@ class StudentScheduleEditor {
                             }).catch((err) => {return reject(err)});
                         }*/
                     }).catch((err) => {return reject(err)});
+                } else {
+                    return reject(new Error("Invalid form. Please see the marked rows"))
                 }
             })
             

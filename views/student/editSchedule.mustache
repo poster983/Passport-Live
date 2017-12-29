@@ -23,18 +23,24 @@ email: hi@josephhassell.com
 <!--The NAv-->
 <nav>
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo right">My Schedule</a>
-      <a href="#" id="mixenSEBack"><i class="left-allign nav-sandwich material-icons">arrow_back</i></a>
+      
+      <ul class="left">
+        <a href="#" class="no-hover left-allign" style="" id="mixenSEBack"><i class="material-icons">arrow_back</i></a>
+      </ul>
+      <ul class="right hide-on-small-only">
+        <a class="waves-effect waves-light mixenSESave" id="mixenSESave-nav"><i class="left material-icons">save</i>Save</a>
+      </ul>
+
     </div>
 </nav>
 
 
 <!--THe FAB-->
-<div class="fixed-action-btn">
-    <a class="btn-floating btn-large red waves-effect waves-light pulse disabled" id="mixenSESave">
-      <i class="large material-icons">save</i>
-    </a>
-  </div>
+<div class="fixed-action-btn hide-on-med-and-up">
+  <a class="btn-floating btn-large red waves-effect waves-light pulse disabled mixenSESave" id="mixenSESave-fab">
+    <i class="large material-icons">save</i>
+  </a>
+</div>
 
 <!-- THe page -->
 <div class="container">
@@ -71,13 +77,3 @@ email: hi@josephhassell.com
     </div>
   </div>
 </div>
-
-
-<!--Feature Disc -->
-
-  <div class="tap-target" id="unsaveConfirm"  data-activates="mixenSESave">
-    <div class="tap-target-content">
-      <h5>You have unsaved work</h5>
-      <p>To discard hit the <i class=" material-icons">backspace</i> button</p>
-    </div>
-  </div>
