@@ -37,12 +37,113 @@ var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
 var emailJS = require("./email.js");
 
+/** ACCOUNT TYPE DEFS **/ 
 
+/**
+ * User Account Model stored in RethinkDB
+ * @typedef {Object} account
+ * @property {String} id - Assigned by RethinkDB. A Primary Key / Primary Index
+ * @property {String} email - Must be unique. (TODO: Secondary Index)
+ * @property {Object} name
+ * @property {string} name.salutation - Pronoun (Mr., Ms., Mx., ECT...)
+ * @property {string} name.first - Given name
+ * @property {string} name.last - Family name
+ * @property {userGroup} userGroup
+ * @property {Object} groupFields - unused
+ * @property {boolean} isArchived - If true the user's account is frozen and no manipulation will take place.
+ * @property {boolean} isVerified - If true, the user will be able to make passes and email notifications will work.
+ * @property {(string|null)} password - Will be removed when returned from a REST endpoint
+ * @property {int} [graduationYear=null] - only required on userGroups that define it in the configs.
+ * @property {string} [schoolID=null]
+ * @property {Object} properties
+ * @property {Date} properties.createdOn
+ * @property {(Date|null)} properties.verifiedOn
+ * @property {Object} flags 
+ * @property {string} [flags.bulkImportID=undefined] - The ID of the account import job that imported this account. 
+ * @property {Object} integrations - holds ids and keys of services that integrate with passport 
+ * @property {Object} integrations.google - OAuth2 Login
+ * @property {Object} integrations.google.id - Google ID used to match the google account to the passport user
+ */
+
+
+
+/**
+* Student Schedule/Student Dashboard Schedule object
+* @typedef {Object} studentSchedule
+* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
+* @prop {?string} somePeriodName.teacherID - Holds an account ID linked to this period. Basically, the student is under this teacher's jurisdiction normally during this period. If null, the student is assumed to not have teacher supervision.
+* @example
+* {
+*    "a": {
+*        "teacherID": "2e75aa94-fa63-461a-be06-5345322bebdf"
+*    },
+*    "b": {
+*        "teacherID": "0115c0b0-ee04-4e88-a21f-d2029601b276"
+*    },
+*    "flex": {
+*        "teacherID": null
+*    },
+*    "lunch": {
+*        "teacherID": null
+*    }
+* }
+*/
+
+/**
+* Teacher or Supervisor Schedule / Teacher Dashboard Schedule object
+* @typedef {Object} teacherSchedule
+* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
+* @prop {string} [somePeriodName.className] - Friendly name for the class being taught or activity being supervised 
+* @prop {boolean} somePeriodName.isTeaching - If true, students will be discouraged from requesting a pass that period. 
+* @prop {string} [somePeriodName.room] - room#/name that the user will primarily be in.
+* @prop {?int} somePeriodName.passLimit - The maximum number of passes to accept per period.  Any passes requested over that period will be in a state of "Queue".  Setting to 0 will Queue all passes.
+* @example
+* {
+*    "a": {
+*        "className": "Algebra 1",
+*        "isTeaching": true,
+*        "room": "W-2048",
+*        "passLimit": 0
+*    },
+*    "b": {
+*        "className": "AP Computer Science",
+*        "isTeaching": true,
+*        "room": "E-404",
+*        "passLimit": 0
+*    },
+*    "c": {
+*        "className": "Sub Period",
+*        "isTeaching": false,
+*        "room": "W-2048",
+*        "passLimit": 5
+*    },
+*    "flex": {
+*        "isTeaching": false,
+*        "room": "W-2048",
+*        "passLimit": 10
+*    },
+*    "lunch": {
+*        "isTeaching": false,
+*        "room": "Teacher Lounge",
+*        "passLimit": 0
+*    }
+* }
+*/
+
+/**
+ * Account Tags/flags/metadata/options. 
+ * @typedef {(Object|undefined|null)} accountFlags
+ * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
+ * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
+ */
+
+
+
+/** CODE **/
 /** 
     * Creates An Account 
     * @function createAccount
     * @link module:js/accounts
-    * @async
     * @example
     * api.createAccount({userGroup: "student", name: {first: "Student", last: "McStudentface", salutation: "Mx." } email: "james.smith@gmail.com", schoolID: "123456", {studentID: 01236, isArchived: false }, function(err){
     *   if(err) {
@@ -585,6 +686,10 @@ function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x < givenPeriods.length; x++) {
         //make "" null 
+        let verType = "Maybe Boolean|{teacherID: String|null}";
+        if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+            var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+        }
         console.log(schedule[givenPeriods[x]], "vsc")
         if(schedule[givenPeriods[x]].teacherID == '') {
             console.log("isDumb")
@@ -601,6 +706,12 @@ function verifyStudentSchedule(schedule, done) {
         }
     }
 }
+/*
+function verifyTeacherSchedule(schedule) {
+    return new Promise((resolve, reject) => {
+        var givenPeriods = Object.keys(schedule);
+    })
+}*/
 function verifyUserSchedule(dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     var promise = new Promise(function(resolve, reject) {
@@ -1276,9 +1387,3 @@ exports.setVerification = function(id, isVerified) {
     exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
 }, 1000);*/
 
-/**
- * Account Tags/flags/metadata/options. 
- * @typedef {(Object|undefined|null)} accountFlags
- * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
- * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
- */

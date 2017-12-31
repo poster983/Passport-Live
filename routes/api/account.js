@@ -553,10 +553,10 @@ router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: fal
 router.put("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
-    console.log(req.user)
+    //console.log(req.user)
     if(req.user.schedules && req.user.schedules[dashboard]) {
         api.replaceUserSchedule(req.user.id, dashboard, schedule).then((trans) => {
-            console.log(trans)
+            //console.log(trans)
             res.json(trans)
         }).catch((err) => {return next(err);})
     } else {
