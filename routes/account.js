@@ -32,7 +32,7 @@ var db = require('../modules/db/index.js');
 var checkAuth = require('connect-ensure-login');
 
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), function(req, res, next) {
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardNav, function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
@@ -40,6 +40,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), function(req, res, next
     var elements = {};
     elements.schedules = {};
     //enable elements
+
     if(req.user.schedules && req.user.schedules.student) {
         elements.schedules.student = true;
     }
@@ -47,7 +48,15 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), function(req, res, next
         elements.schedules.teacher = true;
     }
     console.log(elements)
-    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    
+    //set links in sidenav
+    if(req.query.referral) {
+        req.sidenav.links = ['<li><a class="waves-effect" href="/' + req.query.referral + '"><i class="material-icons">home</i>Home</a></li>']
+    } else {
+        req.sidenav.dashboards.show = true;
+    }
+
+    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 //RaTE LIMIT RATE LIMIT!!

@@ -23,27 +23,10 @@ email: hi@josephhassell.com
 <main>
     <nav id="navBar">
         <div class="nav-wrapper nav-noshadow" data-stellar-ratio="5">
-          <!--SideNav-->
-          <ul id="slide-out" class="side-nav">
-           <li><div class="userView">
-             <div class="background">
-               <img alt="Side-Nav Background" src="/images/stunav.jpg">
-             </div>
-             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-           </div></li>
-           
-           <li><a class="waves-effect" href="/student">Home</a></li>
-           <li><a class="waves-effect active" href="#!">Your Account</a></li>
-           <li><div class="divider"></div></li>
-           <!--<li><a class="subheader">Subheader</a></li>-->
-           <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
-
-         </ul>
+          {{>sidenav}}
           <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-            <a href="#" class="brand-logo center">Passport</a>
-            <span class="nav-right">{{passportVersion}}</span>
+          <a href="#" class="brand-logo center">Passport</a>
+          <span class="nav-right">{{passportVersion}}</span>
         </div>
     </nav>
 

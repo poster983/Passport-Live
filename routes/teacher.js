@@ -25,13 +25,28 @@ var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 var checkAuth = require('connect-ensure-login');
 var ssarv = require('ssarv');
+var utils = require("../modules/passport-utils/index.js")
 
 router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('teacher/index', { doc_Title: 'Passport-Teacher', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    let dashboards = {};
+    dashboards.names = utils.getAllowedDashboards(req.user.userGroup);//req.user.userGroup
+    if(dashboards.names.length < 2) {
+        dashboards.showPicker = false;
+    } else {dashboards.showPicker=true;}
+    dashboards.format = function () {
+        return this.substring(0,1).toUpperCase()  + this.substring(1).toLowerCase();
+    }
+    dashboards.icon = function () {
+        if(this == "student") {return "book";}
+        else if(this == "teacher") {return "assignment";}
+        else if(this == "administrator") {return "gavel"}
+        else {return "computer"}
+    }
+    res.render('teacher/index', { doc_Title: 'Passport-Teacher', user, dashboards, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 //Teacher Account Page

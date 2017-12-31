@@ -84,9 +84,9 @@ exports.checkPermission = (userGroup, dashboards) => {
         return err;
     }
     return new Promise((resolve, reject) => {
-        if(config.has("userGroups." + userGroup + ".permissions.dashboards")) {
-            let groupDashboards = config.get("userGroups." + userGroup + ".permissions.dashboards");
-            if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1) >=0) {
+        let groupDashboards = exports.getAllowedDashboards(userGroup);
+        if(groupDashboards.length > 0) {
+            if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
                 return resolve();
             } else {
                 return reject(getErr());
@@ -97,14 +97,48 @@ exports.checkPermission = (userGroup, dashboards) => {
     })
 } 
 
+/** 
+* Gets the allowed dashboard array from the usergroup configs
+* @link module:js/utils
+* @param {userGroup} userGroup
+* @returns {string[]}
+*/
+exports.getAllowedDashboards = (userGroup) => {
+    if(config.has("userGroups." + userGroup + ".permissions.dashboards")) {
+        return config.get("userGroups." + userGroup + ".permissions.dashboards");
+    } else {
+        return [];
+    }
+}
 
+
+exports.compileDashboardNav = (req,res,next) => {
+    let sidenav = {}
+    //make the dashboard picker
+    sidenav.dashboards = {};
+    sidenav.dashboards.names = exports.getAllowedDashboards(req.user.userGroup);
+    if(sidenav.dashboards.names.length < 2) {
+        sidenav.dashboards.showPicker = false;
+    } else {sidenav.dashboards.showPicker=true;}
+    sidenav.dashboards.format = function () {
+        return this.substring(0,1).toUpperCase()  + this.substring(1).toLowerCase();
+    }
+    sidenav.dashboards.icon = function () {
+        if(this == "student") {return "book";}
+        else if(this == "teacher") {return "assignment";}
+        else if(this == "administrator") {return "gavel"}
+        else {return "computer"}
+    }
+    req.sidenav = sidenav;
+    return next();
+}
 
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
 * @function cleanUser
 * @link module:js/utils
-* @param {user} user - The user to clean.  The same user object found in the database 
-* @returns {user}
+* @param {account} user - The user to clean.  The same user object found in the database 
+* @returns {account}
 */
 exports.cleanUser = function(user){
     if(user) {

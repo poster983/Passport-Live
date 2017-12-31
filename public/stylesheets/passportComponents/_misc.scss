@@ -24,3 +24,16 @@ email: hi@josephhassell.com
 a.no-hover:hover {
     background-color: inherit !important;  
 }
+
+
+//For sidenav photo
+img.sidenav-background {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+//for the mini dashboard chooser in the sidenav
+ul.myDashboards {
+    display: none;
+}

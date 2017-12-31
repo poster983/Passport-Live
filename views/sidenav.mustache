@@ -1,0 +1,34 @@
+<!--SideNav-->
+<ul id="slide-out" class="side-nav">
+  <li><div class="userView">
+    <div class="background">
+      <img alt="Side-Nav Background" class="sidenav-background" src="/api/media/background/{{user.id}}.svg">
+    </div>
+    {{#sidenav.dashboards.showPicker}}<a class="right waves-effect myDashboards" style="text-shadow: 0 0 2px rgba(0,0,0,0.8);"><i class="material-icons">apps</i></a>{{/sidenav.dashboards.showPicker}}
+    <div><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img z-depth-3"></div>
+    <div><span class="white-text" style="text-shadow: 0 0 2px rgba(0,0,0,0.8);">{{user.name.first}} {{user.name.last}}</span></div>
+    <div><span class="white-text" style="text-shadow: 0 0 2px rgba(0,0,0,0.8);">{{user.email}}</span></div>
+  </div></li>
+  {{#sidenav.dashboards.showPicker}}
+    <ul class="myDashboards" {{#sidenav.dashboards.show}} style="display: block;" {{/sidenav.dashboards.show}}>
+      {{#sidenav.dashboards.names}}
+        <li><a class="waves-effect" href="/{{.}}"><i class="material-icons">{{sidenav.dashboards.icon}}</i>{{sidenav.dashboards.format}}</a></li>
+      {{/sidenav.dashboards.names}}
+      <li><div class="divider"></div></li>
+   </ul>
+  {{/sidenav.dashboards.showPicker}}
+  {{#sidenav.links}}
+    {{{.}}}
+  {{/sidenav.links}}
+    <li><div class="divider"></div></li>
+ <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
+ <script type="text/javascript">
+    /* REPLACE THIS WITH THE UTIL FUNCTION WHEN MOVING TO WEBPACK */
+    document.addEventListener('DOMContentLoaded', () => {
+      $("a.myDashboards").on("click", (e) => {
+        $("ul.myDashboards").toggle(300);
+      })
+    }, false);
+      
+  </script>
+</ul>
