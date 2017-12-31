@@ -34,6 +34,71 @@ var typeCheck = require("./customTypeCheck.js");
 exports.typeCheck = {};
 exports.typeCheck = typeCheck
 //console.log(exports.typeCheck)
+
+
+/**
+* Middleware wrapper for {@link module:js/utils.checkPermission}
+* @link module:js/utils
+* @param {string[]} dashboards - Holds the allowed dashboards (Like "student", "teacher", "administrator")
+* @param {Object} [options]
+* @param {string} [options.failRedirect] - if set, the user will be redirected here on a failure
+*/
+exports.middlewarePermission = (dashboards, options) => {
+    return function(req, res, next) {
+        if(req.user) {
+            checkPermission(req.user.userGroup, dashboards).then(() => {
+                return next();
+            }).catch((err) => {
+                if(options && options.failRedirect) {
+                    return res.redirect(307, options.failRedirect)
+                } else {
+                    return next(err);
+                }
+            })
+        }
+    }
+}
+
+/** 
+* Checks if the allwed dashboards for the given usergroup are present
+* @link module:js/utils
+* @param {userGroup} userGroup
+* @param {string[]} dashboards - Holds the allowed dashboards (Like "student", "teacher", "administrator")
+* @returns {Promise}
+*/
+exports.checkPermission = (userGroup, dashboards) => {
+    let getErr = () => {
+        //make english error
+        let dashList = "";
+        if(dashboards.length == 2) {
+            dashList = dashboards[0] + " or " + dashboards[1];
+        } else {
+            if(dashboards > 2) {
+                dashboards[dashboards.length-1] = "or " + dashboards[dashboards.length-1];
+            }
+            dashList = dashboards.join(", ");
+        }
+
+        let err = new Error("Account must have access to " + dashList + " dashboards to access this resource");
+        err.status = 403;
+        return err;
+    }
+    return new Promise((resolve, reject) => {
+        if(config.has("userGroups." + userGroup + ".permissions.dashboards")) {
+            let groupDashboards = config.get("userGroups." + userGroup + ".permissions.dashboards");
+            if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1) >=0) {
+                return resolve();
+            } else {
+                return reject(getErr());
+            }
+        } else {
+            return reject(getErr())
+        }
+    })
+} 
+
+
+
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
 * @function cleanUser

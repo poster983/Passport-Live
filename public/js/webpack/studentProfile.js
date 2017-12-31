@@ -2899,7 +2899,7 @@ window.onload = function() {
     $(window).stellar({
         responsive: true,
     });
-    loadMySchedules();
+    loadMyStudentSchedule();
     //check for changes on settings card
     $("#settingsCard").find("input").on("change", settingNeedsSaving);
 
@@ -3005,13 +3005,13 @@ var idOfUser = utils.thisUser();
 
 
 
-function loadMySchedules() {
+function loadMyStudentSchedule() {
 scheduleJS.getSchedules(utils.thisUser()).then((data) => {
     console.log(data)
     data = data.studentType;
     if(data && data.schedule) {
         //clear area
-        $("#scheduleBody").empty();
+        $("#studentScheduleBody").empty();
         //do stuff with schedule 
         console.log(data)
         var keys = Object.keys(data.schedule);
@@ -3064,19 +3064,19 @@ scheduleJS.getSchedules(utils.thisUser()).then((data) => {
             tr.appendChild(roomEl);
 
             //set
-            $('#scheduleBody').append(tr);
+            $('#studentScheduleBody').append(tr);
           }
         }
 
       } else {
-        var err = new Error("Please click on the edit (pencil) button and add a schedule.");
+        var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
         markScheduleEditButton(1);
         return utils.throwError(err);
       }
     }).catch((err) => {
         return utils.throwError(err);
     })
-}   
+}
 
 function markScheduleEditButton(loop) {
     let frequency = .3;

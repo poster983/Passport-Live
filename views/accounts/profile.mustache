@@ -73,25 +73,55 @@ email: hi@josephhassell.com
       <!--Schedules-->
       <div class="row" >
         <div class="col s12 m12 l6 push-l3">
-          <div class="card" >
-             
+          <div class="card cyan accent-4"">
+
             <div class="card-content">
-            <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
-             <span class="card-title">Schedules</span>
+              <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
+              <span class="card-title">Schedules</span>
+            </div>
+            <div class="card-tabs">
+              <ul class="tabs tabs-fixed-width tabs-transparent ">
+                {{#elements.schedules.student}}<li class="tab"><a href="#studentSchedule">Student Schedule</a></li>{{/elements.schedules.student}}
+                {{#elements.schedules.teacher}}<li class="tab"><a href="#teacherSchedule">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+              </ul>
+            </div>
+            <div class="card-content grey lighten-4">
+              {{#elements.schedules.student}}
+              <div id="studentSchedule">
+                <table class="highlight responsive-table">
+                  <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Class</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th>Limit</th>
+                    </tr>
+                  </thead>
 
-               <table class="highlight responsive-table">
-                <thead>
-                  <tr>
-                      <th>Period</th>
-                      <th>Class</th>
-                      <th>Teacher</th>
-                      <th>Room</th>
-                  </tr>
-                </thead>
+                  <tbody id="studentScheduleBody">
+                  </tbody>
+                </table>
+              </div>
+              {{/elements.schedules.student}}
+              {{#elements.schedules.teacher}}
+              <div id="teacherSchedule">
+                <table class="highlight responsive-table">
+                  <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Class</th>
+                        <th>Teaching</th>
+                        <th>Room</th>
+                        <th>Limit</th>
+                    </tr>
+                  </thead>
 
-                <tbody id="scheduleBody">
-                </tbody>
-              </table>
+                  <tbody id="teacherScheduleBody">
+                  </tbody>
+                </table>
+              </div>
+              {{/elements.schedules.teacher}}
             </div>
           </div>
         </div>
@@ -137,7 +167,7 @@ email: hi@josephhassell.com
     <!-- Compiled and minified JavaScript -->
     <script src="/js/materialize.js"></script>
     <script src="/js/passport.js"></script>
-    <script src="/js/webpack/teacherProfile.js"></script>
+    <script src="/js/webpack/studentProfile.js"></script>
     <script src="/jquery.stellar/jquery.stellar.js"></script>
     <!--MIXINS-->
     <div id="mustacheMixens">
