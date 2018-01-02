@@ -3940,23 +3940,21 @@ class TeacherScheduleEditor {
                 this.teacherTable.generate().then(() => {
                     //Import existing schedule
                     
-                    /*if(allSchedules && allSchedules.teacherType) {
+                    if(allSchedules && allSchedules.teacherType) {
                         let schedule = allSchedules.teacherType;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
+                                let thisPeriod = schedule.schedule[periods[x]];
                                 this.teacherTable.appendRow([{}], (row, callback) => {
-                                    let nameInj = null;
-                                    if(schedule.schedule[periods[x]].teacher && schedule.schedule[periods[x]].teacher.name) {
-                                        nameInj = this._autocompleteNameFormat(schedule.schedule[periods[x]].teacher.name, schedule.schedule[periods[x]].teacher.email);
-                                    }
-                                    this._injectDOM(scheduleConfig.periods, row, periods[x], nameInj).then((arr) => {
+                                    console.log("Teacher Schedule", schedule.schedule)
+                                    this._injectDOM(scheduleConfig.periods, row, periods[x], thisPeriod.isTeaching, thisPeriod.room, thisPeriod.className, thisPeriod.passLimit).then((arr) => {
                                         return callback(arr);
                                     }).catch(err => reject(err))
                                 })
                             }
                         }
-                    }*/
+                    }
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
@@ -4157,7 +4155,7 @@ class TeacherScheduleEditor {
                                     }
                                     this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
-                                })).append($("<label/>").addClass(limitLabelCSS).attr("for", limitID).html("Period Limit"))
+                                })).append($("<label/>").addClass(limitLabelCSS).attr("for", limitID).html("Pass Limit"))
                             )
                     }, {
                         column: "Teaching",
