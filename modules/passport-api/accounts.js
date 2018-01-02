@@ -712,7 +712,6 @@ function verifyTeacherSchedule(schedule) {
     return new Promise((resolve, reject) => {
         var givenPeriods = Object.keys(schedule);
         for(var x = 0; x < givenPeriods.length; x++) {
-            console.log(schedule)
             let verType = "{className: Maybe String, isTeaching: Boolean, room: Maybe String, passLimit: Maybe Number}";
             if(!typeCheck(verType, schedule[givenPeriods[x]])) {
                 var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
