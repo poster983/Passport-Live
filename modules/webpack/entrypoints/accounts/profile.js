@@ -20,13 +20,15 @@ email: hi@josephhassell.com
 
 */
 var Caret = require("../../common/Caret.js");
-var ScheduleEditor = require("../../sections/StudentScheduleEditor.js");
+var StudentScheduleEditor = require("../../sections/StudentScheduleEditor.js");
+var TeacherScheduleEditor = require("../../sections/TeacherScheduleEditor.js");
 var utils = require("../../utils/index.js");
 var scheduleJS = require("../../api/schedule.js");
 var unsavedWork = require("../../common/unsavedWork.js")
 var anime = require("animejs");
 
-var scheduleEditor = null;
+var studentScheduleEditor = null;
+var teacherScheduleEditor = null;
 window.onload = function() {
     routeHash();
     console.log(utils.thisUser())
@@ -43,6 +45,7 @@ window.onload = function() {
     //Advanced Options for schedule editor 
     var ADVschedule = new Caret($("#se-advancedOptionsCaret"), $("#se-advancedOptionsDIV"));
     ADVschedule.initialize();
+
 }
 
 
@@ -56,7 +59,8 @@ function routeHash() {
         case "#editSchedule": 
             utils.openPage("scheduleEditor");
             $(".mixenSESave").removeClass("disabled");
-            initScheduleEditor();
+            initStudentScheduleEditor();
+            initTeacherScheduleEditor();
             break;
         default: 
             $(".mixenSESave").addClass("disabled");
@@ -65,7 +69,12 @@ function routeHash() {
 }
 
 
+/** SCHEDULE EDITOR **/ 
 function initScheduleEditor() {
+
+}
+/* Studnet Editor */
+function initStudentScheduleEditor() {
     if($("#editScheduleContainer").children().length <=0) {
         
 
@@ -75,7 +84,7 @@ function initScheduleEditor() {
             },
             onDiscard: () => {
                 unsavedWork.reset("#mixenSEBack");
-                scheduleEditor.clearContainer();
+                studentScheduleEditor.clearContainer();
                 console.log("discard")
             },
             onWarn: (event) => {
@@ -91,33 +100,35 @@ function initScheduleEditor() {
                 console.log("Reset")
             }
         })
-        scheduleEditor = new ScheduleEditor($("#editScheduleContainer"), {
+        studentScheduleEditor = new StudentScheduleEditor($("#editStudentScheduleContainer"), {
             onChange: (e) => {
                 console.log("changed")
                 unsavedWork.changed("#mixenSEBack");
             }
         });
-        genScheduleEditor();
+        genStudentScheduleEditor();
         /* Schedule Editor Options */
         
-        $("#se-advancedOptions").off("click");
-        $("#se-advancedOptions").on("change", (e) => {
+        $("#se-advancedOptions-studentRecovery").off("click");
+        $("#se-advancedOptions-studentRecovery").on("change", (e) => {
             if($(e.currentTarget).prop('checked')) {
-                genScheduleEditor(true);
+                genStudentScheduleEditor(true);
             } else {
-                genScheduleEditor();
+                genStudentScheduleEditor();
             }
             
         })
     }
 }
 
-function genScheduleEditor(startClean) {
-    scheduleEditor.generate(startClean).then(() => {
+
+
+function genStudentScheduleEditor(startClean) {
+    studentScheduleEditor.generate(startClean).then(() => {
         $("a.mixenSESave").off("click");
         $("a.mixenSESave").on("click", (e) => {
             $("a.mixenSESave").addClass("disabled");
-            scheduleEditor.submit().then((resp) => {
+            studentScheduleEditor.submit().then((resp) => {
                 console.log(resp);
                 if(resp.transaction && resp.transaction.unchanged >= 1) {
                     Materialize.toast('Nothing changed', 4000)
@@ -136,6 +147,35 @@ function genScheduleEditor(startClean) {
         })
     }).catch(err => utils.throwError(err))
 }
+
+function initTeacherScheduleEditor() {
+    
+    /* Schedule Editor Options */
+    teacherScheduleEditor = new TeacherScheduleEditor($("#editTeacherScheduleContainer"), {
+        onChange: (e) => {
+            console.log("changed")
+            unsavedWork.changed("#mixenSEBack");
+        }
+    });
+    genTeacherScheduleEditor();
+    $("#se-advancedOptions-teacherRecovery").off("click");
+    $("#se-advancedOptions-teacherRecovery").on("change", (e) => {
+        if($(e.currentTarget).prop('checked')) {
+            genTeacherScheduleEditor(true);
+        } else {
+            genTeacherScheduleEditor();
+        }
+        
+    })
+}
+
+function genTeacherScheduleEditor(startClean) {
+    teacherScheduleEditor.generate(startClean).then(() => {
+        console.log("Generated Teacher")
+    }).catch(err => utils.throwError(err))
+
+}
+
 var idOfUser = utils.thisUser();
 
 
@@ -320,3 +360,6 @@ function spinneyMcSpinFace() {
         loop: 1
     })
 }
+
+
+

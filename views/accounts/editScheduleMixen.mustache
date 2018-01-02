@@ -17,9 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 -->
-<div class="progress" id="loader" style="position: absolute; display:none;">
-  <div class="indeterminate"></div>
-</div>
+
 <!--The NAv-->
 <nav>
     <div class="nav-wrapper">
@@ -33,7 +31,9 @@ email: hi@josephhassell.com
 
     </div>
 </nav>
-
+<div class="progress" id="loader" style="position: absolute; display:none;">
+  <div class="indeterminate"></div>
+</div>
 
 <!--THe FAB-->
 <div class="fixed-action-btn hide-on-med-and-up">
@@ -51,7 +51,7 @@ email: hi@josephhassell.com
         <div class="card">
           <div class="card-content">
             <a id="se-advancedOptionsCaret" data-position="left" data-tooltip="More Options" class="right waves-effect waves-circle waves-light btn-floating grey darken-2 tooltipped" ><i class="material-icons">expand_less</i></a>
-            <span class="card-title">My Schedule</span>
+            <span class="card-title">Edit My Schedule</span>
             <!--Advanced Options -->
             <div id="se-advancedOptionsDIV" class="row">
               <div class="col s12">
@@ -59,10 +59,19 @@ email: hi@josephhassell.com
                   <h5 class="">Advanced Options</h5>
                   <!-- Recovery Switch -->
                   <div class="switch">
-                    Recovery Mode:
+                    Student Recovery Mode:
                     <label>
                       Off
-                      <input id="se-advancedOptions" type="checkbox" value="true">
+                      <input id="se-advancedOptions-studentRecovery" type="checkbox" value="true">
+                      <span class="lever"></span>
+                      On
+                    </label>
+                  </div>
+                  <div class="switch">
+                    Teacher Recovery Mode:
+                    <label>
+                      Off
+                      <input id="se-advancedOptions-teacherRecovery" type="checkbox" value="true">
                       <span class="lever"></span>
                       On
                     </label>
@@ -70,7 +79,22 @@ email: hi@josephhassell.com
                 </div>
               </div>
             </div>
-            <div id="editScheduleContainer"></div>
+
+            
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab"><a href="#editStudentType">Student Schedule</a></li>
+              <li class="tab"><a href="#editTeacherType">Teacher Schedule</a></li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="editStudentType">
+              <div id="editStudentScheduleContainer"></div>
+            </div>
+            <div id="editTeacherType">
+              <div id="editTeacherScheduleContainer"></div>
+            </div>
           </div>
         </div>
       </div>

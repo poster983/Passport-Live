@@ -53,10 +53,20 @@ email: hi@josephhassell.com
           </div>
         </div>
       </div>
+      <!--Multi Schedule Edit Question-->
+      <div id="multiScheduleEditorModal" class="modal">
+        <div class="modal-content">
+          <h4>What type would you like to edit?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#editStudentSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Student</a>
+          <a href="#editTeacherSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Teacher</a>
+        </div>
+      </div>
       <!--Schedules-->
       <div class="row" >
         <div class="col s12 m12 l6 push-l3">
-          <div class="card cyan accent-4"">
+          <div class="card cyan accent-4">
 
             <div class="card-content">
               <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
@@ -150,12 +160,12 @@ email: hi@josephhassell.com
     <!-- Compiled and minified JavaScript -->
     <script src="/js/materialize.js"></script>
     <script src="/js/passport.js"></script>
-    <script src="/js/webpack/studentProfile.js"></script>
+    <script src="/js/webpack/profile.js"></script>
     <script src="/jquery.stellar/jquery.stellar.js"></script>
     <!--MIXINS-->
     <div id="mustacheMixens">
       <div class="mustacheMixen page" id="scheduleEditor"> 
-        {{>student/editSchedule}}
+        {{>accounts/editScheduleMixen}}
       </div>
     </div>
 

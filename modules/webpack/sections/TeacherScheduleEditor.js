@@ -26,23 +26,25 @@ var accountAPI = require("../api/account.js");
 var miscAPI = require("../api/misc.js");
 var utils = require("../utils/index.js");
 /**
-* Class that Generates a Schedule editor for students.
+* Class that Generates a Schedule editor for teachers.
 * @class 
 * @param {Object} formOutputContainer - Where to put the scheduele editor.
 * @param {Object} [options] 
 * @param {string} [options.accountID] - Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.
 * @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.
 */
-class StudentScheduleEditor {
+class TeacherScheduleEditor {
     /** @constructor */
     constructor(formOutputContainer, options) {
         this.container = $(formOutputContainer);
         if(!options) {options = {}}
         this.options = options;
         this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
-        this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
+        this.isTeachingClass = "__IS_TEACHING_SWITCH_" + utils.uuidv4() + "__";
+        this.classNameClass = "__CLASS_NAME_INPUT_" + utils.uuidv4() + "__";
+        this.roomClass = "__ROOM_INPUT_" + utils.uuidv4() + "__";
+        this.limitClass = "__LIMIT_INPUT_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
-        this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
     }
     /*Events*/
 
@@ -59,26 +61,16 @@ class StudentScheduleEditor {
             this.clearContainer();
             let prom = [];
             prom.push(miscAPI.getScheduleConfig());
-            prom.push(accountAPI.getWithClasses());
             if(startClean) {
                 prom.push(new Promise((resolve) => {return resolve()}));
             } else {
                 prom.push(scheduleAPI.getSchedules(this.options.accountID));
             }
             
-            Promise.all(prom).then(([scheduleConfig, allClassAccounts, allSchedules]) => {
-                this.allClassAccounts = allClassAccounts;
-                let locationAutocompleteData = {};
-                let doneMappingAutoData = new Promise((res) => {
-                    for(let x = 0; x < this.allClassAccounts.length; x++) {
-                        locationAutocompleteData[this._autocompleteNameFormat(this.allClassAccounts[x].name, this.allClassAccounts[x].email)] = null;
-                        if(x >= this.allClassAccounts.length-1) {
-                            return res();
-                        }
-                    }
-                })
+            Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
 
-                this.studentTable = new Table(this.container, [{}], {
+                this.teacherTable = new Table(this.container, [{}], {
+                    tableClasses: "noresponsive-table",
                     preferInject: false,
                     idKey: "id",
                     ignoredKeys: ["id"],
@@ -90,33 +82,18 @@ class StudentScheduleEditor {
                     afterGenerate: () => {
                         //INIT SELECT
                         $('select').material_select();
-                        doneMappingAutoData.then(() => {
-                            $('input.'+this.autocompleteClass).autocomplete({
-                                data: locationAutocompleteData,
-                                limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
-                                onAutocomplete: (val) => {
-                                  // Callback function when value is autcompleted.
-                                  console.log(val)
-                                    if(typeof this.options.onChange === "function") {
-                                        this.options.onChange(null);
-                                    }
-                                  this.checkValidity().catch(err => reject(err))
-                                },
-                                minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-                            });
-                        }).catch(err => reject(err))
                     }
                 });
 
-                this.studentTable.generate().then(() => {
+                this.teacherTable.generate().then(() => {
                     //Import existing schedule
                     
-                    if(allSchedules && allSchedules.studentType) {
-                        let schedule = allSchedules.studentType;
+                    /*if(allSchedules && allSchedules.teacherType) {
+                        let schedule = allSchedules.teacherType;
                         let periods = Object.keys(schedule.schedule);
                         for(let x = 0; x < periods.length; x++) {
                             if(schedule.schedule[periods[x]]) {
-                                this.studentTable.appendRow([{}], (row, callback) => {
+                                this.teacherTable.appendRow([{}], (row, callback) => {
                                     let nameInj = null;
                                     if(schedule.schedule[periods[x]].teacher && schedule.schedule[periods[x]].teacher.name) {
                                         nameInj = this._autocompleteNameFormat(schedule.schedule[periods[x]].teacher.name, schedule.schedule[periods[x]].teacher.email);
@@ -127,12 +104,11 @@ class StudentScheduleEditor {
                                 })
                             }
                         }
-                    }
-                    
+                    }*/
                     //create new row button
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
-                        this.studentTable.appendRow([{}])
+                        this.teacherTable.appendRow([{}])
                     }))
 
                     //generation done
@@ -142,13 +118,6 @@ class StudentScheduleEditor {
 
             }).catch(reject);
         })
-    }
-    _autocompleteNameFormat(nameObject, email) {
-        if(nameObject.salutation) {
-            return nameObject.salutation + " " + nameObject.first + " " + nameObject.last + " --- " + email;
-        } else {
-            return nameObject.first + " " + nameObject.last + " --- " + email;
-        }
     }
     _periodSelectElm(periods, selected) {
         return new Promise((resolve, reject) => {
@@ -183,7 +152,7 @@ class StudentScheduleEditor {
             this._periodSelectElm(periods, selected).then((sel) => {
                 return resolve($("<span/>")
                 .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", (e) => {
-                    this.studentTable.deleteRow(rowID)
+                    this.teacherTable.deleteRow(rowID)
                     if(typeof this.options.onChange === "function") {
                         this.options.onChange(e);
                     }
@@ -194,21 +163,50 @@ class StudentScheduleEditor {
             }).catch(err => reject(err))
         })
     }
-    _injectDOM(periodArray, row, period, locationValue) {
+    _injectDOM(periodArray, row, period, isTeachingValue, roomValue, classValue, limitValue) {
         return new Promise((resolve, reject) => {
-            let locationCSS = "block"; 
-            let buttonCSS = "none";
-            let labelCSS = "active";
-            let locationIcon = "location_off";
-            if(!locationValue) {
-                locationValue = "";
-                locationCSS = "none"; 
-                buttonCSS = "block";
-                locationIcon = "add_location"
-                labelCSS = "";
+            let roomCSS = "block"; 
+            let roomPlaceHolderDisplay = "none";
+            let roomIcon = "location_off";
+            let roomLabelCSS = "active"
+            let limitCSS = "block"; 
+            let limitPlaceHolderDisplay = "none";
+            let limitIcon = "remove_circle_outline";
+            let limitLabelCSS = "active"
+            let classCSS = "block"; 
+            let classPlaceHolderDisplay = "none";
+            let classIcon = "remove_circle_outline"; 
+            let classLabelCSS = "active"
+            if(!roomValue) {
+                roomValue = "";
+                roomCSS = "none"; 
+                roomPlaceHolderDisplay = "block";
+                roomIcon = "add_location";
+                roomLabelCSS = "";
             }
-                
-            let autoID = "__AUTOCOMPLETE_" + utils.uuidv4()
+            if(!classValue) {
+                classValue = "";
+                classCSS = "none"; 
+                classPlaceHolderDisplay = "block";
+                classIcon = "class";
+                classLabelCSS = "";
+            }
+            if(!limitValue) {
+                limitValue = "";
+                limitCSS = "none"; 
+                limitPlaceHolderDisplay = "block";
+                limitIcon = "group"
+                limitLabelCSS = "";
+            }
+            if(isTeachingValue) {
+                isTeachingValue = "checked";
+            } else {
+                isTeachingValue = null;
+            }
+            //Input IDS
+            let classNameID = "__CLASS_NAME_" + utils.uuidv4() + "__"
+            let roomID = "__ROOM_" + utils.uuidv4() + "__"
+            let limitID = "__LIMIT_" + utils.uuidv4() + "__"
             this._periodDom(row.rowID, periodArray, period).then((perDom) => {
                 return resolve([
                     {
@@ -217,6 +215,106 @@ class StudentScheduleEditor {
                         dom: perDom
 
                     }, {
+                        column: "Class name",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-classname", (!!classValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-classname") == "true") {
+                                    $("#" + classNameID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-classname", false).css("transform", "translateY(0%)").find("i").html("class")
+                                } else {
+                                    $("#" + classNameID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-classname", true).css("transform", "translateY(50%)").find("i").html("remove_circle_outline")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("<i/>").addClass("material-icons").html(classIcon)))
+                            .append($("<p/>").html(" &nbsp; No class name").css("transform", "translateY(50%)").css("display", classPlaceHolderDisplay))
+                            .append($("<div/>").addClass("input-field col s10").css("display", classCSS).attr("id", classNameID + "_DIV__")
+                                .append($("<input/>").attr("type", "text").val(classValue).attr("id", classNameID).addClass(this.classNameClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("<label/>").addClass(classLabelCSS).attr("for", classNameID).html("Class name"))
+                            )
+                    }, {
+                        column: "Room",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-room", (!!roomValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-room") == "true") {
+                                    $("#" + roomID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-room", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                } else {
+                                    $("#" + roomID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-room", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("<i/>").addClass("material-icons").html(roomIcon)))
+                            .append($("<p/>").html(" &nbsp; No Room").css("transform", "translateY(50%)").css("display", roomPlaceHolderDisplay))
+                            .append($("<div/>").addClass("input-field col s10").css("display", roomCSS).attr("id", roomID + "_DIV__")
+                                .append($("<input/>").attr("type", "text").val(roomValue).attr("id", roomID).addClass(this.roomClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
+                            )
+                    }, {
+                        column: "Limit",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-limit", (!!limitValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-limit") == "true") {
+                                    $("#" + limitID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-limit", false).css("transform", "translateY(0%)").find("i").html("group")
+                                } else {
+                                    $("#" + limitID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-limit", true).css("transform", "translateY(50%)").find("i").html("remove_circle_outline")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("<i/>").addClass("material-icons").html(limitIcon)))
+                            .append($("<p/>").html(" &nbsp; No Limit").css("transform", "translateY(50%)").css("display", limitPlaceHolderDisplay))
+                            .append($("<div/>").addClass("input-field col s10").css("display", limitCSS).attr("id", limitID + "_DIV__")
+                                .append($("<input/>").attr("type", "text").val(limitValue).attr("id", limitID).addClass(this.limitClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("<label/>").addClass(limitLabelCSS).attr("for", limitID).html("Period Limit"))
+                            )
+                    }, {
+                        column: "Teaching",
+                        strictColumn: true,
+                        dom: $("<span/>")
+                            .append($("<div/>").addClass("col s12").append($("<div/>").addClass("switch").append($("<label/>")
+                                .prepend("Not")
+                                .append($("<input/>").attr("checked", isTeachingValue).attr("type", "checkbox").addClass(this.isTeachingClass)).on("change", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.checkValidity().catch(err => reject(err))
+                                })
+                                .append($("<span/>").addClass("lever"))
+                                .append("Teaching")
+                            )))
+                    }
+                    /*{
                         column: "Location",
                         strictColumn: true,
                         dom: $("<span/>")
@@ -248,9 +346,9 @@ class StudentScheduleEditor {
                                     }
                                     this.checkValidity().catch(err => reject(err))
                                 }))
-                                .append($("<label/>").addClass(labelCSS).attr("for", autoID).html("Search Teachers"))
+                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
                             )
-                    }
+                    }*/
                 ])
             }).catch(err => reject(err))
         })
@@ -301,7 +399,7 @@ class StudentScheduleEditor {
             let prom = [];
             prom.push(this._checkPeriodSelect());
             prom.push(this._checkLocation());
-            if(this.studentTable.getTableBody().children().length < 1) {
+            if(this.teacherTable.getTableBody().children().length < 1) {
                 return resolve({valid: false});
             }
             Promise.all(prom).then(([periodRes, locationRes]) => {
@@ -357,8 +455,8 @@ class StudentScheduleEditor {
         return new Promise((resolve, reject) => {
             let formData = {};
             let loopPromise = [];
-            let tableBody = this.studentTable.getTableBody().children();
-            console.log(this.studentTable.getTableBody());
+            let tableBody = this.teacherTable.getTableBody().children();
+            console.log(this.teacherTable.getTableBody());
             for(let x = 0; x < tableBody.length; x++) {
                 loopPromise.push(new Promise((resolve, reject) => {
                     console.log("Table Rows:", tableBody[x])
@@ -410,4 +508,4 @@ class StudentScheduleEditor {
     }
 }
 
-module.exports = StudentScheduleEditor;
+module.exports = TeacherScheduleEditor;

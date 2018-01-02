@@ -54,6 +54,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardN
         req.sidenav.links = ['<li><a class="waves-effect" href="/' + req.query.referral + '"><i class="material-icons">home</i>Home</a></li>']
     } else {
         req.sidenav.dashboards.show = true;
+        req.sidenav.dashboards.showPicker = true;
     }
 
     res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
