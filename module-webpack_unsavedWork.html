@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>mediaRESTAPI - Documentation</title>
+    <title>webpack/unsavedWork - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">mediaRESTAPI</h1>
+    <h1 class="page-title">webpack/unsavedWork</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,9 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: mediaRESTAPI</h2>
+      <h2>Module: webpack/unsavedWork</h2>
+        
+            
         
     
 
@@ -59,9 +61,15 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#generateBackdrop">generateBackdrop</a></li>
+            <li><a href="#button">button</a></li>
             
-            <li><a href="#getIdenticon">getIdenticon</a></li>
+            <li><a href="#changed">changed</a></li>
+            
+            <li><a href="#destroy">destroy</a></li>
+            
+            <li><a href="#reset">reset</a></li>
+            
+            <li><a href="#saved">saved</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -69,6 +77,135 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Browser module for storing if work is unsaved and then notifying the user.
+This is ment to be used with the back buttons on the mustache mixen pages.
+If the button is clicked and there is unsaved work, the button will need to be pressed again for the button action to go through.</p></div>
+        
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line22">22</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-webpack/unsavedWork">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line22">22</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Browser module for storing if work is unsaved and then notifying the user.\n* This is ment to be used with the back buttons on the mustache mixen pages.\n* If the button is clicked and there is unsaved work, the button will need to be pressed again for the button action to go through.\n* @module webpack/unsavedWork\n*/","meta":{"filename":"unsavedWork.js","lineno":22,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Browser module for storing if work is unsaved and then notifying the user.\nThis is ment to be used with the back buttons on the mustache mixen pages.\nIf the button is clicked and there is unsaved work, the button will need to be pressed again for the button action to go through.</p>","kind":"module","name":"webpack/unsavedWork","longname":"module:webpack/unsavedWork","___id":"T000002R001065","___s":true,"attribs":"","id":"webpack/unsavedWork","ancestors":[]}
+</pre>
+-->
+</div>
 
         
     
@@ -101,7 +238,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line46">46</a>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line40">40</a>
   </code>
 </div>
 
@@ -112,8 +249,8 @@
 
     
 
-    <h4 class="name" id="~generateBackdrop">
-      <a href="#params-generateBackdrop"><span class="type-signature">(async, inner) </span>generateBackdrop</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id=".button">
+      <a href="#params-button"><span class="type-signature">(static) </span>button</a><span class="signature">(element, callbacks<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -123,20 +260,16 @@
 
 
 
-      <a href="#api-generateBackdrop">
-        <span class="label label-api">API: GET /api/media/background/:id.svg</span>
-      </a>
-    
 
 
 
-<span class="label label-default">Async</span>
+
 
 
 
 
 <div class="description">
-    <p>Generates a unique backdrop for each user</p>
+    <p>Initiates a button for tracking if work is unsaved.</p>
 </div>
 
 
@@ -146,7 +279,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-generateBackdrop">
+<div class="collapse_" id="methodCollapse-button">
 
   
 
@@ -190,19 +323,12 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
 
 
 
 
 
-
-  <div id="params-generateBackdrop" class="bs-callout bs-callout-primary">
+  <div id="params-button" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -217,6 +343,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -229,77 +357,69 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The element to initiate for trackeing</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>callbacks</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#response">response</a></span>
+<span class="param-type">Object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-generateBackdrop">
-    <h5>
-      API Route:
-      GET /api/media/background/:id.svg
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
+            <td class="description last">
+                <h6>Properties</h6>
+                <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -312,6 +432,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -324,58 +446,193 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>onAction</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">ID of the user.</td>
+            <td class="description last"><p>called when the button action goes through. IE The page is discarded. The click event and the element are passed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDiscard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>called when the button is pressed after being warned. Like callbacks.onAction, but not called if everything is saved.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onWarn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>called when the button action is canceled and a warning should be showed. The click event and the element are passed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onSave</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>called when the element is saved and it is save to discard. The Element is passed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onReset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>called when the element is reset to default values. The Element is passed</p></td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
+            </td>
+        </tr>
 
     
+    </tbody>
+</table>
 
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returnes the unique svg image
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">image/svg\u002Bxml</span>
-
-
-    </dd>
-</dl>
-
-    
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -385,7 +642,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Generates a unique backdrop for each user\n* @function generateBackdrop\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/background/:id.svg\n* @apiparam {string} id ID of the user.\n* @apiresponse {image/svg\\u002Bxml} Returnes the unique svg image\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":46,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Generates a unique backdrop for each user</p>","kind":"function","name":"generateBackdrop","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/background/:id.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the unique svg image"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~generateBackdrop","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R001920","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~generateBackdrop","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n* Initiates a button for tracking if work is unsaved.\n* @link module:webpack/unsavedWork\n* @param {(Object|string)} element - The element to initiate for trackeing\n* @param {Object} [callbacks] \n* @param {function} [callbacks.onAction] - called when the button action goes through. IE The page is discarded. The click event and the element are passed\n* @param {function} [callbacks.onDiscard] - called when the button is pressed after being warned. Like callbacks.onAction, but not called if everything is saved.\n* @param {function} [callbacks.onWarn] - called when the button action is canceled and a warning should be showed. The click event and the element are passed \n* @param {function} [callbacks.onSave] - called when the element is saved and it is save to discard. The Element is passed\n* @param {function} [callbacks.onReset] - called when the element is reset to default values. The Element is passed\n*/","meta":{"range":[2069,3535],"filename":"unsavedWork.js","lineno":40,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100015475","name":"exports.button","type":"ArrowFunctionExpression","paramnames":["element","callbacks"]},"vars":{"callbacks":"module:webpack/unsavedWork~callbacks","element":"module:webpack/unsavedWork~element","":null},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Initiates a button for tracking if work is unsaved.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/unsavedWork","value":"module:webpack/unsavedWork"}],"params":[{"type":{"names":["Object","string"]},"description":"<p>The element to initiate for trackeing</p>","name":"element"},{"type":{"names":["Object"]},"optional":true,"name":"callbacks","subparams":[{"type":{"names":["function"]},"optional":true,"description":"<p>called when the button action goes through. IE The page is discarded. The click event and the element are passed</p>","name":"onAction"},{"type":{"names":["function"]},"optional":true,"description":"<p>called when the button is pressed after being warned. Like callbacks.onAction, but not called if everything is saved.</p>","name":"onDiscard"},{"type":{"names":["function"]},"optional":true,"description":"<p>called when the button action is canceled and a warning should be showed. The click event and the element are passed</p>","name":"onWarn"},{"type":{"names":["function"]},"optional":true,"description":"<p>called when the element is saved and it is save to discard. The Element is passed</p>","name":"onSave"},{"type":{"names":["function"]},"optional":true,"description":"<p>called when the element is reset to default values. The Element is passed</p>","name":"onReset"}]},null,null,null,null,null],"name":"button","longname":"module:webpack/unsavedWork.button","kind":"function","memberof":"module:webpack/unsavedWork","scope":"static","___id":"T000002R001066","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".button","signature":"<span class=\"signature\">(element, callbacks<span class=\"signature-attributes\">opt</span>)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-webpack_unsavedWork.html\">webpack/unsavedWork</a>."]}
 </pre>
 -->
 </div>
@@ -402,7 +659,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_media.js.html">media.js</a>:<a href="routes_api_media.js.html#line79">79</a>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line85">85</a>
   </code>
 </div>
 
@@ -413,8 +670,8 @@
 
     
 
-    <h4 class="name" id="~getIdenticon">
-      <a href="#params-getIdenticon"><span class="type-signature">(async, inner) </span>getIdenticon</a><span class="signature">(req, res)</span><span class="type-signature"></span>
+    <h4 class="name" id=".changed">
+      <a href="#params-changed"><span class="type-signature">(static) </span>changed</a><span class="signature">(element)</span><span class="type-signature"></span>
 
     </h4>
 
@@ -424,20 +681,17 @@
 
 
 
-      <a href="#api-getIdenticon">
-        <span class="label label-api">API: GET /api/media/avatar/:id/:size.svg</span>
-      </a>
-    
 
 
 
-<span class="label label-default">Async</span>
+
 
 
 
 
 <div class="description">
-    <p>Gets an avatar for the user</p>
+    <p>Call this when data is changed and thus unsaved.
+<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>
 </div>
 
 
@@ -447,7 +701,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getIdenticon">
+<div class="collapse_" id="methodCollapse-changed">
 
   
 
@@ -491,19 +745,12 @@
 
 
 
-  <div class="bs-callout bs-callout-default">
-    <h5>To Do</h5>
-    <ul>
-        <li>move rethink db to passport-api module</li>
-    </ul>
-  </div>
 
 
 
 
 
-
-  <div id="params-getIdenticon" class="bs-callout bs-callout-primary">
+  <div id="params-changed" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -530,13 +777,16 @@
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#request">request</a></span>
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -546,30 +796,7 @@
 
             
 
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
+            <td class="description last"><p>The element to notify about the change.</p></td>
         </tr>
 
     
@@ -592,15 +819,125 @@
 
 
 
-  <div class="bs-callout bs-callout-api" id="api-getIdenticon">
-    <h5>
-      API Route:
-      GET /api/media/avatar/:id/:size.svg
-    </h5>
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Call this when data is changed and thus unsaved.\n* <a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.\n* @link module:webpack/unsavedWork\n* @param {(Object|string)} element - The element to notify about the change.\n*/","meta":{"range":[3782,4171],"filename":"unsavedWork.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100015670","name":"exports.changed","type":"ArrowFunctionExpression","paramnames":["element"]},"vars":{"element":"module:webpack/unsavedWork~element"},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Call this when data is changed and thus unsaved.\n<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/unsavedWork","value":"module:webpack/unsavedWork"}],"params":[{"type":{"names":["Object","string"]},"description":"<p>The element to notify about the change.</p>","name":"element"}],"name":"changed","longname":"module:webpack/unsavedWork.changed","kind":"function","memberof":"module:webpack/unsavedWork","scope":"static","___id":"T000002R001077","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".changed","signature":"<span class=\"signature\">(element)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-webpack_unsavedWork.html\">webpack/unsavedWork</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line136">136</a>
+  </code>
+</div>
+
+
+
 
     
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
+
+    
+
+    <h4 class="name" id=".destroy">
+      <a href="#params-destroy"><span class="type-signature">(static) </span>destroy</a><span class="signature">(element)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted
+<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-destroy">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-destroy" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -625,12 +962,15 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
+<span class="param-type">Object</span>
+|
+
 <span class="param-type">string</span>
 
 
@@ -641,65 +981,28 @@
 
             
 
-            <td class="description last">ID of the user.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">How big the svg should be</td>
+            <td class="description last"><p>The element to destroy.</p></td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
-
-    
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returnes the avatar png
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">image/svg\u002Bxml</span>
-
-
-    </dd>
-</dl>
-
-    
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -709,7 +1012,378 @@
 
 <!--
 <pre>
-{"comment":"/**\n* Gets an avatar for the user\n* @function getIdenticon\n* @async\n* @param {request} req\n* @param {response} res\n* @api GET /api/media/avatar/:id/:size.svg\n* @apiparam {string} id ID of the user.\n* @apiparam {string} size How big the svg should be\n* @apiresponse {image/svg\\u002Bxml} Returnes the avatar png\n* @todo move rethink db to passport-api module\n*/","meta":{"filename":"media.js","lineno":79,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/media.js"},"description":"<p>Gets an avatar for the user</p>","kind":"function","name":"getIdenticon","async":true,"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"}],"route":"GET /api/media/avatar/:id/:size.svg","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id ID of the user.","value":{"type":{"names":["string"]},"description":"ID of the user.","name":"id"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} size How big the svg should be","value":{"type":{"names":["string"]},"description":"How big the svg should be","name":"size"}}],"response":{"type":{"names":["image/svg\\u002Bxml"]},"description":"Returnes the avatar png"},"todo":["move rethink db to passport-api module"],"longname":"module:mediaRESTAPI~getIdenticon","scope":"inner","memberof":"module:mediaRESTAPI","___id":"T000002R001927","___s":true,"attribs":"<span class=\"type-signature\">(async, inner) </span>","id":"~getIdenticon","signature":"<span class=\"signature\">(req, res)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-mediaRESTAPI.html\">mediaRESTAPI</a>~"]}
+{"comment":"/**\n* Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted\n* <a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.\n* @link module:webpack/unsavedWork\n* @param {(Object|string)} element - The element to destroy.\n*/","meta":{"range":[5742,6225],"filename":"unsavedWork.js","lineno":136,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100015828","name":"exports.destroy","type":"ArrowFunctionExpression","paramnames":["element"]},"vars":{"element":"module:webpack/unsavedWork~element"},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Removes all bindings from the element and removes the data and attrs.  The element itself will not be deleted\n<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/unsavedWork","value":"module:webpack/unsavedWork"}],"params":[{"type":{"names":["Object","string"]},"description":"<p>The element to destroy.</p>","name":"element"}],"name":"destroy","longname":"module:webpack/unsavedWork.destroy","kind":"function","memberof":"module:webpack/unsavedWork","scope":"static","___id":"T000002R001083","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".destroy","signature":"<span class=\"signature\">(element)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-webpack_unsavedWork.html\">webpack/unsavedWork</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line101">101</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".reset">
+      <a href="#params-reset"><span class="type-signature">(static) </span>reset</a><span class="signature">(element)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Resets the values to a saved state.
+<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-reset">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-reset" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to notify about the change.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Resets the values to a saved state.\n* <a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.\n* @link module:webpack/unsavedWork\n* @param {(Object|string)} element - The element to notify about the change.\n*/","meta":{"range":[4405,4895],"filename":"unsavedWork.js","lineno":101,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100015721","name":"exports.reset","type":"ArrowFunctionExpression","paramnames":["element"]},"vars":{"element":"module:webpack/unsavedWork~element"},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Resets the values to a saved state.\n<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/unsavedWork","value":"module:webpack/unsavedWork"}],"params":[{"type":{"names":["Object","string"]},"description":"<p>The element to notify about the change.</p>","name":"element"}],"name":"reset","longname":"module:webpack/unsavedWork.reset","kind":"function","memberof":"module:webpack/unsavedWork","scope":"static","___id":"T000002R001079","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".reset","signature":"<span class=\"signature\">(element)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-webpack_unsavedWork.html\">webpack/unsavedWork</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_common_unsavedWork.js.html">unsavedWork.js</a>:<a href="modules_webpack_common_unsavedWork.js.html#line121">121</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".saved">
+      <a href="#params-saved"><span class="type-signature">(static) </span>saved</a><span class="signature">(element)</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Call this when data is saved and it is ok to click the button. IE. a <a href="module-webpack_unsavedWork.html#.reset"><code>reset</code></a>
+Also calles the &quot;onSave&quot; and &quot;onReset&quot; callbacks.
+<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-saved">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-saved" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to notify about the change.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n* Call this when data is saved and it is ok to click the button. IE. a <a href="module-webpack_unsavedWork.html#.reset"><code>reset</code></a>\n* Also calles the \"onSave\" and \"onReset\" callbacks.\n* <a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.\n* @link module:webpack/unsavedWork\n* @param {(Object|string)} element - The element to notify about the change.\n*/","meta":{"range":[5262,5450],"filename":"unsavedWork.js","lineno":121,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/common","code":{"id":"astnode100015790","name":"exports.saved","type":"ArrowFunctionExpression","paramnames":["element"]},"vars":{"element":"module:webpack/unsavedWork~element"},"shortpath":"modules/webpack/common/unsavedWork.js"},"description":"<p>Call this when data is saved and it is ok to click the button. IE. a <a href="module-webpack_unsavedWork.html#.reset"><code>reset</code></a>\nAlso calles the &quot;onSave&quot; and &quot;onReset&quot; callbacks.\n<a href="module-webpack_unsavedWork.html#.button"><code>Button</code></a> must be called first.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/unsavedWork","value":"module:webpack/unsavedWork"}],"params":[{"type":{"names":["Object","string"]},"description":"<p>The element to notify about the change.</p>","name":"element"}],"name":"saved","longname":"module:webpack/unsavedWork.saved","kind":"function","memberof":"module:webpack/unsavedWork","scope":"static","___id":"T000002R001081","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".saved","signature":"<span class=\"signature\">(element)</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-webpack_unsavedWork.html\">webpack/unsavedWork</a>."]}
 </pre>
 -->
 </div>

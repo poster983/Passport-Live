@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>modules/webpack/sections/TeacherScheduleEditor.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/incomplete/dashboard/student</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~studentCheckIfIncomplete">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/student/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/{:id}</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_account.html">api/account</a><ul class='methods'><li data-type='method'><a href="module-api_account.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_account.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_account.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_account.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_account.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_account.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_account.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_account.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_account.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_account.html#~searchAccounts">searchAccounts</a></li><li data-type='method'><a href="module-api_account.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_account.html#~studentCheckIfIncomplete">studentCheckIfIncomplete</a></li><li data-type='method'><a href="module-api_account.html#~updateUserPassword">updateUserPassword</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_account.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkPermission">checkPermission</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.middlewarePermission">middlewarePermission</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passportPassApi.html">passportPassApi</a><ul class='methods'><li data-type='method'><a href="module-passportPassApi.html#~flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-passportPassApi.html#~newPass">newPass</a></li><li data-type='method'><a href="module-passportPassApi.html#~updatePass">updatePass</a></li></ul></li><li><a href="module-passportSchedulesApi.html">passportSchedulesApi</a><ul class='methods'><li data-type='method'><a href="module-passportSchedulesApi.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/webpack/sections/TeacherScheduleEditor.js</h1>
+    
+
+    <!--container.tmpl-->
+
+
+
+
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+var Table = require("../common/Table.js");
+var scheduleAPI = require("../api/schedule.js");
+var accountAPI = require("../api/account.js");
+var miscAPI = require("../api/misc.js");
+var utils = require("../utils/index.js");
+/**
+* Class that Generates a Schedule editor for teachers.
+* @class 
+* @param {Object} formOutputContainer - Where to put the scheduele editor.
+* @param {Object} [options] 
+* @param {string} [options.accountID] - Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.
+* @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.
+*/
+class TeacherScheduleEditor {
+    /** @constructor */
+    constructor(formOutputContainer, options) {
+        this.container = $(formOutputContainer);
+        if(!options) {options = {}}
+        this.options = options;
+        this.periodSelectClass = "__PERIOD_SELECT_" + utils.uuidv4() + "__";
+        this.isTeachingClass = "__IS_TEACHING_SWITCH_" + utils.uuidv4() + "__";
+        this.classNameClass = "__CLASS_NAME_INPUT_" + utils.uuidv4() + "__";
+        this.roomClass = "__ROOM_INPUT_" + utils.uuidv4() + "__";
+        this.limitClass = "__LIMIT_INPUT_" + utils.uuidv4() + "__";
+        this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
+        this.hasChanged = false;
+    }
+
+    clearContainer() {
+        $(this.container).children().off();
+        $(this.container).empty();
+    }
+    /** Tells if the form has been changed from its initial value 
+    * @returns {boolean}
+    */
+    getHasChanged() {
+        return this.hasChanged;
+    }
+    /** Creates the table 
+    * @param {bool} [startClean] - If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.
+    * @returns {Promise}
+    */
+    generate(startClean) {
+        return new Promise((resolve, reject) => {
+            this.clearContainer();
+            let prom = [];
+            prom.push(miscAPI.getScheduleConfig());
+            if(startClean) {
+                prom.push(new Promise((resolve) => {return resolve()}));
+            } else {
+                prom.push(scheduleAPI.getSchedules(this.options.accountID));
+            }
+            
+            Promise.all(prom).then(([scheduleConfig, allSchedules]) => {
+
+                this.teacherTable = new Table(this.container, [{}], {
+                    tableClasses: "noresponsive-table",
+                    preferInject: false,
+                    idKey: "id",
+                    ignoredKeys: ["id"],
+                    inject: (row, callback) => {
+                        this._injectDOM(scheduleConfig.periods, row).then((arr) => {
+                            return callback(arr);
+                        }).catch(err => reject(err))
+                    },
+                    afterGenerate: () => {
+                        //INIT SELECT
+                        $('select').material_select();
+                    }
+                });
+
+                this.teacherTable.generate().then(() => {
+                    //Import existing schedule
+                    
+                    if(allSchedules &amp;&amp; allSchedules.teacherType) {
+                        let schedule = allSchedules.teacherType;
+                        let periods = Object.keys(schedule.schedule);
+                        for(let x = 0; x &lt; periods.length; x++) {
+                            if(schedule.schedule[periods[x]]) {
+                                let thisPeriod = schedule.schedule[periods[x]];
+                                this.teacherTable.appendRow([{}], (row, callback) => {
+                                    console.log("Teacher Schedule", schedule.schedule)
+                                    this._injectDOM(scheduleConfig.periods, row, periods[x], thisPeriod.isTeaching, thisPeriod.room, thisPeriod.className, thisPeriod.passLimit).then((arr) => {
+                                        return callback(arr);
+                                    }).catch(err => reject(err))
+                                })
+                            }
+                        }
+                    }
+                    //create new row button
+                    this.container.append($("&lt;a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("&lt;i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
+                        $("#" + this.addRowButtonID).attr("disabled", true)
+                        this.teacherTable.appendRow([{}])
+                        this.checkValidity().catch(err => reject(err));
+                    }))
+
+                    //generation done
+                    return resolve();
+                });
+
+
+            }).catch(reject);
+        })
+    }
+    _periodSelectElm(periods, selected) {
+        return new Promise((resolve, reject) => {
+            let sel = $("&lt;select/>").addClass(this.periodSelectClass).on("change", (e) => {
+                if(typeof this.options.onChange === "function") {
+                    this.options.onChange(e);
+                }
+                this.hasChanged = true;
+                this.checkValidity().catch(err => reject(err))
+            });
+            if(selected) {
+                sel.append($("&lt;option/>").attr("value", "").attr("disabled", true).html("Choose a period"));
+            } else {
+                sel.append($("&lt;option/>").attr("value", "").attr("disabled", true).attr("selected", true).html("Choose a period"));
+            }
+            
+            for(let x = 0; x &lt; periods.length; x++) {
+                if(periods[x] == selected) {
+                    sel.append($("&lt;option/>").attr("value", periods[x]).attr("selected", true).html(periods[x].toUpperCase()))
+                } else {
+                    sel.append($("&lt;option/>").attr("value", periods[x]).html(periods[x].toUpperCase()))
+                }
+                
+                if(x >= periods.length-1) {
+                    let div = $("&lt;div/>").addClass("input-field col s10").append(sel);
+                    resolve(div);
+                }
+            }
+        });
+    }
+    _periodDom(rowID, periods, selected) {
+        return new Promise((resolve, reject) => {
+            this._periodSelectElm(periods, selected).then((sel) => {
+                return resolve($("&lt;span/>")
+                .prepend($("&lt;a/>").addClass("left btn-floating waves-effect waves-light delete-row").css("transform", "translateY(50%)").on("click", (e) => {
+                    this.teacherTable.deleteRow(rowID)
+                    if(typeof this.options.onChange === "function") {
+                        this.options.onChange(e);
+                    }
+                    this.hasChanged = true;
+                    $("#" + this.addRowButtonID).attr("disabled", false);
+                    this.checkValidity().catch(err => reject(err))
+                }).append($("&lt;i/>").addClass("material-icons").html("delete")))
+                .append(sel));
+            }).catch(err => reject(err))
+        })
+    }
+    _injectDOM(periodArray, row, period, isTeachingValue, roomValue, classValue, limitValue) {
+        return new Promise((resolve, reject) => {
+            let roomCSS = "block"; 
+            let roomPlaceHolderDisplay = "none";
+            let roomIcon = "location_off";
+            let roomLabelCSS = "active"
+            let limitCSS = "block"; 
+            let limitPlaceHolderDisplay = "none";
+            let limitIcon = "remove_circle_outline";
+            let limitLabelCSS = "active"
+            let classCSS = "block"; 
+            let classPlaceHolderDisplay = "none";
+            let classIcon = "remove_circle_outline"; 
+            let classLabelCSS = "active"
+            if(!roomValue) {
+                roomValue = "";
+                roomCSS = "none"; 
+                roomPlaceHolderDisplay = "block";
+                roomIcon = "add_location";
+                roomLabelCSS = "";
+            }
+            if(!classValue) {
+                classValue = "";
+                classCSS = "none"; 
+                classPlaceHolderDisplay = "block";
+                classIcon = "class";
+                classLabelCSS = "";
+            }
+            if(!limitValue) {
+                limitValue = "";
+                limitCSS = "none"; 
+                limitPlaceHolderDisplay = "block";
+                limitIcon = "group"
+                limitLabelCSS = "";
+            }
+            if(typeof isTeachingValue === "undefined" || isTeachingValue) {
+                isTeachingValue = "checked";
+            } else {
+                isTeachingValue = null;
+            }
+            //Input IDS
+            let classNameID = "__CLASS_NAME_" + utils.uuidv4() + "__"
+            let roomID = "__ROOM_" + utils.uuidv4() + "__"
+            let limitID = "__LIMIT_" + utils.uuidv4() + "__"
+            this._periodDom(row.rowID, periodArray, period).then((perDom) => {
+                return resolve([
+                    {
+                        column: "Period",
+                        strictColumn: true,
+                        dom: perDom
+
+                    }, {
+                        column: "Class name",
+                        strictColumn: true,
+                        dom: $("&lt;span/>")
+                            .prepend($("&lt;a/>").addClass("left btn-floating waves-effect waves-light").attr("data-classname", (!!classValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-classname") == "true") {
+                                    $("#" + classNameID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-classname", false).css("transform", "translateY(0%)").find("i").html("class")
+                                } else {
+                                    $("#" + classNameID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-classname", true).css("transform", "translateY(50%)").find("i").html("remove_circle_outline")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.hasChanged = true;
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("&lt;i/>").addClass("material-icons").html(classIcon)))
+                            .append($("&lt;p/>").html(" &amp;nbsp; No class name").css("transform", "translateY(50%)").css("display", classPlaceHolderDisplay))
+                            .append($("&lt;div/>").addClass("input-field col s10").css("display", classCSS).attr("id", classNameID + "_DIV__")
+                                .append($("&lt;input/>").attr("type", "text").val(classValue).attr("id", classNameID).addClass(this.classNameClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.hasChanged = true;
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("&lt;label/>").addClass(classLabelCSS).attr("for", classNameID).html("Class name"))
+                            )
+                    }, {
+                        column: "Room",
+                        strictColumn: true,
+                        dom: $("&lt;span/>")
+                            .prepend($("&lt;a/>").addClass("left btn-floating waves-effect waves-light").attr("data-room", (!!roomValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-room") == "true") {
+                                    $("#" + roomID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-room", false).css("transform", "translateY(0%)").find("i").html("add_location")
+                                } else {
+                                    $("#" + roomID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-room", true).css("transform", "translateY(50%)").find("i").html("location_off")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.hasChanged = true;
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("&lt;i/>").addClass("material-icons").html(roomIcon)))
+                            .append($("&lt;p/>").html(" &amp;nbsp; No Room").css("transform", "translateY(50%)").css("display", roomPlaceHolderDisplay))
+                            .append($("&lt;div/>").addClass("input-field col s10").css("display", roomCSS).attr("id", roomID + "_DIV__")
+                                .append($("&lt;input/>").attr("type", "text").val(roomValue).attr("id", roomID).addClass(this.roomClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.hasChanged = true;
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("&lt;label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
+                            )
+                    }, {
+                        column: "Limit",
+                        strictColumn: true,
+                        dom: $("&lt;span/>")
+                            .prepend($("&lt;a/>").addClass("left btn-floating waves-effect waves-light").attr("data-limit", (!!limitValue)).css("transform", "translateY(0%)").on("click", (e) => {
+                                if($(e.currentTarget).attr("data-limit") == "true") {
+                                    $("#" + limitID + "_DIV__").slideUp(500);
+                                    $(e.currentTarget).siblings("p").slideDown(500)
+                                    $(e.currentTarget).attr("data-limit", false).css("transform", "translateY(0%)").find("i").html("group")
+                                } else {
+                                    $("#" + limitID + "_DIV__").slideDown(500);
+                                    $(e.currentTarget).siblings("p").slideUp(500)
+                                    $(e.currentTarget).attr("data-limit", true).css("transform", "translateY(50%)").find("i").html("remove_circle_outline")
+                                }
+                                if(typeof this.options.onChange === "function") {
+                                    this.options.onChange(e);
+                                }
+                                this.hasChanged = true;
+                                this.checkValidity().catch(err => reject(err))
+                            }).append($("&lt;i/>").addClass("material-icons").html(limitIcon)))
+                            .append($("&lt;p/>").html(" &amp;nbsp; No Limit").css("transform", "translateY(50%)").css("display", limitPlaceHolderDisplay))
+                            .append($("&lt;div/>").addClass("input-field col s10").css("display", limitCSS).attr("id", limitID + "_DIV__")
+                                .append($("&lt;input/>").attr("type", "number").val(limitValue).attr("id", limitID).addClass(this.limitClass).on("keyup", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.hasChanged = true;
+                                    this.checkValidity().catch(err => reject(err));
+                                })).append($("&lt;label/>").addClass(limitLabelCSS).attr("for", limitID).html("Pass Limit"))
+                            )
+                    }, {
+                        column: "Teaching",
+                        strictColumn: true,
+                        dom: $("&lt;span/>")
+                            .append($("&lt;div/>").addClass("col s12").append($("&lt;div/>").addClass("switch").append($("&lt;label/>")
+                                .prepend("Not")
+                                .append($("&lt;input/>").attr("checked", isTeachingValue).attr("type", "checkbox").addClass(this.isTeachingClass)).on("change", (e) => {
+                                    if(typeof this.options.onChange === "function") {
+                                        this.options.onChange(e);
+                                    }
+                                    this.hasChanged = true;
+                                    this.checkValidity().catch(err => reject(err))
+                                })
+                                .append($("&lt;span/>").addClass("lever"))
+                                .append("Teaching")
+                            )))
+                    }
+                ])
+            }).catch(err => reject(err))
+        })
+    }
+    //checks every 
+    _checkPeriodSelect() {
+        return new Promise((resolve, reject) => {
+            let sel = $("select." + this.periodSelectClass);
+            let prevVal = []
+            for(let x = 0; x &lt; sel.length; x++) {
+                if(prevVal.includes(sel[x].value)){
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                }
+                prevVal.push(sel[x].value)
+                if(sel[x].value.length &lt; 1) {
+                    return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")});
+                }
+                if (x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }
+    _checkInput(typeClass, buttonEnabledAttr, isNumber) {
+        return new Promise((resolve, reject) => {
+            let sel = $("input." + typeClass);
+            for(let x = 0; x &lt; sel.length; x++) {
+                //console.log("CURRENT ELEMENT", sel);
+                let button = $(sel[x]).parentsUntil("td").find("a[" + buttonEnabledAttr + "]");
+                if(button.attr(buttonEnabledAttr) == "true") {
+                    //location enabled
+                    if(sel[x].value.length &lt; 1) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                    if(isNumber &amp;&amp; isNaN(parseInt(sel[x].value))) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                }
+                //is finished
+                if(x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }
+    /*_checkLocation() {
+        return new Promise((resolve, reject) => {
+            let sel = $("input." + this.autocompleteClass);
+            for(let x = 0; x &lt; sel.length; x++) {
+                //console.log("CURRENT ELEMENT", sel);
+                let button = $(sel[x]).parentsUntil("td").find("a[data-location]");
+                if(button.attr("data-location") == "true") {
+                    //location enabled
+                    if(sel[x].value.length &lt; 1 || sel[x].value.search(this.autocompleteREGEX) &lt; 0) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                }
+                //is finished
+                if(x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }*/
+    /** This checks to see if each field is valid.  If not it will change the dom to reflect that.
+    * @returns {Promise} - Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}
+    */
+    checkValidity() {
+        return new Promise((resolve, reject) => {
+            let prom = [];
+            prom.push(this._checkPeriodSelect());
+            prom.push(this._checkInput(this.classNameClass, "data-classname"));
+            prom.push(this._checkInput(this.roomClass, "data-room"));
+            prom.push(this._checkInput(this.limitClass, "data-limit", "number"));
+            if(this.teacherTable.getTableBody().children().length &lt; 1) {
+                return resolve({valid: false});
+            }
+            Promise.all(prom).then(([periodRes, classnameRes, roomRes, limitRes]) => {
+                $("a[data-classname]").removeClass("pulse red").fadeIn(1000);
+                $("a[data-room]").removeClass("pulse red").fadeIn(1000);
+                $("a[data-limit]").removeClass("pulse red").fadeIn(1000);
+
+                $("a.delete-row").removeClass("pulse red").fadeIn(1000);
+                if(!classnameRes.valid) {
+                    classnameRes.problemRowElement.find("a[data-classname]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(classnameRes);
+                } 
+                if(!roomRes.valid) {
+                    roomRes.problemRowElement.find("a[data-room]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(roomRes);
+                } 
+                if(!limitRes.valid) {
+                    limitRes.problemRowElement.find("a[data-limit]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(limitRes);
+                } 
+                if(!periodRes.valid) {
+                    periodRes.problemRowElement.find("a.delete-row").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(periodRes);
+                }
+                
+                
+                $("#" + this.addRowButtonID).attr("disabled", false);
+                return resolve({valid: true});
+            }).catch(err => reject(err));
+        
+        })
+    }
+
+    /** Submits the form
+    * @returns {Promise} - {transaction: res, formData: form}
+    */
+    submit() {
+        return new Promise((resolve, reject) => {
+            this.checkValidity().then((validResp) => {
+                if(validResp.valid) {
+                    this._compileFormData().then((form) => {
+                        console.log(form)
+                        scheduleAPI.replaceSchedule("teacher", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
+                    }).catch((err) => {return reject(err)});
+                } else {
+                    return reject(new Error("Invalid form. Please see the marked rows"))
+                }
+            })
+            
+        })
+    }
+    _compileFormData() {
+        return new Promise((resolve, reject) => {
+            let formData = {};
+            let loopPromise = [];
+            let tableBody = this.teacherTable.getTableBody().children();
+            console.log(this.teacherTable.getTableBody());
+            for(let x = 0; x &lt; tableBody.length; x++) {
+                loopPromise.push(new Promise((resolve, reject) => {
+
+                    console.log("Table Rows:", tableBody[x])
+                    console.log("Period Select:", $(tableBody[x]).find("select." + this.periodSelectClass))
+                    //compile period select
+                    let period = $(tableBody[x]).find("select." + this.periodSelectClass).val();
+                    //period must be valid on all rows
+                    if(period) {
+                        //set Key with the period
+                        formData[period] = {};
+                        console.log("Period Select Value:", $(tableBody[x]).find("select." + this.periodSelectClass).val())
+                        console.log(x, "has period")
+                        //ROW HAS PERIOD, CONTINUE
+                        //[START CLASS NAME]
+                        //console.log("Class Name Toggle", $(tableBody[x]).find("a[data-classname]"))
+                        //check to see if toggle is set to accept user input
+                        if($(tableBody[x]).find("a[data-classname]").attr("data-classname") === "true") {
+                            //get data from text input
+                            let classNameVal = $(tableBody[x]).find("input." + this.classNameClass).val();
+                            //valitate input (again)
+                            if(classNameVal.length &lt; 1) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Class name invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].className = classNameVal;
+                        }
+                        //[END CLASS NAME]
+
+                        //[START ROOM]
+                        if($(tableBody[x]).find("a[data-room]").attr("data-room") === "true") {
+                            //get data from text input
+                            let roomVal = $(tableBody[x]).find("input." + this.roomClass).val();
+                            //valitate input (again)
+                            if(roomVal.length &lt; 1) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Room invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].room = roomVal;
+                        }
+                        //[END ROOM]
+
+                        //[START LIMIT]
+                        if($(tableBody[x]).find("a[data-limit]").attr("data-limit") === "true") {
+                            //get data from text input
+                            let limitVal = $(tableBody[x]).find("input." + this.limitClass).val();
+                            //valitate input (again)
+                            if(limitVal.length &lt; 1 || isNaN(parseInt(limitVal))) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Limit invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].passLimit = parseInt(limitVal);
+                        }
+                        //[END LIMIT]
+
+                        //[START LIMIT]
+                        if($(tableBody[x]).find("input." + this.isTeachingClass).is(":checked")) {
+                            formData[period].isTeaching = true;
+                        } else {
+                            formData[period].isTeaching = false;
+                        }
+                        //[END LIMIT]
+                        //console.log("Location Toggle:", $(tableBody[x]).find("a[data-location]"))
+                        /*if($(tableBody[x]).find("a[data-location]").attr("data-location") === "true") {
+                            console.log(x, "has Location")
+                            let autoVal = $(tableBody[x]).find("input."+ this.autocompleteClass).val();
+                            console.log("Autocomplete Value:", autoVal);
+                            //Validate Autocomplete Val 
+                            if(autoVal.length &lt; 1 || autoVal.search(this.autocompleteREGEX) &lt; 0) {
+                                //Fail
+                                return reject(new Error("Form not valid. Location Invalid."));
+                            }
+                            console.log(autoVal.search(this.autocompleteREGEX))
+                            //Exchange email for ID
+                            accountAPI.get({ 
+                                email: autoVal.substring(autoVal.search(this.autocompleteREGEX)+5)
+                            }).then((user) => {
+                                if(user.length > 1) {
+                                    //More than one user for that email 
+                                    console.error("Conflicting Accounts:", user)
+                                    throw new Error("There are multiple users with that email in the DB. Emails should be unique. Please see IT. The users are logged in this console.");
+                                }
+                                formData[period].teacherID = user[0].id;
+                                return resolve();
+                            }).catch((err) => {return reject(err)})
+                        } else {
+                            formData[period].teacherID = null;
+                            //Done
+                            return resolve();
+                        }*/
+
+                        //ALL DONE
+                        return resolve();
+                    } else {
+                        return reject(new Error("Form not valid. Missing Period."));
+                    }
+                }));
+            }
+            Promise.all(loopPromise).then(() => {
+                return resolve(formData);
+            }).catch((err) => {return reject(err);})
+        })
+    }
+}
+
+module.exports = TeacherScheduleEditor;</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 02 2018 18:20:28 GMT+0000 (UTC) using the LOKE theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>js/emailTemplates - Documentation</title>
+    <title>modules/webpack/api/account.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">js/emailTemplates</h1>
+    <h1 class="page-title">modules/webpack/api/account.js</h1>
     
 
     <!--container.tmpl-->
@@ -42,178 +42,88 @@
 
 
 
+    <!--source.tmpl-->
+
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser Import Functions.
+* @module webpack/api/accounts
+*/
+
+var utils = require("../utils/index.js");
+
+
+/** 
+* Gets all accounts with classes from the server.
+* @link module:webpack/api/accounts
+* @returns {Promise}
+*/
+exports.getWithClasses = () => {
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
+}
+
+/** 
+    * Searches accounts that match the query
+    * @link webpack/api/accounts
+    * @param {Object} query
+    * @param {(string|undefined)} query.id - Unique Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email - Unique Key
+    * @param {(userGroup|undefined)} query.userGroup
+    * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
+    * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
+    * @param {(string|undefined)} query.name.first - User's given name
+    * @param {(string|undefined)} query.name.last - User's family name
+    * @param {(string|number|undefined)} query.schoolID
+    * @param {(number|undefined)} query.graduationYear
+    * @returns {Promise} Includes array.
+    */
+exports.get = (query) => {
+    return new Promise((resolve, reject) => {
+        if(!query) {
+            return reject(new TypeError("query must be an object"));
+        }
+        if(query.name &amp;&amp; typeof query.name === "object") {
+            if(query.name.salutation) {
+                query.name_salutation = query.name.salutation;
+                delete query.name.salutation;
+            }
+            if(query.name.first) {
+                query.name_first = query.name.first;
+                delete query.name.first;
+            }
+            if(query.name.last) {
+                query.name_last = query.name.last;
+                delete query.name.last;
+            }
+        }
+        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject)
+    })   
+}</code></pre>
+        </article>
+    </section>
 
-<section>
-
-
-
-<header data-tmpl="container.tmpl">
-    
-      <h2>Module: js/emailTemplates</h2>
-        
-            
-        
-    
-
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Apis for generating templeted email html</p></div>
-        
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-js/emailTemplates">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
-  </code>
-</div>
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** \n* Apis for generating templeted email html \n* @module js/emailTemplates\n*/","meta":{"filename":"index.js","lineno":20,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api/emailTemplates","code":{},"shortpath":"modules/passport-api/emailTemplates/index.js"},"description":"<p>Apis for generating templeted email html</p>","kind":"module","name":"js/emailTemplates","longname":"module:js/emailTemplates","___id":"T000002R000363","___s":true,"attribs":"","id":"js/emailTemplates","ancestors":[]}
-</pre>
--->
-</div>
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 
@@ -223,7 +133,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 02 2018 18:20:29 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 02 2018 18:20:28 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>js/emailTemplates - Documentation</title>
+    <title>webpack/api/schedule - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">js/emailTemplates</h1>
+    <h1 class="page-title">webpack/api/schedule</h1>
     
 
     <!--container.tmpl-->
@@ -49,20 +49,33 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: js/emailTemplates</h2>
+      <h2>Module: webpack/api/schedule</h2>
         
             
         
     
 
     
+      <div class="bs-callout bs-callout-default">
+        <h5>Members</h5>
+        <br />
+        <dl class="dl-horizontal methods-members">
+        <dt>Methods</dt><dd><ul>
+            <li><a href="#getSchedules">getSchedules</a></li>
+            
+            <li><a href="#newSchedule">newSchedule</a></li>
+            
+            <li><a href="#replaceSchedule">replaceSchedule</a></li>
+            
+            <li><a href="#updateSchedule">updateSchedule</a></li>
+            </ul></dd></dl></div>
 </header>
 
 <article>
     <div class="container-overview">
     
         
-            <div class="description"><p>Apis for generating templeted email html</p></div>
+            <div class="description"><p>Browser Schedule Functions.</p></div>
         
 
         
@@ -77,7 +90,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line23">23</a>
   </code>
 </div>
 
@@ -103,7 +116,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-js/emailTemplates">
+<div class="collapse_" id="methodCollapse-webpack/api/schedule">
 
   
 
@@ -119,7 +132,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_passport-api_emailTemplates_index.js.html">index.js</a>:<a href="modules_passport-api_emailTemplates_index.js.html#line20">20</a>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line23">23</a>
   </code>
 </div>
 
@@ -185,7 +198,7 @@
 
 <!--
 <pre>
-{"comment":"/** \n* Apis for generating templeted email html \n* @module js/emailTemplates\n*/","meta":{"filename":"index.js","lineno":20,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api/emailTemplates","code":{},"shortpath":"modules/passport-api/emailTemplates/index.js"},"description":"<p>Apis for generating templeted email html</p>","kind":"module","name":"js/emailTemplates","longname":"module:js/emailTemplates","___id":"T000002R000363","___s":true,"attribs":"","id":"js/emailTemplates","ancestors":[]}
+{"comment":"/**\n* Browser Schedule Functions.\n* @module webpack/api/schedule\n*/","meta":{"filename":"schedule.js","lineno":23,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{},"shortpath":"modules/webpack/api/schedule.js"},"description":"<p>Browser Schedule Functions.</p>","kind":"module","name":"webpack/api/schedule","longname":"module:webpack/api/schedule","___id":"T000002R000958","___s":true,"attribs":"","id":"webpack/api/schedule","ancestors":[]}
 </pre>
 -->
 </div>
@@ -206,6 +219,890 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line36">36</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".getSchedules">
+      <a href="#params-getSchedules"><span class="type-signature">(static) </span>getSchedules</a><span class="signature">(accountID)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Gets all schedule types for the user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getSchedules">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getSchedules" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>accountID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Gets all schedule types for the user\n* @link module:webpack/api/schedule\n* @param {(String|undefined)} accountID\n* @returns {Promise}\n*/","meta":{"range":[1084,1256],"filename":"schedule.js","lineno":36,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100013628","name":"exports.getSchedules","type":"ArrowFunctionExpression","paramnames":["accountID"]},"vars":{"accountID":"module:webpack/api/schedule~accountID"},"shortpath":"modules/webpack/api/schedule.js"},"description":"<p>Gets all schedule types for the user</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/schedule","value":"module:webpack/api/schedule"}],"params":[{"type":{"names":["String","undefined"]},"name":"accountID"}],"returns":[{"type":{"names":["Promise"]}}],"name":"getSchedules","longname":"module:webpack/api/schedule.getSchedules","kind":"function","memberof":"module:webpack/api/schedule","scope":"static","___id":"T000002R000960","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".getSchedules","signature":"<span class=\"signature\">(accountID)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-webpack_api_schedule.html\">webpack/api/schedule</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line48">48</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".newSchedule">
+      <a href="#params-newSchedule"><span class="type-signature">(static) </span>newSchedule</a><span class="signature">(dashboard, schedule)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Sets a new schedule for the logged in user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>can be &quot;student&quot; or &quot;teacher&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schedule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Please see <code>setUserSchedule</code></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Sets a new schedule for the logged in user\n* @link module:webpack/api/schedule\n* @param {String} dashboard - can be \"student\" or \"teacher\"\n* @param {Object} schedule - Please see <code>setUserSchedule</code>\n* @returns {Promise}\n*/","meta":{"range":[1492,1641],"filename":"schedule.js","lineno":48,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100013657","name":"exports.newSchedule","type":"ArrowFunctionExpression","paramnames":["dashboard","schedule"]},"shortpath":"modules/webpack/api/schedule.js"},"description":"<p>Sets a new schedule for the logged in user</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/schedule","value":"module:webpack/api/schedule"}],"params":[{"type":{"names":["String"]},"description":"<p>can be &quot;student&quot; or &quot;teacher&quot;</p>","name":"dashboard"},{"type":{"names":["Object"]},"description":"<p>Please see <code>setUserSchedule</code></p>","name":"schedule"}],"returns":[{"type":{"names":["Promise"]}}],"name":"newSchedule","longname":"module:webpack/api/schedule.newSchedule","kind":"function","memberof":"module:webpack/api/schedule","scope":"static","___id":"T000002R000963","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".newSchedule","signature":"<span class=\"signature\">(dashboard, schedule)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-webpack_api_schedule.html\">webpack/api/schedule</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line71">71</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".replaceSchedule">
+      <a href="#params-replaceSchedule"><span class="type-signature">(static) </span>replaceSchedule</a><span class="signature">(dashboard, schedule)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Replaces the schedule for the logged in user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-replaceSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-replaceSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>can be &quot;student&quot; or &quot;teacher&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schedule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Please see <code>setUserSchedule</code></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Replaces the schedule for the logged in user\n* @link module:webpack/api/schedule\n* @param {String} dashboard - can be \"student\" or \"teacher\"\n* @param {Object} schedule - Please see <code>setUserSchedule</code>\n* @returns {Promise}\n*/","meta":{"range":[2270,2422],"filename":"schedule.js","lineno":71,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100013703","name":"exports.replaceSchedule","type":"ArrowFunctionExpression","paramnames":["dashboard","schedule"]},"shortpath":"modules/webpack/api/schedule.js"},"description":"<p>Replaces the schedule for the logged in user</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/schedule","value":"module:webpack/api/schedule"}],"params":[{"type":{"names":["String"]},"description":"<p>can be &quot;student&quot; or &quot;teacher&quot;</p>","name":"dashboard"},{"type":{"names":["Object"]},"description":"<p>Please see <code>setUserSchedule</code></p>","name":"schedule"}],"returns":[{"type":{"names":["Promise"]}}],"name":"replaceSchedule","longname":"module:webpack/api/schedule.replaceSchedule","kind":"function","memberof":"module:webpack/api/schedule","scope":"static","___id":"T000002R000969","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".replaceSchedule","signature":"<span class=\"signature\">(dashboard, schedule)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-webpack_api_schedule.html\">webpack/api/schedule</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_webpack_api_schedule.js.html">schedule.js</a>:<a href="modules_webpack_api_schedule.js.html#line60">60</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".updateSchedule">
+      <a href="#params-updateSchedule"><span class="type-signature">(static) </span>updateSchedule</a><span class="signature">(dashboard, schedule)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Updates the schedule for the logged in user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-updateSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-updateSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>can be &quot;student&quot; or &quot;teacher&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schedule</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Please see <code>setUserSchedule</code></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n* Updates the schedule for the logged in user\n* @link module:webpack/api/schedule\n* @param {String} dashboard - can be \"student\" or \"teacher\"\n* @param {Object} schedule - Please see <code>setUserSchedule</code>\n* @returns {Promise}\n*/","meta":{"range":[1879,2032],"filename":"schedule.js","lineno":60,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100013680","name":"exports.updateSchedule","type":"ArrowFunctionExpression","paramnames":["dashboard","schedule"]},"shortpath":"modules/webpack/api/schedule.js"},"description":"<p>Updates the schedule for the logged in user</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/schedule","value":"module:webpack/api/schedule"}],"params":[{"type":{"names":["String"]},"description":"<p>can be &quot;student&quot; or &quot;teacher&quot;</p>","name":"dashboard"},{"type":{"names":["Object"]},"description":"<p>Please see <code>setUserSchedule</code></p>","name":"schedule"}],"returns":[{"type":{"names":["Promise"]}}],"name":"updateSchedule","longname":"module:webpack/api/schedule.updateSchedule","kind":"function","memberof":"module:webpack/api/schedule","scope":"static","___id":"T000002R000966","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".updateSchedule","signature":"<span class=\"signature\">(dashboard, schedule)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-webpack_api_schedule.html\">webpack/api/schedule</a>."]}
+</pre>
+-->
+</div>
+
+        
     
 
     
