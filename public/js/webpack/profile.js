@@ -3200,7 +3200,7 @@ function scheduleEditorSubmitRes(student, teacher) {
         if(teacher.transaction && teacher.transaction.unchanged >= 1) {
             Materialize.toast('Teacher schedule unchanged', 4000)
         } else {
-            Materialize.toast('Updated student schedule', 4000)
+            Materialize.toast('Updated teacher schedule', 4000)
             //loadMyTeacherSchedule();
             
         }
@@ -4297,16 +4297,7 @@ class TeacherScheduleEditor {
                 if(validResp.valid) {
                     this._compileFormData().then((form) => {
                         console.log(form)
-                        //scheduleAPI.replaceSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        //scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        /*if(this.hasSchedule) {
-                            scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        } else {
-                            scheduleAPI.newSchedule("student", form).then((res) => {
-                                this.hasSchedule = true;
-                                return resolve({transaction: res, formData: form})
-                            }).catch((err) => {return reject(err)});
-                        }*/
+                        scheduleAPI.replaceSchedule("teacher", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                     }).catch((err) => {return reject(err)});
                 } else {
                     return reject(new Error("Invalid form. Please see the marked rows"))
@@ -4336,7 +4327,7 @@ class TeacherScheduleEditor {
                         console.log(x, "has period")
                         //ROW HAS PERIOD, CONTINUE
                         //[START CLASS NAME]
-                        console.log("Class Name Toggle", $(tableBody[x]).find("a[data-classname]"))
+                        //console.log("Class Name Toggle", $(tableBody[x]).find("a[data-classname]"))
                         //check to see if toggle is set to accept user input
                         if($(tableBody[x]).find("a[data-classname]").attr("data-classname") === "true") {
                             //get data from text input
@@ -4375,7 +4366,7 @@ class TeacherScheduleEditor {
                                 return reject(new Error("Form not valid. Limit invalid"));
                             }
                             //set value in formData Object
-                            formData[period].limit = parseInt(limitVal);
+                            formData[period].passLimit = parseInt(limitVal);
                         }
                         //[END LIMIT]
 

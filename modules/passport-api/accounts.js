@@ -685,9 +685,11 @@ function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x < givenPeriods.length; x++) {
         //make "" null 
-        let verType = "Maybe Boolean|{teacherID: String|null}";
+        console.log(schedule[givenPeriods[x]].teacherID)
+        let verType = "{teacherID: String|Null}";
         if(!typeCheck(verType, schedule[givenPeriods[x]])) {
             var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+            return done(err)
         }
         console.log(schedule[givenPeriods[x]], "vsc")
         if(schedule[givenPeriods[x]].teacherID == '') {
@@ -705,12 +707,21 @@ function verifyStudentSchedule(schedule, done) {
         }
     }
 }
-/*
+
 function verifyTeacherSchedule(schedule) {
     return new Promise((resolve, reject) => {
         var givenPeriods = Object.keys(schedule);
+        for(var x = 0; x < givenPeriods.length; x++) {
+            console.log(schedule)
+            let verType = "{className: Maybe String, isTeaching: Boolean, room: Maybe String, passLimit: Maybe Number}";
+            if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+                var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+                return reject(err)
+            }
+            return resolve(schedule);
+        }
     })
-}*/
+}
 function verifyUserSchedule(dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     var promise = new Promise(function(resolve, reject) {
@@ -725,7 +736,7 @@ function verifyUserSchedule(dashboard, schedule_UIN, done) {
                 })
                 break;
             case "teacher":
-                resolve();
+                return verifyTeacherSchedule(schedule).then(resolve).catch(reject);
                 break;
             default: 
                 var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
@@ -817,7 +828,7 @@ exports.replaceUserSchedule = (userID, dashboard, schedule) => {
             err.status = 400;
             return reject(err);
         }
-
+        console.log(schedule)
         verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
             if(err) {
                 return reject(err)

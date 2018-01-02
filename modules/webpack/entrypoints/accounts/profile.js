@@ -214,7 +214,7 @@ function scheduleEditorSubmitRes(student, teacher) {
         if(teacher.transaction && teacher.transaction.unchanged >= 1) {
             Materialize.toast('Teacher schedule unchanged', 4000)
         } else {
-            Materialize.toast('Updated student schedule', 4000)
+            Materialize.toast('Updated teacher schedule', 4000)
             //loadMyTeacherSchedule();
             
         }

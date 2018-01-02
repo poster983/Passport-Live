@@ -520,7 +520,7 @@ class TeacherScheduleEditor {
                                 return reject(new Error("Form not valid. Limit invalid"));
                             }
                             //set value in formData Object
-                            formData[period].limit = parseInt(limitVal);
+                            formData[period].passLimit = parseInt(limitVal);
                         }
                         //[END LIMIT]
 
