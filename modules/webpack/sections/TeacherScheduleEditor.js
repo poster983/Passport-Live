@@ -45,12 +45,18 @@ class TeacherScheduleEditor {
         this.roomClass = "__ROOM_INPUT_" + utils.uuidv4() + "__";
         this.limitClass = "__LIMIT_INPUT_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
+        this.hasChanged = false;
     }
-    /*Events*/
 
     clearContainer() {
         $(this.container).children().off();
         $(this.container).empty();
+    }
+    /** Tells if the form has been changed from its initial value 
+    * @returns {boolean}
+    */
+    getHasChanged() {
+        return this.hasChanged;
     }
     /** Creates the table 
     * @param {bool} [startClean] - If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.
@@ -109,6 +115,7 @@ class TeacherScheduleEditor {
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
                         this.teacherTable.appendRow([{}])
+                        this.checkValidity().catch(err => reject(err));
                     }))
 
                     //generation done
@@ -125,6 +132,7 @@ class TeacherScheduleEditor {
                 if(typeof this.options.onChange === "function") {
                     this.options.onChange(e);
                 }
+                this.hasChanged = true;
                 this.checkValidity().catch(err => reject(err))
             });
             if(selected) {
@@ -156,6 +164,7 @@ class TeacherScheduleEditor {
                     if(typeof this.options.onChange === "function") {
                         this.options.onChange(e);
                     }
+                    this.hasChanged = true;
                     $("#" + this.addRowButtonID).attr("disabled", false);
                     this.checkValidity().catch(err => reject(err))
                 }).append($("<i/>").addClass("material-icons").html("delete")))
@@ -198,7 +207,7 @@ class TeacherScheduleEditor {
                 limitIcon = "group"
                 limitLabelCSS = "";
             }
-            if(isTeachingValue) {
+            if(typeof isTeachingValue === "undefined" || isTeachingValue) {
                 isTeachingValue = "checked";
             } else {
                 isTeachingValue = null;
@@ -231,6 +240,7 @@ class TeacherScheduleEditor {
                                 if(typeof this.options.onChange === "function") {
                                     this.options.onChange(e);
                                 }
+                                this.hasChanged = true;
                                 this.checkValidity().catch(err => reject(err))
                             }).append($("<i/>").addClass("material-icons").html(classIcon)))
                             .append($("<p/>").html(" &nbsp; No class name").css("transform", "translateY(50%)").css("display", classPlaceHolderDisplay))
@@ -239,6 +249,7 @@ class TeacherScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
                                 })).append($("<label/>").addClass(classLabelCSS).attr("for", classNameID).html("Class name"))
                             )
@@ -259,6 +270,7 @@ class TeacherScheduleEditor {
                                 if(typeof this.options.onChange === "function") {
                                     this.options.onChange(e);
                                 }
+                                this.hasChanged = true;
                                 this.checkValidity().catch(err => reject(err))
                             }).append($("<i/>").addClass("material-icons").html(roomIcon)))
                             .append($("<p/>").html(" &nbsp; No Room").css("transform", "translateY(50%)").css("display", roomPlaceHolderDisplay))
@@ -267,6 +279,7 @@ class TeacherScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
                                 })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
                             )
@@ -287,14 +300,16 @@ class TeacherScheduleEditor {
                                 if(typeof this.options.onChange === "function") {
                                     this.options.onChange(e);
                                 }
+                                this.hasChanged = true;
                                 this.checkValidity().catch(err => reject(err))
                             }).append($("<i/>").addClass("material-icons").html(limitIcon)))
                             .append($("<p/>").html(" &nbsp; No Limit").css("transform", "translateY(50%)").css("display", limitPlaceHolderDisplay))
                             .append($("<div/>").addClass("input-field col s10").css("display", limitCSS).attr("id", limitID + "_DIV__")
-                                .append($("<input/>").attr("type", "text").val(limitValue).attr("id", limitID).addClass(this.limitClass).on("keyup", (e) => {
+                                .append($("<input/>").attr("type", "number").val(limitValue).attr("id", limitID).addClass(this.limitClass).on("keyup", (e) => {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
                                 })).append($("<label/>").addClass(limitLabelCSS).attr("for", limitID).html("Period Limit"))
                             )
@@ -308,47 +323,13 @@ class TeacherScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err))
                                 })
                                 .append($("<span/>").addClass("lever"))
                                 .append("Teaching")
                             )))
                     }
-                    /*{
-                        column: "Location",
-                        strictColumn: true,
-                        dom: $("<span/>")
-                            .prepend($("<a/>").addClass("left btn-floating waves-effect waves-light").attr("data-location", (!!locationValue)).css("transform", "translateY(0%)").on("click", (e) => {
-                                if($(e.currentTarget).attr("data-location") == "true") {
-                                    $("#" + autoID + "_DIV__").slideUp(500);
-                                    $(e.currentTarget).siblings("p").slideDown(500)
-                                    $(e.currentTarget).attr("data-location", false).css("transform", "translateY(0%)").find("i").html("add_location")
-                                    if(typeof this.options.onChange === "function") {
-                                        this.options.onChange(e);
-                                    }
-                                    this.checkValidity().catch(err => reject(err))
-                                } else {
-                                    $("#" + autoID + "_DIV__").slideDown(500);
-                                    $(e.currentTarget).siblings("p").slideUp(500)
-                                    $(e.currentTarget).attr("data-location", true).css("transform", "translateY(50%)").find("i").html("location_off")
-                                    if(typeof this.options.onChange === "function") {
-                                        this.options.onChange(e);
-                                    }
-                                    this.checkValidity().catch(err => reject(err))
-                                }
-                                
-                            }).append($("<i/>").addClass("material-icons").html(locationIcon)))
-                            .append($("<p/>").html(" &nbsp; No set location").css("transform", "translateY(50%)").css("display", buttonCSS))
-                            .append($("<div/>").addClass("input-field col s10").css("display", locationCSS).attr("id", autoID + "_DIV__")
-                                .append($("<input/>").attr("type", "text").val(locationValue).attr("id", autoID).addClass(this.autocompleteClass + " autocomplete").on("keyup", (e) => {
-                                    if(typeof this.options.onChange === "function") {
-                                        this.options.onChange(e);
-                                    }
-                                    this.checkValidity().catch(err => reject(err))
-                                }))
-                                .append($("<label/>").attr("for", autoID).html("Search Teachers"))
-                            )
-                    }*/
                 ])
             }).catch(err => reject(err))
         })
@@ -372,7 +353,29 @@ class TeacherScheduleEditor {
             }
         });
     }
-    _checkLocation() {
+    _checkInput(typeClass, buttonEnabledAttr, isNumber) {
+        return new Promise((resolve, reject) => {
+            let sel = $("input." + typeClass);
+            for(let x = 0; x < sel.length; x++) {
+                //console.log("CURRENT ELEMENT", sel);
+                let button = $(sel[x]).parentsUntil("td").find("a[" + buttonEnabledAttr + "]");
+                if(button.attr(buttonEnabledAttr) == "true") {
+                    //location enabled
+                    if(sel[x].value.length < 1) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                    if(isNumber && isNaN(parseInt(sel[x].value))) {
+                        return resolve({valid: false, problemRowElement: $(sel[x]).parentsUntil("td")})
+                    }
+                }
+                //is finished
+                if(x >= sel.length-1) {
+                    return resolve({valid: true});
+                }
+            }
+        });
+    }
+    /*_checkLocation() {
         return new Promise((resolve, reject) => {
             let sel = $("input." + this.autocompleteClass);
             for(let x = 0; x < sel.length; x++) {
@@ -390,7 +393,7 @@ class TeacherScheduleEditor {
                 }
             }
         });
-    }
+    }*/
     /** This checks to see if each field is valid.  If not it will change the dom to reflect that.
     * @returns {Promise} - Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}
     */
@@ -398,17 +401,32 @@ class TeacherScheduleEditor {
         return new Promise((resolve, reject) => {
             let prom = [];
             prom.push(this._checkPeriodSelect());
-            prom.push(this._checkLocation());
+            prom.push(this._checkInput(this.classNameClass, "data-classname"));
+            prom.push(this._checkInput(this.roomClass, "data-room"));
+            prom.push(this._checkInput(this.limitClass, "data-limit", "number"));
             if(this.teacherTable.getTableBody().children().length < 1) {
                 return resolve({valid: false});
             }
-            Promise.all(prom).then(([periodRes, locationRes]) => {
-                $("a[data-location]").removeClass("pulse red").fadeIn(1000);
+            Promise.all(prom).then(([periodRes, classnameRes, roomRes, limitRes]) => {
+                $("a[data-classname]").removeClass("pulse red").fadeIn(1000);
+                $("a[data-room]").removeClass("pulse red").fadeIn(1000);
+                $("a[data-limit]").removeClass("pulse red").fadeIn(1000);
+
                 $("a.delete-row").removeClass("pulse red").fadeIn(1000);
-                if(!locationRes.valid) {
-                    locationRes.problemRowElement.find("a[data-location]").addClass("pulse red").fadeIn(1000);
+                if(!classnameRes.valid) {
+                    classnameRes.problemRowElement.find("a[data-classname]").addClass("pulse red").fadeIn(1000);
                     $("#" + this.addRowButtonID).attr("disabled", true);
-                    return resolve(locationRes);
+                    return resolve(classnameRes);
+                } 
+                if(!roomRes.valid) {
+                    roomRes.problemRowElement.find("a[data-room]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(roomRes);
+                } 
+                if(!limitRes.valid) {
+                    limitRes.problemRowElement.find("a[data-limit]").addClass("pulse red").fadeIn(1000);
+                    $("#" + this.addRowButtonID).attr("disabled", true);
+                    return resolve(limitRes);
                 } 
                 if(!periodRes.valid) {
                     periodRes.problemRowElement.find("a.delete-row").addClass("pulse red").fadeIn(1000);
@@ -433,16 +451,7 @@ class TeacherScheduleEditor {
                 if(validResp.valid) {
                     this._compileFormData().then((form) => {
                         console.log(form)
-                        scheduleAPI.replaceSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        //scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        /*if(this.hasSchedule) {
-                            scheduleAPI.updateSchedule("student", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
-                        } else {
-                            scheduleAPI.newSchedule("student", form).then((res) => {
-                                this.hasSchedule = true;
-                                return resolve({transaction: res, formData: form})
-                            }).catch((err) => {return reject(err)});
-                        }*/
+                        scheduleAPI.replaceSchedule("teacher", form).then((res) => {return resolve({transaction: res, formData: form})}).catch((err) => {return reject(err)});
                     }).catch((err) => {return reject(err)});
                 } else {
                     return reject(new Error("Invalid form. Please see the marked rows"))
@@ -459,17 +468,71 @@ class TeacherScheduleEditor {
             console.log(this.teacherTable.getTableBody());
             for(let x = 0; x < tableBody.length; x++) {
                 loopPromise.push(new Promise((resolve, reject) => {
+
                     console.log("Table Rows:", tableBody[x])
                     console.log("Period Select:", $(tableBody[x]).find("select." + this.periodSelectClass))
+                    //compile period select
                     let period = $(tableBody[x]).find("select." + this.periodSelectClass).val();
+                    //period must be valid on all rows
                     if(period) {
-                        //set var.
+                        //set Key with the period
                         formData[period] = {};
                         console.log("Period Select Value:", $(tableBody[x]).find("select." + this.periodSelectClass).val())
                         console.log(x, "has period")
                         //ROW HAS PERIOD, CONTINUE
-                        console.log("Location Toggle:", $(tableBody[x]).find("a[data-location]"))
-                        if($(tableBody[x]).find("a[data-location]").attr("data-location") === "true") {
+                        //[START CLASS NAME]
+                        //console.log("Class Name Toggle", $(tableBody[x]).find("a[data-classname]"))
+                        //check to see if toggle is set to accept user input
+                        if($(tableBody[x]).find("a[data-classname]").attr("data-classname") === "true") {
+                            //get data from text input
+                            let classNameVal = $(tableBody[x]).find("input." + this.classNameClass).val();
+                            //valitate input (again)
+                            if(classNameVal.length < 1) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Class name invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].className = classNameVal;
+                        }
+                        //[END CLASS NAME]
+
+                        //[START ROOM]
+                        if($(tableBody[x]).find("a[data-room]").attr("data-room") === "true") {
+                            //get data from text input
+                            let roomVal = $(tableBody[x]).find("input." + this.roomClass).val();
+                            //valitate input (again)
+                            if(roomVal.length < 1) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Room invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].room = roomVal;
+                        }
+                        //[END ROOM]
+
+                        //[START LIMIT]
+                        if($(tableBody[x]).find("a[data-limit]").attr("data-limit") === "true") {
+                            //get data from text input
+                            let limitVal = $(tableBody[x]).find("input." + this.limitClass).val();
+                            //valitate input (again)
+                            if(limitVal.length < 1 || isNaN(parseInt(limitVal))) {
+                                //Value not present. ERROR 
+                                return reject(new Error("Form not valid. Limit invalid"));
+                            }
+                            //set value in formData Object
+                            formData[period].limit = parseInt(limitVal);
+                        }
+                        //[END LIMIT]
+
+                        //[START LIMIT]
+                        if($(tableBody[x]).find("input." + this.isTeachingClass).is(":checked")) {
+                            formData[period].isTeaching = true;
+                        } else {
+                            formData[period].isTeaching = false;
+                        }
+                        //[END LIMIT]
+                        //console.log("Location Toggle:", $(tableBody[x]).find("a[data-location]"))
+                        /*if($(tableBody[x]).find("a[data-location]").attr("data-location") === "true") {
                             console.log(x, "has Location")
                             let autoVal = $(tableBody[x]).find("input."+ this.autocompleteClass).val();
                             console.log("Autocomplete Value:", autoVal);
@@ -495,7 +558,10 @@ class TeacherScheduleEditor {
                             formData[period].teacherID = null;
                             //Done
                             return resolve();
-                        }
+                        }*/
+
+                        //ALL DONE
+                        return resolve();
                     } else {
                         return reject(new Error("Form not valid. Missing Period."));
                     }

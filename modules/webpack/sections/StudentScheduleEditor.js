@@ -43,13 +43,20 @@ class StudentScheduleEditor {
         this.autocompleteClass = "__SCHEDULE_AUTOCOMPLETE_" + utils.uuidv4() + "__";
         this.addRowButtonID = "__ADD_ROW_PERIOD_" + utils.uuidv4() + "__";
         this.autocompleteREGEX  = new RegExp(/( --- )+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/)
+        this.hasChanged = false;
     }
-    /*Events*/
 
     clearContainer() {
         $(this.container).children().off();
         $(this.container).empty();
     }
+    /** Tells if the form has been changed from its initial value 
+    * @returns {boolean}
+    */
+    getHasChanged() {
+        return this.hasChanged;
+    }
+
     /** Creates the table 
     * @param {bool} [startClean] - If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.
     * @returns {Promise}
@@ -100,6 +107,7 @@ class StudentScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(null);
                                     }
+                                    this.hasChanged = true;
                                   this.checkValidity().catch(err => reject(err))
                                 },
                                 minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
@@ -133,6 +141,7 @@ class StudentScheduleEditor {
                     this.container.append($("<a/>").attr("id", this.addRowButtonID).addClass("waves-effect waves-light btn").append($("<i/>").addClass("material-icons left").html("add")).html("Add Period").on("click", () => {
                         $("#" + this.addRowButtonID).attr("disabled", true)
                         this.studentTable.appendRow([{}])
+                        this.checkValidity().catch(err => reject(err));
                     }))
 
                     //generation done
@@ -156,6 +165,7 @@ class StudentScheduleEditor {
                 if(typeof this.options.onChange === "function") {
                     this.options.onChange(e);
                 }
+                this.hasChanged = true;
                 this.checkValidity().catch(err => reject(err))
             });
             if(selected) {
@@ -187,6 +197,7 @@ class StudentScheduleEditor {
                     if(typeof this.options.onChange === "function") {
                         this.options.onChange(e);
                     }
+                    this.hasChanged = true;
                     $("#" + this.addRowButtonID).attr("disabled", false);
                     this.checkValidity().catch(err => reject(err))
                 }).append($("<i/>").addClass("material-icons").html("delete")))
@@ -228,6 +239,7 @@ class StudentScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err))
                                 } else {
                                     $("#" + autoID + "_DIV__").slideDown(500);
@@ -236,6 +248,7 @@ class StudentScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err))
                                 }
                                 
@@ -246,6 +259,7 @@ class StudentScheduleEditor {
                                     if(typeof this.options.onChange === "function") {
                                         this.options.onChange(e);
                                     }
+                                    this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err))
                                 }))
                                 .append($("<label/>").addClass(labelCSS).attr("for", autoID).html("Search Teachers"))

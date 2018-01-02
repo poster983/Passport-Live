@@ -59,8 +59,7 @@ function routeHash() {
         case "#editSchedule": 
             utils.openPage("scheduleEditor");
             $(".mixenSESave").removeClass("disabled");
-            initStudentScheduleEditor();
-            initTeacherScheduleEditor();
+            initScheduleEditor();
             break;
         default: 
             $(".mixenSESave").addClass("disabled");
@@ -71,35 +70,49 @@ function routeHash() {
 
 /** SCHEDULE EDITOR **/ 
 function initScheduleEditor() {
+    //init the back button
+    unsavedWork.button("#mixenSEBack", {
+        onAction: () => {
+            console.log("action")
+        },
+        onDiscard: () => {
+            unsavedWork.reset("#mixenSEBack");
+            studentScheduleEditor.clearContainer();
+            teacherScheduleEditor.clearContainer();
+            console.log("discard")
+        },
+        onWarn: (event) => {
+            event.element.find("i").html("backspace");
+            Materialize.toast($("<span>You have unsaved work</span>").append($("<br/>")).append("<span>Click back again to discard</span>"), 10000)
+            console.log("Warning")
+        },
+        onSave: (element) => {
+            console.log("Saved")
+        },
+        onReset: (element) => {
+            element.find("i").html("arrow_back");
+            console.log("Reset")
+        }
+    })
+    //init the various schedules
+    
+    if($("#editStudentScheduleContainer").length > 0) {
+        initStudentScheduleEditor();
+    }
+    if($("#editTeacherScheduleContainer").length > 0) {
+        initTeacherScheduleEditor();
+    }
+    
 
 }
-/* Studnet Editor */
-function initStudentScheduleEditor() {
-    if($("#editScheduleContainer").children().length <=0) {
-        
 
-        unsavedWork.button("#mixenSEBack", {
-            onAction: () => {
-                console.log("action")
-            },
-            onDiscard: () => {
-                unsavedWork.reset("#mixenSEBack");
-                studentScheduleEditor.clearContainer();
-                console.log("discard")
-            },
-            onWarn: (event) => {
-                event.element.find("i").html("backspace");
-                Materialize.toast($("<span>You have unsaved work</span>").append($("<br/>")).append("<span>Click back again to discard</span>"), 10000)
-                console.log("Warning")
-            },
-            onSave: (element) => {
-                console.log("Saved")
-            },
-            onReset: (element) => {
-                element.find("i").html("arrow_back");
-                console.log("Reset")
-            }
-        })
+
+
+
+/* Student Editor */
+function initStudentScheduleEditor() {
+    if($("#editStudentScheduleContainer").children().length <=0) {
+        console.log("RUNN")
         studentScheduleEditor = new StudentScheduleEditor($("#editStudentScheduleContainer"), {
             onChange: (e) => {
                 console.log("changed")
@@ -125,55 +138,99 @@ function initStudentScheduleEditor() {
 
 function genStudentScheduleEditor(startClean) {
     studentScheduleEditor.generate(startClean).then(() => {
-        $("a.mixenSESave").off("click");
-        $("a.mixenSESave").on("click", (e) => {
-            $("a.mixenSESave").addClass("disabled");
-            studentScheduleEditor.submit().then((resp) => {
-                console.log(resp);
-                if(resp.transaction && resp.transaction.unchanged >= 1) {
-                    Materialize.toast('Nothing changed', 4000)
-                    unsavedWork.saved("#mixenSEBack");
-                    window.location.hash = "";
-                } else {
-                    Materialize.toast('Updated schedule', 4000)
-                    unsavedWork.saved("#mixenSEBack");
-                    loadMySchedules();
-                    window.location.hash = "";
-                    utils.materialResponse("check", "success")
-                }
-                
-                
-            }).catch((err) => {$("a.mixenSESave").removeClass("disabled"); utils.throwError(err)})
-        })
+        console.log("Generated Student")
+        scheduleEditorOnSave();
     }).catch(err => utils.throwError(err))
 }
 
 function initTeacherScheduleEditor() {
-    
-    /* Schedule Editor Options */
-    teacherScheduleEditor = new TeacherScheduleEditor($("#editTeacherScheduleContainer"), {
-        onChange: (e) => {
-            console.log("changed")
-            unsavedWork.changed("#mixenSEBack");
-        }
-    });
-    genTeacherScheduleEditor();
-    $("#se-advancedOptions-teacherRecovery").off("click");
-    $("#se-advancedOptions-teacherRecovery").on("change", (e) => {
-        if($(e.currentTarget).prop('checked')) {
-            genTeacherScheduleEditor(true);
-        } else {
-            genTeacherScheduleEditor();
-        }
-        
-    })
+    if($("#editTeacherScheduleContainer").children().length <=0) {
+        /* Schedule Editor Options */
+        teacherScheduleEditor = new TeacherScheduleEditor($("#editTeacherScheduleContainer"), {
+            onChange: (e) => {
+                console.log("changed")
+                unsavedWork.changed("#mixenSEBack");
+            }
+        });
+        genTeacherScheduleEditor();
+        $("#se-advancedOptions-teacherRecovery").off("click");
+        $("#se-advancedOptions-teacherRecovery").on("change", (e) => {
+            if($(e.currentTarget).prop('checked')) {
+                genTeacherScheduleEditor(true);
+            } else {
+                genTeacherScheduleEditor();
+            }
+            
+        })
+    }
 }
 
 function genTeacherScheduleEditor(startClean) {
     teacherScheduleEditor.generate(startClean).then(() => {
         console.log("Generated Teacher")
+        scheduleEditorOnSave();
     }).catch(err => utils.throwError(err))
 
+}
+
+
+
+
+function scheduleEditorOnSave() {
+    $("a.mixenSESave").off("click");
+    $("a.mixenSESave").on("click", (e) => {
+        $("a.mixenSESave").addClass("disabled");
+        let prom = [];
+        if(studentScheduleEditor && studentScheduleEditor.getHasChanged()) {
+            prom.push(studentScheduleEditor.submit())
+        } else {
+            prom.push(new Promise((resolve) => {return resolve();}))
+        }
+        if(teacherScheduleEditor && teacherScheduleEditor.getHasChanged()) {
+            prom.push(teacherScheduleEditor.submit());
+        } else {prom.push(new Promise((resolve) => {return resolve();}))}
+
+        Promise.all(prom).then(([student, teacher]) => {
+            console.log("Student Response", student);
+            console.log("Teacher Response", teacher);
+            scheduleEditorSubmitRes(student, teacher);
+        }).catch((err) => {$("a.mixenSESave").removeClass("disabled"); utils.throwError(err)})
+    })
+}
+
+
+function scheduleEditorSubmitRes(student, teacher) {
+    if(student) {
+        if(student.transaction && student.transaction.unchanged >= 1) {
+            Materialize.toast('Student schedule unchanged', 4000)
+        } else {
+            Materialize.toast('Updated student schedule', 4000)
+            loadMyStudentSchedule();
+            
+        }
+    }
+
+    if(teacher) {
+        if(teacher.transaction && teacher.transaction.unchanged >= 1) {
+            Materialize.toast('Teacher schedule unchanged', 4000)
+        } else {
+            Materialize.toast('Updated student schedule', 4000)
+            //loadMyTeacherSchedule();
+            
+        }
+    }
+
+    if(student || teacher) {
+        unsavedWork.saved("#mixenSEBack");
+        window.location.hash = "";
+        if((student && student.transaction && student.transaction.unchanged < 1) && (teacher && teacher.transaction && teacher.transaction.unchanged < 1)) {
+            utils.materialResponse("check", "success")
+        } else if((student && student.transaction && student.transaction.unchanged < 1) && !teacher) {
+            utils.materialResponse("check", "success")
+        } else if((teacher && teacher.transaction && teacher.transaction.unchanged < 1) && !student) {
+            utils.materialResponse("check", "success")
+        }
+    }
 }
 
 var idOfUser = utils.thisUser();

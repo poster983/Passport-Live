@@ -96,7 +96,7 @@ var emailJS = require("./email.js");
 * @prop {string} [somePeriodName.className] - Friendly name for the class being taught or activity being supervised 
 * @prop {boolean} somePeriodName.isTeaching - If true, students will be discouraged from requesting a pass that period. 
 * @prop {string} [somePeriodName.room] - room#/name that the user will primarily be in.
-* @prop {?int} somePeriodName.passLimit - The maximum number of passes to accept per period.  Any passes requested over that period will be in a state of "Queue".  Setting to 0 will Queue all passes.
+* @prop {int} [somePeriodName.passLimit] - The maximum number of passes to accept per period.  Any passes requested over that period will be in a state of "Queue".  Setting to 0 will Queue all passes.
 * @example
 * {
 *    "a": {
@@ -114,8 +114,7 @@ var emailJS = require("./email.js");
 *    "c": {
 *        "className": "Sub Period",
 *        "isTeaching": false,
-*        "room": "W-2048",
-*        "passLimit": 5
+*        "room": "W-2048"
 *    },
 *    "flex": {
 *        "isTeaching": false,
