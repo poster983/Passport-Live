@@ -36,7 +36,10 @@ var api = require('../modules/passport-api/index.js');
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
 
-
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
 
   // Rethink db connection
 var connection = null;
@@ -126,12 +129,12 @@ router.get('/login', utils.rateLimit.publicApiBruteforce.prevent, function(req, 
         templateBs.message = "Your browser is older than the minimum supported version. <br> You may experience broken features or layout bugs.  <br>  We highly encourage updating your browser."
         templateBs.browser = sB.ua.browser;
       }
-      res.render('auth/login', { doc_Title: 'Login -- Passport', browserSupport: templateBs, message: msg, notification: notif, googleQuery: googleQuery});
+      res.render('auth/login', { doc_Title: 'Login -- Passport', customHead: customHead, browserSupport: templateBs, message: msg, notification: notif, googleQuery: googleQuery});
     }
   }).catch((err) => {
     console.log(err)
     notif = "Unable to detect browser. Proceed with caution";
-    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, notification: notif, googleQuery: googleQuery});
+    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, customHead: customHead, notification: notif, googleQuery: googleQuery});
   });
 });
 
@@ -141,8 +144,11 @@ router.get('/login', utils.rateLimit.publicApiBruteforce.prevent, function(req, 
 //et signup
 router.get('/signup/', utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
   var msg = null;
-  
-  res.render('auth/signup', { doc_Title: 'Signup -- Passport', message: msg});
+  let customHead = null;
+  if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+      customHead = config.get("webInterface.customHeadCode");
+  }
+  res.render('auth/signup', { doc_Title: 'Signup -- Passport', customHead: customHead, message: msg});
 });
 
 

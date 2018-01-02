@@ -27,13 +27,17 @@ var db = require('../modules/db/index.js');
 var typeCheck = require("type-check").typeCheck;*/
 var router = express.Router();
 
+
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
     if(req.user) {
         var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
         if(permittedDash.length > 1) {
-            //callbackURL: "/callback/multiDashRoute/",
-            res.render('multiDashRoute',{doc_Title: "Passport",  dashboards: permittedDash});
+            res.render('multiDashRoute',{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
         } else {
             res.redirect(permittedDash[0]);
         }

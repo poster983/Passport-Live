@@ -89,7 +89,9 @@
 				"IEMobile": true,
 				"Safari": 9 // if browserVersion <= 9
 			}
-		}
+		},
+		"customHeadCode": "<!--PUT THINGS LIKE google analytics tracking code here -->"
+		
 	},
 	"rethinkdb": {
 		"host": "localhost",
@@ -153,4 +155,5 @@
 	    	"fromEmail": null  //only if username is not the email
 	    }	
 	} 
+
 }

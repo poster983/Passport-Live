@@ -31,6 +31,11 @@ var router = express.Router();
 var db = require('../modules/db/index.js');
 var checkAuth = require('connect-ensure-login');
 
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
+
 
 router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardNav, function(req, res, next) {
     var user = {}
@@ -57,7 +62,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardN
         req.sidenav.dashboards.showPicker = true;
     }
 
-    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 //RaTE LIMIT RATE LIMIT!!
@@ -79,7 +84,7 @@ router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, 
                     res.cookie('JWT', "JWT " + token, {httpOnly: true, signed: true, maxAge: ms("2m")});
                     res.cookie('XSRF-TOKEN', newPayload.dscm, {maxAge: ms("2m")});
 
-                    res.render("accounts/passwordReset", {doc_Title: 'Reset Your Password -- Passport', notification: notif});
+                    res.render("accounts/passwordReset", {doc_Title: 'Reset Your Password -- Passport', customHead: customHead, notification: notif});
                 });
             } else {
                 res.redirect('/auth/login?notif=' + encodeURIComponent("\"key\" invalid")); 

@@ -26,12 +26,17 @@ var passport = require('passport')
 var checkAuth = require('connect-ensure-login');
 var ssarv = require('ssarv');
 
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
+
 router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('administrator/index', { doc_Title: 'Passport-Administrator', user: user});
+    res.render('administrator/index', { doc_Title: 'Passport-Administrator', customHead: customHead, user: user});
 });
 
 router.get('/import', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
@@ -39,7 +44,7 @@ router.get('/import', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "ad
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('administrator/import', { doc_Title: 'Import -- Passport-Administrator', user: user});
+    res.render('administrator/import', { doc_Title: 'Import -- Passport-Administrator', customHead: customHead, user: user});
 });
 
 
