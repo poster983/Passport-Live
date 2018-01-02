@@ -27,8 +27,8 @@ email: hi@josephhassell.com
 /**
 * Takes an Object and returns a URL Query string
 * @link module:webpack/utils
-* @param (Object) params
-* @returns (String)
+* @param {Object} params
+* @returns {String}
 */
 exports.urlQuery = (params) => {
     return query = Object.keys(params)
@@ -40,8 +40,8 @@ exports.urlQuery = (params) => {
 /**
 * Parses an error, and triggers a toast 
 * @link module:webpack/utils
-* @param (Error) err
-* @returns (undefined)
+* @param {Error} err
+* @returns {undefined}
 */
 exports.throwError = (err) => {
   //Do more Later
@@ -60,10 +60,45 @@ exports.throwError = (err) => {
 }
 
 /**
+* An wrapper for the fetch api to make code clean   
+* @link module:webpack/utils
+* @param {String} method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param {String} url - Url to send request to.
+* @param {(Object|undefined)} data
+* @param {(Object|undefined)} data.query - JSON key pair to add to the URL as a query
+* @param {(Object|undefined)} data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param {(Boolean|undefined)} data.head - Data to be sent as the header. Json object
+* @param {(Boolean|undefined)} data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns {Promise}
+*/
+exports.fetch = (method, url, data) => {
+  return new Promise((resolve, reject) => {
+    if(!data) {data = {}}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
+    if(!data.head) {data.head = {}}
+    if(data.auth) {data.head["x-xsrf-token"] = exports.getCookie("XSRF-TOKEN")}
+    if(data.body && typeof data.body === "object") {
+      data.head["Content-Type"] = "application/json";
+      data.body = JSON.stringify(data.body);
+    }
+    fetch(url + data.query, {
+          method: method,
+          headers: new Headers(data.head),
+          body: data.body,
+          credentials: 'same-origin'
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
+        return resolve(json)
+      }).catch((err) => {
+        return reject(err);
+      })
+  })
+}
+
+/**
 * Parses a fetch response and either throws an error, or it returns a promise  
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchStatus = (response) => {
   //console.log(response)
@@ -73,7 +108,7 @@ exports.fetchStatus = (response) => {
     var error = new Error(response.statusText)
     error.isFetch = true;
     error.response = response;
-    errorHand(error)
+    //exports.throwError(error)
     throw error
   }
 }
@@ -81,8 +116,8 @@ exports.fetchStatus = (response) => {
 /**
 * Converts response to json   
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchJSON = (response) => {
   return response.json()
@@ -91,7 +126,7 @@ exports.fetchJSON = (response) => {
 /**
 * Creates a UUID V4 Id    
 * @link module:webpack/utils
-* @returns (String)
+* @returns {String}
 */
 exports.uuidv4 = () => {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
@@ -102,10 +137,10 @@ exports.uuidv4 = () => {
 /**
 * Sets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Value to name the cookie
-* @param (String) cvalue - Value of the cookie
-* @param (Number) exdays - Days until expired
-* @returns (undefined)
+* @param {String} cname - Value to name the cookie
+* @param {String} cvalue - Value of the cookie
+* @param {Number} exdays - Days until expired
+* @returns {undefined}
 */
 exports.setCookie = (cname, cvalue, exdays) => {
     var d = new Date();
@@ -117,11 +152,11 @@ exports.setCookie = (cname, cvalue, exdays) => {
 /**
 * Gets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Name of the cookie
-* @returns (String)
+* @param {String} cname - Name of the cookie
+* @returns {String}
 */
-exports.getCookie = (cname) => {
-    var name = cname + "=";
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -132,14 +167,18 @@ exports.getCookie = (cname) => {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
 }
 
 /**
 * Returns a list of every distinct key in the object   
 * @link module:webpack/utils
-* @param (Object[]) arr - Array of the json objects with keys to test
-* @returns (String[])
+* @param {Object[]} arr - Array of the json objects with keys to test
+* @returns {String[]}
 */
 exports.distinctKeys = (arr) => {
     return Object.keys(arr.reduce(function(result, obj) {
@@ -147,3 +186,109 @@ exports.distinctKeys = (arr) => {
     }, {}))
 }
 
+/**
+* Returns the current user's ID 
+* @link module:webpack/utils
+* @returns {String}
+*/
+exports.thisUser = () => {
+  return exports.getCookie("ACCOUNT-ID");
+}
+
+/**
+* Material full screen response for major actions
+* @link module:webpack/utils
+* @param {string} icon - Can be "check" or "cancel"
+* @param {string} colorClass - Either a css class to apply to the background or presets: "success" "error" or "warning"
+* @returns {function} done
+*/
+exports.materialResponse = (icon, colorClass, done) => {
+  switch(colorClass){
+    case "success": 
+      colorClass = "green accent-3";
+      break;
+     case "error": 
+      colorClass = "red accent-4";
+      break;
+    case "warning": 
+      colorClass = "orange accent-4";
+      break;
+  }
+
+  //Set the elements 
+  $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
+    //setup green grow
+    if(icon == "check") {
+      $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
+        //Check marks 
+      $('#Cleft').addClass('Cleft CleftIn');
+      $('#Cright').addClass('Cright CrightIn');
+    }
+    if(icon == "cancel") {
+        //X marks 
+      $('#Xleft').addClass('Xleft XleftIn');
+      $('#Xright').addClass('Xright XrightIn');
+    }
+
+    $("#circleThing").removeClass().addClass("circleThing circleGrow");
+    //addcolor
+    $("#circleThing").addClass(colorClass);
+
+    //on circle complete 
+    $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+      
+      $("#circleThingContainer").addClass(colorClass)
+      $('#circleThing').removeClass().addClass('circleThing');
+      //wait for 1 second
+      setTimeout(function() {
+        if(icon == "check") {
+          $('#checkmarkContainer').removeClass('checkmarkContainerIn').addClass('checkmarkContainerOut');
+          $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
+          $('#Cright').removeClass('CrightIn').addClass("CrightOut");
+        }
+        if(icon == "cancel") {
+            //X marks 
+          $('#Xleft').removeClass('XleftIn').addClass("XLeftOut");
+          $('#Xright').removeClass('XrightIn').addClass("XrightOut");
+        }
+
+        $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+        //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+        //when final one ends
+        $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+          $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4")
+          setTimeout(function() {
+            $('#Xleft').remove();
+            $('#Xright').remove();
+            $('#Cleft').remove();
+            $('#Cright').remove();
+            $('#checkmarkContainer').remove();
+            $("#circleThingContainer").fadeOut("fast", function() {
+              $("#circleThingContainer").remove();
+            });
+            $("#circleThing").remove();
+            if(typeof done == "function") {
+              return done();
+            }
+          }, 500);
+        });
+      }, 1000);
+    });
+}
+
+/** 
+* Opens a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.openPage = (pageID) => {
+  $("#" + pageID).addClass("active");
+}
+/** 
+* close a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.closePage = (pageID) => {
+  $("#" + pageID).removeClass("active");
+}

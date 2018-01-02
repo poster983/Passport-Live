@@ -166,8 +166,6 @@ var accounts = {};
             }
         }).catch(reject);
     })
-    
-    //
  }
 
 //accounts.rollback("8e4a8ff9-5503-4e6f-920c-7b07f1109601", true).then((res)=>{console.log(res)}).catch((err)=>{console.error(err)});
@@ -358,15 +356,18 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
         //converting to json
         convertExcel(excelFilePath, undefined, false, function(err, data) {
             if(err) {
+                var err = new Error(err);
+                err.status = 500;
                 return reject(err);
             }
+            //console.log(data)
             exports.mapAccounts(data, mapRule, defaultRule, jobProperties.generatePassword).then(function(results) {
                 var errors = [];
                 var transPromice = [];
                 var imported = 0;
                 var initialized = 0;
                 if(results.length <= 0) {
-                    var err = new TypeError("Excel can't be mapped");
+                    var err = new Error("Excel can't be mapped");
                     err.status = 500;
                     return reject(err);
                 }
@@ -501,7 +502,5 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
  *       password: null
  *   }
  */
-
-
 
 

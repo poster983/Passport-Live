@@ -9,11 +9,11 @@ This may not be accurate as browser versions are just estimates. Please open an 
 
 | Browser |  Minimum Version |
 |---------|-----------------|
-| Chrome  | 45              |
-| Chromium | 45				 |
+| Chrome  | 55              |
+| Chromium | 55				 |
 | Firefox | 52              |
 | Safari  | 10              |
-| Opera   | 32              |
+| Opera   | 42              |
 | Edge    | 38              |
 | Vivaldi | All Versions    |
 

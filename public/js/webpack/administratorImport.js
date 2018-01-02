@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,8 +96,8 @@ email: hi@josephhassell.com
 /**
 * Takes an Object and returns a URL Query string
 * @link module:webpack/utils
-* @param (Object) params
-* @returns (String)
+* @param {Object} params
+* @returns {String}
 */
 exports.urlQuery = (params) => {
     return query = Object.keys(params)
@@ -109,8 +109,8 @@ exports.urlQuery = (params) => {
 /**
 * Parses an error, and triggers a toast 
 * @link module:webpack/utils
-* @param (Error) err
-* @returns (undefined)
+* @param {Error} err
+* @returns {undefined}
 */
 exports.throwError = (err) => {
   //Do more Later
@@ -129,10 +129,45 @@ exports.throwError = (err) => {
 }
 
 /**
+* An wrapper for the fetch api to make code clean   
+* @link module:webpack/utils
+* @param {String} method - GET, POST, PATCH, PUT, DELETE, ect.
+* @param {String} url - Url to send request to.
+* @param {(Object|undefined)} data
+* @param {(Object|undefined)} data.query - JSON key pair to add to the URL as a query
+* @param {(Object|undefined)} data.body - Data to send in the body of the request.  May not work with GET and DELETE
+* @param {(Boolean|undefined)} data.head - Data to be sent as the header. Json object
+* @param {(Boolean|undefined)} data.auth - If true, it will send the XSRF-TOKEN to the server
+* @returns {Promise}
+*/
+exports.fetch = (method, url, data) => {
+  return new Promise((resolve, reject) => {
+    if(!data) {data = {}}
+    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
+    if(!data.head) {data.head = {}}
+    if(data.auth) {data.head["x-xsrf-token"] = exports.getCookie("XSRF-TOKEN")}
+    if(data.body && typeof data.body === "object") {
+      data.head["Content-Type"] = "application/json";
+      data.body = JSON.stringify(data.body);
+    }
+    fetch(url + data.query, {
+          method: method,
+          headers: new Headers(data.head),
+          body: data.body,
+          credentials: 'same-origin'
+      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
+        return resolve(json)
+      }).catch((err) => {
+        return reject(err);
+      })
+  })
+}
+
+/**
 * Parses a fetch response and either throws an error, or it returns a promise  
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchStatus = (response) => {
   //console.log(response)
@@ -142,7 +177,7 @@ exports.fetchStatus = (response) => {
     var error = new Error(response.statusText)
     error.isFetch = true;
     error.response = response;
-    errorHand(error)
+    //exports.throwError(error)
     throw error
   }
 }
@@ -150,8 +185,8 @@ exports.fetchStatus = (response) => {
 /**
 * Converts response to json   
 * @link module:webpack/utils
-* @param (Response) response
-* @returns (Promise)
+* @param {Response} response
+* @returns {Promise}
 */
 exports.fetchJSON = (response) => {
   return response.json()
@@ -160,7 +195,7 @@ exports.fetchJSON = (response) => {
 /**
 * Creates a UUID V4 Id    
 * @link module:webpack/utils
-* @returns (String)
+* @returns {String}
 */
 exports.uuidv4 = () => {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
@@ -171,10 +206,10 @@ exports.uuidv4 = () => {
 /**
 * Sets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Value to name the cookie
-* @param (String) cvalue - Value of the cookie
-* @param (Number) exdays - Days until expired
-* @returns (undefined)
+* @param {String} cname - Value to name the cookie
+* @param {String} cvalue - Value of the cookie
+* @param {Number} exdays - Days until expired
+* @returns {undefined}
 */
 exports.setCookie = (cname, cvalue, exdays) => {
     var d = new Date();
@@ -186,11 +221,11 @@ exports.setCookie = (cname, cvalue, exdays) => {
 /**
 * Gets a browser cookie   
 * @link module:webpack/utils
-* @param (String) cname - Name of the cookie
-* @returns (String)
+* @param {String} cname - Name of the cookie
+* @returns {String}
 */
-exports.getCookie = (cname) => {
-    var name = cname + "=";
+exports.getCookie = (name) => {
+    /*var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -201,14 +236,18 @@ exports.getCookie = (cname) => {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "";*/
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+
 }
 
 /**
 * Returns a list of every distinct key in the object   
 * @link module:webpack/utils
-* @param (Object[]) arr - Array of the json objects with keys to test
-* @returns (String[])
+* @param {Object[]} arr - Array of the json objects with keys to test
+* @returns {String[]}
 */
 exports.distinctKeys = (arr) => {
     return Object.keys(arr.reduce(function(result, obj) {
@@ -216,7 +255,112 @@ exports.distinctKeys = (arr) => {
     }, {}))
 }
 
+/**
+* Returns the current user's ID 
+* @link module:webpack/utils
+* @returns {String}
+*/
+exports.thisUser = () => {
+  return exports.getCookie("ACCOUNT-ID");
+}
 
+/**
+* Material full screen response for major actions
+* @link module:webpack/utils
+* @param {string} icon - Can be "check" or "cancel"
+* @param {string} colorClass - Either a css class to apply to the background or presets: "success" "error" or "warning"
+* @returns {function} done
+*/
+exports.materialResponse = (icon, colorClass, done) => {
+  switch(colorClass){
+    case "success": 
+      colorClass = "green accent-3";
+      break;
+     case "error": 
+      colorClass = "red accent-4";
+      break;
+    case "warning": 
+      colorClass = "orange accent-4";
+      break;
+  }
+
+  //Set the elements 
+  $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
+    //setup green grow
+    if(icon == "check") {
+      $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
+        //Check marks 
+      $('#Cleft').addClass('Cleft CleftIn');
+      $('#Cright').addClass('Cright CrightIn');
+    }
+    if(icon == "cancel") {
+        //X marks 
+      $('#Xleft').addClass('Xleft XleftIn');
+      $('#Xright').addClass('Xright XrightIn');
+    }
+
+    $("#circleThing").removeClass().addClass("circleThing circleGrow");
+    //addcolor
+    $("#circleThing").addClass(colorClass);
+
+    //on circle complete 
+    $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+      
+      $("#circleThingContainer").addClass(colorClass)
+      $('#circleThing').removeClass().addClass('circleThing');
+      //wait for 1 second
+      setTimeout(function() {
+        if(icon == "check") {
+          $('#checkmarkContainer').removeClass('checkmarkContainerIn').addClass('checkmarkContainerOut');
+          $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
+          $('#Cright').removeClass('CrightIn').addClass("CrightOut");
+        }
+        if(icon == "cancel") {
+            //X marks 
+          $('#Xleft').removeClass('XleftIn').addClass("XLeftOut");
+          $('#Xright').removeClass('XrightIn').addClass("XrightOut");
+        }
+
+        $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
+        //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+        //when final one ends
+        $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+          $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4")
+          setTimeout(function() {
+            $('#Xleft').remove();
+            $('#Xright').remove();
+            $('#Cleft').remove();
+            $('#Cright').remove();
+            $('#checkmarkContainer').remove();
+            $("#circleThingContainer").fadeOut("fast", function() {
+              $("#circleThingContainer").remove();
+            });
+            $("#circleThing").remove();
+            if(typeof done == "function") {
+              return done();
+            }
+          }, 500);
+        });
+      }, 1000);
+    });
+}
+
+/** 
+* Opens a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.openPage = (pageID) => {
+  $("#" + pageID).addClass("active");
+}
+/** 
+* close a mustache Mixen page
+* @link module:webpack/utils
+* @param {string} pageID - ID of the page element containing the mixen 
+*/
+exports.closePage = (pageID) => {
+  $("#" + pageID).removeClass("active");
+}
 
 /***/ }),
 /* 1 */
@@ -265,50 +409,342 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var Caret = __webpack_require__(3);
-var Table = __webpack_require__(12);
+var flat = __webpack_require__(12);
 var utils = __webpack_require__(0);
-var importAPI = __webpack_require__(16)
-//var moment = require("moment");
+var typeCheck = __webpack_require__(1).typeCheck;
+var DeepKey = __webpack_require__(14);
 
-var bulkTable = null;
-window.onload = function() {
-  var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
-  caret.initialize();
-  console.log(utils.urlQuery({
-    string: "There",
-    number: 1,
-    bool: true,
-    null: null,
-    undefined: undefined
-  }))
-  //get initial table values and create table object.
-  bulkTable = new Table($("#bulkLogTable"), [], {
-    ignoredKeys: ['id'],
-    idKey: 'id',
-    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
-    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
-    tableClasses: 'white-text responsive-table',
-    inject: function(row, done) {
-        return done([{
-            column: "Actions", 
-            strictColumn: true,
-            dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
-            //dom: {hello: "there", howAre: "you"}
-        }])
-    } 
-  });
+/**
+* Takes structured data and makes a table from it. call this.generate() to create a table
+* @link module:webpack/framework
+* @class 
+* @param {Selector} containerElement - The table container.
+* @param {Object} data - The data to be added to the table.
+* @param {(Object|undefined)} options - The clickable element.
+* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
+* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
+* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
+* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
+* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
+*/
+class Table {
+    constructor(containerElement, data, options) {
+        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function, ...}"), options) {
+            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
+        }*/
+        if(!options){options = {};}
+        if(!typeCheck("[Object]", data)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = data;
+        this.container = containerElement;
+        this.options = options;
+        this.table = {};
+    }
+    generate(injectOnce) {
+        return new Promise((resolve, reject) => {
+            this._sortData(this.data, injectOnce).then(({columns, rows}) => {
+                /*console.log(columns, "Col")
+                console.log(rows, "rows")*/
+                var promises = [];
+                /**HEAD**/
+                let tableHead = $("<thead/>");
+                promises.push(new Promise((resolveCol, rejectCol) => {
+                    let tr = $("<tr/>");
+                    //compile Head
+                    for(let x = 0; x < columns.length; x++) {
+                        tr.append($("<th/>").html(columns[x]));
+                        if(x >= columns.length-1) {
+                            //done 
+                            tableHead.append(tr);
+                            return resolveCol()
+                        }
+                    }
+                }))
 
-  importAPI.searchBulkLogs({}).then((data) => {
-    //console.log(data)
-    bulkTable.addData(data)
-    bulkTable.generate().catch(err=>utils.throwError(err));
-  }).catch(err=>utils.throwError(err));
-};
+                /**BODY**/
+                this.table.body = {};
+                this.table.body.id = "__TABLE_BODY_ID_" + utils.uuidv4() + "__"
+                let tableBody = $("<tbody/>").attr("id", this.table.body.id);
+                promises.push(new Promise((resolveRow, rejectRow) => {
 
-function searchBulkLogsForm() {
-    
+                    //compile row
+                    /*for(let r = 0; r < rows.length; r++) {
+                        let tr = $("<tr/>").attr("id", rows[r].rowID);
+                        let bodyData = rows[r].getBody();
+                        //console.log(bodyData)
+                        //allign rows with correct columns 
+                        for (let a = 0 ; a < columns.length; a++) {
+                            tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                            if(a >= columns.length-1) {
+                                //push to body
+                                tableBody.append(tr);
+                            }
+                            if(a >= columns.length-1 && r >= rows.length-1) {
+                                //push to body
+                                return resolveRow();
+
+                            }
+                        }
+                    }*/
+                    this._compileRow(columns, rows).then((tBody) => {
+                        tableBody.append(tBody);
+                        return resolveRow();
+                    }).catch(err => reject(err))
+                }))
+
+                Promise.all(promises).then(() => {
+                    this.container.append($("<table/>").addClass(this.options.tableClasses)
+                        .append(tableHead)
+                        .append(tableBody)
+                    )
+                    this.table.data = {
+                        head: columns,
+                        rows: rows
+                    }
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    
+                    resolve();
+                }).catch((err) => {
+                    return reject(err);
+                })
+            });
+        });
+    }
+    _compileRow(columns, rows) {
+        return new Promise((resolve, reject) => {
+            let tBody = [];
+            for(let r = 0; r < rows.length; r++) {
+                let tr = $("<tr/>").attr("id", rows[r].rowID);
+                let bodyData = rows[r].getBody();
+                //console.log(bodyData)
+                //allign rows with correct columns 
+                for (let a = 0 ; a < columns.length; a++) {
+                    tr.append($("<td/>").html(bodyData[columns[a]]));
+
+                    if(a >= columns.length-1) {
+                        //push to body
+                        tBody.push(tr);
+                    }
+                    if(a >= columns.length-1 && r >= rows.length-1) {
+                        //push to body
+                        //console.log(tBody)
+                        return resolve(tBody);
+
+                    }
+                }
+            }
+        })
+    }
+    addData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = this.data.concat(newData)
+    }
+    replaceData(newData) {
+        if(!typeCheck("[Object]", newData)) {
+            throw new TypeError("data must be an array of objects");
+        }
+        this.data = newData;
+    }
+    destroyTable() {
+        this.data = [];
+        containerElement.empty();
+    }
+    parseRowID(TABLE_ROW_ID) {
+        return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
+    }
+    getDirtyRowID(originalID) {
+        return "__TABLE_ROW_" + originalID + "__";
+    }
+    selectRowElm(TABLE_ROW_ID) {
+        return $("#"+TABLE_ROW_ID);
+    }
+    //no support for new columns yet.
+    appendRow(data, injectOnce) {
+        return new Promise((resolve, reject) => {
+            this.addData(data);
+            this._sortData(data, injectOnce).then(({rows}) => {
+                this._compileRow(this.table.data.head, rows).then((elements) => {
+                    $("#" + this.table.body.id).append(elements)
+                    //update table object
+                    this.table.data.rows.push(rows);
+                    if(typeCheck("Function", this.options.afterGenerate)) {
+                        this.options.afterGenerate();
+                    }
+                    resolve();
+                }).catch(err => reject(err))
+            }).catch(err => reject(err))
+        })
+    }
+    deleteRow(TABLE_ROW_ID) {
+        this.selectRowElm(TABLE_ROW_ID).remove();
+    }
+    getTableBody() {
+        return $("#" + this.table.body.id);
+    }
+    _sortData(data, injectOnce) {
+        return new Promise((resolve, reject) => {
+            var columnNames = [];
+            var rows = [];
+            for(let x = 0; x < data.length; x++ ) {
+                let row = {};
+                row.shownData = data[x];
+                row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
+                //note ID
+                if(this.options.idKey && row.shownData[this.options.idKey]) {
+                    row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
+                }
+                //Store Untouched ID for dev
+                row.getRowID = () => {return this.parseRowID(row.rowID);}
+
+                //Filter out hidden keys for later 
+                if(this.options.hiddenKeys) {
+                    row.hiddenData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return this.options.hiddenKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    if(this.options.ignoredKeys) {
+                        this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
+                    } else {
+                        this.options.ignoredKeys = this.options.hiddenKeys;
+                    }
+                }
+
+                //filter out unwanted Keys
+                //should error in constructor if not array
+                if(this.options.ignoredKeys) {
+                    row.shownData = DeepKey.keys(row.shownData, {
+                        filter: (deepkey) => {
+                            return !this.options.ignoredKeys.includes(deepkey.join("."));
+                        }
+                    }).reduce((obj, key) => {
+                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
+                        return obj;
+                    }, {})
+                    
+                }
+                let promInj = []
+                //row.injectedData = {};
+                promInj.push(new Promise((resolveIn, rejectIn) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", this.options.inject)) {
+                        //console.log("INJECTING")
+                        this.options.inject(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
+                            } else {
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolveIn()
+                    }
+                }))
+                //inject once
+                promInj.push(new Promise((resolveIn, rejectIn) => {
+                    //Generate Actions 
+                    if(typeCheck("Function", injectOnce)) {
+                        //console.log("INJECTING")
+                        injectOnce(row, (injected) => {
+                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
+                                this._compileInject(injected).then((inj) => {
+                                    return resolveIn(inj)
+                                    //row.injectedData = Object.assign(row.injectedData, inj);
+                                })
+                            } else {
+                                return rejectIn(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
+                            }
+                            
+                        })
+                    } else {
+                        return resolveIn()
+                    }
+                }))
+
+
+                Promise.all(promInj).then(([injectGlobal, injectOnce]) => {
+                    if(injectGlobal && injectOnce) {
+                        row.injectedData = Object.assign(injectGlobal, injectOnce);
+                    } else if(injectGlobal) {row.injectedData = injectGlobal} else if(injectOnce){row.injectedData = injectOnce}
+
+                    let flatData = flat(row.shownData, {safe: true});
+                    if(row.injectedData) {
+                        //console.log(row.injectedData)
+                        //remove dupe and combine
+                        if(this.options.preferInject) {
+                            row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
+                        } else {
+                            row.shownKeys = [...new Set([...Object.keys(row.injectedData), ...Object.keys(flatData)])];
+                        }
+                        
+                    } else {
+                        row.shownKeys = Object.keys(flatData);
+                    }
+                    columnNames = [...new Set([...columnNames, ...row.shownKeys])];
+
+
+
+
+                    // add helper functions
+                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
+                    //Waitfor end of loop
+                    rows.push(row);
+                    //console.log(rows, "loop Row")
+                    if(x >= data.length-1) {
+                        //sort 
+                        if(typeCheck("[String]", this.options.sort)) {
+                            /*let reference_object = {};
+                            for (let i = 0; i < this.options.sort.length; i++) {
+                                reference_object[this.options.sort[i]] = i;
+                            }*/
+                            columnNames.sort((a, b) => {
+                              return this.options.sort.indexOf(a) - this.options.sort.indexOf(b);
+                            });
+                        } else if(typeCheck("Function", this.options.sort)) {
+                            columnNames.sort(this.options.sort);
+                        }
+                        return resolve({columns: columnNames, rows: rows});
+                    }
+                    
+                }).catch((err) => {throw err})
+            }
+        });
+    }
+    _compileInject(injected) {
+        return new Promise((resolve) => {
+            let injectedData = {};
+            if(injected.length < 1) {return resolve(injectedData);}
+            for(let a = 0; a < injected.length; a++) {
+                if(injected[a].strictColumn) {
+                    injectedData[injected[a].column] = injected[a].dom;
+                } else {
+                    injectedData = Object.assign(injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
+                }
+                if(a >= injected.length-1) {
+                    return resolve(injectedData);
+                }
+            }
+        });
+    }
 }
+
+module.exports = Table;
 
 /***/ }),
 /* 3 */
@@ -2058,255 +2494,7 @@ function curry$(f, bound){
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*
-
-Passport-Live is a modern web app for schools that helps them manage passes.
-    Copyright (C) 2017  Joseph Hassell
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-email: hi@josephhassell.com
-
-*/
-var flat = __webpack_require__(13);
-var utils = __webpack_require__(0);
-var typeCheck = __webpack_require__(1).typeCheck;
-var DeepKey = __webpack_require__(15);
-
-/**
-* Takes structured data and makes a table from it. call this.generate() to create a table
-* @link module:webpack/framework
-* @class 
-* @param {Selector} containerElement - The table container.
-* @param {Object} data - The data to be added to the table.
-* @param {(Object|undefined)} options - The clickable element.
-* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
-* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
-* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
-* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
-* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
-* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
-*/
-class Table {
-    constructor(containerElement, data, options) {
-        /*if(!typeCheck("Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function, ...}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {ignoredKeys: Maybe [String], idKey: Maybe String, hiddenKeys: Maybe [String], inject: Maybe Function, tableClasses: Maybe String, sort: Maybe [String] | Function}\"");
-        }*/
-        if(!options){options = {};}
-        if(!typeCheck("[Object]", data)) {
-            throw new TypeError("data must be an array of objects");
-        }
-        this.data = data;
-        this.container = containerElement;
-        this.options = options;
-    }
-    generate() {
-        return new Promise((resolve, reject) => {
-            this._sortData().then(({columns, rows}) => {
-                console.log(columns, "Col")
-                console.log(rows, "rows")
-                var promises = [];
-                /**HEAD**/
-                let tableHead = $("<thead/>");
-                promises.push(new Promise((resolveCol, rejectCol) => {
-                    let tr = $("<tr/>");
-                    //compile Head
-                    for(let x = 0; x < columns.length; x++) {
-                        tr.append($("<th/>").html(columns[x]));
-                        if(x >= columns.length-1) {
-                            //done 
-                            tableHead.append(tr);
-                            return resolveCol()
-                        }
-                    }
-                }))
-
-                /**BODY**/
-                let tableBody = $("<tbody/>");
-                promises.push(new Promise((resolveRow, rejectRow) => {
-
-                    //compile row
-                    for(let r = 0; r < rows.length; r++) {
-                        let tr = $("<tr/>").attr("id", rows[r].rowID);
-                        let bodyData = rows[r].getBody();
-                        console.log(bodyData)
-                        //allign rows with correct columns 
-                        for (let a = 0 ; a < columns.length; a++) {
-                            tr.append($("<td/>").html(bodyData[columns[a]]));
-
-                            if(a >= columns.length-1) {
-                                //push to body
-                                tableBody.append(tr);
-                            }
-                            if(a >= columns.length-1 && r >= rows.length-1) {
-                                //push to body
-                                return resolveRow();
-
-                            }
-                        }
-                    }
-                }))
-
-                Promise.all(promises).then(() => {
-                    this.container.append($("<table/>").addClass(this.options.tableClasses)
-                        .append(tableHead)
-                        .append(tableBody)
-                    )
-                }).catch((err) => {
-                    return reject(err);
-                })
-            });
-        });
-    }
-    addData(newData) {
-        if(!typeCheck("[Object]", newData)) {
-            throw new TypeError("data must be an array of objects");
-        }
-        this.data = this.data.concat(newData)
-    }
-    replaceData(newData) {
-        if(!typeCheck("[Object]", newData)) {
-            throw new TypeError("data must be an array of objects");
-        }
-        this.data = newData;
-    }
-    destroyTable() {
-        this.data = [];
-        containerElement.empty();
-    }
-    parseRowID(TABLE_ROW_ID) {
-        return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
-    }
-    _sortData() {
-        return new Promise((resolve, reject) => {
-            var columnNames = [];
-            var rows = [];
-            for(let x = 0; x < this.data.length; x++ ) {
-                let row = {};
-                row.shownData = this.data[x];
-                row.rowID = "__TABLE_ROW_" + utils.uuidv4() + "__";
-                //note ID
-                if(this.options.idKey && row.shownData[this.options.idKey]) {
-                    row.rowID = "__TABLE_ROW_" + DeepKey.get(row.shownData, this.options.idKey.split(".")) + "__"; 
-                }
-                //Store Untouched ID for dev
-                row.getRowID = () => {return this.parseRowID(row.rowID);}
-
-                //Filter out hidden keys for later 
-                if(this.options.hiddenKeys) {
-                    row.hiddenData = DeepKey.keys(row.shownData, {
-                        filter: (deepkey) => {
-                            return this.options.hiddenKeys.includes(deepkey.join("."));
-                        }
-                    }).reduce((obj, key) => {
-                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
-                        return obj;
-                    }, {})
-                    if(this.options.ignoredKeys) {
-                        this.options.ignoredKeys = this.options.ignoredKeys.concat(this.options.hiddenKeys);
-                    } else {
-                        this.options.ignoredKeys = this.options.hiddenKeys;
-                    }
-                }
-
-                //filter out unwanted Keys
-                //should error in constructor if not array
-                if(this.options.ignoredKeys) {
-                    row.shownData = DeepKey.keys(row.shownData, {
-                        filter: (deepkey) => {
-                            return !this.options.ignoredKeys.includes(deepkey.join("."));
-                        }
-                    }).reduce((obj, key) => {
-                        DeepKey.set(obj, key, DeepKey.get(row.shownData, key));
-                        return obj;
-                    }, {})
-                    
-                }
-                new Promise((resolve, reject) => {
-                    //Generate Actions 
-                    if(typeCheck("Function", this.options.inject)) {
-                        console.log("INJECTING")
-                        row.injectedData = {};
-                        this.options.inject(row, (injected) => {
-                            if(typeCheck("[{column: String, strictColumn: Maybe Boolean, dom: *}]", injected)) {
-                                for(let a = 0; a < injected.length; a++) {
-                                    if(injected[a].strictColumn) {
-                                        row.injectedData[injected[a].column] = injected[a].dom;
-                                    } else {
-                                        row.injectedData = Object.assign(row.injectedData, flat({[injected[a].column.split(".")]: injected[a].dom}, {safe: true}))
-                                    }
-                                    if(a >= injected.length-1) {
-                                        return resolve();
-                                    }
-                                }
-                            } else {
-                                return reject(new TypeError("inject callback expected a single paramater with type structure: [{column: String, strictColumn: Maybe Boolean, dom: *}]"));
-                            }
-                            
-                        })
-                    } else {
-                        return resolve()
-                    }
-                }).then(() => {
-                    let flatData = flat(row.shownData, {safe: true});
-                    if(row.injectedData) {
-                        console.log(row.injectedData)
-                        row.shownKeys = [...new Set([...Object.keys(flatData), ...Object.keys(row.injectedData)])];
-                    } else {
-                        row.shownKeys = Object.keys(flatData);
-                    }
-                    columnNames = [...new Set([...columnNames, ...row.shownKeys])];
-
-
-
-
-                    // add helper functions
-                    row.getBody = () => {return Object.assign(flatData, row.injectedData)}
-                    //Waitfor end of loop
-                    rows.push(row);
-                    //console.log(rows, "loop Row")
-                    if(x >= this.data.length-1) {
-                        //sort 
-                        if(typeCheck("[String]", this.options.sort)) {
-                            /*let reference_object = {};
-                            for (let i = 0; i < this.options.sort.length; i++) {
-                                reference_object[this.options.sort[i]] = i;
-                            }*/
-                            columnNames.sort((a, b) => {
-                              return this.options.sort.indexOf(a) - this.options.sort.indexOf(b);
-                            });
-                        } else if(typeCheck("Function", this.options.sort)) {
-                            columnNames.sort(this.options.sort);
-                        }
-                        this.sortedColumns = columnNames;
-                        this.sortedData = rows;
-                        return resolve({columns: this.sortedColumns, rows: this.sortedData});
-                    }
-                    
-                }).catch((err) => {throw err})
-            }
-        });
-    }
-}
-
-module.exports = Table;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isBuffer = __webpack_require__(14)
+var isBuffer = __webpack_require__(13)
 
 module.exports = flatten
 flatten.flatten = flatten
@@ -2419,7 +2607,7 @@ function unflatten (target, opts) {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /*!
@@ -2446,7 +2634,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2591,7 +2779,80 @@ module.exports = {
 
 
 /***/ }),
-/* 16 */
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var Caret = __webpack_require__(3);
+var Table = __webpack_require__(2);
+var utils = __webpack_require__(0);
+var importAPI = __webpack_require__(19)
+//var moment = require("moment");
+
+var bulkTable = null;
+window.onload = function() {
+  var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
+  caret.initialize();
+  console.log(utils.urlQuery({
+    string: "There",
+    number: 1,
+    bool: true,
+    null: null,
+    undefined: undefined
+  }))
+  //get initial table values and create table object.
+  bulkTable = new Table($("#bulkLogTable"), [], {
+    ignoredKeys: ['id'],
+    idKey: 'id',
+    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
+    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
+    tableClasses: 'white-text responsive-table',
+    inject: function(row, done) {
+        return done([{
+            column: "Actions", 
+            strictColumn: true,
+            dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+            //dom: {hello: "there", howAre: "you"}
+        }])
+    } 
+  });
+
+  importAPI.searchBulkLogs({}).then((data) => {
+    //console.log(data)
+    bulkTable.addData(data)
+    bulkTable.generate().catch(err=>utils.throwError(err));
+  }).catch(err=>utils.throwError(err));
+};
+
+function searchBulkLogsForm() {
+    
+}
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*

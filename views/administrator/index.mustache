@@ -37,7 +37,8 @@ email: hi@josephhassell.com
             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
           </div></li>
           <li><a href="#" class="waves-effect active"><i class="material-icons">home</i>Home</a></li>
-          <li><a href="/administrator/import" class="waves-effect active"><i class="material-icons">backup</i>Import</a></li>
+          <li><a href="/account?referral=administrator" class="waves-effect"><i class="material-icons">account_circle</i>Your Account</a></li>
+          <li><a href="/administrator/import" class="waves-effect"><i class="material-icons">backup</i>Import</a></li>
           <li><div class="divider"></div></li>
           <li><a class="waves-effect" href="/auth/logout"><i class="material-icons">lock</i>Logout</a></li>
         </ul>
@@ -57,10 +58,9 @@ email: hi@josephhassell.com
     </nav>
 
     <!-- Side Nav-->
-   
 
      <div class="fixed-action-btn">
-      <a  class="btn-floating btn-large waves-effect waves-light">
+      <a class="btn-floating btn-large waves-effect waves-light" onclick="$('#tempIDForButton').tapTarget('open');">
         <i class="large material-icons">mode_edit</i>
       </a>
       <ul>
@@ -68,6 +68,8 @@ email: hi@josephhassell.com
         <li><a onclick="openPage('recurringEditor'); re.setup();" class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Set Repeating Schedule"><i class="material-icons">today</i></a></li>
       </ul>
     </div>
+
+    
 
     <div id="mainCards" class="container">
       <div id="cal"> 

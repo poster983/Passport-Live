@@ -142,6 +142,49 @@ function serializeUser(req, res, done) {
     })
 });
 
+/**
+    * Searches Accounts
+    * @function searchAccounts
+    * @api GET /api/account/
+    * @apiquery {(string|undefined)} id - The id of the user. A Primary Key. Uses getAll.
+    * @apiquery {(string|undefined)} email
+    * @apiquery {(userGroup|undefined)} userGroup
+    * @apiquery {(string|undefined)} name - If a string, any other name query (name_salutation, name_first, name_last) will be ignored 
+    * @apiquery {(string|undefined)} name_salutation - User's prefix/salutation
+    * @apiquery {(string|undefined)} name_first - User's given name
+    * @apiquery {(string|undefined)} name_last - User's family name
+    * @apiquery {(string|undefined)} schoolID
+    * @apiquery {(number|undefined)} graduationYear - Will be typecast
+    * @apiresponse {Object[]} Returnes the safe info
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    */
+router.get("/", passport.authenticate('jwt', { session: false}), function searchAccounts(req, res, next) {
+    if(!req.query.name) {
+        if(req.query.name_salutation || req.query.name_first || req.query.name_last) {
+            req.query.name = {};
+            if(req.query.name_salutation) {
+                req.query.name.salutation = req.query.name_salutation;
+            }
+            if(req.query.name_first) {
+                req.query.name.first = req.query.name_first;
+            }
+            if(req.query.name_last) {
+                req.query.name.last = req.query.name_last;
+            }
+        }
+    }
+    if(typeof req.query.graduationYear === "string") {
+        req.query.graduationYear = parseInt(req.query.graduationYear);
+    }
+    delete req.query.name_salutation;
+    delete req.query.name_first;
+    delete req.query.name_last;
+    api.get(req.query).then((users) => {
+        return res.json(users)
+    }).catch((err) => {
+        return next(err);
+    })
+})
 
 /**
     * GETs accounts by id
@@ -480,18 +523,52 @@ router.post("/schedule/:dashboard", passport.authenticate('jwt', { session: fals
 router.patch("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
-    if(!req.user.schedules || !req.user.schedules[dashboard]) {
-        var err = new Error("Schedule refrence not found");
-        err.status = 404;
-        return next(err)
-    }
     console.log(dashboard)
-    api.updateUserSchedule(req.user.schedules[dashboard], dashboard, schedule, function(err, data) {
+    api.updateUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
         if(err) {
             return next(err);
         }
         res.send(data)
     })
+});
+
+/** Creates or Replaces the user's schedule for a dashboard
+    * @function updateUserSchedule
+    * @async
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PUT /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null|undefined //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.put("/schedule/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    //console.log(req.user)
+    if(req.user.schedules && req.user.schedules[dashboard]) {
+        api.replaceUserSchedule(req.user.id, dashboard, schedule).then((trans) => {
+            //console.log(trans)
+            res.json(trans)
+        }).catch((err) => {return next(err);})
+    } else {
+        api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+            if(err) {
+                return next(err);
+            }
+            res.json(data)
+        })
+    }
+
 });
 
 /** GETs account schedules for student dash
@@ -552,21 +629,20 @@ router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: 
 
 
 /** GETs All account schedule types for an account
+    * If you dont give an ID, the user in the JWT will be assumed.
     * @function getAllSchedules
-    * @async
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/id/:id/
+    * @api GET /api/account/schedule/{:id}
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+
+router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
     if(!req.params.id) {
-        var err = new Error("ID Required");
-        err.status = 400;
-        return next(err)
+        req.params.id = req.user.id;
     }
     var prom = [];
 
@@ -596,7 +672,6 @@ router.get('/schedule/id/:id/', passport.authenticate('jwt', { session: false}),
         return next(err)
     });
 });
-
 
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation

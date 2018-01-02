@@ -66,7 +66,7 @@ router.get("/log", passport.authenticate('jwt', { session: false}), ssarv(["admi
 })
 //{name: "testFaculty"}
 router.post('/test', function (req, res, next) {
-  importJS.importAccountsExcel("C:/Users/josep/Documents/facultyhassell.xlsx", {
+  importJS.importAccountsExcel("/home/joseph/Desktop/passportImport/facultyhassell.xlsx", {
             name: {
                 first: "First Name",
                 last: "Last Name",

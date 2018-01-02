@@ -25,6 +25,7 @@ email: hi@josephhassell.com
 */
 var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+var r_ = db.dash()
 var config = require('config');
 var bcrypt = require('bcrypt-nodejs');
 var utils = require("../passport-utils/index.js")
@@ -36,12 +37,112 @@ var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
 var emailJS = require("./email.js");
 
+/** ACCOUNT TYPE DEFS **/ 
 
+/**
+ * User Account Model stored in RethinkDB
+ * @typedef {Object} account
+ * @property {String} id - Assigned by RethinkDB. A Primary Key / Primary Index
+ * @property {String} email - Must be unique. (TODO: Secondary Index)
+ * @property {Object} name
+ * @property {string} name.salutation - Pronoun (Mr., Ms., Mx., ECT...)
+ * @property {string} name.first - Given name
+ * @property {string} name.last - Family name
+ * @property {userGroup} userGroup
+ * @property {Object} groupFields - unused
+ * @property {boolean} isArchived - If true the user's account is frozen and no manipulation will take place.
+ * @property {boolean} isVerified - If true, the user will be able to make passes and email notifications will work.
+ * @property {(string|null)} password - Will be removed when returned from a REST endpoint
+ * @property {int} [graduationYear=null] - only required on userGroups that define it in the configs.
+ * @property {string} [schoolID=null]
+ * @property {Object} properties
+ * @property {Date} properties.createdOn
+ * @property {(Date|null)} properties.verifiedOn
+ * @property {Object} flags 
+ * @property {string} [flags.bulkImportID=undefined] - The ID of the account import job that imported this account. 
+ * @property {Object} integrations - holds ids and keys of services that integrate with passport 
+ * @property {Object} integrations.google - OAuth2 Login
+ * @property {Object} integrations.google.id - Google ID used to match the google account to the passport user
+ */
+
+
+
+/**
+* Student Schedule/Student Dashboard Schedule object
+* @typedef {Object} studentSchedule
+* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
+* @prop {?string} somePeriodName.teacherID - Holds an account ID linked to this period. Basically, the student is under this teacher's jurisdiction normally during this period. If null, the student is assumed to not have teacher supervision.
+* @example
+* {
+*    "a": {
+*        "teacherID": "2e75aa94-fa63-461a-be06-5345322bebdf"
+*    },
+*    "b": {
+*        "teacherID": "0115c0b0-ee04-4e88-a21f-d2029601b276"
+*    },
+*    "flex": {
+*        "teacherID": null
+*    },
+*    "lunch": {
+*        "teacherID": null
+*    }
+* }
+*/
+
+/**
+* Teacher or Supervisor Schedule / Teacher Dashboard Schedule object
+* @typedef {Object} teacherSchedule
+* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
+* @prop {string} [somePeriodName.className] - Friendly name for the class being taught or activity being supervised 
+* @prop {boolean} somePeriodName.isTeaching - If true, students will be discouraged from requesting a pass that period. 
+* @prop {string} [somePeriodName.room] - room#/name that the user will primarily be in.
+* @prop {int} [somePeriodName.passLimit] - The maximum number of passes to accept per period.  Any passes requested over that period will be in a state of "Queue".  Setting to 0 will Queue all passes.
+* @example
+* {
+*    "a": {
+*        "className": "Algebra 1",
+*        "isTeaching": true,
+*        "room": "W-2048",
+*        "passLimit": 0
+*    },
+*    "b": {
+*        "className": "AP Computer Science",
+*        "isTeaching": true,
+*        "room": "E-404",
+*        "passLimit": 0
+*    },
+*    "c": {
+*        "className": "Sub Period",
+*        "isTeaching": false,
+*        "room": "W-2048"
+*    },
+*    "flex": {
+*        "isTeaching": false,
+*        "room": "W-2048",
+*        "passLimit": 10
+*    },
+*    "lunch": {
+*        "isTeaching": false,
+*        "room": "Teacher Lounge",
+*        "passLimit": 0
+*    }
+* }
+*/
+
+/**
+ * Account Tags/flags/metadata/options. 
+ * @typedef {(Object|undefined|null)} accountFlags
+ * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
+ * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
+ */
+
+
+
+/** CODE **/
 /** 
     * Creates An Account 
     * @function createAccount
-    * @link module:passportApi
-    * @async
+    * @link module:js/accounts
     * @example
     * api.createAccount({userGroup: "student", name: {first: "Student", last: "McStudentface", salutation: "Mx." } email: "james.smith@gmail.com", schoolID: "123456", {studentID: 01236, isArchived: false }, function(err){
     *   if(err) {
@@ -134,6 +235,8 @@ exports.createAccount = function(user, options) {
 
         if(!user.schoolID || user.schoolID == "") {
             user.schoolID = null;
+        } else {
+            user.schoolID = user.schoolID + "";
         }
         if(!user.graduationYear || user.graduationYear == "") {
             if(config.has('userGroups.' + user.userGroup + '.graduates') && config.get('userGroups.' + user.userGroup + '.graduates') == true) {
@@ -290,8 +393,80 @@ exports.createAccount = function(user, options) {
     * @param {object} err - Returns an error object if any.
     */
 
+/** 
+    * Searches accounts that match the query
+    * @link module:js/accounts
+    * @param {Object} query
+    * @param {(string|undefined)} query.id - Primary Key.  Uses getAll.  
+    * @param {(string|undefined)} query.email
+    * @param {(userGroup|undefined)} query.userGroup
+    * @param {(Object|string|undefined)} query.name - If a string it will do a combined search using Match
+    * @param {(string|undefined)} query.name.salutation - User's prefix/salutation
+    * @param {(string|undefined)} query.name.first - User's given name
+    * @param {(string|undefined)} query.name.last - User's family name
+    * @param {(string|number|undefined)} query.schoolID
+    * @param {(number|undefined)} query.graduationYear
+    * @returns {Promise} Includes array.
+    */
+exports.get = (query) => {
+    return new Promise((resolve, reject) => {
+        let typeStruct = `{
+            id: Maybe String, 
+            email: Maybe String, 
+            userGroup: Maybe userGroup,
+            name: Maybe String | {
+                salutation: Maybe String,
+                first: Maybe String,
+                last: Maybe String
+            },
+            schoolID: Maybe String | Number
+            graduationYear: Maybe Number
+        }`;
+        if(!typeCheck(typeStruct, query, utils.typeCheck)) {
+            return reject(new TypeError("Expected \"query\" to have structure of: \"" + typeStruct + "\""));
+        }
+        if(typeof query.schoolID === "number") {
+            query.schoolID = query.schoolID.toString();
+        }
+        let dbquery = r_.table("accounts");
+        if(query.id) {
+            let queryID = query.id;
+            delete query.id;
+            dbquery = dbquery.getAll(queryID);
+            
+        }
+        //Samrt Name Search
+        if(typeof query.name === "string") {
+            let nameStr = query.name;
+            delete query.name;
+            dbquery = dbquery.filter(function(doc){
+                return r_.or(doc('name')('first').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
+                            doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
+                            doc('name')('salutation').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,''))
+                        )
+            })
 
-
+        }
+        //leftover query
+        dbquery = dbquery.filter(query);
+        //run query
+        dbquery.run().then(resolve).catch(reject)
+    })
+}
+/*
+setTimeout(() => {
+exports.get({
+    //name: "ass"
+    //id: "sdhjfajaklsdf",
+    name: {
+        first: "Joseph"
+    }
+}).then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.error(err);
+})
+}, 500);*/
 /** 
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName
@@ -510,6 +685,12 @@ function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x < givenPeriods.length; x++) {
         //make "" null 
+        console.log(schedule[givenPeriods[x]].teacherID)
+        let verType = "{teacherID: String|Null}";
+        if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+            var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+            return done(err)
+        }
         console.log(schedule[givenPeriods[x]], "vsc")
         if(schedule[givenPeriods[x]].teacherID == '') {
             console.log("isDumb")
@@ -526,7 +707,21 @@ function verifyStudentSchedule(schedule, done) {
         }
     }
 }
-function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
+
+function verifyTeacherSchedule(schedule) {
+    return new Promise((resolve, reject) => {
+        var givenPeriods = Object.keys(schedule);
+        for(var x = 0; x < givenPeriods.length; x++) {
+            let verType = "{className: Maybe String, isTeaching: Boolean, room: Maybe String, passLimit: Maybe Number}";
+            if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+                var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+                return reject(err)
+            }
+            return resolve(schedule);
+        }
+    })
+}
+function verifyUserSchedule(dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     var promise = new Promise(function(resolve, reject) {
         switch(dashboard) {
@@ -540,7 +735,7 @@ function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
                 })
                 break;
             case "teacher":
-                resolve();
+                return verifyTeacherSchedule(schedule).then(resolve).catch(reject);
                 break;
             default: 
                 var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
@@ -574,46 +769,108 @@ function verifyUserSchedule(id, dashboard, schedule_UIN, done) {
 
 /** 
     * Updates a user schedule 
-    * @function updateUserSchedule
-    * @link module:passportAccountsApi
-    * @async
-    * @param {string} id - ID of Schedule.
-    * @param {constant} dashboard - may be either "student" or "teacher"
-    * @param {json} schedule_UIN  - The schedule.
+    * @link module:js/accounts
+    * @param {string} userID - User id to update.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
     * @param {function} done - Callback
     * @returns {callback}
     */
-exports.updateUserSchedule = function(id, dashboard, schedule_UIN, done) {
+exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
     //param checks
     
-     verifyUserSchedule(id, dashboard, schedule_UIN, function(err, dbSafe) {
+     verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
         if(err) {
             return done(err)
         }
-
-        r.table("userSchedules").get(id).update(dbSafe).run(db.conn(), function(err, data) {
-            if(err) {
-                return done(err)
+        r_.table("accounts").get(userID).run().then((user) => {
+            if(!user) {
+                var err = new Error("User not found");
+                err.status = 404;
+                return done(err);
+            } 
+            if(user.schedules && user.schedules[dashboard]) {
+                r_.table("userSchedules").get(user.schedules[dashboard]).update(dbSafe).run(function(err, data) {
+                    if(err) {
+                        return done(err)
+                    }
+                    return done(null, data)
+                });
+            } else {
+                var err = new Error("User schedule not found");
+                err.status = 404;
+                return done(err);
             }
-            return done(null, data)
-        });
+        }).catch((err) => {return done(err);})
+        
     })
 }
 
+
+/** 
+    * Replaces a user schedule 
+    * @link module:js/accounts
+    * @param {string} userID - Userid to replace the schedule.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
+    * @returns {callback}
+    */
+exports.replaceUserSchedule = (userID, dashboard, schedule) => {
+    return new Promise((resolve, reject) => {
+        if(typeCheck("Null", schedule)) {
+            var err = new TypeError("To delete a user schedule, please use .deleteUserSchedule");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!typeCheck("Object", schedule)) {
+            var err = new TypeError("schedule expected to be an object, got " + typeof schedule);
+            err.status = 400;
+            return reject(err);
+        }
+        console.log(schedule)
+        verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
+            if(err) {
+                return reject(err)
+            }
+            r_.table("accounts").get(userID).run().then((user) => {
+                if(!user) {
+                    var err = new Error("User not found");
+                    err.status = 404;
+                    return reject(err);
+                } 
+                if(user.schedules && user.schedules[dashboard]) {
+                    dbSafe.id = user.schedules[dashboard];
+                    r_.table("userSchedules").get(user.schedules[dashboard]).replace(dbSafe).run(function(err, data) {
+                        if(err) {
+                            return reject(err)
+                        }
+                        return resolve(data)
+                    });
+                } else {
+                    var err = new Error("User schedule not found");
+                    err.status = 404;
+                    return reject(err);
+                }
+            }).catch((err) => {return reject(err);})
+            
+        })
+    })
+}
+
+
+
 /** 
     * Creates a new user schedule 
-    * @function newUserSchedule
-    * @link module:passportAccountsApi
-    * @async
+    * @link module:js/accounts
     * @param {string} userID - ID of User.
     * @param {constant} dashboard - may be either "student" or "teacher"
-    * @param {json} schedule_UIN  - The schedule.
+    * @param {object} schedule_UIN  - The schedule.
     * @param {function} done - Callback
     * @returns {callback}
     */
 exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
     //makesure no extra periods were left out 
-    var requiredPeriods = config.get('schedule.periods');
+    /*var requiredPeriods = config.get('schedule.periods');
     var givenPeriods = Object.keys(schedule_UIN);
     for(var x = 0; x < requiredPeriods.length; x++) {
         if(!givenPeriods.includes(requiredPeriods[x])) {
@@ -621,12 +878,12 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
             err.status = 400;
             return done(err);
         }
-    }
-    verifyUserSchedule(userID, dashboard, schedule_UIN, function(err, dbSafe) {
+    }*/
+    verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err);
         }
-        dbSafe.userId = userID
+        //dbSafe.userId = userID;
         //chesk for existing 
         r.table('accounts').get(userID).hasFields({schedules: {[dashboard]: true}}).run(db.conn(), function(err, doc) {
             if(err) {
@@ -723,6 +980,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     "teacher": true
                 }, 
                 "name": true, 
+                "email": true,
                 "id": true
             }).run(db.conn(), function(err, teacherAccount) {
                 if(err) {
@@ -735,6 +993,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                     student.schedule[keys[0]].teacher = {};
                     student.schedule[keys[0]].teacher.id = teacherAccount.id;
                     student.schedule[keys[0]].teacher.name = teacherAccount.name;
+                    student.schedule[keys[0]].teacher.email = teacherAccount.email;
                     student.schedule[keys[0]].teacher.scheduleID = null;
                     //console.log(keys[0], "teacherid is Null")
 
@@ -1137,9 +1396,3 @@ exports.setVerification = function(id, isVerified) {
     exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
 }, 1000);*/
 
-/**
- * Account Tags/flags/metadata/options. 
- * @typedef {(Object|undefined|null)} accountFlags
- * @property {(boolean|undefined)} requirePasswordReset - On the next login, the user will be required to reset their password.  
- * @property {(String|undefined)} bulkImportID - The ID of the mass import sequence for debugging and rollbackability.  
- */

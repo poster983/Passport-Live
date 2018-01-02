@@ -29,8 +29,36 @@ var jwt = require('jsonwebtoken');
 var ms = require("ms");
 var router = express.Router();
 var db = require('../modules/db/index.js');
+var checkAuth = require('connect-ensure-login');
 
 
+router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardNav, function(req, res, next) {
+    var user = {}
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+    var elements = {};
+    elements.schedules = {};
+    //enable elements
+
+    if(req.user.schedules && req.user.schedules.student) {
+        elements.schedules.student = true;
+    }
+    if(req.user.schedules && req.user.schedules.teacher) {
+        elements.schedules.teacher = true;
+    }
+    console.log(elements)
+    
+    //set links in sidenav
+    if(req.query.referral) {
+        req.sidenav.links = ['<li><a class="waves-effect" href="/' + req.query.referral + '"><i class="material-icons">home</i>Home</a></li>']
+    } else {
+        req.sidenav.dashboards.show = true;
+        req.sidenav.dashboards.showPicker = true;
+    }
+
+    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+});
 
 //RaTE LIMIT RATE LIMIT!!
 //Reset Password 

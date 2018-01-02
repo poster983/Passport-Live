@@ -118,6 +118,7 @@ router.post('/login/dscm', utils.rateLimit.publicApiBruteforce.prevent, utils.ra
         
         res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
         res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+        res.cookie('ACCOUNT-ID', req.user[0].id, {maxAge: 24 * 60 * 60 * 1000});
         res.status(200).json({
             userId: req.user[0].id
         });
@@ -140,6 +141,7 @@ router.get("/google/callback", utils.rateLimit.publicApiBruteforce.prevent, pass
             }
             res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
             res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+            res.cookie('ACCOUNT-ID', req.user.id, {maxAge: 24 * 60 * 60 * 1000});
             res.redirect("/?userId=" + req.user.id);
         });
     } else {

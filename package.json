@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.10.1",
+  "version": "0.10.3",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -23,7 +23,7 @@
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
-    "webpack": "webpack --progress --colors"
+    "build": "webpack --progress --colors"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "url": "https://github.com/poster983/Passport-Live/issues"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.2",
     "brute-rethinkdb": "^2.0.1",
@@ -74,7 +75,6 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "latest",
     "pixel-tracker": "0.0.5",
-    "requirejs": "^2.3.3",
     "rethinkdb": "latest",
     "rethinkdb-job-queue": "^3.1.4",
     "rethinkdbdash": "^2.3.31",

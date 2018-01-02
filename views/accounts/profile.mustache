@@ -23,27 +23,10 @@ email: hi@josephhassell.com
 <main>
     <nav id="navBar">
         <div class="nav-wrapper nav-noshadow" data-stellar-ratio="5">
-          <!--SideNav-->
-          <ul id="slide-out" class="side-nav">
-           <li><div class="userView">
-             <div class="background">
-               <img alt="Side-Nav Background" src="/images/stunav.jpg">
-             </div>
-             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-           </div></li>
-           
-           <li><a class="waves-effect" href="/student">Home</a></li>
-           <li><a class="waves-effect active" href="#!">Your Account</a></li>
-           <li><div class="divider"></div></li>
-           <!--<li><a class="subheader">Subheader</a></li>-->
-           <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
-
-         </ul>
+          {{>sidenav}}
           <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-            <a href="#" class="brand-logo center">Passport</a>
-            <span class="nav-right">{{passportVersion}}</span>
+          <a href="#" class="brand-logo center">Passport</a>
+          <span class="nav-right">{{passportVersion}}</span>
         </div>
     </nav>
 
@@ -70,28 +53,68 @@ email: hi@josephhassell.com
           </div>
         </div>
       </div>
+      <!--Multi Schedule Edit Question-->
+      <div id="multiScheduleEditorModal" class="modal">
+        <div class="modal-content">
+          <h4>What type would you like to edit?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#editStudentSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Student</a>
+          <a href="#editTeacherSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Teacher</a>
+        </div>
+      </div>
       <!--Schedules-->
       <div class="row" >
         <div class="col s12 m12 l6 push-l3">
-          <div class="card" >
-             
+          <div class="card cyan accent-4">
+
             <div class="card-content">
-            <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
-             <span class="card-title">Schedules</span>
+              <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
+              <span class="card-title">Schedules</span>
+            </div>
+            <div class="card-tabs">
+              <ul class="tabs tabs-fixed-width tabs-transparent ">
+                {{#elements.schedules.student}}<li class="tab"><a href="#studentSchedule">Student Schedule</a></li>{{/elements.schedules.student}}
+                {{#elements.schedules.teacher}}<li class="tab"><a href="#teacherSchedule">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+              </ul>
+            </div>
+            <div class="card-content grey lighten-4">
+              {{#elements.schedules.student}}
+              <div id="studentSchedule">
+                <table class="highlight responsive-table">
+                  <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Class</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th>Limit</th>
+                    </tr>
+                  </thead>
 
-               <table class="highlight responsive-table">
-                <thead>
-                  <tr>
-                      <th>Period</th>
-                      <th>Class</th>
-                      <th>Teacher</th>
-                      <th>Room</th>
-                  </tr>
-                </thead>
+                  <tbody id="studentScheduleBody">
+                  </tbody>
+                </table>
+              </div>
+              {{/elements.schedules.student}}
+              {{#elements.schedules.teacher}}
+              <div id="teacherSchedule">
+                <table class="highlight responsive-table">
+                  <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Class</th>
+                        <th>Teaching</th>
+                        <th>Room</th>
+                        <th>Limit</th>
+                    </tr>
+                  </thead>
 
-                <tbody id="scheduleBody">
-                </tbody>
-              </table>
+                  <tbody id="teacherScheduleBody">
+                  </tbody>
+                </table>
+              </div>
+              {{/elements.schedules.teacher}}
             </div>
           </div>
         </div>
@@ -137,12 +160,12 @@ email: hi@josephhassell.com
     <!-- Compiled and minified JavaScript -->
     <script src="/js/materialize.js"></script>
     <script src="/js/passport.js"></script>
-    <script src="/js/webpack/teacherProfile.js"></script>
+    <script src="/js/webpack/profile.js"></script>
     <script src="/jquery.stellar/jquery.stellar.js"></script>
     <!--MIXINS-->
     <div id="mustacheMixens">
       <div class="mustacheMixen page" id="scheduleEditor"> 
-        {{>student/editSchedule}}
+        {{>accounts/editScheduleMixen}}
       </div>
     </div>
 
