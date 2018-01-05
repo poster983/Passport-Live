@@ -17,9 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-/**
-* @module api/account
-*/
+
 var express = require("express");
 var router = express.Router();
 var r = require("../../modules/db/index.js");
@@ -631,6 +629,7 @@ router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: 
 /** GETs All account schedule types for an account
     * If you dont give an ID, the user in the JWT will be assumed.
     * @function getAllSchedules
+    * @deprecated
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next

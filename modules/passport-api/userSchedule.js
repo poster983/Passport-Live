@@ -164,72 +164,46 @@ exports.getStudentSchedule = function(userID) {
                 err.status = 404;
                 return reject(err)
             }
-
-            //Get the userSchedule Object
-            /*exports.get({id: studentUser.schedules.student}).then((studentSchedule) => {
-                if(studentSchedule.length < 1) {
-                    var err = new Error("Schedule not found");
-                    err.status = 404;
-                    return reject(err)
-                }
-                studentSchedule = studentSchedule[0];
-                console.log("js/userSchedule.getStudentSchedule#studentSchedule", studentSchedule);
-
-            }).catch((err) => {return reject(err);})*/
-
+            //MERGE 
             return r.table("userSchedules").get(studentUser.schedules.student)
             
             .do(function(schedule) {
                 //loop over each key
-                return schedule.merge(r.object("schedule", schedule("schedule").keys().map(function(key) {
-                    //construct new schedule objects
-                    return r.object(key, schedule("schedule")(key).do(function(period) {
-                        return r.branch(
-                            period("teacherID").typeOf().eq("STRING"),
-                            r.table("accounts").get(period("teacherID"))
-                            .pluck({
-                                "schedules": {
-                                    "teacher": true
-                                }, 
-                                "name": true, 
-                                "email": true,
-                                "id": true
-                            })
-                            .merge(schedule("schedule")(key))
-                            ,
-                            {teacherID: null}
-                        )
-                        
-                    }))
-                    /*return schedule.eqJoin(function(doc) {
-                        return doc("schedule")(key)("teacherID")
-                    }, r.table('accounts'))*/
-                    //return schedule("schedule")(key)
-                })))
+                return schedule.merge(r.object("schedule", 
+                    schedule("schedule").keys().map(function(key) {
+                        //construct new schedule objects
+                        return [key, schedule("schedule")(key).do(function(period) {
+                            return r.branch(
+                                period("teacherID").typeOf().eq("STRING"),
+                                r.table("accounts").get(period("teacherID"))
+                                .pluck({
+                                    "schedules": {
+                                        "teacher": true
+                                    }, 
+                                    "name": true, 
+                                    "email": true,
+                                    "id": true
+                                })
+                                .merge(schedule("schedule")(key))
+                                ,
+                                {teacherID: null}
+                            )
+                            
+                        })]
+                    }).coerceTo('object')
+                
+                ))
                 
             })
-            /*.do(function(doc) {
-                return doc.pluck("dashboard", "id").merge(
-                    r.object(r.args(doc('schedule')
-                        .concatMap(function(schedule) { return [schedule("dashboard"), schedule("id")] })
-                    ))
-                )
-            })*/
-
-            //map new schedule object to original object structure
 
             .run().then(resolve).catch(reject) //.then((joined) => {console.log(joined); return resolve(joined);})
-            /*
-            //join teacherID with account
-            .eqJoin(function (schedule) {
-                return schedule
-            }, r.table('accounts'))*/
+
         }).catch((err) => {return reject(err);})
     })
 }
 
 setTimeout(function() {
-    exports.getStudentSchedule("da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
+    exports.getStudentSchedule("3c4fb0e7-9330-45d0-8d7c-9c29142fac45").then((res) => {
         console.log(res)
     }).catch((err) => { console.error(err)})
 }, 500);
