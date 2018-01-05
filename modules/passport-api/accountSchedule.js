@@ -196,9 +196,58 @@ exports.getStudentSchedule = function(userID) {
                 
             })
 
-            .run().then(resolve).catch(reject) //.then((joined) => {console.log(joined); return resolve(joined);})
+            .run().then(resolve).catch(reject)
 
         }).catch((err) => {return reject(err);})
+    })
+}
+
+
+/** 
+    * Gets the teacher schedule for an account 
+    * @link module:js/userSchedule
+    * @param {string} userID - ID of User.
+    * @param {function} done - Callback
+    * @returns {teacherSchedule} - Promise
+    */
+exports.getTeacherSchedule = function(userID) {
+    return new Promise((resolve, reject) => {
+        if(!userID) {
+            var err = new Error("User ID Not Present");
+            err.status = 400;
+            return reject(err)
+        }
+
+        r.table('accounts').get(userID).pluck({
+            "name": true,
+            "id": true,
+            "schedules": {
+                "teacher": true
+            }
+        }).run(function(err, accDoc) {
+             if(err) {
+                return reject(err);
+            }
+            //if returned stuff
+            if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
+                 r.table('userSchedules').get(accDoc.schedules.teacher).run(db.conn(), function(err, teacher) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(!teacher || !teacher.schedule) {
+                        var err = new Error("teacher.schedule not defined");
+                        err.status = 500;
+                        return reject(err)
+                    }
+                    
+                    return resolve(null, teacher)
+                });
+            } else {
+                var err = new Error("Account has no schedule linked");
+                        err.status = 404;
+                        return reject(err)
+            }
+        });
     })
 }
 

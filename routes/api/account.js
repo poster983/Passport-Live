@@ -639,7 +639,7 @@ router.get('/schedule/teacher/id/:id/', passport.authenticate('jwt', { session: 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
 
-router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+/*router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
     if(!req.params.id) {
         req.params.id = req.user.id;
     }
@@ -670,7 +670,7 @@ router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { sessi
     }).catch(function(err) {
         return next(err)
     });
-});
+});*/
 
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation

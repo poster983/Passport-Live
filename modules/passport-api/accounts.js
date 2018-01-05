@@ -35,7 +35,7 @@ const util = require('util')
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
 var emailJS = require("./email.js");
-var userScheduleJS = require("./userSchedule.js");
+var accountScheduleJS = require("./accountSchedule.js");
 
 /** ACCOUNT TYPE DEFS **/ 
 
