@@ -25,14 +25,14 @@ var config = require("config");
 var moment = require("moment");
 
 /** 
-* @module passportSchedulesApi
+* @module js/schedules
 */
 
  /** 
     * Gets the Currint period for the date based off the time 
-    *  If time is omitted, the passport will assume UTC Midnight 
+    * If time is omitted, the passport will assume UTC Midnight 
+    * @link module:js/schedules
     * @function getActivePeriodsAtDateTime
-    * @async
     * @returns {callback} Array of Active Periods for the Date and Time 
     * @param {object} dateTime - An ISO Date with time and zone info 
     * @param {function} done - Callback
@@ -94,3 +94,4 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     
     //indexAPI.getScheduleOfADate(db.conn(), )
 }
+

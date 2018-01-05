@@ -18,7 +18,6 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-//TODO: INCLUDE IN INDEX.JS
 /** 
 * Account manipulation APIs
 * @module js/accounts
@@ -36,6 +35,7 @@ const util = require('util')
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
 var emailJS = require("./email.js");
+var userScheduleJS = require("./userSchedule.js");
 
 /** ACCOUNT TYPE DEFS **/ 
 
@@ -45,7 +45,7 @@ var emailJS = require("./email.js");
  * @property {String} id - Assigned by RethinkDB. A Primary Key / Primary Index
  * @property {String} email - Must be unique. (TODO: Secondary Index)
  * @property {Object} name
- * @property {string} name.salutation - Pronoun (Mr., Ms., Mx., ECT...)
+ * @property {string} name.salutation - Prefix (Mr., Ms., Mx., ECT...)
  * @property {string} name.first - Given name
  * @property {string} name.last - Family name
  * @property {userGroup} userGroup
@@ -65,69 +65,6 @@ var emailJS = require("./email.js");
  * @property {Object} integrations.google.id - Google ID used to match the google account to the passport user
  */
 
-
-
-/**
-* Student Schedule/Student Dashboard Schedule object
-* @typedef {Object} studentSchedule
-* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
-* @prop {?string} somePeriodName.teacherID - Holds an account ID linked to this period. Basically, the student is under this teacher's jurisdiction normally during this period. If null, the student is assumed to not have teacher supervision.
-* @example
-* {
-*    "a": {
-*        "teacherID": "2e75aa94-fa63-461a-be06-5345322bebdf"
-*    },
-*    "b": {
-*        "teacherID": "0115c0b0-ee04-4e88-a21f-d2029601b276"
-*    },
-*    "flex": {
-*        "teacherID": null
-*    },
-*    "lunch": {
-*        "teacherID": null
-*    }
-* }
-*/
-
-/**
-* Teacher or Supervisor Schedule / Teacher Dashboard Schedule object
-* @typedef {Object} teacherSchedule
-* @prop {Object.<...string, Object>} somePeriodName - the key for this should be a period constant defined in the configs
-* @prop {string} [somePeriodName.className] - Friendly name for the class being taught or activity being supervised 
-* @prop {boolean} somePeriodName.isTeaching - If true, students will be discouraged from requesting a pass that period. 
-* @prop {string} [somePeriodName.room] - room#/name that the user will primarily be in.
-* @prop {int} [somePeriodName.passLimit] - The maximum number of passes to accept per period.  Any passes requested over that period will be in a state of "Queue".  Setting to 0 will Queue all passes.
-* @example
-* {
-*    "a": {
-*        "className": "Algebra 1",
-*        "isTeaching": true,
-*        "room": "W-2048",
-*        "passLimit": 0
-*    },
-*    "b": {
-*        "className": "AP Computer Science",
-*        "isTeaching": true,
-*        "room": "E-404",
-*        "passLimit": 0
-*    },
-*    "c": {
-*        "className": "Sub Period",
-*        "isTeaching": false,
-*        "room": "W-2048"
-*    },
-*    "flex": {
-*        "isTeaching": false,
-*        "room": "W-2048",
-*        "passLimit": 10
-*    },
-*    "lunch": {
-*        "isTeaching": false,
-*        "room": "Teacher Lounge",
-*        "passLimit": 0
-*    }
-* }
-*/
 
 /**
  * Account Tags/flags/metadata/options. 
@@ -406,7 +343,7 @@ exports.createAccount = function(user, options) {
     * @param {(string|undefined)} query.name.last - User's family name
     * @param {(string|number|undefined)} query.schoolID
     * @param {(number|undefined)} query.graduationYear
-    * @returns {Promise} Includes array.
+    * @returns {Promise} Includes an array of account objects.
     */
 exports.get = (query) => {
     return new Promise((resolve, reject) => {
@@ -910,11 +847,15 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
         })
     })
 }
+
+
+
+
+
 /** 
     * Gets a schedule for a student dash 
     * @function getStudentSchedule
-    * @link module:passportAccountsApi
-    * @async
+    * @link module:js/accounts
     * @param {string} userID - ID of User.
     * @param {function} done - Callback
     * @returns {callback}
@@ -1005,6 +946,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
                                 return done(err);
                             }
                             //console.log(teacher)
+                            //userId is nolonger used, REMOVE
                             if(!teacher || !teacher.schedule || !teacher.userId) {
                                 var err = new Error("teacher is not set in the db");
                                 err.status = 500;
@@ -1049,7 +991,7 @@ function recursiveStudentScheduleJoin(keys, student, done) {
 /** 
     * Gets a schedule for a teacher dash 
     * @function getTeacherSchedule
-    * @link module:passportAccountsApi
+    * @link module:js/accounts
     * @async
     * @param {string} userID - ID of User.
     * @param {function} done - Callback
