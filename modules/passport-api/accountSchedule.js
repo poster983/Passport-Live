@@ -157,7 +157,7 @@ exports.getStudentSchedule = function(userID) {
                 return reject(err)
             }
             studentUser = studentUser[0];
-            console.log("js/userSchedule.getStudentSchedule#studentUser", studentUser);
+            //console.log("js/userSchedule.getStudentSchedule#studentUser", studentUser);
             //check for student schedule
             if(!studentUser.schedules || !studentUser.schedules.student) {
                 var err = new Error("Account has no student schedule linked");
@@ -168,13 +168,19 @@ exports.getStudentSchedule = function(userID) {
             return r.table("userSchedules").get(studentUser.schedules.student)
             
             .do(function(schedule) {
-                //loop over each key
+                //overwrite the schedule object with merged data
                 return schedule.merge(r.object("schedule", 
+                    //loops for each key
                     schedule("schedule").keys().map(function(key) {
-                        //construct new schedule objects
+                        //by putting everything in an aray, we can then call .coerceTo('object') to get everything back to an object.
                         return [key, schedule("schedule")(key).do(function(period) {
+                            //GET USER ACCOUNT BY teacherID key
+                            //If teacherID is not a string, we will return teacherID: null.
+                            //if it is a string we get the account and do some manipulation to get the teacher schedule id aswell as wrap it in a "teacher" key
                             return r.branch(
+                                //IF
                                 period("teacherID").typeOf().eq("STRING"),
+                                //THEN
                                 r.table("accounts").get(period("teacherID"))
                                 .pluck({
                                     "schedules": {
@@ -184,8 +190,26 @@ exports.getStudentSchedule = function(userID) {
                                     "email": true,
                                     "id": true
                                 })
-                                .merge(schedule("schedule")(key))
+                                .do(function(teacher) {
+                                    //
+                                    return r.object("teacher", teacher.merge(
+                                        r.branch(
+                                            //IF
+                                            teacher.hasFields({schedules: {teacher: true}})
+                                            ,
+                                            //then
+                                            {
+                                                scheduleID: teacher("schedules")("teacher")
+                                            }
+                                            ,
+                                            //else
+                                            {}
+                                        )
+                                    ))
+                                })
+                                //.merge(schedule("schedule")(key))
                                 ,
+                                //else
                                 {teacherID: null}
                             )
                             
@@ -217,7 +241,19 @@ exports.getTeacherSchedule = function(userID) {
             err.status = 400;
             return reject(err)
         }
+        r.table('accounts').get(userID).do((account) => {
+            return r.branch(
+                account.hasFields({schedules: {teacher: true}})
+                ,
+                r.table('userSchedules').get(account("schedules")("teacher"))
+                ,
+                null
+            )
+        }).run().then((res) => {
+            return resolve(res)
+        }).catch((err) => {return reject(err);})
 
+        /*
         r.table('accounts').get(userID).pluck({
             "name": true,
             "id": true,
@@ -230,7 +266,7 @@ exports.getTeacherSchedule = function(userID) {
             }
             //if returned stuff
             if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
-                 r.table('userSchedules').get(accDoc.schedules.teacher).run(db.conn(), function(err, teacher) {
+                 r.table('userSchedules').get(accDoc.schedules.teacher).run(function(err, teacher) {
                     if(err) {
                         return reject(err);
                     }
@@ -247,15 +283,9 @@ exports.getTeacherSchedule = function(userID) {
                         err.status = 404;
                         return reject(err)
             }
-        });
+        });*/
     })
 }
-
-setTimeout(function() {
-    exports.getStudentSchedule("3c4fb0e7-9330-45d0-8d7c-9c29142fac45").then((res) => {
-        console.log(res)
-    }).catch((err) => { console.error(err)})
-}, 500);
 
 
 //END [CODE]

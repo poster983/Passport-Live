@@ -883,23 +883,26 @@ email: hi@josephhassell.com
                       }
                       var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
                       // add only the enabled periods to validFromTeachers
-
+                      console.log(dayScheduleKeys)
                       for(var x = 0; x < dayScheduleKeys.length; x++ ) {
+                        console.log(userSchedule.schedule)
                         //check if user has one of the periods for today
                         if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
-
+                          
                           validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
+                          console.log(x)
                           //check if done
-                          if(x >= dayScheduleKeys.length - 1) {
+                          
+                        }
+                        if(x >= dayScheduleKeys.length - 1) {
+                          
+                          orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
+                            if(err) {
+                              return errorHand(err)
+                            }
                             
-                            orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
-                              if(err) {
-                                return errorHand(err)
-                              }
-                              
-                              setMyTeachersSelect(orderedArr);
-                            })
-                          }
+                            setMyTeachersSelect(orderedArr);
+                          })
                         }
                       }
                     });
