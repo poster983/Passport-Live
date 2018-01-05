@@ -178,16 +178,26 @@ exports.getStudentSchedule = function(userID) {
             }).catch((err) => {return reject(err);})*/
 
             return r.table("userSchedules").get(studentUser.schedules.student)
+            
             .do(function(schedule) {
-                return schedule("schedule").keys().map(function(key) {
-                    return r.object("left", schedule("schedule")(key), "right", schedule("schedule")(key).do(function(period) {
-                        //return period
-                        //return r.table("accounts").get(period.getField("teacherID"))
-                        //return r.table("accounts").get(period("teacherID"))
+                //loop over each key
+                return schedule.merge(r.object("schedule", schedule("schedule").keys().map(function(key) {
+                    //construct new schedule objects
+                    return r.object(key, schedule("schedule")(key).do(function(period) {
                         return r.branch(
                             period("teacherID").typeOf().eq("STRING"),
-                            r.table("accounts").get(period("teacherID")),
-                            null
+                            r.table("accounts").get(period("teacherID"))
+                            .pluck({
+                                "schedules": {
+                                    "teacher": true
+                                }, 
+                                "name": true, 
+                                "email": true,
+                                "id": true
+                            })
+                            .merge(schedule("schedule")(key))
+                            ,
+                            {teacherID: null}
                         )
                         
                     }))
@@ -195,9 +205,20 @@ exports.getStudentSchedule = function(userID) {
                         return doc("schedule")(key)("teacherID")
                     }, r.table('accounts'))*/
                     //return schedule("schedule")(key)
-                })
+                })))
                 
-            }).run().then(resolve).catch(reject) //.then((joined) => {console.log(joined); return resolve(joined);})
+            })
+            /*.do(function(doc) {
+                return doc.pluck("dashboard", "id").merge(
+                    r.object(r.args(doc('schedule')
+                        .concatMap(function(schedule) { return [schedule("dashboard"), schedule("id")] })
+                    ))
+                )
+            })*/
+
+            //map new schedule object to original object structure
+
+            .run().then(resolve).catch(reject) //.then((joined) => {console.log(joined); return resolve(joined);})
             /*
             //join teacherID with account
             .eqJoin(function (schedule) {
