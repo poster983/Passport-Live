@@ -130,7 +130,6 @@ class Table {
     }
     _compileRow(columns, rows) {
         return new Promise((resolve, reject) => {
-            console.log("BODY", rows)
             let tBody = [];
             for(let r = 0; r < rows.length; r++) {
                 let tr = $("<tr/>").attr("id", rows[r].rowID);

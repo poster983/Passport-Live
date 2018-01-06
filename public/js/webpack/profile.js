@@ -522,7 +522,6 @@ class Table {
     }
     _compileRow(columns, rows) {
         return new Promise((resolve, reject) => {
-            console.log("BODY", rows)
             let tBody = [];
             for(let r = 0; r < rows.length; r++) {
                 let tr = $("<tr/>").attr("id", rows[r].rowID);
@@ -3324,16 +3323,16 @@ function loadMyTeacherSchedule() {
                 let schedule = data.schedule;
                 let tableData = Object.keys(schedule);
                 tableData = tableData.map(function(period) {
-                    console.log(schedule[period].isTeaching)
+                    //console.log(schedule[period])
                     return {
                         Period: period.charAt(0).toUpperCase() + period.slice(1),
                         Class: (schedule[period].className || ""),
                         Teaching: schedule[period].isTeaching ? "<i class=\"material-icons\">check_circle</i>" : "<i class=\"material-icons\">cancel</i>",
                         Room: (schedule[period].room || ""),
-                        Limit: (schedule[period].periodLimit || "∞"),
+                        Limit: typeof schedule[period].passLimit === "number" ? schedule[period].passLimit : "∞",
                     }
                 })
-                console.log(tableData)
+                //console.log(tableData)
                 if(teacherTable) {
                     teacherTable.replaceData(tableData);
                     teacherTable.emptyContainer();
@@ -3997,7 +3996,7 @@ class TeacherScheduleEditor {
                             if(schedule.schedule[periods[x]]) {
                                 let thisPeriod = schedule.schedule[periods[x]];
                                 this.teacherTable.appendRow([{}], (row, callback) => {
-                                    console.log("Teacher Schedule", schedule.schedule)
+                                    //console.log("Teacher Schedule", schedule.schedule)
                                     this._injectDOM(scheduleConfig.periods, row, periods[x], thisPeriod.isTeaching, thisPeriod.room, thisPeriod.className, thisPeriod.passLimit).then((arr) => {
                                         return callback(arr);
                                     }).catch(err => reject(err))

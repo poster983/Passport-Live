@@ -190,21 +190,28 @@ exports.getStudentSchedule = function(userID) {
                                     "id": true
                                 })
                                 .do(function(teacher) {
-                                    //
-                                    return r.object("teacher", teacher.merge(
+                                    //put teacher stuff in teacher object
+                                    return r.object("teacher", teacher)
+                                })
+                                //merge schedule
+                                .do(function(teacher) {
+                                    
+                                    return teacher.merge(
                                         r.branch(
                                             //IF
-                                            teacher.hasFields({schedules: {teacher: true}})
+                                            teacher.hasFields({teacher: {schedules: {teacher: true}}})
                                             ,
                                             //then
-                                            {
-                                                scheduleID: teacher("schedules")("teacher")
-                                            }
+                                            r.object("location", r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
+                                                .pluck({
+                                                    schedule: {[key]: true}
+                                                })
+                                            )
                                             ,
                                             //else
                                             {}
                                         )
-                                    ))
+                                    )
                                 })
                                 //.merge(schedule("schedule")(key))
                                 ,

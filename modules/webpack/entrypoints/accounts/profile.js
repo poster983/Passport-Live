@@ -323,16 +323,16 @@ function loadMyTeacherSchedule() {
                 let schedule = data.schedule;
                 let tableData = Object.keys(schedule);
                 tableData = tableData.map(function(period) {
-                    console.log(schedule[period].isTeaching)
+                    //console.log(schedule[period])
                     return {
                         Period: period.charAt(0).toUpperCase() + period.slice(1),
                         Class: (schedule[period].className || ""),
                         Teaching: schedule[period].isTeaching ? "<i class=\"material-icons\">check_circle</i>" : "<i class=\"material-icons\">cancel</i>",
                         Room: (schedule[period].room || ""),
-                        Limit: (schedule[period].periodLimit || "∞"),
+                        Limit: typeof schedule[period].passLimit === "number" ? schedule[period].passLimit : "∞",
                     }
                 })
-                console.log(tableData)
+                //console.log(tableData)
                 if(teacherTable) {
                     teacherTable.replaceData(tableData);
                     teacherTable.emptyContainer();
