@@ -190,7 +190,6 @@ exports.fetchStatus = (response) => {
 */
 exports.fetchJSON = (response) => {
   return response.text().then(function(text) {
-    console.log(text)
     return text ? JSON.parse(text) : {}
   })
 }
@@ -418,20 +417,21 @@ var typeCheck = __webpack_require__(1).typeCheck;
 var DeepKey = __webpack_require__(14);
 
 /**
-* Takes structured data and makes a table from it. call this.generate() to create a table
+* Takes structured data and makes a table from it. call this.generate() to create a table,
+* All data should be strings to avoid strange behaviour.  
 * @link module:webpack/framework
 * @class 
 * @param {Selector} containerElement - The table container.
 * @param {Object} data - The data to be added to the table.
-* @param {(Object|undefined)} options - The clickable element.
-* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
-* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
-* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
-* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
-* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
-* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
-* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
-* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
+* @param {Object} [options]
+* @param {String[]} [options.ignoredKeys] - List of keys to leave out of the row object
+* @param {String} [options.idKey] - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {String[]} [options.hiddenKeys] - Removes the keys from the table, but keeps it in row object. 
+* @param {Function} [options.inject] - fires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {String} [options.tableClasses] - class strings to be added to the top table element 
+* @param {(Function|String[])} [options.sort] - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {Function} [options.afterGenerate] - Function that runs after any function that adds elements to the dom.
+* @param {Boolean} [options.preferInject] - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -443,7 +443,7 @@ class Table {
             throw new TypeError("data must be an array of objects");
         }
         this.data = data;
-        this.container = containerElement;
+        this.container = $(containerElement);
         this.options = options;
         this.table = {};
     }
@@ -522,6 +522,7 @@ class Table {
     }
     _compileRow(columns, rows) {
         return new Promise((resolve, reject) => {
+            console.log("BODY", rows)
             let tBody = [];
             for(let r = 0; r < rows.length; r++) {
                 let tr = $("<tr/>").attr("id", rows[r].rowID);
@@ -559,7 +560,10 @@ class Table {
     }
     destroyTable() {
         this.data = [];
-        containerElement.empty();
+        this.emptyContainer();
+    }
+    emptyContainer() {
+        this.container.empty();
     }
     parseRowID(TABLE_ROW_ID) {
         return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
@@ -607,6 +611,8 @@ class Table {
                 }
                 //Store Untouched ID for dev
                 row.getRowID = () => {return this.parseRowID(row.rowID);}
+
+
 
                 //Filter out hidden keys for later 
                 if(this.options.hiddenKeys) {
@@ -705,7 +711,13 @@ class Table {
 
 
                     // add helper functions
-                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
+                    row.getBody = () => {
+                        if(!row.injectedData) {
+                            return flatData
+                        } else {
+                            if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}
+                        }
+                    }
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")
@@ -3015,9 +3027,11 @@ var utils = __webpack_require__(0);
 var scheduleJS = __webpack_require__(15);
 var unsavedWork = __webpack_require__(23)
 var anime = __webpack_require__(24);
+var Table = __webpack_require__(2)
 
 var studentScheduleEditor = null;
 var teacherScheduleEditor = null;
+var teacherTable = null;
 window.onload = function() {
     routeHash();
     console.log(utils.thisUser())
@@ -3027,6 +3041,7 @@ window.onload = function() {
         responsive: true,
     });
     loadMyStudentSchedule();
+    loadMyTeacherSchedule();
     //check for changes on settings card
     $("#settingsCard").find("input").on("change", settingNeedsSaving);
 
@@ -3110,7 +3125,6 @@ function initStudentScheduleEditor() {
         });
         genStudentScheduleEditor();
         /* Schedule Editor Options */
-        
         $("#se-advancedOptions-studentRecovery").off("click");
         $("#se-advancedOptions-studentRecovery").on("change", (e) => {
             if($(e.currentTarget).prop('checked')) {
@@ -3204,7 +3218,7 @@ function scheduleEditorSubmitRes(student, teacher) {
             Materialize.toast('Teacher schedule unchanged', 4000)
         } else {
             Materialize.toast('Updated teacher schedule', 4000)
-            //loadMyTeacherSchedule();
+            loadMyTeacherSchedule();
             
         }
     }
@@ -3228,80 +3242,120 @@ var idOfUser = utils.thisUser();
 
 
 function loadMyStudentSchedule() {
-scheduleJS.getSchedules(utils.thisUser()).then((data) => {
-    console.log(data)
-    data = data.studentType;
-    if(data && data.schedule) {
-        //clear area
-        $("#studentScheduleBody").empty();
-        //do stuff with schedule 
-        console.log(data)
-        var keys = Object.keys(data.schedule);
-        for(var i = 0; i < keys.length; i++) {
-          //set defaults 
-          /*
-          if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
-            data.schedule = {
-              [keys[i]]: {
-                className: undefined
-              }
-            }
-          }*/
-          if(data.schedule[keys[i]]) {
-            var tr = document.createElement("TR");
-            //create elements
-            var idEl = document.createElement("TD");
-            var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+    if($("#studentSchedule").length > 0) {
+        scheduleJS.getSchedules(utils.thisUser()).then((data) => {
+            console.log(data)
+            data = data.studentType;
+            if(data && data.schedule) {
+                //clear area
+                $("#studentScheduleBody").empty();
+                //do stuff with schedule 
+                console.log(data)
+                var keys = Object.keys(data.schedule);
+                for(var i = 0; i < keys.length; i++) {
+                  //set defaults 
+                  /*
+                  if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
+                    data.schedule = {
+                      [keys[i]]: {
+                        className: undefined
+                      }
+                    }
+                  }*/
+                  if(data.schedule[keys[i]]) {
+                    var tr = document.createElement("TR");
+                    //create elements
+                    var idEl = document.createElement("TD");
+                    var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
 
-            var classEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
-              var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                    var classEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
+                      var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                    } else {
+                      var classElText = document.createTextNode(" ");
+                    }
+
+                    var teacherEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
+                      var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+                    } else {
+                      var teacherElText = document.createTextNode(" ");
+                    }
+                    var roomEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
+                      var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+                    } else {
+                      var roomElText = document.createTextNode(" ");
+                    }
+                    //append
+                    idEl.appendChild(idElText);
+                    tr.appendChild(idEl);
+
+                    classEl.appendChild(classElText);
+                    tr.appendChild(classEl);
+
+                    teacherEl.appendChild(teacherElText);
+                    tr.appendChild(teacherEl);
+
+                    roomEl.appendChild(roomElText);
+                    tr.appendChild(roomEl);
+
+                    //set
+                    $('#studentScheduleBody').append(tr);
+                  }
+                }
+
             } else {
-              var classElText = document.createTextNode(" ");
+                var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
+                markScheduleEditButton(1);
+                return utils.throwError(err);
             }
+        }).catch((err) => {
+            return utils.throwError(err);
+        })
+    }
+}
 
-            var teacherEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
-              var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+function loadMyTeacherSchedule() {
+    if($("#teacherSchedule").length > 0) {
+        scheduleJS.getSchedules().then((data) => {
+            data = data.teacherType;
+            if(data && data.schedule) {
+                let schedule = data.schedule;
+                let tableData = Object.keys(schedule);
+                tableData = tableData.map(function(period) {
+                    console.log(schedule[period].isTeaching)
+                    return {
+                        Period: period.charAt(0).toUpperCase() + period.slice(1),
+                        Class: (schedule[period].className || ""),
+                        Teaching: schedule[period].isTeaching ? "<i class=\"material-icons\">check_circle</i>" : "<i class=\"material-icons\">cancel</i>",
+                        Room: (schedule[period].room || ""),
+                        Limit: (schedule[period].periodLimit || "∞"),
+                    }
+                })
+                console.log(tableData)
+                if(teacherTable) {
+                    teacherTable.replaceData(tableData);
+                    teacherTable.emptyContainer();
+                    teacherTable.generate().catch((err) => {utils.throwError(err)})
+                } else {
+                    teacherTable = new Table("#teacherSchedule", tableData, {
+                        tableClasses: "highlight responsive-table"
+                    })
+                    teacherTable.generate().catch((err) => {utils.throwError(err)})
+                }
             } else {
-              var teacherElText = document.createTextNode(" ");
+                var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
+                markScheduleEditButton(1);
+                return utils.throwError(err);
             }
-            var roomEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
-              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
-            } else {
-              var roomElText = document.createTextNode(" ");
-            }
-            //append
-            idEl.appendChild(idElText);
-            tr.appendChild(idEl);
-
-            classEl.appendChild(classElText);
-            tr.appendChild(classEl);
-
-            teacherEl.appendChild(teacherElText);
-            tr.appendChild(teacherEl);
-
-            roomEl.appendChild(roomElText);
-            tr.appendChild(roomEl);
-
-            //set
-            $('#studentScheduleBody').append(tr);
-          }
-        }
-
-      } else {
-        var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
-        markScheduleEditButton(1);
-        return utils.throwError(err);
-      }
-    }).catch((err) => {
-        return utils.throwError(err);
-    })
+        }).catch((err) => {
+            return utils.throwError(err);
+        })
+    }
 }
 
 function markScheduleEditButton(loop) {
-    let frequency = .3;
     
     $("#openScheduleEditor").removeClass("black-text").css("transition", "all 0s")
     anime({
@@ -3310,13 +3364,6 @@ function markScheduleEditButton(loop) {
             value: "+=720",
             duration: 1200,
         },
-        /*color: function(el, i) {
-            console.log(el)
-            let red   = Math.sin(frequency*i + 0) * 127 + 128;
-            let green = Math.sin(frequency*i + 2) * 127 + 128;
-            let blue  = Math.sin(frequency*i + 4) * 127 + 128;
-            return "rgb(" + red + "," + green + "," + blue + ")";
-        },*/
         color: [
             {value: "rgb(0,255,0)", duration: 300},
             {value: "rgb(255,0,0)", duration: 400},
@@ -4128,7 +4175,7 @@ class TeacherScheduleEditor {
                                     }
                                     this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
-                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
+                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Room"))
                             )
                     }, {
                         column: "Limit",

@@ -58,6 +58,7 @@ email: hi@josephhassell.com
                 <div class="card-panel grey darken-4 white-text">
                   <h5 class="">Advanced Options</h5>
                   <!-- Recovery Switch -->
+                  {{#elements.schedules.student}}
                   <div class="switch">
                     Student Recovery Mode:
                     <label>
@@ -67,6 +68,8 @@ email: hi@josephhassell.com
                       On
                     </label>
                   </div>
+                  {{/elements.schedules.student}}
+                  {{#elements.schedules.teacher}}
                   <div class="switch">
                     Teacher Recovery Mode:
                     <label>
@@ -76,6 +79,7 @@ email: hi@josephhassell.com
                       On
                     </label>
                   </div>
+                  {{/elements.schedules.teacher}}
                 </div>
               </div>
             </div>
@@ -84,17 +88,21 @@ email: hi@josephhassell.com
           </div>
           <div class="card-tabs">
             <ul class="tabs tabs-fixed-width">
-              <li class="tab"><a href="#editStudentType">Student Schedule</a></li>
-              <li class="tab"><a href="#editTeacherType">Teacher Schedule</a></li>
+              {{#elements.schedules.student}}<li class="tab"><a href="#editStudentType">Student Schedule</a></li>{{/elements.schedules.student}}
+              {{#elements.schedules.teacher}}<li class="tab"><a href="#editTeacherType">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
             </ul>
           </div>
           <div class="card-content grey lighten-4">
+            {{#elements.schedules.student}}
             <div id="editStudentType">
               <div id="editStudentScheduleContainer"></div>
             </div>
+            {{/elements.schedules.student}}
+            {{#elements.schedules.teacher}}
             <div id="editTeacherType">
               <div id="editTeacherScheduleContainer"></div>
             </div>
+            {{/elements.schedules.teacher}}
           </div>
         </div>
       </div>

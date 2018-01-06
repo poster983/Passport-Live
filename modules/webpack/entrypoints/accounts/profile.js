@@ -26,9 +26,11 @@ var utils = require("../../utils/index.js");
 var scheduleJS = require("../../api/schedule.js");
 var unsavedWork = require("../../common/unsavedWork.js")
 var anime = require("animejs");
+var Table = require("../../common/Table.js")
 
 var studentScheduleEditor = null;
 var teacherScheduleEditor = null;
+var teacherTable = null;
 window.onload = function() {
     routeHash();
     console.log(utils.thisUser())
@@ -38,6 +40,7 @@ window.onload = function() {
         responsive: true,
     });
     loadMyStudentSchedule();
+    loadMyTeacherSchedule();
     //check for changes on settings card
     $("#settingsCard").find("input").on("change", settingNeedsSaving);
 
@@ -121,7 +124,6 @@ function initStudentScheduleEditor() {
         });
         genStudentScheduleEditor();
         /* Schedule Editor Options */
-        
         $("#se-advancedOptions-studentRecovery").off("click");
         $("#se-advancedOptions-studentRecovery").on("change", (e) => {
             if($(e.currentTarget).prop('checked')) {
@@ -215,7 +217,7 @@ function scheduleEditorSubmitRes(student, teacher) {
             Materialize.toast('Teacher schedule unchanged', 4000)
         } else {
             Materialize.toast('Updated teacher schedule', 4000)
-            //loadMyTeacherSchedule();
+            loadMyTeacherSchedule();
             
         }
     }
@@ -239,80 +241,120 @@ var idOfUser = utils.thisUser();
 
 
 function loadMyStudentSchedule() {
-scheduleJS.getSchedules(utils.thisUser()).then((data) => {
-    console.log(data)
-    data = data.studentType;
-    if(data && data.schedule) {
-        //clear area
-        $("#studentScheduleBody").empty();
-        //do stuff with schedule 
-        console.log(data)
-        var keys = Object.keys(data.schedule);
-        for(var i = 0; i < keys.length; i++) {
-          //set defaults 
-          /*
-          if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
-            data.schedule = {
-              [keys[i]]: {
-                className: undefined
-              }
-            }
-          }*/
-          if(data.schedule[keys[i]]) {
-            var tr = document.createElement("TR");
-            //create elements
-            var idEl = document.createElement("TD");
-            var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
+    if($("#studentSchedule").length > 0) {
+        scheduleJS.getSchedules(utils.thisUser()).then((data) => {
+            console.log(data)
+            data = data.studentType;
+            if(data && data.schedule) {
+                //clear area
+                $("#studentScheduleBody").empty();
+                //do stuff with schedule 
+                console.log(data)
+                var keys = Object.keys(data.schedule);
+                for(var i = 0; i < keys.length; i++) {
+                  //set defaults 
+                  /*
+                  if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
+                    data.schedule = {
+                      [keys[i]]: {
+                        className: undefined
+                      }
+                    }
+                  }*/
+                  if(data.schedule[keys[i]]) {
+                    var tr = document.createElement("TR");
+                    //create elements
+                    var idEl = document.createElement("TD");
+                    var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
 
-            var classEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
-              var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                    var classEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
+                      var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                    } else {
+                      var classElText = document.createTextNode(" ");
+                    }
+
+                    var teacherEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
+                      var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+                    } else {
+                      var teacherElText = document.createTextNode(" ");
+                    }
+                    var roomEl = document.createElement("TD");
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
+                      var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+                    } else {
+                      var roomElText = document.createTextNode(" ");
+                    }
+                    //append
+                    idEl.appendChild(idElText);
+                    tr.appendChild(idEl);
+
+                    classEl.appendChild(classElText);
+                    tr.appendChild(classEl);
+
+                    teacherEl.appendChild(teacherElText);
+                    tr.appendChild(teacherEl);
+
+                    roomEl.appendChild(roomElText);
+                    tr.appendChild(roomEl);
+
+                    //set
+                    $('#studentScheduleBody').append(tr);
+                  }
+                }
+
             } else {
-              var classElText = document.createTextNode(" ");
+                var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
+                markScheduleEditButton(1);
+                return utils.throwError(err);
             }
+        }).catch((err) => {
+            return utils.throwError(err);
+        })
+    }
+}
 
-            var teacherEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
-              var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
+function loadMyTeacherSchedule() {
+    if($("#teacherSchedule").length > 0) {
+        scheduleJS.getSchedules().then((data) => {
+            data = data.teacherType;
+            if(data && data.schedule) {
+                let schedule = data.schedule;
+                let tableData = Object.keys(schedule);
+                tableData = tableData.map(function(period) {
+                    console.log(schedule[period].isTeaching)
+                    return {
+                        Period: period.charAt(0).toUpperCase() + period.slice(1),
+                        Class: (schedule[period].className || ""),
+                        Teaching: schedule[period].isTeaching ? "<i class=\"material-icons\">check_circle</i>" : "<i class=\"material-icons\">cancel</i>",
+                        Room: (schedule[period].room || ""),
+                        Limit: (schedule[period].periodLimit || "∞"),
+                    }
+                })
+                console.log(tableData)
+                if(teacherTable) {
+                    teacherTable.replaceData(tableData);
+                    teacherTable.emptyContainer();
+                    teacherTable.generate().catch((err) => {utils.throwError(err)})
+                } else {
+                    teacherTable = new Table("#teacherSchedule", tableData, {
+                        tableClasses: "highlight responsive-table"
+                    })
+                    teacherTable.generate().catch((err) => {utils.throwError(err)})
+                }
             } else {
-              var teacherElText = document.createTextNode(" ");
+                var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
+                markScheduleEditButton(1);
+                return utils.throwError(err);
             }
-            var roomEl = document.createElement("TD");
-            if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
-              var roomElText = document.createTextNode(data.schedule[keys[i]].room);
-            } else {
-              var roomElText = document.createTextNode(" ");
-            }
-            //append
-            idEl.appendChild(idElText);
-            tr.appendChild(idEl);
-
-            classEl.appendChild(classElText);
-            tr.appendChild(classEl);
-
-            teacherEl.appendChild(teacherElText);
-            tr.appendChild(teacherEl);
-
-            roomEl.appendChild(roomElText);
-            tr.appendChild(roomEl);
-
-            //set
-            $('#studentScheduleBody').append(tr);
-          }
-        }
-
-      } else {
-        var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
-        markScheduleEditButton(1);
-        return utils.throwError(err);
-      }
-    }).catch((err) => {
-        return utils.throwError(err);
-    })
+        }).catch((err) => {
+            return utils.throwError(err);
+        })
+    }
 }
 
 function markScheduleEditButton(loop) {
-    let frequency = .3;
     
     $("#openScheduleEditor").removeClass("black-text").css("transition", "all 0s")
     anime({
@@ -321,13 +363,6 @@ function markScheduleEditButton(loop) {
             value: "+=720",
             duration: 1200,
         },
-        /*color: function(el, i) {
-            console.log(el)
-            let red   = Math.sin(frequency*i + 0) * 127 + 128;
-            let green = Math.sin(frequency*i + 2) * 127 + 128;
-            let blue  = Math.sin(frequency*i + 4) * 127 + 128;
-            return "rgb(" + red + "," + green + "," + blue + ")";
-        },*/
         color: [
             {value: "rgb(0,255,0)", duration: 300},
             {value: "rgb(255,0,0)", duration: 400},

@@ -279,7 +279,7 @@ class TeacherScheduleEditor {
                                     }
                                     this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
-                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
+                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Room"))
                             )
                     }, {
                         column: "Limit",

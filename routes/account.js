@@ -1,6 +1,6 @@
 /*
 Passport-Live is a modern web app for schools that helps them manage passes.
-    Copyright (C) 2017  Joseph Hassell
+    Copyright (C) 2017 Joseph Hassell
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -45,13 +45,9 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardN
     var elements = {};
     elements.schedules = {};
     //enable elements
+    elements.schedules.student = utils.checkPermission(req.user.userGroup, ["student"]);
+    elements.schedules.teacher = utils.checkPermission(req.user.userGroup, ["teacher"]);
 
-    if(req.user.schedules && req.user.schedules.student) {
-        elements.schedules.student = true;
-    }
-    if(req.user.schedules && req.user.schedules.teacher) {
-        elements.schedules.teacher = true;
-    }
     console.log(elements)
     
     //set links in sidenav
@@ -65,7 +61,7 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardN
     res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
-//RaTE LIMIT RATE LIMIT!!
+
 //Reset Password 
 router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
     var permissionKey = req.query.key;

@@ -43,29 +43,6 @@ exports.rateLimit = require("./rateLimit.js");
 * @param {string} [options.failRedirect] - if set, the user will be redirected here on a failure
 */
 exports.middlewarePermission = (dashboards, options) => {
-    return function(req, res, next) {
-        if(req.user) {
-            checkPermission(req.user.userGroup, dashboards).then(() => {
-                return next();
-            }).catch((err) => {
-                if(options && options.failRedirect) {
-                    return res.redirect(307, options.failRedirect)
-                } else {
-                    return next(err);
-                }
-            })
-        }
-    }
-}
-
-/** 
-* Checks if the allwed dashboards for the given usergroup are present
-* @link module:js/utils
-* @param {userGroup} userGroup
-* @param {string[]} dashboards - Holds the allowed dashboards (Like "student", "teacher", "administrator")
-* @returns {Promise}
-*/
-exports.checkPermission = (userGroup, dashboards) => {
     let getErr = () => {
         //make english error
         let dashList = "";
@@ -82,18 +59,42 @@ exports.checkPermission = (userGroup, dashboards) => {
         err.status = 403;
         return err;
     }
-    return new Promise((resolve, reject) => {
+    return function(req, res, next) {
+        if(req.user) {
+            if(checkPermission(req.user.userGroup, dashboards)) {
+                return next();
+            } else {
+                if(options && options.failRedirect) {
+                    return res.redirect(307, options.failRedirect)
+                } else {
+                    return next(getErr());
+                }
+            }
+        }
+    }
+}
+
+/** 
+* Checks if the allowed dashboards for the given usergroup are present
+* @link module:js/utils
+* @param {userGroup} userGroup
+* @param {string[]} dashboards - Holds the allowed dashboards (Like "student", "teacher", "administrator")
+* @returns {boolean} 
+*/
+exports.checkPermission = (userGroup, dashboards) => {
+    
+    //return new Promise((resolve, reject) => {
         let groupDashboards = exports.getAllowedDashboards(userGroup);
         if(groupDashboards.length > 0) {
             if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
-                return resolve();
+                return true;
             } else {
-                return reject(getErr());
+                return false;
             }
         } else {
-            return reject(getErr())
+            return false;
         }
-    })
+    //})
 } 
 
 /** 
@@ -111,6 +112,14 @@ exports.getAllowedDashboards = (userGroup) => {
 }
 
 
+/** 
+* Middleware that compiles the nav dashboard picker settings and stores it in req.sidenav
+* @link module:js/utils
+* @param {Object} req
+* @param {Object} res
+* @param {function} next
+* @returns {function}
+*/
 exports.compileDashboardNav = (req,res,next) => {
     let sidenav = {}
     //make the dashboard picker
