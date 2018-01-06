@@ -618,7 +618,7 @@ exports.getSchedulesForStudentDash = function(id, done) {
 
 //USER schedules//
 //private
-function verifyStudentSchedule(schedule, done) {
+/*function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x < givenPeriods.length; x++) {
         //make "" null 
@@ -702,11 +702,12 @@ function verifyUserSchedule(dashboard, schedule_UIN, done) {
     }, function(err) {
         return done(err)
     });
-}
+}*/
 
 /** 
-    * Updates a user schedule 
+    * A wraper function for {@link module:js/userSchedule.update} 
     * @link module:js/accounts
+    * @deprecated
     * @param {string} userID - User id to update.
     * @param {string} dashboard - may be either "student" or "teacher"
     * @param {object} schedule  - The schedule object. 
@@ -714,7 +715,13 @@ function verifyUserSchedule(dashboard, schedule_UIN, done) {
     * @returns {callback}
     */
 exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
-    //param checks
+    accountScheduleJS.update(userID, dashboard, schedule_UIN).then((res) => {
+        return done(null, res);
+    }).catch((err) => {
+        return done(err)
+    })
+
+    /*//param checks
     
      verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
         if(err) {
@@ -740,19 +747,22 @@ exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
             }
         }).catch((err) => {return done(err);})
         
-    })
+    })*/
 }
 
 
 /** 
-    * Replaces a user schedule 
+    * A wraper function for {@link module:js/userSchedule.replace} 
     * @link module:js/accounts
+    * @deprecated
     * @param {string} userID - Userid to replace the schedule.
     * @param {string} dashboard - may be either "student" or "teacher"
     * @param {object} schedule  - The schedule object. 
-    * @returns {callback}
+    * @returns {Promise}
     */
 exports.replaceUserSchedule = (userID, dashboard, schedule) => {
+    return accountScheduleJS.replace(userID, dashboard, schedule_UIN);
+    /*
     return new Promise((resolve, reject) => {
         if(typeCheck("Null", schedule)) {
             var err = new TypeError("To delete a user schedule, please use .deleteUserSchedule");
@@ -791,14 +801,15 @@ exports.replaceUserSchedule = (userID, dashboard, schedule) => {
             }).catch((err) => {return reject(err);})
             
         })
-    })
+    })*/
 }
 
 
 
 /** 
-    * Creates a new user schedule 
+    * A wraper function for {@link module:js/userSchedule.new} 
     * @link module:js/accounts
+    * @deprecated
     * @param {string} userID - ID of User.
     * @param {constant} dashboard - may be either "student" or "teacher"
     * @param {object} schedule_UIN  - The schedule.
@@ -806,6 +817,11 @@ exports.replaceUserSchedule = (userID, dashboard, schedule) => {
     * @returns {callback}
     */
 exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
+    accountScheduleJS.new(userID, dashboard, schedule_UIN).then((res) => {
+        return done(null, res);
+    }).catch((err) => {
+        return done(err)
+    })
     //makesure no extra periods were left out 
     /*var requiredPeriods = config.get('schedule.periods');
     var givenPeriods = Object.keys(schedule_UIN);
@@ -816,7 +832,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
             return done(err);
         }
     }*/
-    verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
+    /*verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
         if(err) {
             return done(err);
         }
@@ -845,7 +861,7 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
                 })
             }
         })
-    })
+    })*/
 }
 
 
@@ -853,15 +869,21 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
 
 
 /** 
-    * Gets a schedule for a student dash 
+    * A wraper function for {@link module:js/userSchedule.getStudentSchedule} 
     * @function getStudentSchedule
     * @link module:js/accounts
+    * @deprecated
     * @param {string} userID - ID of User.
     * @param {function} done - Callback
     * @returns {callback}
     */
 exports.getStudentSchedule = function(userID, done) {
-    if(!userID) {
+    accountScheduleJS.getStudentSchedule(userID).then((res) => {
+        return done(null, res);
+    }).catch((err) => {
+        return done(err)
+    })
+    /*if(!userID) {
         var err = new Error("User ID Not Present");
         err.status = 400;
         return done(err)
@@ -905,8 +927,9 @@ exports.getStudentSchedule = function(userID, done) {
                     return done(err)
         }
         
-    })
+    })*/
 }
+/*
 function recursiveStudentScheduleJoin(keys, student, done) {
     if(keys.length <= 0) {
         return done(null, student);
@@ -986,55 +1009,23 @@ function recursiveStudentScheduleJoin(keys, student, done) {
         return recursiveStudentScheduleJoin(keys.slice(1), student, done);
     }
 
-}
+}*/
 
 /** 
-    * Gets a schedule for a teacher dash 
+    * A wraper function for {@link module:js/userSchedule.getTeacherSchedule}
     * @function getTeacherSchedule
     * @link module:js/accounts
-    * @async
+    * @deprecated
     * @param {string} userID - ID of User.
     * @param {function} done - Callback
     * @returns {callback}
     */
 exports.getTeacherSchedule = function(userID, done) {
-    if(!userID) {
-        var err = new Error("User ID Not Present");
-        err.status = 400;
+    accountScheduleJS.getTeacherSchedule(userID).then((res) => {
+        return done(null, res);
+    }).catch((err) => {
         return done(err)
-    }
-
-    r.table('accounts').get(userID).pluck({
-        "name": true,
-        "id": true,
-        "schedules": {
-            "teacher": true
-        }
-    }).run(db.conn(), function(err, accDoc) {
-         if(err) {
-
-            return done(err);
-        }
-        //if returned stuff
-        if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
-             r.table('userSchedules').get(accDoc.schedules.teacher).run(db.conn(), function(err, teacher) {
-                if(err) {
-                    return done(err);
-                }
-                if(!teacher || !teacher.schedule) {
-                    var err = new Error("teacher.schedule not defined");
-                    err.status = 500;
-                    return done(err)
-                }
-                
-                return done(null, teacher)
-            });
-        } else {
-            var err = new Error("Account has no schedule linked");
-                    err.status = 404;
-                    return done(err)
-        }
-    });
+    })
 }
 
 /** 

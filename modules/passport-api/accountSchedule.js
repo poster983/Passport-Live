@@ -157,7 +157,6 @@ exports.getStudentSchedule = function(userID) {
                 return reject(err)
             }
             studentUser = studentUser[0];
-            //console.log("js/userSchedule.getStudentSchedule#studentUser", studentUser);
             //check for student schedule
             if(!studentUser.schedules || !studentUser.schedules.student) {
                 var err = new Error("Account has no student schedule linked");
@@ -252,39 +251,228 @@ exports.getTeacherSchedule = function(userID) {
         }).run().then((res) => {
             return resolve(res)
         }).catch((err) => {return reject(err);})
+    })
+}
 
-        /*
-        r.table('accounts').get(userID).pluck({
-            "name": true,
-            "id": true,
-            "schedules": {
-                "teacher": true
+
+
+function verifyStudentSchedule(schedule, done) {
+    var givenPeriods = Object.keys(schedule);
+    for(var x = 0; x < givenPeriods.length; x++) {
+        //make "" null 
+        console.log(schedule[givenPeriods[x]].teacherID)
+        let verType = "{teacherID: String|Null}";
+        if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+            var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+            return done(err)
+        }
+        console.log(schedule[givenPeriods[x]], "vsc")
+        if(schedule[givenPeriods[x]].teacherID == '') {
+            console.log("isDumb")
+            schedule[givenPeriods[x]].teacherID = null
+        }
+        if(schedule[givenPeriods[x]] == "true") {
+            schedule[givenPeriods[x]] = true;
+        } else if(schedule[givenPeriods[x]] == "false"){
+            schedule[givenPeriods[x]] = false;
+        }
+
+        if(x >= givenPeriods.length-1 ) {
+            return done(null, schedule)
+        }
+    }
+}
+
+function verifyTeacherSchedule(schedule) {
+    return new Promise((resolve, reject) => {
+        var givenPeriods = Object.keys(schedule);
+        for(var x = 0; x < givenPeriods.length; x++) {
+            let verType = "{className: Maybe String, isTeaching: Boolean, room: Maybe String, passLimit: Maybe Number}";
+            if(!typeCheck(verType, schedule[givenPeriods[x]])) {
+                var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
+                return reject(err)
             }
-        }).run(function(err, accDoc) {
-             if(err) {
-                return reject(err);
-            }
-            //if returned stuff
-            if(accDoc && accDoc.schedules && accDoc.schedules.teacher) {
-                 r.table('userSchedules').get(accDoc.schedules.teacher).run(function(err, teacher) {
+            return resolve(schedule);
+        }
+    })
+}
+function verifyUserSchedule(dashboard, schedule_UIN, done) {
+    var schedule = schedule_UIN;
+    var promise = new Promise(function(resolve, reject) {
+        switch(dashboard) {
+            case "student": 
+                verifyStudentSchedule(schedule, function(err, nSch) {
                     if(err) {
                         return reject(err);
                     }
-                    if(!teacher || !teacher.schedule) {
-                        var err = new Error("teacher.schedule not defined");
-                        err.status = 500;
-                        return reject(err)
-                    }
-                    
-                    return resolve(null, teacher)
-                });
-            } else {
-                var err = new Error("Account has no schedule linked");
-                        err.status = 404;
-                        return reject(err)
+                    schedule = nSch
+                    resolve();
+                })
+                break;
+            case "teacher":
+                return verifyTeacherSchedule(schedule).then(resolve).catch(reject);
+                break;
+            default: 
+                var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
+                err.status = 400;
+                return reject(err);
+        }
+    });
+    promise.then(function(result) {
+        console.log(schedule)
+        //check if there are extra periods
+        var requiredPeriods = config.get('schedule.periods');
+        var givenPeriods = Object.keys(schedule);
+        for(var x = 0; x < givenPeriods.length; x++) {
+            if(!requiredPeriods.includes(givenPeriods[x])) {
+                var err = new Error("Unknown Period: \"" + givenPeriods[x] + "\"")
+                err.status = 400;
+                return done(err);
             }
-        });*/
+        }
+        
+
+        var toDB = {
+            "dashboard": dashboard,
+            "schedule": schedule
+        }
+        return done(null, toDB)
+    }, function(err) {
+        return done(err)
+    });
+}
+
+/** 
+    * Updates a user schedule 
+    * @link module:js/userSchedule
+    * @param {string} userID - User id to update.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
+    * @returns {Promise}
+    */
+exports.update = function(userID, dashboard, schedule) {
+    return new Promise((resolve, reject) => {
+    
+         verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
+            if(err) {
+                return reject(err)
+            }
+            r.table("accounts").get(userID).run().then((user) => {
+                if(!user) {
+                    var err = new Error("User not found");
+                    err.status = 404;
+                    return reject(err);
+                } 
+                if(user.schedules && user.schedules[dashboard]) {
+                    r.table("userSchedules").get(user.schedules[dashboard]).update(dbSafe).run(function(err, data) {
+                        if(err) {
+                            return reject(err)
+                        }
+                        return resolve(null, data)
+                    });
+                } else {
+                    var err = new Error("User schedule not found");
+                    err.status = 404;
+                    return reject(err);
+                }
+            }).catch((err) => {return reject(err);})
+            
+        })
+     });
+}
+
+
+/** 
+    * Replaces a user schedule 
+    * @link module:js/userSchedule
+    * @param {string} userID - Userid to replace the schedule.
+    * @param {string} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule  - The schedule object. 
+    * @returns {Promise}
+    */
+exports.replace = (userID, dashboard, schedule) => {
+    return new Promise((resolve, reject) => {
+        if(typeCheck("Null", schedule)) {
+            var err = new TypeError("To delete a user schedule, please use .deleteUserSchedule");
+            err.status = 400;
+            return reject(err);
+        }
+        if(!typeCheck("Object", schedule)) {
+            var err = new TypeError("schedule expected to be an object, got " + typeof schedule);
+            err.status = 400;
+            return reject(err);
+        }
+        console.log(schedule)
+        verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
+            if(err) {
+                return reject(err)
+            }
+            r.table("accounts").get(userID).run().then((user) => {
+                if(!user) {
+                    var err = new Error("User not found");
+                    err.status = 404;
+                    return reject(err);
+                } 
+                if(user.schedules && user.schedules[dashboard]) {
+                    dbSafe.id = user.schedules[dashboard];
+                    r.table("userSchedules").get(user.schedules[dashboard]).replace(dbSafe).run(function(err, data) {
+                        if(err) {
+                            return reject(err)
+                        }
+                        return resolve(data)
+                    });
+                } else {
+                    var err = new Error("User schedule not found");
+                    err.status = 404;
+                    return reject(err);
+                }
+            }).catch((err) => {return reject(err);})
+            
+        })
     })
+}
+
+/** 
+    * Creates a new user schedule 
+    * @link module:js/userSchedule
+    * @param {string} userID - ID of User.
+    * @param {constant} dashboard - may be either "student" or "teacher"
+    * @param {object} schedule_UIN  - The schedule.
+    * @returns {Promise}
+    */
+exports.new = function(userID, dashboard, schedule_UIN) {
+    return new Promise((resolve, reject) => {
+        verifyUserSchedule(dashboard, schedule_UIN, function(err, dbSafe) {
+            if(err) {
+                return reject(err);
+            }
+            //dbSafe.userId = userID;
+            //chesk for existing 
+            r.table('accounts').get(userID).hasFields({schedules: {[dashboard]: true}}).run(function(err, doc) {
+                if(err) {
+                    return reject(err);
+                }
+                else if(doc == true) {
+                    var err = new Error("Schedule is Present")
+                    err.status = 409;
+                    return reject(err);
+                } else {
+                    r.table('userSchedules').insert(dbSafe).run(function(err, trans) {
+                        if(err) {
+                            return reject(err);
+                        }
+                        
+                        r.table('accounts').get(userID).update({schedules: {[dashboard]: trans.generated_keys[0]}}).run(function(err, data) {
+                            if(err) {
+                                return reject(err);
+                            }
+                            return resolve(null, trans)
+                        })
+                    })
+                }
+            })
+        })
+    });
 }
 
 

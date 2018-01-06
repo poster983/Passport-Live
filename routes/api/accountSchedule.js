@@ -42,7 +42,7 @@ router.options('*', cors())
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/{:id}
+    * @api GET /api/account/schedule/[:id]
     * @apiparam {string} [id] - A user's ID.
     * @apiresponse {Object} student schedule is in "studentType" and teacher is in "teacherType"
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
@@ -102,13 +102,10 @@ router.get(['/', '/:id/'], passport.authenticate('jwt', { session: false}), func
 router.post("/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
-    console.log(dashboard)
-    api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
-        if(err) {
-            return next(err);
-        }
+    //console.log(dashboard)
+    accountScheduleJS.new(req.user.id, dashboard, schedule).then((data) => {
         res.send(data)
-    })
+    }).catch((err) => {return next(err)})
 });
 /** Updates the user's schedule for a dashboard
     * @function updateUserSchedule
@@ -132,13 +129,10 @@ router.post("/:dashboard", passport.authenticate('jwt', { session: false}), func
 router.patch("/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
-    console.log(dashboard)
-    api.updateUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
-        if(err) {
-            return next(err);
-        }
+    //console.log(dashboard)
+    accountScheduleJS.update(req.user.id, dashboard, schedule).then((data) => {
         res.send(data)
-    })
+    }).catch((err) => {return next(err)})
 });
 
 /** Creates or Replaces the user's schedule for a dashboard
@@ -158,20 +152,19 @@ router.put("/:dashboard", passport.authenticate('jwt', { session: false}), funct
     var schedule = req.body;
     //console.log(req.user)
     if(req.user.schedules && req.user.schedules[dashboard]) {
-        api.replaceUserSchedule(req.user.id, dashboard, schedule).then((trans) => {
+        accountScheduleJS.replace(req.user.id, dashboard, schedule).then((trans) => {
             //console.log(trans)
             res.json(trans)
         }).catch((err) => {return next(err);})
     } else {
-        api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
-            if(err) {
-                return next(err);
-            }
-            res.json(data)
-        })
+        accountScheduleJS.newUserSchedule(req.user.id, dashboard, schedule).then((data) => {
+            res.send(data)
+        }).catch((err) => {return next(err)})
     }
 
 });
+
+
 
 /** GETs account schedules for student dash
     * @function getSchedulesForStudentDash
@@ -179,27 +172,21 @@ router.put("/:dashboard", passport.authenticate('jwt', { session: false}), funct
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/student/:id/
+    * @api GET /api/account/schedule/student/:id
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns Joined data of the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo Auth
 */
-//MAKE REQ.USER SUPPLY THE ID
 router.get('/student/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForStudentDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
         return next(err)
     }
-    //console.log("HIIIIIIIIIIIIIIIIIii")
-    api.getStudentSchedule(req.params.id, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-        
+    accountScheduleJS.getStudentSchedule(req.params.id).then((data) => {
         res.send(data)
-    })
+    }).catch((err) => {return next(err)})
 });
 
 /** GETs account schedules for teacher dash
@@ -208,7 +195,7 @@ router.get('/student/id/:id/', passport.authenticate('jwt', { session: false}), 
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
-    * @api GET /api/account/schedule/teacher/:id/
+    * @api GET /api/account/schedule/teacher/:id
     * @apiparam {string} id - A user's ID.
     * @apiresponse {json} Returns the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
@@ -219,13 +206,9 @@ router.get('/teacher/id/:id/', passport.authenticate('jwt', { session: false}), 
         err.status = 400;
         return next(err)
     }
-    api.getTeacherSchedule(req.params.id, function(err, data) {
-        if(err) {
-            return next(err);
-        }
-        
+    accountScheduleJS.getTeacherSchedule(req.params.id).then((data) => {
         res.send(data)
-    })
+    }).catch((err) => {return next(err)})
 });
 
 module.exports = router;
