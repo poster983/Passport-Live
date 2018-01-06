@@ -368,7 +368,7 @@ exports.update = function(userID, dashboard, schedule) {
                         if(err) {
                             return reject(err)
                         }
-                        return resolve(null, data)
+                        return resolve(data)
                     });
                 } else {
                     var err = new Error("User schedule not found");
@@ -466,7 +466,7 @@ exports.new = function(userID, dashboard, schedule_UIN) {
                             if(err) {
                                 return reject(err);
                             }
-                            return resolve(null, trans)
+                            return resolve(trans)
                         })
                     })
                 }

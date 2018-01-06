@@ -157,7 +157,7 @@ router.put("/:dashboard", passport.authenticate('jwt', { session: false}), funct
             res.json(trans)
         }).catch((err) => {return next(err);})
     } else {
-        accountScheduleJS.newUserSchedule(req.user.id, dashboard, schedule).then((data) => {
+        accountScheduleJS.new(req.user.id, dashboard, schedule).then((data) => {
             res.send(data)
         }).catch((err) => {return next(err)})
     }
