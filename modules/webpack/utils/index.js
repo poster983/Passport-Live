@@ -121,7 +121,6 @@ exports.fetchStatus = (response) => {
 */
 exports.fetchJSON = (response) => {
   return response.text().then(function(text) {
-    console.log(text)
     return text ? JSON.parse(text) : {}
   })
 }
