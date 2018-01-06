@@ -78,4 +78,154 @@ router.get(['/', '/:id/'], passport.authenticate('jwt', { session: false}), func
     });
 });
 
+
+/** Sets a user schedule for a dashboard
+    * @function setUserSchedule
+    * @link module:api/userSchedule
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api POST /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+
+router.post("/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    console.log(dashboard)
+    api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
+});
+/** Updates the user's schedule for a dashboard
+    * @function updateUserSchedule
+    * @link module:api/userSchedule
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @example 
+    * <caption>Body Structure For Student Dashboard (application/json): </caption>
+    * {
+    *    "<periodConst>": {  //
+    *       "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.
+    *   },
+    *    "<periodConst>": null //this means that the period is dissabled and won't be returned
+    * }
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.patch("/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    console.log(dashboard)
+    api.updateUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        res.send(data)
+    })
+});
+
+/** Creates or Replaces the user's schedule for a dashboard
+    * @function updateUserSchedule
+    * @link module:api/userSchedule
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PUT /api/account/schedule/:dashboard
+    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)
+    * @apiresponse {json} Returns rethinkDB action summery
+    * @apibody {module:js/userSchedule#studentSchedule}
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.put("/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+    var dashboard = req.params.dashboard;
+    var schedule = req.body;
+    //console.log(req.user)
+    if(req.user.schedules && req.user.schedules[dashboard]) {
+        api.replaceUserSchedule(req.user.id, dashboard, schedule).then((trans) => {
+            //console.log(trans)
+            res.json(trans)
+        }).catch((err) => {return next(err);})
+    } else {
+        api.newUserSchedule(req.user.id, dashboard, schedule, function(err, data) {
+            if(err) {
+                return next(err);
+            }
+            res.json(data)
+        })
+    }
+
+});
+
+/** GETs account schedules for student dash
+    * @function getSchedulesForStudentDash
+    * @link module:api/userSchedule
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/student/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns Joined data of the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+    * @todo Auth
+*/
+//MAKE REQ.USER SUPPLY THE ID
+router.get('/student/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForStudentDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    //console.log("HIIIIIIIIIIIIIIIIIii")
+    api.getStudentSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        
+        res.send(data)
+    })
+});
+
+/** GETs account schedules for teacher dash
+    * @function getSchedulesForTeacherDash
+    * @link module:api/userSchedule
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api GET /api/account/schedule/teacher/:id/
+    * @apiparam {string} id - A user's ID.
+    * @apiresponse {json} Returns the schedule
+    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
+*/
+router.get('/teacher/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForTeacherDash(req, res, next) {
+    if(!req.params.id) {
+        var err = new Error("ID Required");
+        err.status = 400;
+        return next(err)
+    }
+    api.getTeacherSchedule(req.params.id, function(err, data) {
+        if(err) {
+            return next(err);
+        }
+        
+        res.send(data)
+    })
+});
+
 module.exports = router;
