@@ -204,7 +204,7 @@ exports.getStudentSchedule = function(userID) {
                                             //then
                                             r.object("location", r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
                                                 .pluck({
-                                                    schedule: {[key]: true}
+                                                    schedule: [key]
                                                 })
                                             )
                                             ,
