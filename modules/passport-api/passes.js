@@ -32,10 +32,10 @@ var typeCheck = require("type-check").typeCheck;
     * Creates a new account
     * @function newPass
     * @async
-    * @param {userId} toPerson - Id of the account recieving the migrating person
-    * @param {userId} fromPerson - Id of the account releasing the migrating person
-    * @param {userId} migrator - Id of the account moving between people
-    * @param {userId} requester - Id of the account who requested the pass
+    * @param {string} toPerson - Id of the account recieving the migrating person
+    * @param {string} fromPerson - Id of the account releasing the migrating person
+    * @param {string} migrator - Id of the account moving between people
+    * @param {string} requester - Id of the account who requested the pass
     * @param {string} period
     * @param {(date|ISOString)} date
     * @param {boolean} checkDupe - Sheck if there is an identical pass in the system already.
@@ -156,7 +156,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
     * Gets passes with flexable id search
     * @function flexableGetPasses
     * @async
-    * @param {userId} id - Id of the account
+    * @param {string} id - Id of the account
     * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @param {date} fromDate - low range date to search for.  
     * @param {date} toDate - High range date to search for.  set null for none

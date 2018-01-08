@@ -3250,7 +3250,7 @@ function loadMyStudentSchedule() {
                 //clear area
                 $("#studentScheduleBody").empty();
                 //do stuff with schedule 
-                console.log(data)
+                //console.log(data)
                 var keys = Object.keys(data.schedule);
                 let schedule = data.schedule;
                 let tableData = Object.keys(schedule);
@@ -3265,7 +3265,7 @@ function loadMyStudentSchedule() {
                         Limit: schedule[period].teacher && schedule[period].teacher.period && typeof schedule[period].teacher.period.passLimit === "number" ? schedule[period].teacher.period.passLimit : "∞",
                     }
                 })
-                console.log(tableData)
+                
                 if(studentTable) {
                     studentTable.replaceData(tableData);
                     studentTable.emptyContainer();
