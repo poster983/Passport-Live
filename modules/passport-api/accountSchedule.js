@@ -193,7 +193,7 @@ exports.getStudentSchedule = function(userID) {
                                     //put teacher stuff in teacher object
                                     return r.object("teacher", teacher)
                                 })
-                                //merge schedule
+                                //merge teacher schedule 
                                 .do(function(teacher) {
                                     
                                     return teacher.merge(
@@ -202,11 +202,18 @@ exports.getStudentSchedule = function(userID) {
                                             teacher.hasFields({teacher: {schedules: {teacher: true}}})
                                             ,
                                             //then
-                                            r.object("location", r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
-                                                .pluck({
-                                                    schedule: [key]
+                                            {teacher: r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
+                                                .do(function(tSchedule) {
+                                                    return r.branch(
+                                                        //IF teacher has set period
+                                                        tSchedule.hasFields({schedule: [key]})
+                                                        ,//THEN
+                                                        {period: tSchedule("schedule")(key)}
+                                                        ,//ELSE
+                                                        {}
+                                                    )
                                                 })
-                                            )
+                                            }
                                             ,
                                             //else
                                             {}

@@ -837,11 +837,13 @@ email: hi@josephhassell.com
                   console.log(myScheduleArray);
                   for(var i = 0; i < myScheduleArray.length; i++) {
                     //bad code
-                    if(!myScheduleArray[i].className) {
-                      myScheduleArray[i].className = "";
+                    if(!myScheduleArray[i].teacher || !myScheduleArray[i].teacher.period || !myScheduleArray[i].teacher.period.className) {
+                      myScheduleArray[i].teacher.period.className = "";
+                    } else {
+                      myScheduleArray[i].teacher.period.className = " - " + myScheduleArray[i].teacher.period.className;
                     }
                     if(myScheduleArray[i].teacher) {
-                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + " - " + myScheduleArray[i].className + "</option>")
+                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + myScheduleArray[i].teacher.period.className + "</option>")
                     } else {
                        $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " - " + myScheduleArray[i].className + "</option>");
                     }

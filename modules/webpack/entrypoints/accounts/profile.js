@@ -30,6 +30,7 @@ var Table = require("../../common/Table.js")
 
 var studentScheduleEditor = null;
 var teacherScheduleEditor = null;
+var studentTable = null;
 var teacherTable = null;
 window.onload = function() {
     routeHash();
@@ -249,18 +250,34 @@ function loadMyStudentSchedule() {
                 //clear area
                 $("#studentScheduleBody").empty();
                 //do stuff with schedule 
-                console.log(data)
+                //console.log(data)
                 var keys = Object.keys(data.schedule);
-                for(var i = 0; i < keys.length; i++) {
-                  //set defaults 
-                  /*
-                  if(!data.schedule[keys[i]] || !data.schedule[keys[i]].className) {
-                    data.schedule = {
-                      [keys[i]]: {
-                        className: undefined
-                      }
+                let schedule = data.schedule;
+                let tableData = Object.keys(schedule);
+                tableData = tableData.map(function(period) {
+                    //console.log(schedule[period])
+                    return {
+                        Period: period.charAt(0).toUpperCase() + period.slice(1),
+                        Class: schedule[period].teacher && schedule[period].teacher.period && schedule[period].teacher.period.className ? schedule[period].teacher.period.className : "",
+                        Teacher: schedule[period].teacher ? schedule[period].teacher.name.first + " " + schedule[period].teacher.name.last : "",
+                        Teaching: schedule[period].teacher && schedule[period].teacher.period && schedule[period].teacher.period.isTeaching ? "<i class=\"material-icons\">check_circle</i>" : "<i class=\"material-icons\">cancel</i>",
+                        Room: schedule[period].teacher && schedule[period].teacher.period && schedule[period].teacher.period.room ? schedule[period].teacher.period.room : "",
+                        Limit: schedule[period].teacher && schedule[period].teacher.period && typeof schedule[period].teacher.period.passLimit === "number" ? schedule[period].teacher.period.passLimit : "∞",
                     }
-                  }*/
+                })
+                
+                if(studentTable) {
+                    studentTable.replaceData(tableData);
+                    studentTable.emptyContainer();
+                    studentTable.generate().catch((err) => {utils.throwError(err)})
+                } else {
+                    studentTable = new Table("#studentSchedule", tableData, {
+                        tableClasses: "highlight responsive-table"
+                    })
+                    studentTable.generate().catch((err) => {utils.throwError(err)})
+                }
+                /*for(var i = 0; i < keys.length; i++) {
+                  //set defaults 
                   if(data.schedule[keys[i]]) {
                     var tr = document.createElement("TR");
                     //create elements
@@ -268,24 +285,27 @@ function loadMyStudentSchedule() {
                     var idElText = document.createTextNode(keys[i].charAt(0).toUpperCase() + keys[i].slice(1));
 
                     var classEl = document.createElement("TD");
-                    if(data.schedule[keys[i]] && data.schedule[keys[i]].className) {
-                      var classElText = document.createTextNode(data.schedule[keys[i]].className);
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher && data.schedule[keys[i]].teacher.period && data.schedule[keys[i]].teacher.period.className) {
+                      var classElText = document.createTextNode(data.schedule[keys[i]].teacher.period.className);
                     } else {
                       var classElText = document.createTextNode(" ");
                     }
 
                     var teacherEl = document.createElement("TD");
+                    
                     if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher) {
                       var teacherElText = document.createTextNode(data.schedule[keys[i]].teacher.name.first + " " +  data.schedule[keys[i]].teacher.name.last);
                     } else {
                       var teacherElText = document.createTextNode(" ");
+                      
                     }
                     var roomEl = document.createElement("TD");
-                    if(data.schedule[keys[i]] && data.schedule[keys[i]].room) {
-                      var roomElText = document.createTextNode(data.schedule[keys[i]].room);
+                    if(data.schedule[keys[i]] && data.schedule[keys[i]].teacher && data.schedule[keys[i]].teacher.period && data.schedule[keys[i]].teacher.period.room) {
+                      var roomElText = document.createTextNode(data.schedule[keys[i]].teacher.period.room);
                     } else {
                       var roomElText = document.createTextNode(" ");
                     }
+
                     //append
                     idEl.appendChild(idElText);
                     tr.appendChild(idEl);
@@ -302,7 +322,7 @@ function loadMyStudentSchedule() {
                     //set
                     $('#studentScheduleBody').append(tr);
                   }
-                }
+                }*/
 
             } else {
                 var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
