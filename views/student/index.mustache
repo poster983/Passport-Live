@@ -837,11 +837,13 @@ email: hi@josephhassell.com
                   console.log(myScheduleArray);
                   for(var i = 0; i < myScheduleArray.length; i++) {
                     //bad code
-                    if(!myScheduleArray[i].className) {
-                      myScheduleArray[i].className = "";
+                    if(!myScheduleArray[i].teacher || !myScheduleArray[i].teacher.period || !myScheduleArray[i].teacher.period.className) {
+                      myScheduleArray[i].teacher.period.className = "";
+                    } else {
+                      myScheduleArray[i].teacher.period.className = " - " + myScheduleArray[i].teacher.period.className;
                     }
                     if(myScheduleArray[i].teacher) {
-                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + " - " + myScheduleArray[i].className + "</option>")
+                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + myScheduleArray[i].teacher.period.className + "</option>")
                     } else {
                        $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " - " + myScheduleArray[i].className + "</option>");
                     }
@@ -883,23 +885,26 @@ email: hi@josephhassell.com
                       }
                       var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
                       // add only the enabled periods to validFromTeachers
-
+                      console.log(dayScheduleKeys)
                       for(var x = 0; x < dayScheduleKeys.length; x++ ) {
+                        console.log(userSchedule.schedule)
                         //check if user has one of the periods for today
                         if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
-
+                          
                           validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
+                          console.log(x)
                           //check if done
-                          if(x >= dayScheduleKeys.length - 1) {
+                          
+                        }
+                        if(x >= dayScheduleKeys.length - 1) {
+                          
+                          orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
+                            if(err) {
+                              return errorHand(err)
+                            }
                             
-                            orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
-                              if(err) {
-                                return errorHand(err)
-                              }
-                              
-                              setMyTeachersSelect(orderedArr);
-                            })
-                          }
+                            setMyTeachersSelect(orderedArr);
+                          })
                         }
                       }
                     });

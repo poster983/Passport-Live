@@ -48,6 +48,7 @@ var administrator = require('./routes/administrator');
 var account = require('./routes/account');
 var apiMedia = require('./routes/api/media');
 var apiAccounts = require('./routes/api/account');
+var apiAccountSchedule = require('./routes/api/accountSchedule');
 var apiAuth = require('./routes/api/auth');
 var apiPasses = require('./routes/api/passes');
 var apiBlackouts = require('./routes/api/blackout');
@@ -138,6 +139,7 @@ app.use('/account', account)
 //api routes
 app.use('/api/media', apiMedia)
 app.use('/api/account', apiAccounts)
+app.use("/api/account/schedule", apiAccountSchedule)
 app.use('/api/auth', apiAuth)
 app.use('/api/blackout', apiBlackouts)
 app.use('/api/passes', apiPasses)

@@ -189,7 +189,9 @@ exports.fetchStatus = (response) => {
 * @returns {Promise}
 */
 exports.fetchJSON = (response) => {
-  return response.json()
+  return response.text().then(function(text) {
+    return text ? JSON.parse(text) : {}
+  })
 }
 
 /**
@@ -415,20 +417,21 @@ var typeCheck = __webpack_require__(1).typeCheck;
 var DeepKey = __webpack_require__(14);
 
 /**
-* Takes structured data and makes a table from it. call this.generate() to create a table
+* Takes structured data and makes a table from it. call this.generate() to create a table,
+* All data should be strings to avoid strange behaviour.  
 * @link module:webpack/framework
 * @class 
 * @param {Selector} containerElement - The table container.
 * @param {Object} data - The data to be added to the table.
-* @param {(Object|undefined)} options - The clickable element.
-* @param {(String[]|undefined)} options.ignoredKeys - List of keys to leave out of the row object
-* @param {(String|undefine)} options.idKey - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
-* @param {(String[]|undefine)} options.hiddenKeys - Removes the keys from the table, but keeps it in row object. 
-* @param {(Function|undefine)} options.inject - ires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
-* @param {(String|undefine)} options.tableClasses - class strings to be added to the top table element 
-* @param {(Function|String[]|undefine)} options.sort - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
-* @param {(Function|undefine)} options.afterGenerate - Function that runs after any function that adds elements to the dom.
-* @param {(Boolean|undefine)} options.preferInject - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
+* @param {Object} [options]
+* @param {String[]} [options.ignoredKeys] - List of keys to leave out of the row object
+* @param {String} [options.idKey] - Key name in data to act as ID.  Will generate a unique one for every row if not included. 
+* @param {String[]} [options.hiddenKeys] - Removes the keys from the table, but keeps it in row object. 
+* @param {Function} [options.inject] - fires for every row.  Allowes for one to inject columns and data for each row. First param is the row object, second is a callback that takes one array of objects. Example Object to return: {column: String, strictColumn: Maybe Boolean, dom: *}
+* @param {String} [options.tableClasses] - class strings to be added to the top table element 
+* @param {(Function|String[])} [options.sort] - Can be an array of the order of column keys, or an array.sort callback. See MDN Web Docs for array.sort
+* @param {Function} [options.afterGenerate] - Function that runs after any function that adds elements to the dom.
+* @param {Boolean} [options.preferInject] - If ture, options.inject will take presedence over the data, if false, the data will overwrite the injected row
 */
 class Table {
     constructor(containerElement, data, options) {
@@ -440,7 +443,7 @@ class Table {
             throw new TypeError("data must be an array of objects");
         }
         this.data = data;
-        this.container = containerElement;
+        this.container = $(containerElement);
         this.options = options;
         this.table = {};
     }
@@ -556,7 +559,10 @@ class Table {
     }
     destroyTable() {
         this.data = [];
-        containerElement.empty();
+        this.emptyContainer();
+    }
+    emptyContainer() {
+        this.container.empty();
     }
     parseRowID(TABLE_ROW_ID) {
         return TABLE_ROW_ID.substring(12, TABLE_ROW_ID.length-2);
@@ -604,6 +610,8 @@ class Table {
                 }
                 //Store Untouched ID for dev
                 row.getRowID = () => {return this.parseRowID(row.rowID);}
+
+
 
                 //Filter out hidden keys for later 
                 if(this.options.hiddenKeys) {
@@ -702,7 +710,13 @@ class Table {
 
 
                     // add helper functions
-                    row.getBody = () => {if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}}
+                    row.getBody = () => {
+                        if(!row.injectedData) {
+                            return flatData
+                        } else {
+                            if(this.options.preferInject) {return Object.assign(flatData, row.injectedData)} else {return Object.assign(row.injectedData, flatData)}
+                        }
+                    }
                     //Waitfor end of loop
                     rows.push(row);
                     //console.log(rows, "loop Row")

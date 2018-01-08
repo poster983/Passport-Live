@@ -120,7 +120,9 @@ exports.fetchStatus = (response) => {
 * @returns {Promise}
 */
 exports.fetchJSON = (response) => {
-  return response.json()
+  return response.text().then(function(text) {
+    return text ? JSON.parse(text) : {}
+  })
 }
 
 /**

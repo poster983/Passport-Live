@@ -101,7 +101,7 @@ class TeacherScheduleEditor {
                             if(schedule.schedule[periods[x]]) {
                                 let thisPeriod = schedule.schedule[periods[x]];
                                 this.teacherTable.appendRow([{}], (row, callback) => {
-                                    console.log("Teacher Schedule", schedule.schedule)
+                                    //console.log("Teacher Schedule", schedule.schedule)
                                     this._injectDOM(scheduleConfig.periods, row, periods[x], thisPeriod.isTeaching, thisPeriod.room, thisPeriod.className, thisPeriod.passLimit).then((arr) => {
                                         return callback(arr);
                                     }).catch(err => reject(err))
@@ -279,7 +279,7 @@ class TeacherScheduleEditor {
                                     }
                                     this.hasChanged = true;
                                     this.checkValidity().catch(err => reject(err));
-                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Class name"))
+                                })).append($("<label/>").addClass(roomLabelCSS).attr("for", roomID).html("Room"))
                             )
                     }, {
                         column: "Limit",
