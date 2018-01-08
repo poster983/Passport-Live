@@ -256,12 +256,23 @@ exports.getTeacherSchedule = function(userID, query) {
             return reject(err)
         }
 
+        function userScheduleQuery(account) {
+            let tQu = r.table('userSchedules').get(account("schedules")("teacher"))
+            if (query && typeCheck("[String]", query.periods)) {
+                tQu = tQu.pluck({
+                    schedule: query.periods
+                })
+            }
+
+            return tQu;
+        }
+
         r.table('accounts').get(userID)
         .do((account) => {
             return r.branch(
                 account.hasFields({schedules: {teacher: true}})
                 ,
-                r.table('userSchedules').get(account("schedules")("teacher"))
+                userScheduleQuery(account)
                 ,
                 null
             )

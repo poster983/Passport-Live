@@ -18,22 +18,24 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 /** 
-* @module passportPassApi
+* @module js/passes
 */
 
 var r = require("rethinkdb")
 var db = require("../db/index.js");
+var r_ = db.dash();
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 var validator = require("validator");
 var typeCheck = require("type-check").typeCheck;
 
+var accountScheduleJS = require("./accountSchedule.js")
+
 /**
     * Creates a new account
-    * @function newPass
-    * @async
+    * @link module:js/passes
     * @param {string} toPerson - Id of the account recieving the migrating person
-    * @param {string} fromPerson - Id of the account releasing the migrating person
+    * @param {string} [fromPerson=null] - Id of the account releasing the migrating person
     * @param {string} migrator - Id of the account moving between people
     * @param {string} requester - Id of the account who requested the pass
     * @param {string} period
@@ -42,8 +44,10 @@ var typeCheck = require("type-check").typeCheck;
     * @param {function} done - callback
     * @returns {done} Error, or a transaction statement 
     */
-exports.newPass = function(toPerson, fromPerson, migrator, requester, period, date, checkDupe, done) {
+exports.newPass = function(pass, toPerson, fromPerson, migrator, requester, period, date, checkDupe, done) {
     //validate
+    let passType = "{toPerson: String, fromPerson: Maybe String, migrator: String, requester: String, period: period, date: Date|ISODate}";
+    if(typeCheck(passType, pass))
     if(!toPerson || typeof toPerson != "string") {
         var err = new Error("toPerson Not Valid");
             err.status = 400;
@@ -82,7 +86,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
     } else if(typeCheck("Date", date)){
         date = moment(date).toISOString();
     }
-    console.log(date)
+    //console.log(date)
     //check for dupe 
     var promise = new Promise(function(resolve, reject) {
         if(checkDupe) {
@@ -154,8 +158,7 @@ exports.newPass = function(toPerson, fromPerson, migrator, requester, period, da
 
 /**
     * Gets passes with flexable id search
-    * @function flexableGetPasses
-    * @async
+    * @link module:js/passes
     * @param {string} id - Id of the account
     * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
     * @param {date} fromDate - low range date to search for.  
@@ -322,7 +325,13 @@ exports.flexableGetPasses = function(id, byColl, fromDate, toDate, periods, done
 
 
 
-
+/**
+    * Gets pass by Primary key
+    * @link module:js/passes
+    * @param {UUID} passId - Id of the Pass
+    * @param {function} done - callback
+    * @returns {done} Error, or pass object 
+    */
 exports.getPass = function(passId, done) {
      if(!validator.isUUID(passId)) {
         var err = new Error("Not a valid passId");
@@ -341,8 +350,7 @@ exports.getPass = function(passId, done) {
 
 /**
     * Updates pass fields
-    * @function updatePass
-    * @async
+    * @link module:js/passes
     * @param {UUID} passId - Id of the Pass
     * @param {json} doc - Json object to update / insert into the db 
     * @param {function} done - callback
@@ -370,4 +378,43 @@ exports.updatePass = function(passId, doc, done) {
     })
 }
 
+/**
+* Gets the pass tally for a user
+* @link module:js/passes
+* @param {string} userID - account id of user to tally up passes (AKA toPerson)
+* @param {string} period - a period constant to check for 
+* @param {(Date|ISOstring)} date - the day to tally up
+* @returns {Promise} passes tally and passLimit 
+*/
+exports.limitTally = (userID, period, date) => {
+    return new Promise((resolve, reject) => {
+        //get toPerson's passLimit
+        accountScheduleJS.getTeacherSchedule(userID, {periods: [period]}).then((tSchedule) => {
+            let outOf = null;
+            if(typeCheck("{schedule: {" + period + ": {passLimit: Number, ...}}}", tSchedule)) {
+                outOf = tSchedule.schedule[period].passLimit;
+            }
+            //get tally count
+            r_.table("passes").filter(function(doc) {
+                return doc("date").date().eq(r_.ISO8601(date).date())
+                .and(doc("toPerson").eq(userID))
+                .and(doc("period").eq(period))
+            }).count()
+            .do(function(count) {
+                return {
+                    tally: count,
+                    passLimit: outOf
+                }
+            }).run().then((tally) => {
+                return resolve(tally);
+            }).catch((err) => {return reject(err)})
+        }).catch((err) => {return reject(err)})
 
+    })
+}
+/*
+exports.tally("b17c14ad-4799-4644-85e0-bd029475a17b", "a", "2018-01-08T06:00:00+00:00").then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.error(err)
+})*/

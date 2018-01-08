@@ -835,17 +835,16 @@ email: hi@josephhassell.com
                    $("#selectMyTeachers").append("<option value=\"\" disabled selected>Choose a Person</option>");
 
                   console.log(myScheduleArray);
-                  for(var i = 0; i < myScheduleArray.length; i++) {
+                  for(let i = 0; i < myScheduleArray.length; i++) {
                     //bad code
-                    if(!myScheduleArray[i].teacher || !myScheduleArray[i].teacher.period || !myScheduleArray[i].teacher.period.className) {
-                      myScheduleArray[i].teacher.period.className = "";
-                    } else {
-                      myScheduleArray[i].teacher.period.className = " - " + myScheduleArray[i].teacher.period.className;
+                    let className = ""
+                    if(myScheduleArray[i].teacher && myScheduleArray[i].teacher.period && myScheduleArray[i].teacher.period.className) {
+                      className = " - " + myScheduleArray[i].teacher.period.className;
                     }
                     if(myScheduleArray[i].teacher) {
-                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + myScheduleArray[i].teacher.period.className + "</option>")
+                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + className + "</option>")
                     } else {
-                       $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " - " + myScheduleArray[i].className + "</option>");
+                       $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + className + "</option>");
                     }
                     if(i >= myScheduleArray.length-1) {
                       $('#selectMyTeachers').material_select();
