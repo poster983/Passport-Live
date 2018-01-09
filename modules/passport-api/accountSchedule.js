@@ -244,21 +244,35 @@ exports.getStudentSchedule = function(userID) {
     * Gets the teacher schedule for an account 
     * @link module:js/userSchedule
     * @param {string} userID - ID of User.
-    * @param {function} done - Callback
+    * @param {Object} [query]
+    * @param {string[]} [query.periods] - only return these periods.  Defaults to all periods
     * @returns {teacherSchedule} - Promise
     */
-exports.getTeacherSchedule = function(userID) {
+exports.getTeacherSchedule = function(userID, query) {
     return new Promise((resolve, reject) => {
         if(!userID) {
             var err = new Error("User ID Not Present");
             err.status = 400;
             return reject(err)
         }
-        r.table('accounts').get(userID).do((account) => {
+
+        function userScheduleQuery(account) {
+            let tQu = r.table('userSchedules').get(account("schedules")("teacher"))
+            if (query && typeCheck("[String]", query.periods)) {
+                tQu = tQu.pluck({
+                    schedule: query.periods
+                })
+            }
+
+            return tQu;
+        }
+
+        r.table('accounts').get(userID)
+        .do((account) => {
             return r.branch(
                 account.hasFields({schedules: {teacher: true}})
                 ,
-                r.table('userSchedules').get(account("schedules")("teacher"))
+                userScheduleQuery(account)
                 ,
                 null
             )

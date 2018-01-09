@@ -29,27 +29,18 @@ var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
 var config = require("config");
-var validator = require("validator");
 var moment = require("moment");
 
 
 router.use(cors());
-router.options('*', cors())
+router.options('*', cors());
 
-function serializeUser(req, res, done) {
-    console.log(req.user[0]);
-    //REMOVE SECRET INFO LIKE PASSWORDS
-    //delete req.user[0].password;
-    //req.user = req.user[0];
-    req.user = utils.cleanUser(req.user);
-    done();
-};
+
 
 /**
     * Creates a new Pass from/for currently logged in account.
     * This one used the JWT to find the requester and migrator.  this only allows the signed in person to request a pass for themselves 
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have student db permissions
     * @function newPassForMe
     * @async
     * @param {request} req
@@ -76,17 +67,13 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     var period = req.body.period;
     var date = req.body.date;
 
-    api.newPass(toPerson, fromPerson, migrator, migrator, period, date, true, function(err, trans) {
-        if(err) {
-            return next(err);
-        }
+    api.newPass({toPerson: toPerson, fromPerson: fromPerson, requester: migrator, migrator: migrator, period: period, date: date}).then((trans) => {
         res.status(201).json(trans);
-    })
+    }).catch((err) => {return next(err);});
 });
 /**
     * Gets all Passes from a day from/for currently logged in account.
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have student db permissions
     * @function getPassForMeFromDay
     * @async
     * @param {request} req
@@ -107,13 +94,12 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session
             return next(err);
         }
         res.send(data);
-    })
+    });
 });
 
 /**
     * Gets all Passes from a day to a day from/for currently logged in account.
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have student db permissions
     * @function getPassForMeFromToDay
     * @async
     * @param {request} req
@@ -135,14 +121,13 @@ router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt',
             return next(err);
         }
         res.send(data);
-    })
+    });
 });
 
 /**
     * Sets migration Status
     * Can only be set by fromPerson
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have teacher db permissions
     * @function updateMigrationStatus
     * @async
     * @param {request} req
@@ -166,8 +151,8 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
 
     api.getPass(passId, function(err, pass) {
         if(userId != pass.fromPerson) {
-            console.log(pass.fromPerson)
-            console.log(userId)
+            console.log(pass.fromPerson);
+            console.log(userId);
             var err = new Error("Forbidden");
             err.status = 403;
             return next(err);
@@ -176,13 +161,13 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
         //update logic 
         var updateDoc = {};
         if(state == "true") {
-             updateDoc = {
+            updateDoc = {
                 status: {
                     migration: {
                         excusedTime: r.get().ISO8601(moment().toISOString())
                     }
                 }
-             }
+            };
         } else if(state == "false") {
             updateDoc = {
                 status: {
@@ -191,16 +176,16 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
                         inLimbo: false
                     }
                 }
-             }
+            };
         }
         
         api.updatePass(passId, updateDoc, function(err, trans) {
             if(err) {
-                return next(err)
+                return next(err);
             }
-            res.json(trans)
-        })
-    })
+            res.json(trans);
+        });
+    });
 
 });
 
@@ -208,7 +193,6 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
     * Sets arrived Status
     * Can only be set by fromPerson
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have teacher db permissions
     * @function updateArrivedStatus
     * @async
     * @param {request} req
@@ -233,8 +217,8 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
 
     api.getPass(passId, function(err, pass) {
         if(userId != pass.toPerson) {
-            console.log(pass.toPerson)
-            console.log(userId)
+            console.log(pass.toPerson);
+            console.log(userId);
             var err = new Error("Forbidden");
             err.status = 403;
             return next(err);
@@ -243,13 +227,13 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
         //update logic 
         var updateDoc = {};
         if(state == "true") {
-             updateDoc = {
+            updateDoc = {
                 status: {
                     migration: {
                         arrivedTime: r.get().ISO8601(moment().toISOString())
                     }
                 }
-             }
+            };
         } else if(state == "false") {
             updateDoc = {
                 status: {
@@ -258,16 +242,16 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
                         arrivedTime: null
                     }
                 }
-             }
+            };
         }
         
         api.updatePass(passId, updateDoc, function(err, trans) {
             if(err) {
-                return next(err)
+                return next(err);
             }
-            res.json(trans)
-        })
-    })
+            res.json(trans);
+        });
+    });
 
 });
 
@@ -275,7 +259,6 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
     * Sets Pass Status
     * Can be set by toPerson and Migrator
     * REQUIRES JWT Authorization in headers.
-    * @todo Account must have teacher db permissions
     * @function updatePassState
     * @async
     * @param {request} req
@@ -292,6 +275,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     var passId = req.params.passId;
     var state = req.params.state;
 
+
     //check user input
     if(state != "pending" && state != "accepted" && state != "denied" && state != "canceled") {
         var err = new Error("Unknown state value: " + state);
@@ -304,12 +288,22 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
         if(err) {
             return next(err);
         }
-       //makesure only people involved can change stuff
-       if(userId != pass.toPerson && userId != pass.fromPerson && userId != pass.migrator && userId != pass.requester) {
-        var err = new Error("Forbidden");
-                err.status = 403;
-                return next(err);
-       }
+
+
+
+
+        //CHECK WAITLISTED Make sure noone but to person can accept pass
+        if(pass.status.confirmation.state == "waitlisted" && userId !== pass.toPerson && state === "accepted") {
+            var err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+        }
+        //makesure only people involved can change stuff
+        if(userId != pass.toPerson && userId != pass.fromPerson && userId != pass.migrator && userId != pass.requester) {
+            var err = new Error("Forbidden");
+            err.status = 403;
+            return next(err);
+        }
 
         if(pass.status.confirmation.state == "denied" || pass.status.confirmation.state == "canceled") {
             if(pass.status.confirmation.setByUser != userId) {
@@ -321,16 +315,10 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
         }
 
         //makesure that as the requester, you are not accepting your own pass
-        if(userId == pass.requester && state == "accepted" && (pass.status.confirmation.state != "denied" && pass.status.confirmation.state != "canceled")) {
-            /*if(pass.status.confirmation.state == "pending") {
-                var err = new Error("Forbidden");
-                err.status = 403;
-                return next(err);
-            }*/
-            //console.log("this")
+        if(userId == pass.requester && state === "accepted" && (pass.status.confirmation.state !== "denied" && pass.status.confirmation.state !== "canceled")) {
             var err = new Error("Forbidden");
-                err.status = 403;
-                return next(err);
+            err.status = 403;
+            return next(err);
             
         }
 
@@ -339,21 +327,22 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
             status: {
                 confirmation: {
                     setByUser: userId,
-                    state: state
+                    state: state,
+                    previousState: pass.status.confirmation.state == state ? pass.status.confirmation.previousState : pass.status.confirmation.state
                 }
             }
         };
 
         api.updatePass(passId, updateDoc, function(err, trans) {
             if(err) {
-                return next(err)
+                return next(err);
             }
-            res.json(trans)
-        })
+            res.json(trans);
+        });
 
     });
     
-})
+});
 
 
 

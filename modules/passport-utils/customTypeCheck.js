@@ -44,5 +44,11 @@ module.exports = {
                 return moment(x, moment.ISO_8601, true).isValid();
             }
         },
+        period: {
+            typeOf: "String",
+            validate: function(x) {
+                return config.get("schedule.periods").includes(x);
+            }
+        }
     }
 }

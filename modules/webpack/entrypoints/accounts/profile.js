@@ -364,7 +364,7 @@ function loadMyTeacherSchedule() {
                     teacherTable.generate().catch((err) => {utils.throwError(err)})
                 }
             } else {
-                var err = new Error("Please click on the edit (pencil) button and add a student schedule.");
+                var err = new Error("Please click on the edit (pencil) button and add a teacher schedule.");
                 markScheduleEditButton(1);
                 return utils.throwError(err);
             }
