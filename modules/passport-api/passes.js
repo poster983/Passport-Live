@@ -105,7 +105,8 @@ exports.newPass = function (pass, options) {
         preChecks.push(new Promise((limResolve, limReject) => {
             if (options.checkLimit !== false) {
                 exports.limitTally(pass.toPerson, pass.period, pass.date).then((limit) => {
-                    if(limit.tally > limit.passLimit || typeof limit.passLimit !== "string") {
+                    console.log(limit)
+                    if(limit.tally > limit.passLimit && typeof limit.passLimit !== "string") {
                         return limResolve("pending");
                     } else {
                         return limResolve("waitlisted");

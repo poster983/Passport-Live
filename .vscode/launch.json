@@ -7,12 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Start Passport",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
-            "program": "${workspaceFolder}/bin/www",
-            "restart": true,
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "name": "Launch Passport",
+            "program": "${workspaceFolder}/bin/www"
         }
     ]
 }

@@ -1279,7 +1279,7 @@ email: hi@josephhassell.com
           materialResponse("cancel", "error");
           return errorHand(err);
         }
-
+        console.log(transaction)
         if (transaction && transaction.replaced == 1) {
           Materialize.toast('Successfully Updated State', 4000)
           if (action == "denied" || action == "canceled") {
@@ -1342,6 +1342,24 @@ email: hi@josephhassell.com
             undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
           }
           badge.removeClass().addClass("new badge");
+
+          break;
+        case "waitlisted":
+          if (!cantAccept && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Cancel This Pass");
+          if (userIsRequester) {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+          } else {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+          }
+          badge.removeClass().addClass("new badge orange");
 
           break;
         case "accepted":

@@ -872,13 +872,13 @@ console.log(state)
       } else {
         if(myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state == "canceled") {
             if(myPasses[i].status.confirmation.setByUser != idOfUser) {
-                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, undefined);
             } else {
               setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
             }
         } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
           
-          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, undefined);
         } else {
           setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
         }
@@ -985,7 +985,7 @@ console.log(state)
         releaseBtn.attr("onclick", false);
         checkInBtn.attr("disabled", false);
         checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
-        checkInBtn.attr("title", false);
+        checkInBtn.attr("title", null);
         checkInBtn.attr("data-tooltip", "Check Student In");
       }
       undoBtn.attr("disabled", false);
@@ -993,6 +993,28 @@ console.log(state)
       undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
       
       badge.removeClass().addClass("new badge");
+      
+      break;
+    case "waitlisted": 
+      if(!cantAccept && !userIsRequester) {
+        releaseBtn.attr("disabled", false);
+        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+        checkInBtn.attr("disabled", true);
+        checkInBtn.attr("onclick", false);
+        checkInBtn.attr("title", "Accept this pass first");
+      } else {
+        releaseBtn.attr("disabled", true);
+        releaseBtn.attr("onclick", false);
+        checkInBtn.attr("disabled", false);
+        checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+        checkInBtn.attr("title", null);
+        checkInBtn.attr("data-tooltip", "Check Student In");
+      }
+      undoBtn.attr("disabled", false);
+      undoBtn.attr("data-tooltip", "Deny This Pass Request");
+      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+      
+      badge.removeClass().addClass("new badge orange");
       
       break;
     case "accepted": 

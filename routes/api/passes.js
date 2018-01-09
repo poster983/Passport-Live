@@ -35,14 +35,7 @@ var moment = require("moment");
 router.use(cors());
 router.options('*', cors());
 
-function serializeUser(req, res, done) {
-    console.log(req.user[0]);
-    //REMOVE SECRET INFO LIKE PASSWORDS
-    //delete req.user[0].password;
-    //req.user = req.user[0];
-    req.user = utils.cleanUser(req.user);
-    done();
-};
+
 
 /**
     * Creates a new Pass from/for currently logged in account.
@@ -298,13 +291,9 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 
 
 
-        /*NEW CODE*/
 
-        
-
-
-        //CHECK WAITLISTED
-        if(pass.status.confirmation.state == "waitlisted" && userId != pass.toPerson) {
+        //CHECK WAITLISTED Make sure noone but to person can accept pass
+        if(pass.status.confirmation.state == "waitlisted" && userId !== pass.toPerson && state === "accepted") {
             var err = new Error("Forbidden");
             err.status = 403;
             return next(err);
@@ -326,13 +315,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
         }
 
         //makesure that as the requester, you are not accepting your own pass
-        if(userId == pass.requester && state == "accepted" && (pass.status.confirmation.state != "denied" && pass.status.confirmation.state != "canceled")) {
-            /*if(pass.status.confirmation.state == "pending") {
-                var err = new Error("Forbidden");
-                err.status = 403;
-                return next(err);
-            }*/
-            //console.log("this")
+        if(userId == pass.requester && state === "accepted" && (pass.status.confirmation.state !== "denied" && pass.status.confirmation.state !== "canceled")) {
             var err = new Error("Forbidden");
             err.status = 403;
             return next(err);
