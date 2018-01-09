@@ -106,7 +106,7 @@ exports.newPass = function (pass, options) {
             if (options.checkLimit !== false) {
                 exports.limitTally(pass.toPerson, pass.period, pass.date).then((limit) => {
                     console.log(limit)
-                    if(limit.tally > limit.passLimit && typeof limit.passLimit !== "string") {
+                    if(limit.tally > limit.passLimit && typeof limit.passLimit !== "number") {
                         return limResolve("pending");
                     } else {
                         return limResolve("waitlisted");
