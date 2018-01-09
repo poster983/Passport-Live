@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>StudentScheduleEditor - Documentation</title>
+    <title>js/passes - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">StudentScheduleEditor</h1>
+    <h1 class="page-title">js/passes</h1>
     
 
     <!--container.tmpl-->
@@ -49,11 +49,7 @@
 
 <header data-tmpl="container.tmpl">
     
-        <h2>
-        StudentScheduleEditor
-        </h2>
-        
-            <div class="lead"><p>Class that Generates a Schedule editor for students.</p></div>
+      <h2>Module: js/passes</h2>
         
     
 
@@ -63,45 +59,67 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#checkValidity">checkValidity</a></li>
+            <li><a href="#flexableGetPasses">flexableGetPasses</a></li>
             
-            <li><a href="#generate">generate</a></li>
+            <li><a href="#getPass">getPass</a></li>
             
-            <li><a href="#getHasChanged">getHasChanged</a></li>
+            <li><a href="#limitTally">limitTally</a></li>
             
-            <li><a href="#submit">submit</a></li>
+            <li><a href="#newPass">newPass</a></li>
+            
+            <li><a href="#updatePass">updatePass</a></li>
             </ul></dd></dl></div>
 </header>
 
 <article>
     <div class="container-overview">
     
-        <!--method.tmpl-->
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            <!--method.tmpl-->
 <div class="method-details">
 
 
 
-
-
-    
-    <h3 class="constructor">Constructor</h3>
-    
-
-    
-      <!--source-link.tmpl-->
+  <!--source-link.tmpl-->
 
 
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_sections_StudentScheduleEditor.js.html">StudentScheduleEditor.js</a>:<a href="modules_webpack_sections_StudentScheduleEditor.js.html#line36">36</a>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line203">203</a>
   </code>
 </div>
 
+
+
+
     
 
-    <h4 class="name" id="StudentScheduleEditor">
-      <a href="#params-StudentScheduleEditor"><span class="type-signature"></span>new StudentScheduleEditor</a><span class="signature">(formOutputContainer, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+    
+
+    <h4 class="name" id=".flexableGetPasses">
+      <a href="#params-flexableGetPasses"><span class="type-signature">(static) </span>flexableGetPasses</a><span class="signature">(id, byColl, fromDate, toDate, periods, done)</span><span class="type-signature"> &rarr; {done}</span>
 
     </h4>
 
@@ -119,6 +137,9 @@
 
 
 
+<div class="description">
+    <p>Gets passes with flexable id search</p>
+</div>
 
 
 
@@ -126,7 +147,8 @@
 
 
 
-<div class="collapse_" id="methodCollapse-StudentScheduleEditor">
+
+<div class="collapse_" id="methodCollapse-flexableGetPasses">
 
   
 
@@ -175,7 +197,812 @@
 
 
 
-  <div id="params-StudentScheduleEditor" class="bs-callout bs-callout-primary">
+  <div id="params-flexableGetPasses" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the account</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>byColl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Where to search for the id.  Possible values: &quot;fromPerson&quot;, &quot;toPerson&quot;, &quot;migrator&quot;, &quot;requester&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>low range date to search for.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>High range date to search for.  set null for none</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>periods</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Only return passes with these periods.  set null for none</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>Error, or a transaction statement</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">done</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n * Gets passes with flexable id search\n * @link module:js/passes\n * @param {string} id - Id of the account\n * @param {string} byColl - Where to search for the id.  Possible values: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"\n * @param {date} fromDate - low range date to search for.  \n * @param {date} toDate - High range date to search for.  set null for none\n * @param {array} periods - Only return passes with these periods.  set null for none\n * @param {function} done - callback\n * @returns {done} Error, or a transaction statement \n */","meta":{"range":[7756,11781],"filename":"passes.js","lineno":203,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100009551","name":"exports.flexableGetPasses","type":"FunctionExpression","paramnames":["id","byColl","fromDate","toDate","periods","done"]},"vars":{"err":"module:js/passes.flexableGetPasses~err","err.status":"module:js/passes.flexableGetPasses~err.status","fromDate":"module:js/passes~fromDate","toDate":"module:js/passes~toDate","":null},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Gets passes with flexable id search</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/passes","value":"module:js/passes"}],"params":[{"type":{"names":["string"]},"description":"<p>Id of the account</p>","name":"id"},{"type":{"names":["string"]},"description":"<p>Where to search for the id.  Possible values: &quot;fromPerson&quot;, &quot;toPerson&quot;, &quot;migrator&quot;, &quot;requester&quot;</p>","name":"byColl"},{"type":{"names":["date"]},"description":"<p>low range date to search for.</p>","name":"fromDate"},{"type":{"names":["date"]},"description":"<p>High range date to search for.  set null for none</p>","name":"toDate"},{"type":{"names":["array"]},"description":"<p>Only return passes with these periods.  set null for none</p>","name":"periods"},{"type":{"names":["function"]},"description":"<p>callback</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Error, or a transaction statement</p>"}],"name":"flexableGetPasses","longname":"module:js/passes.flexableGetPasses","kind":"function","memberof":"module:js/passes","scope":"static","___id":"T000002R000631","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".flexableGetPasses","signature":"<span class=\"signature\">(id, byColl, fromDate, toDate, periods, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-js_passes.html\">js/passes</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line351">351</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".getPass">
+      <a href="#params-getPass"><span class="type-signature">(static) </span>getPass</a><span class="signature">(passId, done)</span><span class="type-signature"> &rarr; {done}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Gets pass by Primary key</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-getPass">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-getPass" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>passId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">UUID</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id of the Pass</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>Error, or pass object</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">done</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n * Gets pass by Primary key\n * @link module:js/passes\n * @param {UUID} passId - Id of the Pass\n * @param {function} done - callback\n * @returns {done} Error, or pass object \n */","meta":{"range":[11968,12333],"filename":"passes.js","lineno":351,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100010145","name":"exports.getPass","type":"FunctionExpression","paramnames":["passId","done"]},"vars":{"err":"module:js/passes.getPass~err","err.status":"module:js/passes.getPass~err.status","":null},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Gets pass by Primary key</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/passes","value":"module:js/passes"}],"params":[{"type":{"names":["UUID"]},"description":"<p>Id of the Pass</p>","name":"passId"},{"type":{"names":["function"]},"description":"<p>callback</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Error, or pass object</p>"}],"name":"getPass","longname":"module:js/passes.getPass","kind":"function","memberof":"module:js/passes","scope":"static","___id":"T000002R000647","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".getPass","signature":"<span class=\"signature\">(passId, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-js_passes.html\">js/passes</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line405">405</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".limitTally">
+      <a href="#params-limitTally"><span class="type-signature">(static) </span>limitTally</a><span class="signature">(userID, period, date)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Gets the pass tally for a user</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-limitTally">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-limitTally" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>account id of user to tally up passes (AKA toPerson)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>period</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a period constant to check for</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">ISOstring</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the day to tally up</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <p>passes tally and passLimit</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n * Gets the pass tally for a user\n * @link module:js/passes\n * @param {string} userID - account id of user to tally up passes (AKA toPerson)\n * @param {string} period - a period constant to check for \n * @param {(Date|ISOstring)} date - the day to tally up\n * @returns {Promise} passes tally and passLimit \n */","meta":{"range":[13442,14611],"filename":"passes.js","lineno":405,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100010307","name":"exports.limitTally","type":"ArrowFunctionExpression","paramnames":["userID","period","date"]},"vars":{"":null},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Gets the pass tally for a user</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/passes","value":"module:js/passes"}],"params":[{"type":{"names":["string"]},"description":"<p>account id of user to tally up passes (AKA toPerson)</p>","name":"userID"},{"type":{"names":["string"]},"description":"<p>a period constant to check for</p>","name":"period"},{"type":{"names":["Date","ISOstring"]},"description":"<p>the day to tally up</p>","name":"date"}],"returns":[{"type":{"names":["Promise"]},"description":"<p>passes tally and passLimit</p>"}],"name":"limitTally","longname":"module:js/passes.limitTally","kind":"function","memberof":"module:js/passes","scope":"static","___id":"T000002R000655","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".limitTally","signature":"<span class=\"signature\">(userID, period, date)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_passes.html\">js/passes</a>."]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line49">49</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id=".newPass">
+      <a href="#params-newPass"><span class="type-signature">(static) </span>newPass</a><span class="signature">(pass, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Creates a new account</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-newPass">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-newPass" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -204,7 +1031,7 @@
 
         <tr>
             
-                <td class="name"><code>formOutputContainer</code></td>
+                <td class="name"><code>pass</code></td>
             
 
             <td class="type">
@@ -228,7 +1055,255 @@
 
             
 
-            <td class="description last"><p>Where to put the scheduele editor.</p></td>
+            <td class="description last">
+                <h6>Properties</h6>
+                <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>toPerson</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Id of the account recieving the migrating person</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromPerson</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>Id of the account releasing the migrating person</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>migrator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Id of the account moving between people</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>requester</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Id of the account who requested the pass</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>period</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>must be a valid period set in the configs</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">date</span>
+|
+
+<span class="param-type">ISOString</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -280,6 +1355,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -290,13 +1367,13 @@
 
         <tr>
             
-                <td class="name"><code>accountID</code></td>
+                <td class="name"><code>checkLimit</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -315,21 +1392,27 @@
             
 
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
 
-            <td class="description last"><p>Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.</p></td>
+            <td class="description last"><p>Checks if toPerson is full. If so, the pass will be set as &quot;waitlisted&quot;</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>onChange</code></td>
+                <td class="name"><code>checkDupe</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -348,8 +1431,14 @@
             
 
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
 
-            <td class="description last"><p>Called whenever change occurs in the form. event passed to function.</p></td>
+            <td class="description last"><p>Sheck if there is an identical pass in the system already.</p></td>
         </tr>
 
     
@@ -377,161 +1466,12 @@
 
 
 
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n* Class that Generates a Schedule editor for students.\n* @class \n* @param {Object} formOutputContainer - Where to put the scheduele editor.\n* @param {Object} [options] \n* @param {string} [options.accountID] - Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.\n* @param {function} [options.onChange] - Called whenever change occurs in the form. event passed to function.\n*/","meta":{"range":[1477,22149],"filename":"StudentScheduleEditor.js","lineno":36,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/sections","code":{"id":"astnode100018107","name":"StudentScheduleEditor","type":"ClassDeclaration","paramnames":["formOutputContainer","options"]},"shortpath":"modules/webpack/sections/StudentScheduleEditor.js"},"classdesc":"<p>Class that Generates a Schedule editor for students.</p>","kind":"class","params":[{"type":{"names":["Object"]},"description":"<p>Where to put the scheduele editor.</p>","name":"formOutputContainer"},{"type":{"names":["Object"]},"optional":true,"name":"options","subparams":[{"type":{"names":["string"]},"optional":true,"description":"<p>Specify what user to pull the existing schedule from. If undefined, the logged in user will be used.</p>","name":"accountID"},{"type":{"names":["function"]},"optional":true,"description":"<p>Called whenever change occurs in the form. event passed to function.</p>","name":"onChange"}]},null,null],"name":"StudentScheduleEditor","longname":"StudentScheduleEditor","scope":"global","___id":"T000003R000003","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"StudentScheduleEditor","signature":"<span class=\"signature\">(formOutputContainer, options<span class=\"signature-attributes\">opt</span>)</span><span class=\"type-signature\"></span>","ancestors":[]}
-</pre>
--->
-</div>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_sections_StudentScheduleEditor.js.html">StudentScheduleEditor.js</a>:<a href="modules_webpack_sections_StudentScheduleEditor.js.html#line313">313</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="checkValidity">
-      <a href="#params-checkValidity"><span class="type-signature"></span>checkValidity</a><span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>This checks to see if each field is valid.  If not it will change the dom to reflect that.</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-checkValidity">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div class="bs-callout bs-callout-success">
     <h5>Returns </h5>
 
         
 <div class="param-desc">
-    <ul>
-<li>Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}</li>
-</ul>
+    <p>Error, or a transaction statement</p>
 </div>
 
 
@@ -561,7 +1501,7 @@
 
 <!--
 <pre>
-{"comment":"/** This checks to see if each field is valid.  If not it will change the dom to reflect that.\n    * @returns {Promise} - Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}\n    */","meta":{"range":[16041,17377],"filename":"StudentScheduleEditor.js","lineno":313,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/sections","code":{"id":"astnode100019874","name":"StudentScheduleEditor#checkValidity","type":"MethodDefinition","paramnames":[]},"vars":{"":null},"shortpath":"modules/webpack/sections/StudentScheduleEditor.js"},"description":"<p>This checks to see if each field is valid.  If not it will change the dom to reflect that.</p>","returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>Will not reject even if it is not valid.  Invalid form response: {valid: false, problemRowElement: (Object)}</li>\n</ul>"}],"name":"checkValidity","longname":"StudentScheduleEditor#checkValidity","kind":"function","memberof":"StudentScheduleEditor","scope":"instance","params":[],"___id":"T000002R001342","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"checkValidity","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"StudentScheduleEditor.html\">StudentScheduleEditor</a>#"]}
+{"comment":"/**\n * Creates a new account\n * @link module:js/passes\n * @param {Object} pass\n * @param {string} pass.toPerson - Id of the account recieving the migrating person\n * @param {string} [pass.fromPerson=null] - Id of the account releasing the migrating person\n * @param {string} pass.migrator - Id of the account moving between people\n * @param {string} pass.requester - Id of the account who requested the pass\n * @param {string} pass.period - must be a valid period set in the configs\n * @param {(date|ISOString)} pass.date\n * @param {Object} [options]\n * @param {boolean} [options.checkLimit=true] - Checks if toPerson is full. If so, the pass will be set as \"waitlisted\"\n * @param {boolean} [options.checkDupe=true] - Sheck if there is an identical pass in the system already.\n * @returns {Promise} Error, or a transaction statement \n */","meta":{"range":[2009,7201],"filename":"passes.js","lineno":49,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100009139","name":"exports.newPass","type":"FunctionExpression","paramnames":["pass","options"]},"vars":{"":null},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Creates a new account</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/passes","value":"module:js/passes"}],"params":[{"type":{"names":["Object"]},"name":"pass","subparams":[{"type":{"names":["string"]},"description":"<p>Id of the account recieving the migrating person</p>","name":"toPerson"},{"type":{"names":["string"]},"optional":true,"defaultvalue":null,"description":"<p>Id of the account releasing the migrating person</p>","name":"fromPerson"},{"type":{"names":["string"]},"description":"<p>Id of the account moving between people</p>","name":"migrator"},{"type":{"names":["string"]},"description":"<p>Id of the account who requested the pass</p>","name":"requester"},{"type":{"names":["string"]},"description":"<p>must be a valid period set in the configs</p>","name":"period"},{"type":{"names":["date","ISOString"]},"name":"date"}]},null,null,null,null,null,null,{"type":{"names":["Object"]},"optional":true,"name":"options","subparams":[{"type":{"names":["boolean"]},"optional":true,"defaultvalue":true,"description":"<p>Checks if toPerson is full. If so, the pass will be set as &quot;waitlisted&quot;</p>","name":"checkLimit"},{"type":{"names":["boolean"]},"optional":true,"defaultvalue":true,"description":"<p>Sheck if there is an identical pass in the system already.</p>","name":"checkDupe"}]},null,null],"returns":[{"type":{"names":["Promise"]},"description":"<p>Error, or a transaction statement</p>"}],"name":"newPass","longname":"module:js/passes.newPass","kind":"function","memberof":"module:js/passes","scope":"static","___id":"T000002R000593","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".newPass","signature":"<span class=\"signature\">(pass, options<span class=\"signature-attributes\">opt</span>)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"module-js_passes.html\">js/passes</a>."]}
 </pre>
 -->
 </div>
@@ -578,7 +1518,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_sections_StudentScheduleEditor.js.html">StudentScheduleEditor.js</a>:<a href="modules_webpack_sections_StudentScheduleEditor.js.html#line64">64</a>
+    <a href="modules_passport-api_passes.js.html">passes.js</a>:<a href="modules_passport-api_passes.js.html#line376">376</a>
   </code>
 </div>
 
@@ -589,8 +1529,8 @@
 
     
 
-    <h4 class="name" id="generate">
-      <a href="#params-generate"><span class="type-signature"></span>generate</a><span class="signature">(startClean<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span>
+    <h4 class="name" id=".updatePass">
+      <a href="#params-updatePass"><span class="type-signature">(static) </span>updatePass</a><span class="signature">(passId, doc, done)</span><span class="type-signature"> &rarr; {done}</span>
 
     </h4>
 
@@ -609,7 +1549,7 @@
 
 
 <div class="description">
-    <p>Creates the table</p>
+    <p>Updates pass fields</p>
 </div>
 
 
@@ -619,7 +1559,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-generate">
+<div class="collapse_" id="methodCollapse-updatePass">
 
   
 
@@ -668,7 +1608,7 @@
 
 
 
-  <div id="params-generate" class="bs-callout bs-callout-primary">
+  <div id="params-updatePass" class="bs-callout bs-callout-primary">
     <h5>Parameters</h5>
     <!--params.tmpl-->
 
@@ -683,8 +1623,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -697,33 +1635,69 @@
 
         <tr>
             
-                <td class="name"><code>startClean</code></td>
+                <td class="name"><code>passId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">UUID</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last"><p>Id of the Pass</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>doc</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type">json</span>
+
+
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.</p></td>
+            <td class="description last"><p>Json object to update / insert into the db</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>callback</p></td>
         </tr>
 
     
@@ -748,310 +1722,8 @@
     <h5>Returns </h5>
 
         
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** Creates the table \n    * @param {bool} [startClean] - If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.\n    * @returns {Promise}\n    */","meta":{"range":[2969,7771],"filename":"StudentScheduleEditor.js","lineno":64,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/sections","code":{"id":"astnode100018224","name":"StudentScheduleEditor#generate","type":"MethodDefinition","paramnames":["startClean"]},"vars":{"":null},"shortpath":"modules/webpack/sections/StudentScheduleEditor.js"},"description":"<p>Creates the table</p>","params":[{"type":{"names":["bool"]},"optional":true,"description":"<p>If true, it will not load the user schedule. Use if there is a problem finding a user schedule, or the user wants to just not load the schedule.</p>","name":"startClean"}],"returns":[{"type":{"names":["Promise"]}}],"name":"generate","longname":"StudentScheduleEditor#generate","kind":"function","memberof":"StudentScheduleEditor","scope":"instance","___id":"T000002R001275","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"generate","signature":"<span class=\"signature\">(startClean<span class=\"signature-attributes\">opt</span>)</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"StudentScheduleEditor.html\">StudentScheduleEditor</a>#"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_sections_StudentScheduleEditor.js.html">StudentScheduleEditor.js</a>:<a href="modules_webpack_sections_StudentScheduleEditor.js.html#line56">56</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="getHasChanged">
-      <a href="#params-getHasChanged"><span class="type-signature"></span>getHasChanged</a><span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Tells if the form has been changed from its initial value</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getHasChanged">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** Tells if the form has been changed from its initial value \n    * @returns {boolean}\n    */","meta":{"range":[2669,2724],"filename":"StudentScheduleEditor.js","lineno":56,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/sections","code":{"id":"astnode100018216","name":"StudentScheduleEditor#getHasChanged","type":"MethodDefinition","paramnames":[]},"vars":{"":null},"shortpath":"modules/webpack/sections/StudentScheduleEditor.js"},"description":"<p>Tells if the form has been changed from its initial value</p>","returns":[{"type":{"names":["boolean"]}}],"name":"getHasChanged","longname":"StudentScheduleEditor#getHasChanged","kind":"function","memberof":"StudentScheduleEditor","scope":"instance","params":[],"___id":"T000002R001274","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"getHasChanged","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {boolean}</span>","ancestors":["<a href=\"StudentScheduleEditor.html\">StudentScheduleEditor</a>#"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_sections_StudentScheduleEditor.js.html">StudentScheduleEditor.js</a>:<a href="modules_webpack_sections_StudentScheduleEditor.js.html#line346">346</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="submit">
-      <a href="#params-submit"><span class="type-signature"></span>submit</a><span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Submits the form</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-submit">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
 <div class="param-desc">
-    <ul>
-<li>{transaction: res, formData: form}</li>
-</ul>
+    <p>Error, or a transaction statement</p>
 </div>
 
 
@@ -1062,7 +1734,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">done</span>
 
 
     </dd>
@@ -1081,7 +1753,7 @@
 
 <!--
 <pre>
-{"comment":"/** Submits the form\n    * @returns {Promise} - {transaction: res, formData: form}\n    */","meta":{"range":[17477,18904],"filename":"StudentScheduleEditor.js","lineno":346,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/sections","code":{"id":"astnode100020069","name":"StudentScheduleEditor#submit","type":"MethodDefinition","paramnames":[]},"vars":{"":null},"shortpath":"modules/webpack/sections/StudentScheduleEditor.js"},"description":"<p>Submits the form</p>","returns":[{"type":{"names":["Promise"]},"description":"<ul>\n<li>{transaction: res, formData: form}</li>\n</ul>"}],"name":"submit","longname":"StudentScheduleEditor#submit","kind":"function","memberof":"StudentScheduleEditor","scope":"instance","params":[],"___id":"T000002R001346","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"submit","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {Promise}</span>","ancestors":["<a href=\"StudentScheduleEditor.html\">StudentScheduleEditor</a>#"]}
+{"comment":"/**\n * Updates pass fields\n * @link module:js/passes\n * @param {UUID} passId - Id of the Pass\n * @param {json} doc - Json object to update / insert into the db \n * @param {function} done - callback\n * @returns {done} Error, or a transaction statement \n */","meta":{"range":[12593,13124],"filename":"passes.js","lineno":376,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/passport-api","code":{"id":"astnode100010211","name":"exports.updatePass","type":"FunctionExpression","paramnames":["passId","doc","done"]},"vars":{"err":"module:js/passes.updatePass~err","err.status":"module:js/passes.updatePass~err.status","":null},"shortpath":"modules/passport-api/passes.js"},"description":"<p>Updates pass fields</p>","tags":[{"originalTitle":"link","title":"link","text":"module:js/passes","value":"module:js/passes"}],"params":[{"type":{"names":["UUID"]},"description":"<p>Id of the Pass</p>","name":"passId"},{"type":{"names":["json"]},"description":"<p>Json object to update / insert into the db</p>","name":"doc"},{"type":{"names":["function"]},"description":"<p>callback</p>","name":"done"}],"returns":[{"type":{"names":["done"]},"description":"<p>Error, or a transaction statement</p>"}],"name":"updatePass","longname":"module:js/passes.updatePass","kind":"function","memberof":"module:js/passes","scope":"static","___id":"T000002R000650","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".updatePass","signature":"<span class=\"signature\">(passId, doc, done)</span><span class=\"type-signature\"> &rarr; {done}</span>","ancestors":["<a href=\"module-js_passes.html\">js/passes</a>."]}
 </pre>
 -->
 </div>
