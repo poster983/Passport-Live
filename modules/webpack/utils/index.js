@@ -294,3 +294,19 @@ exports.openPage = (pageID) => {
 exports.closePage = (pageID) => {
   $("#" + pageID).removeClass("active");
 }
+
+/** 
+* Returns a Materialize loader element
+* @link module:webpack/utils
+* @param {Object} [options]
+* @param {string} [options.size=medium] - ("big" or "small")
+* @param {string} [options.color=multi] - ("red", "yellow", "green", "blue")
+* @returns {Object} - JQuery element
+*/
+exports.loader = ({size, color}) => {
+  if(!size) {size = ""};
+  switch(color) {
+    case "red": 
+      color = 
+  }
+}
