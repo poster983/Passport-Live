@@ -97,7 +97,7 @@ email: hi@josephhassell.com
           <div class="col s12 m6">
             <div class="card">
               <div class="card-content black-text">
-                <span class="card-title">Account Permission Key</span>
+                <span class="card-title">Signup Link</span>
                 <!-- userGroup selector -->
                   <div class="input-field col s12">
                     <select multiple>
@@ -106,13 +106,41 @@ email: hi@josephhassell.com
                       <option value="2">Option 2</option>
                       <option value="3">Option 3</option>
                     </select>
-                    <label>Materialize Multiple Select</label>
+                    <label>Usergroups</label>
                   </div>
+                  <!-- Date/Time -->
+                  <p>Timeout</p>
+                  <div class="input-field col s12 m6">
+                    <input type="text" class="datepicker" id="accountPermKey-date">
+                    <label for="accountPermKey-date">Date</label>
+                  </div>
+                  <div class="input-field col s12 m6">
+                    <input type="text" class="timepicker" id="accountPermKey-time">
+                    <label for="accountPermKey-time">Time</label>
+                  </div>
+                  <p>Uses</p>
+                  <div class="input-field col s12">
+                    <input id="accountPermKey-password" type="number">
+                    <label for="accountPermKey-tally">Max uses</label>
+                  </div>
+                  <p>&nbsp;</p>
 
               </div>
               <div class="card-action">
-                <a href="#">This is a link</a>
-                <a href="#">This is a link</a>
+                <a href="#" class="waves-effect waves-green btn-large btn-flat"><span>Create link</span><div class="button-overlay">
+                  <div class="preloader-wrapper small active">
+    <div class="spinner-layer spinner-green-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+                </div></a>
+                
               </div>
             </div>
           </div>
