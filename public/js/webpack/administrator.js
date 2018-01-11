@@ -380,8 +380,8 @@ exports.loader = ({size, color, active}) => {
     let htmlLoader = $("<div/>").addClass("preloader-wrapper " + active + " " + size);
     
     
-    //!color?4:1
-    for(let x = 0; x < 4; x++) {
+    let itt = !color?4:1;
+    for(let x = 0; x < itt; x++) {
         let rowCol = typeof color === "string" ? color + "-only" : x === 0? "blue" : x === 1? "red" : x === 2? "yellow" : x === 3? "green" : ""; 
         htmlLoader.append($("<div class=\"spinner-layer spinner-" + rowCol + `">
       <div class="circle-clipper left">
@@ -394,7 +394,6 @@ exports.loader = ({size, color, active}) => {
     </div>
     `));
     }
-    console.log(htmlLoader)
     return htmlLoader;
 };
 
@@ -428,16 +427,32 @@ email: hi@josephhassell.com
 let utils = __webpack_require__(0);
 let buttonLoader = __webpack_require__(21);
 
+
+let pageLoadProm = [];
 window.onload = function() {
-    buttonLoader.load("#accountPermKey-submit");
-    setTimeout(() => {
-        buttonLoader.success("#accountPermKey-submit", 1000)
-    }, 2000)
-    setTimeout(() => {
-        buttonLoader.load("#accountPermKey-submit");
-    }, 4000)
-    //$("#accountPermKey-submit").append();
+    
 };
+
+/** START[New Account Permission key Card]**/
+
+//Listen for click on submit button.  Check validity 
+$("#accountPermKey-submit").on("click", (e) => {
+    buttonLoader.load("#accountPermKey-submit");
+    let userGroups = $("#accountPermKey-userGroups");
+    let date = $("input#accountPermKey-date");
+    let time = $("input#accountPermKey-time");
+    let tally = $("input#accountPermKey-tally");
+    console.log(userGroups.val())
+    if(userGroups.val() && date.val() && time.val() && tally.val()) {
+        buttonLoader.success("#accountPermKey-submit", 2000)
+    } else {
+        buttonLoader.warn("#accountPermKey-submit", 2000)
+    }
+})
+
+
+
+/** END[account permission key card] **/
 
 /***/ }),
 

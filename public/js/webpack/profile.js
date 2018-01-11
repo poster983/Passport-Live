@@ -379,8 +379,8 @@ exports.loader = ({size, color, active}) => {
     let htmlLoader = $("<div/>").addClass("preloader-wrapper " + active + " " + size);
     
     
-    //!color?4:1
-    for(let x = 0; x < 4; x++) {
+    let itt = !color?4:1;
+    for(let x = 0; x < itt; x++) {
         let rowCol = typeof color === "string" ? color + "-only" : x === 0? "blue" : x === 1? "red" : x === 2? "yellow" : x === 3? "green" : ""; 
         htmlLoader.append($("<div class=\"spinner-layer spinner-" + rowCol + `">
       <div class="circle-clipper left">
@@ -393,7 +393,6 @@ exports.loader = ({size, color, active}) => {
     </div>
     `));
     }
-    console.log(htmlLoader)
     return htmlLoader;
 };
 
@@ -3024,6 +3023,17 @@ var utils = __webpack_require__(0);
 exports.getScheduleConfig = () => {
     return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
 }
+
+/** 
+* Gets all userGroup types from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getUserGroups = () => {
+    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false})
+}
+
+
 
 /***/ }),
 /* 18 */,

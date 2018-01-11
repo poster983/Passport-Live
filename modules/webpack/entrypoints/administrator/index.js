@@ -23,13 +23,29 @@ email: hi@josephhassell.com
 let utils = require("../../utils/index.js");
 let buttonLoader = require("../../common/buttonLoader");
 
+
+let pageLoadProm = [];
 window.onload = function() {
-    buttonLoader.load("#accountPermKey-submit");
-    setTimeout(() => {
-        buttonLoader.success("#accountPermKey-submit", 1000)
-    }, 2000)
-    setTimeout(() => {
-        buttonLoader.load("#accountPermKey-submit");
-    }, 4000)
-    //$("#accountPermKey-submit").append();
+    
 };
+
+/** START[New Account Permission key Card]**/
+
+//Listen for click on submit button.  Check validity 
+$("#accountPermKey-submit").on("click", (e) => {
+    buttonLoader.load("#accountPermKey-submit");
+    let userGroups = $("#accountPermKey-userGroups");
+    let date = $("input#accountPermKey-date");
+    let time = $("input#accountPermKey-time");
+    let tally = $("input#accountPermKey-tally");
+    console.log(userGroups.val())
+    if(userGroups.val() && date.val() && time.val() && tally.val()) {
+        buttonLoader.success("#accountPermKey-submit", 2000)
+    } else {
+        buttonLoader.warn("#accountPermKey-submit", 2000)
+    }
+})
+
+
+
+/** END[account permission key card] **/

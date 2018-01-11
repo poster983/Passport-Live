@@ -310,8 +310,8 @@ exports.loader = ({size, color, active}) => {
     let htmlLoader = $("<div/>").addClass("preloader-wrapper " + active + " " + size);
     
     
-    //!color?4:1
-    for(let x = 0; x < 4; x++) {
+    let itt = !color?4:1;
+    for(let x = 0; x < itt; x++) {
         let rowCol = typeof color === "string" ? color + "-only" : x === 0? "blue" : x === 1? "red" : x === 2? "yellow" : x === 3? "green" : ""; 
         htmlLoader.append($("<div class=\"spinner-layer spinner-" + rowCol + `">
       <div class="circle-clipper left">
@@ -324,6 +324,5 @@ exports.loader = ({size, color, active}) => {
     </div>
     `));
     }
-    console.log(htmlLoader)
     return htmlLoader;
 };

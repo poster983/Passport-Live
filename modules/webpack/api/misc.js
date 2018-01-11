@@ -35,3 +35,13 @@ var utils = require("../utils/index.js");
 exports.getScheduleConfig = () => {
     return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
 }
+
+/** 
+* Gets all userGroup types from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getUserGroups = () => {
+    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false})
+}
+
