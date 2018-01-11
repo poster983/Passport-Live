@@ -26,7 +26,26 @@ let buttonLoader = require("../../common/buttonLoader");
 
 let pageLoadProm = [];
 window.onload = function() {
-    
+    $(".button-collapse").sideNav();
+    $('.datepicker').pickadate({
+      formatSubmit: 'yyyy-mm-dd',
+      hiddenName: true,
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    $('.timepicker').pickatime({
+      default: 'now', // Set default time
+      fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+      twelvehour: true, // Use AM/PM or 24-hour format
+      donetext: 'OK', // text for done-button
+      cleartext: 'Clear', // text for clear-button
+      canceltext: 'Cancel', // Text for cancel-button
+      autoclose: false, // automatic close timepicker
+      ampmclickable: true, // make AM PM clickable
+      aftershow: function(){} //Function for after opening timepicker  
+    });
+    $('select').material_select();
+
 };
 
 /** START[New Account Permission key Card]**/
@@ -39,8 +58,10 @@ $("#accountPermKey-submit").on("click", (e) => {
     let time = $("input#accountPermKey-time");
     let tally = $("input#accountPermKey-tally");
     console.log(userGroups.val())
-    if(userGroups.val() && date.val() && time.val() && tally.val()) {
+    if(userGroups.val().length > 0) {
+
         buttonLoader.success("#accountPermKey-submit", 2000)
+
     } else {
         buttonLoader.warn("#accountPermKey-submit", 2000)
     }
