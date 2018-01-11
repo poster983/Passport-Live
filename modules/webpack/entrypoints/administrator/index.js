@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 
 let utils = require("../../utils/index.js");
 let buttonLoader = require("../../common/buttonLoader");
+//let moment = require("moment")
 
 
 let pageLoadProm = [];
@@ -54,16 +55,48 @@ window.onload = function() {
 $("#accountPermKey-submit").on("click", (e) => {
     buttonLoader.load("#accountPermKey-submit");
     let userGroups = $("#accountPermKey-userGroups");
-    let date = $("input#accountPermKey-date");
+    let date = $("input[name=accountPermKey-date]");
     let time = $("input#accountPermKey-time");
     let tally = $("input#accountPermKey-tally");
-    console.log(userGroups.val())
+    let datetime = moment(date.val() + " " + time.val(), "YYYY-MM-DD hh:mmA");
+    console.log(date.val() + " " + time.val())
+    console.log(datetime)
+    console.log(datetime.toISOString())
+    console.log(time.val())
+    //console.log(new Date(date).)
+    if(!date.val() && time.val()) {
+        buttonLoader.warning("#accountPermKey-submit", 2000)
+        return Materialize.toast('Date required for timeout', 4000)
+    }
+
+    //check tally 
+    let tallyNum = parseInt(tally.val())
+    if(tally.val() && isNaN(tallyNum)) {
+        Materialize.toast('Invalid tally ', 4000)
+        return buttonLoader.warning("#accountPermKey-submit", 2000)
+    }
     if(userGroups.val().length > 0) {
 
         buttonLoader.success("#accountPermKey-submit", 2000)
 
+        //Submit
+        let returner = {
+            userGroups: userGroups.val()
+        }
+        if(datetime.isValid() || !isNaN(tallyNum)) {
+            returner.timeout = {}
+        }
+        if(datetime.isValid()) {
+            returner.timeout.time = datetime.toISOString()
+        }
+        if(!isNaN(tallyNum)) {
+            returner.timeout.tally = tallyNum;
+        }
+        console.log(returner)
+
     } else {
-        buttonLoader.warn("#accountPermKey-submit", 2000)
+        Materialize.toast('User Group Required', 4000)
+        buttonLoader.warning("#accountPermKey-submit", 2000)
     }
 })
 

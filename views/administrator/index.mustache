@@ -99,6 +99,7 @@ email: hi@josephhassell.com
               <div class="card-content black-text">
                 <span class="card-title">Signup Link</span>
                 <!-- userGroup selector -->
+                <div id="accountPermKey-form">
                   <div class="input-field col s12">
                     <select multiple id="accountPermKey-userGroups">
                       <option value="" disabled selected>Choose your option</option>
@@ -111,11 +112,11 @@ email: hi@josephhassell.com
                   <!-- Date/Time -->
                   <p>Timeout</p>
                   <div class="input-field col s12 m6">
-                    <input type="text" class="datepicker" id="accountPermKey-date">
+                    <input type="text" class="datepicker" id="accountPermKey-date" name="accountPermKey-date">
                     <label for="accountPermKey-date">Date</label>
                   </div>
                   <div class="input-field col s12 m6">
-                    <input type="text" class="timepicker" id="accountPermKey-time">
+                    <input type="text" class="timepicker" id="accountPermKey-time", name="accountPermKey-time">
                     <label for="accountPermKey-time">Time</label>
                   </div>
                   <p>Uses</p>
@@ -124,7 +125,7 @@ email: hi@josephhassell.com
                     <label for="accountPermKey-tally">Max uses</label>
                   </div>
                   <p>&nbsp;</p>
-
+                </div>
               </div>
               <div class="card-action">
                 <a href="#" id="accountPermKey-submit" class="waves-effect waves-green btn-large btn-flat">Create link</a>
