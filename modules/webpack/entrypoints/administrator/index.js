@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 
 let utils = require("../../utils/index.js");
 let buttonLoader = require("../../common/buttonLoader");
+let securityJS = require("../../api/security.js");
 //let moment = require("moment")
 
 
@@ -77,8 +78,6 @@ $("#accountPermKey-submit").on("click", (e) => {
     }
     if(userGroups.val().length > 0) {
 
-        buttonLoader.success("#accountPermKey-submit", 2000)
-
         //Submit
         let returner = {
             userGroups: userGroups.val()
@@ -93,8 +92,21 @@ $("#accountPermKey-submit").on("click", (e) => {
             returner.timeout.tally = tallyNum;
         }
         console.log(returner)
-
-        $("#accountPermKey-response").html("<p>Permission Key: <strong>" + "KEYGOESHERE" + "</strong></p><br> <p>Signup link: <strong>" + window.location.hostname + "</strong></p>")
+        securityJS.newAccount(returner).then((res) => {
+            if(res.key) {
+                buttonLoader.success("#accountPermKey-submit", 2000)
+                let fullURL = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+                let link = fullURL + "/auth/signup?pk=" + res.key;
+                $("#accountPermKey-response").html("<p>Permission Key: <strong>" + res.key + "</strong></p><br> <p>Signup link: <a href=\"" + link + "\">" + link + "</a></p>");
+                userGroups.val(null)
+                userGroups.material_select();
+                return true;
+            } else {
+                Materialize.toast('Key was not returned. Please try again.', 4000)
+                return buttonLoader.warning("#accountPermKey-submit", 2000)
+            }
+        })
+        
 
     } else {
         Materialize.toast('User Group Required', 4000)

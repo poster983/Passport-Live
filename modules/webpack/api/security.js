@@ -24,6 +24,8 @@ email: hi@josephhassell.com
 * @module webpack/api/security
 */
 
+let utils = require("../utils/index.js")
+
 /**
 * Creates a new permission key for creating accounts
 * @param {Object} body 

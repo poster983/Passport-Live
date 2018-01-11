@@ -426,6 +426,7 @@ email: hi@josephhassell.com
 
 let utils = __webpack_require__(0);
 let buttonLoader = __webpack_require__(21);
+let securityJS = __webpack_require__(22);
 //let moment = require("moment")
 
 
@@ -481,8 +482,6 @@ $("#accountPermKey-submit").on("click", (e) => {
     }
     if(userGroups.val().length > 0) {
 
-        buttonLoader.success("#accountPermKey-submit", 2000)
-
         //Submit
         let returner = {
             userGroups: userGroups.val()
@@ -497,6 +496,21 @@ $("#accountPermKey-submit").on("click", (e) => {
             returner.timeout.tally = tallyNum;
         }
         console.log(returner)
+        securityJS.newAccount(returner).then((res) => {
+            if(res.key) {
+                buttonLoader.success("#accountPermKey-submit", 2000)
+                let fullURL = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+                let link = fullURL + "/auth/signup?pk=" + res.key;
+                $("#accountPermKey-response").html("<p>Permission Key: <strong>" + res.key + "</strong></p><br> <p>Signup link: <a href=\"" + link + "\">" + link + "</a></p>");
+                userGroups.val(null)
+                userGroups.material_select();
+                return true;
+            } else {
+                Materialize.toast('Key was not returned. Please try again.', 4000)
+                return buttonLoader.warning("#accountPermKey-submit", 2000)
+            }
+        })
+        
 
     } else {
         Materialize.toast('User Group Required', 4000)
@@ -622,6 +636,51 @@ exports.warning = (element, fadeMS) => {
         }, fadeMS);
     }
 }
+
+/***/ }),
+
+/***/ 22:
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+/**
+* Browser Security Functions.
+* @module webpack/api/security
+*/
+
+let utils = __webpack_require__(0)
+
+/**
+* Creates a new permission key for creating accounts
+* @param {Object} body 
+* @param {String[]} body.userGroups - What accounts can be created with this perm key
+* @param {Object} [body.timeout] - whatever timeout comes first will be applyed.
+* @param {Number} [body.timeout.tally] - The number of uses allowed
+* @param {String} [body.timeout.time] - ISO date/time
+*/
+exports.newAccount = (body) => {
+    return utils.fetch("POST", "/api/security/key/NEW_ACCOUNT", {body: body, auth: true})
+}  
 
 /***/ })
 
