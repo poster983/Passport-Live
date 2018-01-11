@@ -94,6 +94,8 @@ $("#accountPermKey-submit").on("click", (e) => {
         }
         console.log(returner)
 
+        $("#accountPermKey-response").html("<p>Permission Key: <strong>" + "KEYGOESHERE" + "</strong></p><br> <p>Signup link: <strong>" + window.location.hostname + "</strong></p>")
+
     } else {
         Materialize.toast('User Group Required', 4000)
         buttonLoader.warning("#accountPermKey-submit", 2000)
