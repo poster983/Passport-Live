@@ -27,37 +27,37 @@ var importAPI = require("../../api/import.js")
 
 var bulkTable = null;
 window.onload = function() {
-  var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
-  caret.initialize();
-  console.log(utils.urlQuery({
-    string: "There",
-    number: 1,
-    bool: true,
-    null: null,
-    undefined: undefined
-  }))
-  //get initial table values and create table object.
-  bulkTable = new Table($("#bulkLogTable"), [], {
-    ignoredKeys: ['id'],
-    idKey: 'id',
-    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
-    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
-    tableClasses: 'white-text responsive-table',
-    inject: function(row, done) {
-        return done([{
-            column: "Actions", 
-            strictColumn: true,
-            dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+    var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
+    caret.initialize();
+    console.log(utils.urlQuery({
+        string: "There",
+        number: 1,
+        bool: true,
+        null: null,
+        undefined: undefined
+    }))
+    //get initial table values and create table object.
+    bulkTable = new Table($("#bulkLogTable"), [], {
+        ignoredKeys: ["id"],
+        idKey: "id",
+        sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
+        hiddenKeys: ["loggedErrors", "rollback", "properties"],
+        tableClasses: "white-text responsive-table",
+        inject: function(row, done) {
+            return done([{
+                column: "Actions", 
+                strictColumn: true,
+                dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
             //dom: {hello: "there", howAre: "you"}
-        }])
-    } 
-  });
+            }])
+        } 
+    });
 
-  importAPI.searchBulkLogs({}).then((data) => {
+    importAPI.searchBulkLogs({}).then((data) => {
     //console.log(data)
-    bulkTable.addData(data)
-    bulkTable.generate().catch(err=>utils.throwError(err));
-  }).catch(err=>utils.throwError(err));
+        bulkTable.addData(data)
+        bulkTable.generate().catch(err=>utils.throwError(err));
+    }).catch(err=>utils.throwError(err));
 };
 
 function searchBulkLogsForm() {

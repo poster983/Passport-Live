@@ -1,3 +1,73 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 0:
+/***/ (function(module, exports) {
+
 /*
 
 Passport-Live is a modern web app for schools that helps them manage passes.
@@ -327,3 +397,163 @@ exports.loader = ({size, color, active}) => {
     console.log(htmlLoader)
     return htmlLoader;
 };
+
+/***/ }),
+
+/***/ 20:
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+let utils = __webpack_require__(0);
+let buttonLoader = __webpack_require__(21);
+
+window.onload = function() {
+    buttonLoader.load("#accountPermKey-submit");
+    setTimeout(() => {
+        buttonLoader.success("#accountPermKey-submit", 1000)
+    }, 2000)
+    setTimeout(() => {
+        buttonLoader.load("#accountPermKey-submit");
+    }, 4000)
+    //$("#accountPermKey-submit").append();
+};
+
+/***/ }),
+
+/***/ 21:
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+
+/**
+* Browser module for overlaying a circular loader on a button.
+* @module webpack/buttonLoader
+*/
+let utils = __webpack_require__(0);
+
+
+/**
+ * Applies a loader overlay to any button 
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element to apply the overlay to
+ */
+exports.load = (element) => {
+    element = $(element);
+    element.addClass("disabled");
+    let loader = element.find("#" + element.attr("data-button-loader"));
+    if(loader.length > 0) {
+        loader.find("div.preloader-wrapper").addClass("active");
+    } else {
+        let id = utils.uuidv4();
+        element.attr("data-button-loader", id);        
+        element.append($("<div/>").addClass("button-loader").attr("id", id).append(utils.loader({size: "small"})));
+    }
+};
+
+/**
+ * Hides the loading overlay.
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay.
+ */
+exports.done = (element) => {
+    element = $(element);
+    element.removeClass("disabled");
+    let loader = element.find("#" + element.attr("data-button-loader"));
+    loader.find("div.preloader-wrapper").removeClass("active");
+};
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a green success animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.success = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("green")) {
+        element.addClass("green");
+        setTimeout(() => {
+            element.removeClass("green");
+        }, fadeMS);
+    }
+};
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a red fail animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.fail = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("red")) {
+        element.addClass("red")
+        setTimeout(() => {
+            element.removeClass("red")
+        }, fadeMS);
+    }
+}
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a orange warning animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.warning = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("orange")) {
+        element.addClass("orange")
+        setTimeout(() => {
+            element.removeClass("orange")
+        }, fadeMS);
+    }
+}
+
+/***/ })
+
+/******/ });

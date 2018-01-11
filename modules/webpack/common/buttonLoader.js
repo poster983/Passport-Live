@@ -24,10 +24,86 @@ email: hi@josephhassell.com
 * Browser module for overlaying a circular loader on a button.
 * @module webpack/buttonLoader
 */
+let utils = require("../utils/index.js");
 
 
-
+/**
+ * Applies a loader overlay to any button 
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element to apply the overlay to
+ */
 exports.load = (element) => {
     element = $(element);
-    if(element.find(""))
+    element.addClass("disabled");
+    let loader = element.find("#" + element.attr("data-button-loader"));
+    if(loader.length > 0) {
+        loader.find("div.preloader-wrapper").addClass("active");
+    } else {
+        let id = utils.uuidv4();
+        element.attr("data-button-loader", id);        
+        element.append($("<div/>").addClass("button-loader").attr("id", id).append(utils.loader({size: "small"})));
+    }
+};
+
+/**
+ * Hides the loading overlay.
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay.
+ */
+exports.done = (element) => {
+    element = $(element);
+    element.removeClass("disabled");
+    let loader = element.find("#" + element.attr("data-button-loader"));
+    loader.find("div.preloader-wrapper").removeClass("active");
+};
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a green success animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.success = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("green")) {
+        element.addClass("green");
+        setTimeout(() => {
+            element.removeClass("green");
+        }, fadeMS);
+    }
+};
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a red fail animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.fail = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("red")) {
+        element.addClass("red")
+        setTimeout(() => {
+            element.removeClass("red")
+        }, fadeMS);
+    }
+}
+
+/**
+ * Like {@link module:webpack/buttonLoader.done} but has a orange warning animation
+ * @link module:webpack/buttonLoader
+ * @param {(String|Object)} element - The element with an active overlay. 
+ * @param {*} fadeMS - miliseconds to wait until background color is returned to normal 
+ */
+exports.warning = (element, fadeMS) => {
+    element = $(element);
+    exports.done(element);
+    if(!element.hasClass("orange")) {
+        element.addClass("orange")
+        setTimeout(() => {
+            element.removeClass("orange")
+        }, fadeMS);
+    }
 }

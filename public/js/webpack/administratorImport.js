@@ -101,10 +101,10 @@ email: hi@josephhassell.com
 */
 exports.urlQuery = (params) => {
     return query = Object.keys(params)
-    .filter(function(e) { return ((params[e] !== undefined) && params[e] !== null) }) //removes 
-    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-    .join('&');
-}
+        .filter(function(e) { return ((params[e] !== undefined) && params[e] !== null); }) //removes 
+        .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+        .join("&");
+};
 
 /**
 * Parses an error, and triggers a toast 
@@ -113,20 +113,20 @@ exports.urlQuery = (params) => {
 * @returns {undefined}
 */
 exports.throwError = (err) => {
-  //Do more Later
-  if(err.isFetch) {
-    var $toastHTML = $("<span> ERROR: " + err.response.status + " " + err.message + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.response.headers.get("errormessage")) + "</strong> </span>"))
-  } else if(err.status) {
+    //Do more Later
+    if(err.isFetch) {
+        var $toastHTML = $("<span> ERROR: " + err.response.status + " " + err.message + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.response.headers.get("errormessage")) + "</strong> </span>"));
+    } else if(err.status) {
     //AJAX ERROR
-    var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.getResponseHeader("errormessage")) + "</strong> </span>"))
-  } else if(err.message) {
-    var $toastHTML = $("<span> ERROR: " + err.message + "</span>")
-  } else {
-    var $toastHTML = $("<span> ERROR! Check The Console For More Details.</span>")
-  }
-  Materialize.toast($toastHTML, 4000)
-  console.error(err);
-}
+        var $toastHTML = $("<span> ERROR: " + err.status + " " + err.statusText + "</span>").append($("<br/> <span> <strong>" + decodeURIComponent(err.getResponseHeader("errormessage")) + "</strong> </span>"));
+    } else if(err.message) {
+        var $toastHTML = $("<span> ERROR: " + err.message + "</span>");
+    } else {
+        var $toastHTML = $("<span> ERROR! Check The Console For More Details.</span>");
+    }
+    Materialize.toast($toastHTML, 4000);
+    console.error(err);
+};
 
 /**
 * An wrapper for the fetch api to make code clean   
@@ -141,27 +141,27 @@ exports.throwError = (err) => {
 * @returns {Promise}
 */
 exports.fetch = (method, url, data) => {
-  return new Promise((resolve, reject) => {
-    if(!data) {data = {}}
-    if(data.query) {data.query = "?" + exports.urlQuery(data.query)} else {data.query = ""}
-    if(!data.head) {data.head = {}}
-    if(data.auth) {data.head["x-xsrf-token"] = exports.getCookie("XSRF-TOKEN")}
-    if(data.body && typeof data.body === "object") {
-      data.head["Content-Type"] = "application/json";
-      data.body = JSON.stringify(data.body);
-    }
-    fetch(url + data.query, {
-          method: method,
-          headers: new Headers(data.head),
-          body: data.body,
-          credentials: 'same-origin'
-      }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
-        return resolve(json)
-      }).catch((err) => {
-        return reject(err);
-      })
-  })
-}
+    return new Promise((resolve, reject) => {
+        if(!data) {data = {};}
+        if(data.query) {data.query = "?" + exports.urlQuery(data.query);} else {data.query = "";}
+        if(!data.head) {data.head = {};}
+        if(data.auth) {data.head["x-xsrf-token"] = exports.getCookie("XSRF-TOKEN");}
+        if(data.body && typeof data.body === "object") {
+            data.head["Content-Type"] = "application/json";
+            data.body = JSON.stringify(data.body);
+        }
+        fetch(url + data.query, {
+            method: method,
+            headers: new Headers(data.head),
+            body: data.body,
+            credentials: "same-origin"
+        }).then(exports.fetchStatus).then(exports.fetchJSON).then((json) => {
+            return resolve(json);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+};
 
 /**
 * Parses a fetch response and either throws an error, or it returns a promise  
@@ -170,17 +170,17 @@ exports.fetch = (method, url, data) => {
 * @returns {Promise}
 */
 exports.fetchStatus = (response) => {
-  //console.log(response)
-  if (response.status >= 200 && response.status < 300) {
-    return response
-  } else {
-    var error = new Error(response.statusText)
-    error.isFetch = true;
-    error.response = response;
-    //exports.throwError(error)
-    throw error
-  }
-}
+    //console.log(response)
+    if (response.status >= 200 && response.status < 300) {
+        return response;
+    } else {
+        var error = new Error(response.statusText);
+        error.isFetch = true;
+        error.response = response;
+        //exports.throwError(error)
+        throw error;
+    }
+};
 
 /**
 * Converts response to json   
@@ -189,10 +189,10 @@ exports.fetchStatus = (response) => {
 * @returns {Promise}
 */
 exports.fetchJSON = (response) => {
-  return response.text().then(function(text) {
-    return text ? JSON.parse(text) : {}
-  })
-}
+    return response.text().then(function(text) {
+        return text ? JSON.parse(text) : {};
+    });
+};
 
 /**
 * Creates a UUID V4 Id    
@@ -200,10 +200,10 @@ exports.fetchJSON = (response) => {
 * @returns {String}
 */
 exports.uuidv4 = () => {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  )
-}
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => 
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+};
 
 /**
 * Sets a browser cookie   
@@ -218,7 +218,7 @@ exports.setCookie = (cname, cvalue, exdays) => {
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
+};
 
 /**
 * Gets a browser cookie   
@@ -243,7 +243,7 @@ exports.getCookie = (name) => {
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
 
-}
+};
 
 /**
 * Returns a list of every distinct key in the object   
@@ -253,9 +253,9 @@ exports.getCookie = (name) => {
 */
 exports.distinctKeys = (arr) => {
     return Object.keys(arr.reduce(function(result, obj) {
-      return Object.assign(result, obj);
-    }, {}))
-}
+        return Object.assign(result, obj);
+    }, {}));
+};
 
 /**
 * Returns the current user's ID 
@@ -263,8 +263,8 @@ exports.distinctKeys = (arr) => {
 * @returns {String}
 */
 exports.thisUser = () => {
-  return exports.getCookie("ACCOUNT-ID");
-}
+    return exports.getCookie("ACCOUNT-ID");
+};
 
 /**
 * Material full screen response for major actions
@@ -274,31 +274,31 @@ exports.thisUser = () => {
 * @returns {function} done
 */
 exports.materialResponse = (icon, colorClass, done) => {
-  switch(colorClass){
+    switch(colorClass){
     case "success": 
-      colorClass = "green accent-3";
-      break;
-     case "error": 
-      colorClass = "red accent-4";
-      break;
+        colorClass = "green accent-3";
+        break;
+    case "error": 
+        colorClass = "red accent-4";
+        break;
     case "warning": 
-      colorClass = "orange accent-4";
-      break;
-  }
+        colorClass = "orange accent-4";
+        break;
+    }
 
-  //Set the elements 
-  $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>")
+    //Set the elements 
+    $("body").prepend("<div id=\"circleThingContainer\" class=\"circleThingContainer\"><div id=\"circleThing\" class=\"circleThing\"></div></div><span id=\"Xleft\"></span><span id=\"Xright\"></span><div id=\"checkmarkContainer\"><span id=\"Cleft\"></span><span id=\"Cright\"></span></div>");
     //setup green grow
     if(icon == "check") {
-      $('#checkmarkContainer').addClass('checkmarkContainer checkmarkContainerIn');
+        $("#checkmarkContainer").addClass("checkmarkContainer checkmarkContainerIn");
         //Check marks 
-      $('#Cleft').addClass('Cleft CleftIn');
-      $('#Cright').addClass('Cright CrightIn');
+        $("#Cleft").addClass("Cleft CleftIn");
+        $("#Cright").addClass("Cright CrightIn");
     }
     if(icon == "cancel") {
         //X marks 
-      $('#Xleft').addClass('Xleft XleftIn');
-      $('#Xright').addClass('Xright XrightIn');
+        $("#Xleft").addClass("Xleft XleftIn");
+        $("#Xright").addClass("Xright XrightIn");
     }
 
     $("#circleThing").removeClass().addClass("circleThing circleGrow");
@@ -306,46 +306,46 @@ exports.materialResponse = (icon, colorClass, done) => {
     $("#circleThing").addClass(colorClass);
 
     //on circle complete 
-    $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+    $("#circleThing").one("webkitAnimationEnd oanimationend msAnimationEnd animationend", function(e) {
       
-      $("#circleThingContainer").addClass(colorClass)
-      $('#circleThing').removeClass().addClass('circleThing');
-      //wait for 1 second
-      setTimeout(function() {
-        if(icon == "check") {
-          $('#checkmarkContainer').removeClass('checkmarkContainerIn').addClass('checkmarkContainerOut');
-          $('#Cleft').removeClass('CleftIn').addClass("CleftOut");
-          $('#Cright').removeClass('CrightIn').addClass("CrightOut");
-        }
-        if(icon == "cancel") {
-            //X marks 
-          $('#Xleft').removeClass('XleftIn').addClass("XLeftOut");
-          $('#Xright').removeClass('XrightIn').addClass("XrightOut");
-        }
-
-        $('#circleThing').removeClass().addClass('circleThing circleGrow grey darken-4');
-        //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
-        //when final one ends
-        $('#circleThing').one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
-          $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4")
-          setTimeout(function() {
-            $('#Xleft').remove();
-            $('#Xright').remove();
-            $('#Cleft').remove();
-            $('#Cright').remove();
-            $('#checkmarkContainer').remove();
-            $("#circleThingContainer").fadeOut("fast", function() {
-              $("#circleThingContainer").remove();
-            });
-            $("#circleThing").remove();
-            if(typeof done == "function") {
-              return done();
+        $("#circleThingContainer").addClass(colorClass);
+        $("#circleThing").removeClass().addClass("circleThing");
+        //wait for 1 second
+        setTimeout(function() {
+            if(icon == "check") {
+                $("#checkmarkContainer").removeClass("checkmarkContainerIn").addClass("checkmarkContainerOut");
+                $("#Cleft").removeClass("CleftIn").addClass("CleftOut");
+                $("#Cright").removeClass("CrightIn").addClass("CrightOut");
             }
-          }, 500);
-        });
-      }, 1000);
+            if(icon == "cancel") {
+            //X marks 
+                $("#Xleft").removeClass("XleftIn").addClass("XLeftOut");
+                $("#Xright").removeClass("XrightIn").addClass("XrightOut");
+            }
+
+            $("#circleThing").removeClass().addClass("circleThing circleGrow grey darken-4");
+            //$('#circleThing').css("background-color", "rgba(0, 0, 0, 0)")
+            //when final one ends
+            $("#circleThing").one("webkitAnimationEnd oanimationend msAnimationEnd animationend", function(e) {
+                $("#circleThingContainer").removeClass(colorClass).addClass("grey darken-4");
+                setTimeout(function() {
+                    $("#Xleft").remove();
+                    $("#Xright").remove();
+                    $("#Cleft").remove();
+                    $("#Cright").remove();
+                    $("#checkmarkContainer").remove();
+                    $("#circleThingContainer").fadeOut("fast", function() {
+                        $("#circleThingContainer").remove();
+                    });
+                    $("#circleThing").remove();
+                    if(typeof done == "function") {
+                        return done();
+                    }
+                }, 500);
+            });
+        }, 1000);
     });
-}
+};
 
 /** 
 * Opens a mustache Mixen page
@@ -353,16 +353,49 @@ exports.materialResponse = (icon, colorClass, done) => {
 * @param {string} pageID - ID of the page element containing the mixen 
 */
 exports.openPage = (pageID) => {
-  $("#" + pageID).addClass("active");
-}
+    $("#" + pageID).addClass("active");
+};
 /** 
 * close a mustache Mixen page
 * @link module:webpack/utils
 * @param {string} pageID - ID of the page element containing the mixen 
 */
 exports.closePage = (pageID) => {
-  $("#" + pageID).removeClass("active");
-}
+    $("#" + pageID).removeClass("active");
+};
+
+/** 
+* Returns a Materialize loader element
+* @link module:webpack/utils
+* @param {Object} [options]
+* @param {string} [options.size=medium] - ("big" or "small")
+* @param {string} [options.color=multi] - ("red", "yellow", "green", "blue")
+* @param {boolean} [options.active=true]
+* @returns {Object} - JQuery element
+*/
+exports.loader = ({size, color, active}) => {
+    if(!size) {size = "";}
+    if(active !== false) {active = "active"} else {active = ""}
+    let htmlLoader = $("<div/>").addClass("preloader-wrapper " + active + " " + size);
+    
+    
+    //!color?4:1
+    for(let x = 0; x < 4; x++) {
+        let rowCol = typeof color === "string" ? color + "-only" : x === 0? "blue" : x === 1? "red" : x === 2? "yellow" : x === 3? "green" : ""; 
+        htmlLoader.append($("<div class=\"spinner-layer spinner-" + rowCol + `">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+    `));
+    }
+    console.log(htmlLoader)
+    return htmlLoader;
+};
 
 /***/ }),
 /* 1 */
@@ -2828,37 +2861,37 @@ var importAPI = __webpack_require__(19)
 
 var bulkTable = null;
 window.onload = function() {
-  var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
-  caret.initialize();
-  console.log(utils.urlQuery({
-    string: "There",
-    number: 1,
-    bool: true,
-    null: null,
-    undefined: undefined
-  }))
-  //get initial table values and create table object.
-  bulkTable = new Table($("#bulkLogTable"), [], {
-    ignoredKeys: ['id'],
-    idKey: 'id',
-    sort: ['Actions', 'name', 'importType', 'date', 'totalImported', 'totalTried'],
-    hiddenKeys: ['loggedErrors', 'rollback', 'properties'],
-    tableClasses: 'white-text responsive-table',
-    inject: function(row, done) {
-        return done([{
-            column: "Actions", 
-            strictColumn: true,
-            dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+    var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
+    caret.initialize();
+    console.log(utils.urlQuery({
+        string: "There",
+        number: 1,
+        bool: true,
+        null: null,
+        undefined: undefined
+    }))
+    //get initial table values and create table object.
+    bulkTable = new Table($("#bulkLogTable"), [], {
+        ignoredKeys: ["id"],
+        idKey: "id",
+        sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
+        hiddenKeys: ["loggedErrors", "rollback", "properties"],
+        tableClasses: "white-text responsive-table",
+        inject: function(row, done) {
+            return done([{
+                column: "Actions", 
+                strictColumn: true,
+                dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
             //dom: {hello: "there", howAre: "you"}
-        }])
-    } 
-  });
+            }])
+        } 
+    });
 
-  importAPI.searchBulkLogs({}).then((data) => {
+    importAPI.searchBulkLogs({}).then((data) => {
     //console.log(data)
-    bulkTable.addData(data)
-    bulkTable.generate().catch(err=>utils.throwError(err));
-  }).catch(err=>utils.throwError(err));
+        bulkTable.addData(data)
+        bulkTable.generate().catch(err=>utils.throwError(err));
+    }).catch(err=>utils.throwError(err));
 };
 
 function searchBulkLogsForm() {
