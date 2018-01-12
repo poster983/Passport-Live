@@ -60,10 +60,10 @@ $("#accountPermKey-submit").on("click", (e) => {
     let time = $("input#accountPermKey-time");
     let tally = $("input#accountPermKey-tally");
     let datetime = moment(date.val() + " " + time.val(), "YYYY-MM-DD hh:mmA");
-    console.log(date.val() + " " + time.val())
+    /*console.log(date.val() + " " + time.val())
     console.log(datetime)
     console.log(datetime.toISOString())
-    console.log(time.val())
+    console.log(time.val())*/
     //console.log(new Date(date).)
     if(!date.val() && time.val()) {
         buttonLoader.warning("#accountPermKey-submit", 2000)
@@ -73,7 +73,7 @@ $("#accountPermKey-submit").on("click", (e) => {
     //check tally 
     let tallyNum = parseInt(tally.val())
     if(tally.val() && isNaN(tallyNum)) {
-        Materialize.toast('Invalid tally ', 4000)
+        Materialize.toast('Invalid tally', 4000)
         return buttonLoader.warning("#accountPermKey-submit", 2000)
     }
     if(userGroups.val().length > 0) {
@@ -91,7 +91,7 @@ $("#accountPermKey-submit").on("click", (e) => {
         if(!isNaN(tallyNum)) {
             returner.timeout.tally = tallyNum;
         }
-        console.log(returner)
+        //console.log(returner)
         securityJS.newAccount(returner).then((res) => {
             if(res.key) {
                 buttonLoader.success("#accountPermKey-submit", 2000)
