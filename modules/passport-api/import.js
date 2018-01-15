@@ -201,15 +201,132 @@ accounts.sendActivation = (bulkID) => {
         }).catch(reject)
     })
 }
-//accounts.sendActivation("089aa0ae-c8ab-42c2-9807-b6b6c6dc27de").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
+
 exports.accounts = accounts;
 
-//exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
-//exports.searchBulkLogs({name: "testFaculty"}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
+
+/** 
+* Takes in an array of accoutnt json objects an
+* NOTE: Email domains are still must follow userGroup settings.
+* If the json object lacks the nessessary values to create an account, the row is skipped 
+* @link module:js/import
+* @param {accountImport[]} accounts - The accountImport objects 
+* @param {String} importName - a (non unique) name for this import job
+* @returns {Promise} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
+*/
+
+exports.json = (accounts, importName) => {
+    return new Promise((resolve, reject) => {
+        let typeDef = `[{
+            name: {
+                first: String, 
+                last: String,
+                salutation: String
+            },
+            schoolID: Maybe String,
+            email: String,
+            userGroup: userGroup,
+            isVerified: Maybe Boolean,
+            password: Maybe String,
+            graduationYear: Maybe Number
+        }]`;
+        //check type
+        if(!typeCheck(typeDef, accounts, utils.typeCheck) || accounts.length < 1) {
+            let err = new TypeError("\"accounts\" expected an array with structure: " + typeDef);
+            err.status = 400;
+            return reject(err);
+        }
+        if(typeof importName !== "string") {
+            let err = new TypeError("\"importName\" expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        //declare 
+        let loopPromice = [];
+        let errors = 0;
+        let imported = 0;
+        let initialized = 0;
+        let defaults = {
+            schoolID: null,
+            isVerified: false,
+            password: null,
+            graduationYear: null
+        }
+        //loop through accounts
+        newBulkLog(importName, "account").then((jResp) => {
+            if(jResp.inserted == 1) {
+                for(let x = 0; x < accounts.length; x++) {
+                    loopPromice.push(new Promise((lRes, lRej) => {
+                        //set default values
+                        let account = Object.assign(defaults, accounts[x]);
+                        
+                        //Import each account
+                        accountAPI.createAccount({
+                            userGroup: account.userGroup, 
+                            name: account.name, 
+                            email: account.email, 
+                            password: account.password, 
+                            schoolID: account.schoolID, 
+                            graduationYear: account.graduationYear, 
+                            flags: {
+                                bulkImportID: jResp.generated_keys[0]
+                            }
+                        }, {
+                            skipEmail: true,
+                            allowNullPassword: true,
+                            generatePassword: false
+                        }).then(function(transSummery) {
+                            //success 
+                            if(transSummery.inserted > 0) {
+                                imported += transSummery.inserted;
+                                if(account.password) {initialized++;}
+                            }
+                            lRes({account: account, error: null, transaction: transSummery})
+                        }).catch((err) => {
+                            if(err.status == 500) {
+                                return lRej(err); 
+                            } else {
+                                errors.push(err)
+                                //failed, but continue import
+                                lRes({account: account, error: err});
+                            }
+                        });
+                    }))
+                }
+
+                // wrap up transaction 
+                Promice.all(loopPromice).then((sumArray) => {
+                    let finalLog = [];
+                    if(imported == 0) {
+                        //deletes log if theere was nothing that could be imported
+                        finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
+                    } else {
+                        //updates the log with more job info
+                        finalLog.push(updateBulkLog(jResp.generated_keys[0], accounts.length, imported, errors, {totalInitialized: initialized}))
+                    }
+                    Promise.all(finalLog).then(() => {
+                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported, totalInitialized: initialized});
+                    }).catch((err) => {
+                        return reject(err);
+                    })
+                })
+            } else {
+                let err = new Error("Failed to log import job");
+                err.status = 500;
+                return reject(err);
+            }
+        })
+
+
+        
+    });
+};
+
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
 * @function mapAccounts
 * @link module:js/import
+* @deprecated
 * @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
@@ -333,6 +450,7 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePasswor
 * NOTE: Email domains are still must follow userGroup settings.
 * If the account cant be impoirted using the accountApi, the row is skipped
 * @function importAccountsExcel
+* @deprecated
 * @link module:js/import
 * @param {string} excelFilePath - The path to the excel file.
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
@@ -444,7 +562,20 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
 
 
 
-
+/**
+ * An object representing a new account
+ * @typedef {Object} accountImport
+ * @property {Object} name
+ * @property {String} name.first 
+ * @property {String} name.last
+ * @property {String} name.salutation
+ * @property {String} [schoolID=null] 
+ * @property {String} email 
+ * @property {userGroup} userGroup 
+ * @property {Boolean} [isVerified=false] 
+ * @property {String} [password=null] - If no password is given or is null or undefined, the account will start off inactive.  When the activation email is sent out, the user will be prompted to create a password. Importing is SIGNIFICANTLY faster when you don't include a password
+ * @property {Number} [graduationYear=null] - only required on userGroups that define it in the configs.
+ */
 
 
 /**
