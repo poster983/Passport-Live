@@ -120,6 +120,7 @@ var accountsJS = require("./accounts.js")
 
             ins.key = key;
             ins.type = type;
+            ins.uses = 0;
 
             r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
                 if(err) {
@@ -385,7 +386,7 @@ exports.keyUsed = (type, key) => {
         return row.hasFields({timeout: {tally: true}})
     })
     .update((row) => {
-        return {timeout: {tally: row("timeout")("tally").sub(1)}}
+        return {timeout: {tally: row("timeout")("tally").sub(1)}, uses: row("uses").add(1)}
     }).run()
 }
 

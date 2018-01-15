@@ -36,7 +36,12 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administ
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('administrator/index', { doc_Title: 'Passport-Administrator', customHead: customHead, user: user});
+
+    let cards = {};
+    /** Cards **/
+    cards.userGroups = Object.keys(config.get("userGroups"))
+
+    res.render('administrator/index', { doc_Title: 'Passport-Administrator', customHead: customHead, user: user, cards: cards});
 });
 
 router.get('/import', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
