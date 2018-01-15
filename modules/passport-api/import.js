@@ -295,7 +295,7 @@ exports.json = (accounts, importName) => {
                 }
 
                 // wrap up transaction 
-                Promice.all(loopPromice).then((sumArray) => {
+                Promise.all(loopPromice).then((sumArray) => {
                     let finalLog = [];
                     if(imported == 0) {
                         //deletes log if theere was nothing that could be imported
