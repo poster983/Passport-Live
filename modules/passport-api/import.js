@@ -278,11 +278,12 @@ accounts.json = (accounts, importName) => {
                             generatePassword: false
                         }).then(function(transSummery) {
                             //success 
-                            if(transSummery.inserted > 0) {
-                                imported += transSummery.inserted;
+                            if(transSummery.transaction.inserted > 0) {
+                                imported += transSummery.transaction.inserted;
                                 if(account.password) {initialized++;}
                             }
-                            lRes({account: account, error: null, transaction: transSummery})
+                            console.log(transSummery)
+                            lRes({account: account, error: null, transaction: transSummery.transaction});
                         }).catch((err) => {
                             if(err.status == 500) {
                                 return lRej(err); 
@@ -298,15 +299,17 @@ accounts.json = (accounts, importName) => {
                 // wrap up transaction 
                 Promise.all(loopPromice).then((sumArray) => {
                     let finalLog = [];
+                    let bulkID = jResp.generated_keys[0];
                     if(imported == 0) {
                         //deletes log if theere was nothing that could be imported
-                        finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
+                        finalLog.push(deleteBulkLog(bulkID));
+                        bulkID = null;
                     } else {
                         //updates the log with more job info
-                        finalLog.push(updateBulkLog(jResp.generated_keys[0], accounts.length, imported, errors, {totalInitialized: initialized}))
+                        finalLog.push(updateBulkLog(bulkID, accounts.length, imported, errors, {totalInitialized: initialized}));
                     }
                     Promise.all(finalLog).then(() => {
-                        resolve({summary: sumArray, totalTried: accounts.length, totalImported: imported, totalInitialized: initialized});
+                        resolve({bulkID: bulkID, summary: sumArray, totalTried: accounts.length, totalImported: imported, totalInitialized: initialized});
                     }).catch((err) => {
                         return reject(err);
                     })
