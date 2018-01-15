@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="global.html#searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="global.html#getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="global.html#handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="global.html#getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/incomplete/dashboard/student</a><ul class='methods'><li data-type='method'><a href="global.html#studentCheckIfIncomplete">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="global.html#getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="global.html#handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="global.html#updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkPermission">checkPermission</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.middlewarePermission">middlewarePermission</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Usergroup Database Models.html">Usergroup Database Models</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="global.html#searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="global.html#getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="global.html#handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="global.html#getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/incomplete/dashboard/student</a><ul class='methods'><li data-type='method'><a href="global.html#studentCheckIfIncomplete">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="global.html#getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="global.html#handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="global.html#updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="global.html#handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkPermission">checkPermission</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.middlewarePermission">middlewarePermission</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li><li data-type='method'><a href="module-webpack_api_misc.html#.getUserGroups">getUserGroups</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_api_security.html">webpack/api/security</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_security.html#.newAccount">newAccount</a></li></ul></li><li><a href="module-webpack_buttonLoader.html">webpack/buttonLoader</a><ul class='methods'><li data-type='method'><a href="module-webpack_buttonLoader.html#.done">done</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.fail">fail</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.load">load</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.success">success</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.warning">warning</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.loader">loader</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -449,7 +449,7 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 
 <!--
 <pre>
-{"comment":"/** GETs All account schedule types for an account\r\n    * If you dont give an ID, the user in the JWT will be assumed.\r\n    * @link module:api/userSchedule\r\n    * @function getAllSchedules\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/[:id]\r\n    * @apiparam {string} [id] - A user's ID.\r\n    * @apiresponse {Object} student schedule is in \"studentType\" and teacher is in \"teacherType\"\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":38,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs All account schedule types for an account\nIf you dont give an ID, the user in the JWT will be assumed.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"kind":"function","name":"getAllSchedules","params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/[:id]","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} [id] - A user's ID.","value":{"type":{"names":["string"]},"optional":true,"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["Object"]},"description":"student schedule is in \"studentType\" and teacher is in \"teacherType\""},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~getAllSchedules","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001780","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getAllSchedules","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+{"comment":"/** GETs All account schedule types for an account\r\n    * If you dont give an ID, the user in the JWT will be assumed.\r\n    * @link module:api/userSchedule\r\n    * @function getAllSchedules\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/[:id]\r\n    * @apiparam {string} [id] - A user's ID.\r\n    * @apiresponse {Object} student schedule is in \"studentType\" and teacher is in \"teacherType\"\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":38,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs All account schedule types for an account\nIf you dont give an ID, the user in the JWT will be assumed.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"kind":"function","name":"getAllSchedules","params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/[:id]","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} [id] - A user's ID.","value":{"type":{"names":["string"]},"optional":true,"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["Object"]},"description":"student schedule is in \"studentType\" and teacher is in \"teacherType\""},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~getAllSchedules","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001850","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getAllSchedules","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
 </pre>
 -->
 </div>
@@ -800,7 +800,7 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 
 <!--
 <pre>
-{"comment":"/** GETs account schedules for student dash\r\n    * @function getSchedulesForStudentDash\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/student/:id\r\n    * @apiparam {string} id - A user's ID.\r\n    * @apiresponse {json} Returns Joined data of the schedule\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n    * @todo Auth\r\n*/","meta":{"filename":"accountSchedule.js","lineno":169,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs account schedules for student dash</p>","kind":"function","name":"getSchedulesForStudentDash","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/student/:id","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id - A user's ID.","value":{"type":{"names":["string"]},"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["json"]},"description":"Returns Joined data of the schedule"},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"todo":["Auth"],"longname":"module:api/userSchedule~getSchedulesForStudentDash","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001798","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getSchedulesForStudentDash","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+{"comment":"/** GETs account schedules for student dash\r\n    * @function getSchedulesForStudentDash\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/student/:id\r\n    * @apiparam {string} id - A user's ID.\r\n    * @apiresponse {json} Returns Joined data of the schedule\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n    * @todo Auth\r\n*/","meta":{"filename":"accountSchedule.js","lineno":169,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs account schedules for student dash</p>","kind":"function","name":"getSchedulesForStudentDash","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/student/:id","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id - A user's ID.","value":{"type":{"names":["string"]},"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["json"]},"description":"Returns Joined data of the schedule"},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"todo":["Auth"],"longname":"module:api/userSchedule~getSchedulesForStudentDash","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001868","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getSchedulesForStudentDash","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
 </pre>
 -->
 </div>
@@ -1144,7 +1144,7 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 
 <!--
 <pre>
-{"comment":"/** GETs account schedules for teacher dash\r\n    * @function getSchedulesForTeacherDash\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/teacher/:id\r\n    * @apiparam {string} id - A user's ID.\r\n    * @apiresponse {json} Returns the schedule\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":192,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs account schedules for teacher dash</p>","kind":"function","name":"getSchedulesForTeacherDash","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/teacher/:id","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id - A user's ID.","value":{"type":{"names":["string"]},"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["json"]},"description":"Returns the schedule"},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~getSchedulesForTeacherDash","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001802","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getSchedulesForTeacherDash","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+{"comment":"/** GETs account schedules for teacher dash\r\n    * @function getSchedulesForTeacherDash\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api GET /api/account/schedule/teacher/:id\r\n    * @apiparam {string} id - A user's ID.\r\n    * @apiresponse {json} Returns the schedule\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":192,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>GETs account schedules for teacher dash</p>","kind":"function","name":"getSchedulesForTeacherDash","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"GET /api/account/schedule/teacher/:id","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} id - A user's ID.","value":{"type":{"names":["string"]},"description":"A user's ID.","name":"id"}}],"response":{"type":{"names":["json"]},"description":"Returns the schedule"},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~getSchedulesForTeacherDash","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001872","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getSchedulesForTeacherDash","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
 </pre>
 -->
 </div>
@@ -1495,358 +1495,7 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 
 <!--
 <pre>
-{"comment":"/** Sets a user schedule for a dashboard\r\n    * @function setUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api POST /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @example \r\n    * <caption>Body Structure For Student Dashboard (application/json): </caption>\r\n    * {\r\n    *    \"<periodConst>\": {  //\r\n    *       \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r\n    *   },\r\n    *    \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r\n    * }\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":82,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Sets a user schedule for a dashboard</p>","kind":"function","name":"setUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"POST /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"examples":[{"caption":"Body Structure For Student Dashboard (application/json): ","code":"{\r   \"<periodConst>\": {  //\r      \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r  },\r   \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r}"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~setUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001786","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~setUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_accountSchedule.js.html">accountSchedule.js</a>:<a href="routes_api_accountSchedule.js.html#line110">110</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~updateUserSchedule">
-      <a href="#params-updateUserSchedule"><span class="type-signature">(inner) </span>updateUserSchedule</a><span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {callback}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-updateUserSchedule">
-        <span class="label label-api">API: PATCH /api/account/schedule/:dashboard</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Updates the user's schedule for a dashboard</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body Structure For Student Dashboard (application/json): </p>
-    
-    <pre class="prettyprint"><code>{   "&lt;periodConst>": {  //      "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.  },   "&lt;periodConst>": null //this means that the period is dissabled and won't be returned}</code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-updateUserSchedule">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-  <div id="params-updateUserSchedule" class="bs-callout bs-callout-primary">
-    <h5>Parameters</h5>
-    <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#request">request</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#response">response</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>See: <code><a href="#params-nextCallback">Callback Definition</a></code></li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">callback</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-updateUserSchedule">
-    <h5>
-      API Route:
-      PATCH /api/account/schedule/:dashboard
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>dashboard</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The dashboard this is referring to (student, teacher)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-        <h6>Response</h6>
-        
-<div class="param-desc">
-    Returns rethinkDB action summery
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** Updates the user's schedule for a dashboard\r\n    * @function updateUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api PATCH /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @example \r\n    * <caption>Body Structure For Student Dashboard (application/json): </caption>\r\n    * {\r\n    *    \"<periodConst>\": {  //\r\n    *       \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r\n    *   },\r\n    *    \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r\n    * }\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":110,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Updates the user's schedule for a dashboard</p>","kind":"function","name":"updateUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"PATCH /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"examples":[{"caption":"Body Structure For Student Dashboard (application/json): ","code":"{\r   \"<periodConst>\": {  //\r      \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r  },\r   \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r}"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~updateUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001790","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+{"comment":"/** Sets a user schedule for a dashboard\r\n    * @function setUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api POST /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @example \r\n    * <caption>Body Structure For Student Dashboard (application/json): </caption>\r\n    * {\r\n    *    \"<periodConst>\": {  //\r\n    *       \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r\n    *   },\r\n    *    \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r\n    * }\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":82,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Sets a user schedule for a dashboard</p>","kind":"function","name":"setUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"POST /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"examples":[{"caption":"Body Structure For Student Dashboard (application/json): ","code":"{\r   \"<periodConst>\": {  //\r      \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r  },\r   \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r}"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~setUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001856","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~setUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
 </pre>
 -->
 </div>
@@ -2207,7 +1856,358 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 
 <!--
 <pre>
-{"comment":"/** Creates or Replaces the user's schedule for a dashboard\r\n    * @function updateUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api PUT /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @apibody {module:js/userSchedule#studentSchedule}\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":138,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Creates or Replaces the user's schedule for a dashboard</p>","kind":"function","name":"updateUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"PUT /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"body":{"type":{"names":["module:js/userSchedule#studentSchedule"]}},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~updateUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001794","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+{"comment":"/** Creates or Replaces the user's schedule for a dashboard\r\n    * @function updateUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api PUT /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @apibody {module:js/userSchedule#studentSchedule}\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":138,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Creates or Replaces the user's schedule for a dashboard</p>","kind":"function","name":"updateUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"PUT /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"body":{"type":{"names":["module:js/userSchedule#studentSchedule"]}},"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~updateUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001864","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_accountSchedule.js.html">accountSchedule.js</a>:<a href="routes_api_accountSchedule.js.html#line110">110</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~updateUserSchedule">
+      <a href="#params-updateUserSchedule"><span class="type-signature">(inner) </span>updateUserSchedule</a><span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {callback}</span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-updateUserSchedule">
+        <span class="label label-api">API: PATCH /api/account/schedule/:dashboard</span>
+      </a>
+    
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Updates the user's schedule for a dashboard</p>
+</div>
+
+
+
+
+    <h5>Example</h5>
+    
+        <p class="code-caption">Body Structure For Student Dashboard (application/json): </p>
+    
+    <pre class="prettyprint"><code>{   "&lt;periodConst>": {  //      "teacherID": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.  },   "&lt;periodConst>": null //this means that the period is dissabled and won't be returned}</code></pre>
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-updateUserSchedule">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+  <div id="params-updateUserSchedule" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#request">request</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#response">response</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#nextCallback">nextCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-success">
+    <h5>Returns </h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>See: <code><a href="#params-nextCallback">Callback Definition</a></code></li>
+</ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">callback</span>
+
+
+    </dd>
+</dl>
+
+    
+</div>
+  
+
+
+  <div class="bs-callout bs-callout-api" id="api-updateUserSchedule">
+    <h5>
+      API Route:
+      PATCH /api/account/schedule/:dashboard
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dashboard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The dashboard this is referring to (student, teacher)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    Returns rethinkDB action summery
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">json</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** Updates the user's schedule for a dashboard\r\n    * @function updateUserSchedule\r\n    * @link module:api/userSchedule\r\n    * @param {request} req\r\n    * @param {response} res\r\n    * @param {nextCallback} next\r\n    * @api PATCH /api/account/schedule/:dashboard\r\n    * @apiparam {string} dashboard - The dashboard this is referring to (student, teacher)\r\n    * @apiresponse {json} Returns rethinkDB action summery\r\n    * @example \r\n    * <caption>Body Structure For Student Dashboard (application/json): </caption>\r\n    * {\r\n    *    \"<periodConst>\": {  //\r\n    *       \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r\n    *   },\r\n    *    \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r\n    * }\r\n    * @returns {callback} - See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code> \r\n*/","meta":{"filename":"accountSchedule.js","lineno":110,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/accountSchedule.js"},"description":"<p>Updates the user's schedule for a dashboard</p>","kind":"function","name":"updateUserSchedule","tags":[{"originalTitle":"link","title":"link","text":"module:api/userSchedule","value":"module:api/userSchedule"}],"params":[{"type":{"names":["request"]},"name":"req"},{"type":{"names":["response"]},"name":"res"},{"type":{"names":["nextCallback"]},"name":"next"}],"route":"PATCH /api/account/schedule/:dashboard","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} dashboard - The dashboard this is referring to (student, teacher)","value":{"type":{"names":["string"]},"description":"The dashboard this is referring to (student, teacher)","name":"dashboard"}}],"response":{"type":{"names":["json"]},"description":"Returns rethinkDB action summery"},"examples":[{"caption":"Body Structure For Student Dashboard (application/json): ","code":"{\r   \"<periodConst>\": {  //\r      \"teacherID\": 1367081a-63d7-48cf-a9ac-a6b47a851b13 || null //an ID present means that it will link to that user,  null means that there is no teacher for that period.\r  },\r   \"<periodConst>\": null //this means that the period is dissabled and won't be returned\r}"}],"returns":[{"type":{"names":["callback"]},"description":"<ul>\n<li>See: <code><a href=\"#params-nextCallback\">Callback Definition</a></code></li>\n</ul>"}],"longname":"module:api/userSchedule~updateUserSchedule","scope":"inner","memberof":"module:api/userSchedule","___id":"T000002R001860","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~updateUserSchedule","signature":"<span class=\"signature\">(req, res, next)</span><span class=\"type-signature\"> &rarr; {callback}</span>","ancestors":["<a href=\"module-api_userSchedule.html\">api/userSchedule</a>~"]}
 </pre>
 -->
 </div>
@@ -2230,7 +2230,7 @@ If you dont give an ID, the user in the JWT will be assumed.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 09 2018 20:10:16 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 15 2018 17:13:12 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
