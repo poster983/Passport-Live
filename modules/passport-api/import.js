@@ -202,11 +202,11 @@ accounts.sendActivation = (bulkID) => {
     })
 }
 
-exports.accounts = accounts;
+
 
 
 /** 
-* Takes in an array of accoutnt json objects an
+* Takes in an array of account json objects and imports them
 * NOTE: Email domains are still must follow userGroup settings.
 * If the json object lacks the nessessary values to create an account, the row is skipped 
 * @link module:js/import
@@ -215,7 +215,8 @@ exports.accounts = accounts;
 * @returns {Promise} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
 */
 
-exports.json = (accounts, importName) => {
+accounts.json = (accounts, importName) => {
+    console.log(accounts)
     return new Promise((resolve, reject) => {
         let typeDef = `[{
             name: {
@@ -243,7 +244,7 @@ exports.json = (accounts, importName) => {
         }
         //declare 
         let loopPromice = [];
-        let errors = 0;
+        let errors = [];
         let imported = 0;
         let initialized = 0;
         let defaults = {
@@ -286,9 +287,9 @@ exports.json = (accounts, importName) => {
                             if(err.status == 500) {
                                 return lRej(err); 
                             } else {
-                                errors.push(err)
+                                errors.push({status: err.status, message: err.message});
                                 //failed, but continue import
-                                lRes({account: account, error: err});
+                                return lRes({account: account, error: {status: err.status, message: err.message}});
                             }
                         });
                     }))
@@ -305,7 +306,7 @@ exports.json = (accounts, importName) => {
                         finalLog.push(updateBulkLog(jResp.generated_keys[0], accounts.length, imported, errors, {totalInitialized: initialized}))
                     }
                     Promise.all(finalLog).then(() => {
-                        resolve({summary: sumArray, totalTried: results.length, totalImported: imported, totalInitialized: initialized});
+                        resolve({summary: sumArray, totalTried: accounts.length, totalImported: imported, totalInitialized: initialized});
                     }).catch((err) => {
                         return reject(err);
                     })
@@ -321,6 +322,9 @@ exports.json = (accounts, importName) => {
         
     });
 };
+
+
+exports.accounts = accounts;
 
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard

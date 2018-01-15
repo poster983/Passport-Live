@@ -61,7 +61,7 @@ exports.middlewarePermission = (dashboards, options) => {
     }
     return function(req, res, next) {
         if(req.user) {
-            if(checkPermission(req.user.userGroup, dashboards)) {
+            if(exports.checkPermission(req.user.userGroup, dashboards)) {
                 return next();
             } else {
                 if(options && options.failRedirect) {

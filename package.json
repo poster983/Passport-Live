@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -64,7 +64,6 @@
     "moment": "^2.18.1",
     "morgan": "~1.8.2",
     "ms": "^2.0.0",
-    "multer": "^1.3.0",
     "mustache-express": "1.2.4",
     "node-sass-middleware": "0.9.8",
     "nodemailer": "^4.0.1",

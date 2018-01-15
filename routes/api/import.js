@@ -17,33 +17,35 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var express = require('express');
-var config = require('config');
-var cors = require('cors');
+/**
+  * A set of Apis for importing large amounts of data into passport
+  * @module api/import
+ */
+var express = require("express");
+var config = require("config");
+var cors = require("cors");
 var router = express.Router();
-const importJS = require("../../modules/passport-api/import.js")
+const importJS = require("../../modules/passport-api/import.js");
 var ssarv = require("ssarv");
-var multer  = require('multer');
-var upload = multer({ dest: '../../userUploads/' });
 var passport = require("passport");
 var db = require("../../modules/db/index.js");
+let utils = require("../../modules/passport-utils/index.js");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
-/*
+/**
 * Searches the bulk log database 
-* @link module:js/import
+* @link module:api/import
 * @function searchBulkImport
 * @api GET /api/import/log
-* @apiparam {permissionKeyType} type - Must provide an allowed key type defined in ENUM "permissionKeyType".  (Currently only "NEW_ACCOUNT" and "UNKNOWN" are allowed)
 * @apiquery {(String|undefined)} name - Bulk Log Name
 * @apiquery {(String|undefined)} type - importType. Current values: "account", "schedule" 
 * @apiquery {(String|undefined)} from - ISO Strng Low end.  inclusive
 * @apiquery {(String|undefined)} to - ISO Strng High end. inclusive
 * @apiresponse {Object[]}
 */
-router.get("/log", passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function searchBulkImport(req, res, next) {
+router.get("/log", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function searchBulkImport(req, res, next) {
     importJS.searchBulkLogs({
         name: req.query.name,
         type: req.query.type,
@@ -52,12 +54,40 @@ router.get("/log", passport.authenticate('jwt', { session: false}), ssarv(["admi
             to: req.query.to
         }
     }).then((logs) => {
-        res.json(logs)
-    }).catch((err) => {return next(err)})
+        res.json(logs);
+    }).catch((err) => {return next(err);});
 
 });
 
-//passport.authenticate('jwt', { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}),
+
+/** 
+* Takes in an array of account json objects and imports them 
+* NOTE: Email domains are still must follow userGroup settings.
+* If the json object lacks the nessessary values to create an account, the row is skipped 
+* @link module:api/import
+* @function importJsonAccounts
+* @api POST /api/import/accounts
+* @param {Object} req.body - Include these in the body
+* @param {accountImport[]} req.body.accounts - The accountImport objects 
+* @param {String} req.body.importName - a (non unique) name for this import job
+* @apibody {Object} req.body
+* @apiresponse {Object[]} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
+*/
+
+router.post("/accounts", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function importJsonAccounts(req, res, next) {
+    importJS.accounts.json(req.body.accounts, req.body.importName).then((trans) => {
+        return res.json(trans);
+    }).catch((err) => {
+        return next(err);
+    })
+});
+
+
+
+
+
+
+
 
 /*router.post('/accounts', upload.single('excelImport'), function (req, res, next) {
   // req.file is the `avatar` file
