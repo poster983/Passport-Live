@@ -48,3 +48,12 @@ ul.myDashboards {
     top: 0;
     left: 0;
 } 
+
+//Disable all animations
+.no-animation *, .no-animation:before, .no-animation:after {
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -o-animation: none !important;
+    -ms-animation: none !important;
+    animation: none !important;
+}

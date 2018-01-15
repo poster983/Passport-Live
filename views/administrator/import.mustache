@@ -20,132 +20,171 @@ email: hi@josephhassell.com
 -->
 
 <body class="grey darken-4">
-    <nav class="nav-extended">
-        <div class="nav-wrapper">
-            <a href="#!" class="right brand-logo">Administrators</a>
-             <ul id="slide-out" class="side-nav">
-              <li><div class="user-view">
-                <div class="background">
-                  <img src="/images/stunav.jpg">
-                </div>
-                 <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-                <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-                <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-              </div></li>
-              <li><a href="/administrator" class="waves-effect active"><i class="material-icons">home</i>Home</a></li>
-              <li><a href="#" class="waves-effect active"><i class="material-icons">backup</i>Import</a></li>
-              <li><div class="divider"></div></li>
-              <li><a class="waves-effect" href="/auth/logout"><i class="material-icons">lock</i>Logout</a></li>
-            </ul>
-            <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-        </div>
-        <div class="nav-content">
-          <ul class="tabs tabs-fixed-width tabs-transparent">
-            <li class="tab"><a href="#accountImport">Account Import</a></li>
-            <li class="tab"><a href="#scheduleImport">Schedule Import</a></li>
-          </ul>
-        </div>
-    </nav>
-          
-
-    <div class="container">
-        <div id="accountImport" class="col s12">
-        <div class="row">
-                <div class="col s12">
-                  <div class="card grey darken-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">Account Import</span>
-                      <p>Placeholder.</p>
-                    </div>
-                  </div>
-                </div>
+  <nav class="nav-extended">
+    <div class="nav-wrapper">
+      <a href="#!" class="right brand-logo">Administrators</a>
+      <ul id="slide-out" class="side-nav">
+        <li>
+          <div class="user-view">
+            <div class="background">
+              <img src="/images/stunav.jpg">
             </div>
-        </div>
-        <div id="scheduleImport" class="col s12">
-            <div class="row">
-                <div class="col s12">
-                  <div class="card grey darken-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">Schedule Import</span>
-                      <p>This feature is currently unavailable.</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <section id="importJobs">
-            <div class="row">
-                <div class="col s12">
-                  <div class="card grey darken-3">
-                    <div class="card-content white-text">
-                        <a id="expandSearch" class="right waves-effect waves-circle waves-light btn-floating grey darken-2" ><i class="material-icons">expand_less</i></a>
-                        <span class="card-title">All Import Jobs</span>
-                        <!--SEARCH -->
-                        <div id="expandSearchDiv" class="row">
-                          <div class="col s12">
-                            <div class="card-panel black-text">
-                              <span class="">I am a very simple card. I am good at containing small bits of information.
-                              I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="bulkLogTable">
-                            
-                        </div>
-                      <table class="white-text">
-                        <thead>
-                          <tr>
-                              <th>Actions</th>
-                              <th>Name</th>
-                              <th>Date</th>
-                              <th>Type</th>
-                              <th>Total Imported</th>
-                              <th>Total Tried</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          <tr>
-                            <td>Alvin</td>
-                            <td>Eclair</td>
-                            <td>$0.87</td>
-                            <td>Eclair</td>
-                            <td>$0.87</td>
-                            <td>Eclair</td>
-                            
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </section>
+            <a href="#!user">
+              <img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img">
+            </a>
+            <a href="#!name">
+              <span class="white-text name">{{user.name.first}} {{user.name.last}}</span>
+            </a>
+            <a href="#!email">
+              <span class="white-text email">{{user.email}}</span>
+            </a>
+          </div>
+        </li>
+        <li>
+          <a href="/administrator" class="waves-effect active">
+            <i class="material-icons">home</i>Home</a>
+        </li>
+        <li>
+          <a href="#" class="waves-effect active">
+            <i class="material-icons">backup</i>Import</a>
+        </li>
+        <li>
+          <div class="divider"></div>
+        </li>
+        <li>
+          <a class="waves-effect" href="/auth/logout">
+            <i class="material-icons">lock</i>Logout</a>
+        </li>
+      </ul>
+      <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
+        <i class="material-icons">menu</i>
+      </a>
     </div>
-    <script>
-            if ('addEventListener' in window) {
-                window.addEventListener('load', function () {
-                    document.body.className = document.body.className.replace(/\bis-loading\b/, '');
-                });
-                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
-            }
-        </script>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <div class="nav-content">
+      <ul class="tabs tabs-fixed-width tabs-transparent">
+        <li class="tab">
+          <a href="#accountImport">Account Import</a>
+        </li>
+        <li class="tab">
+          <a href="#scheduleImport">Schedule Import</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-        <!-- Compiled and minified JavaScript -->
-        <script src="/js/materialize.js"></script>
-        <script src="/js/passport.js"></script>
-        <script src="/js/webpack/administratorImport.js"></script>
-        <script>
-          $(document).ready(function(){
-            $(".button-collapse").sideNav();
-            $('select').material_select();
-            $('.collapsible').collapsible();
-            
-          });
 
-        </script>
+  <div class="container">
+    <div id="accountImport" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card grey darken-3">
+            <div class="card-content white-text">
+              <span class="card-title">Account Import</span>
+              <!--Start Excel Import -->
+              <div class="file-field input-field">
+                <div class="btn">
+                  <span>File</span>
+                  <input type="file" name="accountImport-excel" accept=".xlsx">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" placeholder="Select Excel File" type="text">
+                </div>
+              </div>
+              <!--End excel-->
+            </div>
+            <div class="card-action white-text">
+              <a href="#" id="accountImport-submit" class="waves-effect btn-large btn-flat white-text">Import Accounts</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="scheduleImport" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card grey darken-3">
+            <div class="card-content white-text">
+              <span class="card-title">Schedule Import</span>
+              <p>This feature is currently unavailable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section id="importJobs">
+      <div class="row">
+        <div class="col s12">
+          <div class="card grey darken-3">
+            <div class="card-content white-text">
+              <a id="expandSearch" class="right waves-effect waves-circle waves-light btn-floating grey darken-2">
+                <i class="material-icons">expand_less</i>
+              </a>
+              <span class="card-title">All Import Jobs</span>
+              <!--SEARCH -->
+              <div id="expandSearchDiv" class="row">
+                <div class="col s12">
+                  <div class="card-panel black-text">
+                    <span class="">I am a very simple card. I am good at containing small bits of information. I am convenient because I
+                      require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div id="bulkLogTable">
+
+              </div>
+              <table class="white-text">
+                <thead>
+                  <tr>
+                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Total Imported</th>
+                    <th>Total Tried</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                    <td>Eclair</td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    if ('addEventListener' in window) {
+      window.addEventListener('load', function () {
+        document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+      });
+      document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+    }
+  </script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="/js/materialize.js"></script>
+  <script src="/js/passport.js"></script>
+  <script src="/js/webpack/administratorImport.js"></script>
+  <script>
+    $(document).ready(function () {
+      $(".button-collapse").sideNav();
+      $('select').material_select();
+      $('.collapsible').collapsible();
+
+    });
+  </script>
 
 </body>
 

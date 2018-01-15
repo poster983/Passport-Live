@@ -22,20 +22,16 @@ email: hi@josephhassell.com
 var Caret = require("../../common/Caret.js");
 var Table = require("../../common/Table.js");
 var utils = require("../../utils/index.js");
-var importAPI = require("../../api/import.js")
+var importAPI = require("../../api/import.js");
+let buttonLoader = require("../../common/buttonLoader");
+let XLSX = require("xlsx");
 //var moment = require("moment");
 
 var bulkTable = null;
 window.onload = function() {
     var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
     caret.initialize();
-    console.log(utils.urlQuery({
-        string: "There",
-        number: 1,
-        bool: true,
-        null: null,
-        undefined: undefined
-    }))
+    
     //get initial table values and create table object.
     bulkTable = new Table($("#bulkLogTable"), [], {
         ignoredKeys: ["id"],
@@ -49,13 +45,13 @@ window.onload = function() {
                 strictColumn: true,
                 dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
             //dom: {hello: "there", howAre: "you"}
-            }])
+            }]);
         } 
     });
 
     importAPI.searchBulkLogs({}).then((data) => {
     //console.log(data)
-        bulkTable.addData(data)
+        bulkTable.addData(data);
         bulkTable.generate().catch(err=>utils.throwError(err));
     }).catch(err=>utils.throwError(err));
 };
@@ -63,3 +59,38 @@ window.onload = function() {
 function searchBulkLogsForm() {
     
 }
+
+
+/**ACCOUNT IMPORT **/
+
+//Process Excel after input change
+$("input[name=accountImport-excel]").on("change", (e) => {
+    let fileList = $("input[name=accountImport-excel]")[0].files;
+    console.log($("input[name=accountImport-excel]"))
+    if(fileList.length == 1) {
+        //load file 
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let data = e.target.result;
+            let workbook = XLSX.read(data, {type: "binary"});
+            console.log(workbook)
+        }
+        //read
+        reader.readAsBinaryString(fileList[0]);
+    } else if(fileList.length < 1) {
+        // no file selected
+        Materialize.toast("Please select a file", 6000)
+    } else {
+        Materialize.toast("One file at a time", 4000)
+    }
+
+    
+});
+
+//Submit Button
+$("#accountImport-submit").on("click", (e) => {
+    buttonLoader.load("#accountImport-submit");
+    setTimeout(() => {
+        buttonLoader.fail("#accountImport-submit", 2000);
+    }, 1000);
+});
