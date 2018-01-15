@@ -4853,6 +4853,8 @@ $("input[name=accountImport-excel]").on("change", (e) => {
             let data = e.target.result;
             let workbook = XLSX.read(data, {type: "binary"});
             console.log(workbook)
+            let json = XLSX.utils.sheet_to_json(workbook.Sheets["studentinfohassell"]);
+            console.log(json)
         }
         //read
         reader.readAsBinaryString(fileList[0]);
