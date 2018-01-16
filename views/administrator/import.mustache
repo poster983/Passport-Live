@@ -87,9 +87,9 @@ email: hi@josephhassell.com
 
             </div>
             <div class="card-tabs">
-              <ul class="tabs tabs-fixed-width">
+              <ul class="tabs tabs-fixed-width" id="accountImport-excel-tabs">
                 <li class="tab">
-                  <a href="#accountImport-excel">Excel</a>
+                  <a href="#accountImport-excel" id="accountImport-excel-tab">Excel</a>
                 </li>
                 <li class="tab">
                   <a href="#accountImport-json">JSON</a>
@@ -98,9 +98,11 @@ email: hi@josephhassell.com
             </div>
             <div class="card-content grey lighten-4 black-text">
               <div id="accountImport-excel">
+                <p>Please see the <a href="http://poster983.github.io/Passport-Live/global.html#accountImport">documentation</a> for an explanation of the JSON structure.
+                <p>WARNING: Large excel files may crash your browser. Please be patient when using this tool.</p>
                 <!--Start Excel Import -->
-                <div class="file-field input-field">
-                  <div class="btn">
+                <div class="file-field input-field col s12 m6">
+                  <div class="btn" id="accountImport-excel-filebutton">
                     <span>File</span>
                     <input type="file" name="accountImport-excel" accept=".xlsx">
                   </div>
@@ -108,23 +110,35 @@ email: hi@josephhassell.com
                     <input class="file-path validate black-text" placeholder="Select Excel File" type="text">
                   </div>
                 </div>
+                <div class="input-field col s12 m6">
+                  <select id="accountImport-excel-sheet">
+                    <option value="" disabled selected>Choose your option</option>
+                  </select>
+                  <label>Sheet Name</label>
+                </div>
+
                 <!--End excel-->
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
               </div>
               <div id="accountImport-json">
               <p>Please see the <a href="http://poster983.github.io/Passport-Live/global.html#accountImport">documentation</a> for an explanation of the JSON structure.
+                <a id="account-json-expand" class="btn-floating waves-effect right"><i class="material-icons">expand_more</i></a>
                 <!--START JSON-->
                 <div class="input-field col s12">
-                  <textarea id="account-json-textbox" class="materialize-textarea validate"></textarea>
+                  <textarea id="account-json-textbox" class="materialize-textarea validate textarea-less"></textarea>
                   <label for="account-json-textbox">Raw JSON</label>
                 </div>
+                
                 <div id="accountImport-json-error"></div>
+                <p>&nbsp;</p>
                 <p>&nbsp;</p>
                 <!--END JSON-->
               </div>
             </div>
             <div class="card-action black-text">
               <a id="accountImport-submit" class="waves-effect btn-large btn-flat black-text">Import Accounts</a>
-
+              <a id="accountImport-verifyJSONData" class="waves-effect btn-large btn-flat black-text">Verify Data Structure</a>
               
             </div>
           </div>
@@ -210,12 +224,6 @@ email: hi@josephhassell.com
   <script src="/js/passport.js"></script>
   <script src="/js/webpack/administratorImport.js"></script>
   <script>
-    $(document).ready(function () {
-      $(".button-collapse").sideNav();
-      $('select').material_select();
-      $('.collapsible').collapsible();
-
-    });
   </script>
 
 </body>

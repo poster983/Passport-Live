@@ -419,7 +419,7 @@ exports.formatJSON = (json) => {
 
 /***/ }),
 
-/***/ 16:
+/***/ 17:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -496,7 +496,7 @@ exports.success = (element, fadeMS) => {
         element.addClass("green");
         setTimeout(() => {
             element.removeClass("green");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -513,7 +513,7 @@ exports.fail = (element, fadeMS) => {
         element.addClass("red");
         setTimeout(() => {
             element.removeClass("red");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -530,7 +530,7 @@ exports.warning = (element, fadeMS) => {
         element.addClass("orange");
         setTimeout(() => {
             element.removeClass("orange");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -562,7 +562,7 @@ email: hi@josephhassell.com
 */
 
 let utils = __webpack_require__(0);
-let buttonLoader = __webpack_require__(16);
+let buttonLoader = __webpack_require__(17);
 let securityJS = __webpack_require__(34);
 //let moment = require("moment")
 

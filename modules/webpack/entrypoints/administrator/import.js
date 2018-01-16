@@ -23,14 +23,35 @@ var Caret = require("../../common/Caret.js");
 var Table = require("../../common/Table.js");
 var utils = require("../../utils/index.js");
 var importAPI = require("../../api/import.js");
+var miscAPI = require("../../api/misc.js");
 let buttonLoader = require("../../common/buttonLoader");
+let typeCheck = require("type-check").typeCheck;
 let XLSX = require("xlsx");
+let flat = require("flat");
 //var moment = require("moment");
 
 var bulkTable = null;
+let userGroups = null;
 window.onload = function() {
-    var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
-    caret.initialize();
+    $(".button-collapse").sideNav();
+    $("select").material_select();
+    $(".collapsible").collapsible();
+
+    //Import Job Caret
+    new Caret($("#expandSearch"), {content: $("#expandSearchDiv")});
+    //Account import json expand caret
+    new Caret($("#account-json-expand"), {
+        callback: (isOpen) => {
+            if(isOpen) {
+                $("#account-json-textbox").removeClass("textarea-less");
+                $("#account-json-textbox").trigger("autoresize");
+            } else {
+                $("#account-json-textbox").addClass("textarea-less");
+            }
+            
+        }
+    });
+
     
     //get initial table values and create table object.
     bulkTable = new Table($("#bulkLogTable"), [], {
@@ -55,6 +76,21 @@ window.onload = function() {
         bulkTable.generate().catch(err=>utils.throwError(err));
     }).catch(err=>utils.throwError(err));
 
+    //get usergroup premissions
+    buttonLoader.load("#accountImport-submit");
+    buttonLoader.load("#accountImport-verifyJSONData");
+    miscAPI.getUserGroups().then((uG) => {
+        userGroups = uG;
+        buttonLoader.done("#accountImport-submit");
+        buttonLoader.done("#accountImport-verifyJSONData");
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-submit");
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        $("#accountImport-submit").attr("disabled", "disabled");
+        $("#accountImport-verifyJSONData").attr("disabled", "disabled");
+        utils.throwError(err);
+    });
+
 };
 
 function searchBulkLogsForm() {
@@ -63,40 +99,62 @@ function searchBulkLogsForm() {
 
 
 /**ACCOUNT IMPORT **/
-
+var excelWorkbook = null;
 //Process Excel after input change
 $("input[name=accountImport-excel]").on("change", (e) => {
+    let sheetSelect = $("#accountImport-excel-sheet");
+    //reset sheet select
+    sheetSelect.find("option").not(":first").remove();
+    sheetSelect.off("change");
+
     let fileList = $("input[name=accountImport-excel]")[0].files;
-    console.log($("input[name=accountImport-excel]"))
     if(fileList.length == 1) {
+        buttonLoader.load("#accountImport-excel-filebutton");
+        Materialize.toast("Loading excel file", 6000);
         //load file 
         let reader = new FileReader();
         reader.onload = function(e) {
             let data = e.target.result;
             let workbook = XLSX.read(data, {type: "binary"});
             console.log(workbook);
-            let json = XLSX.utils.sheet_to_json(workbook.Sheets["studentinfohassell"]);
-            console.log(json);
+            
+            excelWorkbook = workbook;
+            //set sheet select
+            for(let i = 0; i < workbook.SheetNames.length; i++) {
+                sheetSelect.append($("<option/>").val(workbook.SheetNames[i]).html(workbook.SheetNames[i]));
+            }
+            sheetSelect.material_select();
+            buttonLoader.success("#accountImport-excel-filebutton");
+            Materialize.toast("Excel file loaded", 6000);
+        };
+        reader.onerror = function(e) {
+            buttonLoader.fail("#accountImport-excel-filebutton");
+            utils.throwError(e);
         };
         //read
         reader.readAsBinaryString(fileList[0]);
     } else if(fileList.length < 1) {
         // no file selected
-        Materialize.toast("Please select a file", 6000)
+        Materialize.toast("Please select a file", 6000);
     } else {
-        Materialize.toast("One file at a time", 4000)
+        Materialize.toast("One file at a time", 4000);
     }
 
     
 });
 
 
+
+//JSON EXPAND
+
+
 // JSON PROSESS
+
 $("#account-json-textbox").on("focusout", (e) => {
     try {
         
         $("#account-json-textbox").val(utils.formatJSON($("#account-json-textbox").val()));
-        $("#accountImport-json-error").html(null)
+        $("#accountImport-json-error").html(null);
         $("#account-json-textbox").addClass("valid").removeClass("invalid");
     } catch(err) {
         $("#accountImport-json-error").html(err.message);
@@ -108,7 +166,148 @@ $("#account-json-textbox").on("focusout", (e) => {
 //Submit Button
 $("#accountImport-submit").on("click", (e) => {
     buttonLoader.load("#accountImport-submit");
-    setTimeout(() => {
+    //If on excel tab
+    if($("#accountImport-excel-tab").hasClass("active")) {
+        Materialize.toast("Parsing excel file", 6000);
+        parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
+            //un flatten the data
+            $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
+            $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+            buttonLoader.success("#accountImport-submit", 2000);
+            $("#account-json-textbox").trigger("autoresize");
+            Materialize.toast("Please review the parsed data", 6000);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.warning("#accountImport-submit", 2000);
+        });
+    }
+    /*setTimeout(() => {
         buttonLoader.fail("#accountImport-submit", 2000);
-    }, 1000);
+    }, 1000);*/
 });
+
+
+//May become a utill function someday 
+function parseWorkbook(excelWorkbook, sheet) {
+    return new Promise((resolve, reject) => {
+        if(!excelWorkbook) {
+            return reject(new TypeError("Excel workbook not specified"));
+        }
+        if(!typeCheck("String", sheet)) {
+            return reject(new TypeError("Sheet not specified"));
+        }
+        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);
+        json = json.map((row) => {
+            return flat.unflatten(row);
+        });
+        resolve(json);
+    });
+}
+
+$("#accountImport-verifyJSONData").on("click", () => {
+    buttonLoader.load("#accountImport-verifyJSONData");
+    $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+    let arr = JSON.parse($("#account-json-textbox").val());
+    verifyAccountJSON(arr).then((errors) => {
+        console.log(errors)
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        utils.throwError(err);
+    });
+});
+
+function verifyAccountJSON(accountArray) {
+    return new Promise((resolve, reject) => {
+        if(!userGroups) {
+            return reject(new TypeError("Failed to get usergroups"));
+        }
+        let checkPromise = [];
+        for(let x = 0; x < accountArray.length; x++) {
+            checkPromise.push(new Promise((res, rej) => {
+                //console.log(accountArray[x])
+                let account = accountArray[x];
+                let errors = [];
+                //type 
+                if(!typeCheck("Object", account)) {
+                    errors.push("Not an object");
+                    //FAIL NOW
+                    return res({doc: account, errors});
+                }
+                //required fields
+                if(!account.name || typeof account.name.first !== "string") {
+                    errors.push("\"name.first\" must be a string");
+                }
+                if(!account.name || typeof account.name.last !== "string") {
+                    errors.push("\"name.last\" must be a string");
+                }
+                if(!account.name || typeof account.name.salutation !== "string") {
+                    errors.push("\"name.salutation\" must be a string");
+                }
+                if(typeof account.email !== "string") {
+                    errors.push("\"email\" must be a string");
+                }
+                if(typeof account.userGroup !== "string") {
+                    errors.push("\"userGroup\" must be a string");
+                } else if(!userGroups[account.userGroup]) {
+                    errors.push("\"userGroup\" must be a valid userGroup set in the configs. Valid userGroups: " + Object.keys(userGroups));
+                }
+
+                //optional
+                if(account.schoolID && typeof account.schoolID !== "string") {
+                    errors.push("\"schoolID\" is optional(undefined, null), but must be a string if set");
+                }
+                if(account.isVerified && typeof account.isVerified !== "boolean") {
+                    errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
+                }
+                if(account.graduationYear && typeof account.graduationYear !== "number") {
+                    errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
+                } else {
+                    //check if usergroup requires it
+                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && typeof account.graduationYear !== "number")) {
+                        errors.push("\"graduationYear\" is required to be a number by the userGroup");
+                    }
+                }
+                if(account.password && typeof account.password !== "string") {
+                    errors.push("\"password\" is optional(undefined, null), but must be a string if set");
+                }
+                
+
+                //end 
+                if(errors.length < 1) {
+                    return res();
+                } else {
+                    return res({doc: account, errors});
+                }
+            }));
+        }
+
+        Promise.all(checkPromise).then((tran) => {
+            tran = tran.filter((acc, val) => {
+                return !!val;
+            })
+            return resolve(tran);
+        }).catch((err) => {
+            return reject(err);
+        })
+
+        /*let type = `[{
+            name: {
+                first: String, 
+                last: String,
+                salutation: String
+            },
+            schoolID: Maybe String,
+            email: String,
+            userGroup: String,
+            isVerified: Maybe Boolean,
+            password: Maybe String,
+            graduationYear: Maybe Number
+        }]`;
+        if(!typeCheck(json, type)) {
+            //FIND PROBLEM ROWS 
+            
+        } else {
+            resolve();
+        }*/
+    });
+};
