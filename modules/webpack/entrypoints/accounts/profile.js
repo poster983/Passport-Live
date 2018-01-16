@@ -72,7 +72,7 @@ function routeHash() {
 }
 
 
-/** SCHEDULE EDITOR **/ 
+/* SCHEDULE EDITOR */ 
 function initScheduleEditor() {
     //init the back button
     unsavedWork.button("#mixenSEBack", {

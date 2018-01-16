@@ -396,6 +396,26 @@ exports.loader = ({size, color, active}) => {
     return htmlLoader;
 };
 
+
+/** 
+* Returns a nicely formatted json string
+* use with <textarea> for an nice json editor
+* @link module:webpack/utils
+* @param {Object} json
+* @returns {String} - Json STRING
+*/
+exports.formatJSON = (json) => {
+    let obj = JSON.parse(json);
+    let pretty = JSON.stringify(obj, undefined, 4);
+    return pretty;
+    /*try {
+        
+    } catch(err) {
+        throw err;
+    }*/
+    
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -3156,7 +3176,7 @@ function routeHash() {
 }
 
 
-/** SCHEDULE EDITOR **/ 
+/* SCHEDULE EDITOR */ 
 function initScheduleEditor() {
     //init the back button
     unsavedWork.button("#mixenSEBack", {

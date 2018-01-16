@@ -77,23 +77,55 @@ email: hi@josephhassell.com
     <div id="accountImport" class="col s12">
       <div class="row">
         <div class="col s12">
-          <div class="card grey darken-3">
-            <div class="card-content white-text">
+          <div class="card">
+            <div class="card-content black-text">
               <span class="card-title">Account Import</span>
-              <!--Start Excel Import -->
-              <div class="file-field input-field">
-                <div class="btn">
-                  <span>File</span>
-                  <input type="file" name="accountImport-excel" accept=".xlsx">
-                </div>
-                <div class="file-path-wrapper">
-                  <input class="file-path validate" placeholder="Select Excel File" type="text">
-                </div>
+              <div class=" input-field col s12">
+                <input id="accountImport-name" type="text" class="validate">
+                <label for="accountImport-name">Import Name</label>
               </div>
-              <!--End excel-->
+
             </div>
-            <div class="card-action white-text">
-              <a href="#" id="accountImport-submit" class="waves-effect btn-large btn-flat white-text">Import Accounts</a>
+            <div class="card-tabs">
+              <ul class="tabs tabs-fixed-width">
+                <li class="tab">
+                  <a href="#accountImport-excel">Excel</a>
+                </li>
+                <li class="tab">
+                  <a href="#accountImport-json">JSON</a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-content grey lighten-4 black-text">
+              <div id="accountImport-excel">
+                <!--Start Excel Import -->
+                <div class="file-field input-field">
+                  <div class="btn">
+                    <span>File</span>
+                    <input type="file" name="accountImport-excel" accept=".xlsx">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate black-text" placeholder="Select Excel File" type="text">
+                  </div>
+                </div>
+                <!--End excel-->
+              </div>
+              <div id="accountImport-json">
+              <p>Please see the <a href="http://poster983.github.io/Passport-Live/global.html#accountImport">documentation</a> for an explanation of the JSON structure.
+                <!--START JSON-->
+                <div class="input-field col s12">
+                  <textarea id="account-json-textbox" class="materialize-textarea validate"></textarea>
+                  <label for="account-json-textbox">Raw JSON</label>
+                </div>
+                <div id="accountImport-json-error"></div>
+                <p>&nbsp;</p>
+                <!--END JSON-->
+              </div>
+            </div>
+            <div class="card-action black-text">
+              <a id="accountImport-submit" class="waves-effect btn-large btn-flat black-text">Import Accounts</a>
+
+              
             </div>
           </div>
         </div>

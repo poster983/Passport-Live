@@ -54,6 +54,7 @@ window.onload = function() {
         bulkTable.addData(data);
         bulkTable.generate().catch(err=>utils.throwError(err));
     }).catch(err=>utils.throwError(err));
+
 };
 
 function searchBulkLogsForm() {
@@ -87,6 +88,21 @@ $("input[name=accountImport-excel]").on("change", (e) => {
     }
 
     
+});
+
+
+// JSON PROSESS
+$("#account-json-textbox").on("focusout", (e) => {
+    try {
+        
+        $("#account-json-textbox").val(utils.formatJSON($("#account-json-textbox").val()));
+        $("#accountImport-json-error").html(null)
+        $("#account-json-textbox").addClass("valid").removeClass("invalid");
+    } catch(err) {
+        $("#accountImport-json-error").html(err.message);
+        $("#account-json-textbox").removeClass("valid").addClass("invalid");
+    }
+    $("#account-json-textbox").trigger("autoresize");
 });
 
 //Submit Button

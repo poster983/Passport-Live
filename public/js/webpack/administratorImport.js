@@ -396,6 +396,26 @@ exports.loader = ({size, color, active}) => {
     return htmlLoader;
 };
 
+
+/** 
+* Returns a nicely formatted json string
+* use with <textarea> for an nice json editor
+* @link module:webpack/utils
+* @param {Object} json
+* @returns {String} - Json STRING
+*/
+exports.formatJSON = (json) => {
+    let obj = JSON.parse(json);
+    let pretty = JSON.stringify(obj, undefined, 4);
+    return pretty;
+    /*try {
+        
+    } catch(err) {
+        throw err;
+    }*/
+    
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -4866,6 +4886,21 @@ $("input[name=accountImport-excel]").on("change", (e) => {
     }
 
     
+});
+
+
+// JSON PROSESS
+$("#account-json-textbox").on("focusout", (e) => {
+    try {
+        
+        $("#account-json-textbox").val(utils.formatJSON($("#account-json-textbox").val()));
+        $("#accountImport-json-error").html(null)
+        $("#account-json-textbox").addClass("valid").removeClass("invalid");
+    } catch(err) {
+        $("#accountImport-json-error").html(err.message);
+        $("#account-json-textbox").removeClass("valid").addClass("invalid")
+    }
+    $("#account-json-textbox").trigger("autoresize");
 });
 
 //Submit Button
