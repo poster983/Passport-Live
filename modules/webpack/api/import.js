@@ -41,16 +41,17 @@ exports.searchBulkLogs = (queries) => {
         fetch("/api/import/log?" + utils.urlQuery(queries), {
             method: "GET",
             headers: new Headers({
-              //"Content-Type": "application/json",
-              "x-xsrf-token": getCookie("XSRF-TOKEN")
+                //"Content-Type": "application/json",
+                "x-xsrf-token": utils.getCookie("XSRF-TOKEN")
             }),
-            credentials: 'same-origin'
+            credentials: "same-origin"
         }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
-          return resolve(json)
+            return resolve(json);
         }).catch((err) => {
-          return reject(err);
-        })
-    })
-}
+            return reject(err);
+        });
+    });
+};
+
 
 

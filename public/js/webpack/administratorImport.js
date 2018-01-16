@@ -4895,15 +4895,20 @@ let buttonLoader = __webpack_require__(17);
 let typeCheck = __webpack_require__(1).typeCheck;
 let XLSX = __webpack_require__(24);
 let flat = __webpack_require__(3);
+let Logger = __webpack_require__(33);
 //var moment = require("moment");
 
 var bulkTable = null;
 let userGroups = null;
+let accountLog = null;
 window.onload = function() {
     $(".button-collapse").sideNav();
     $("select").material_select();
     $(".collapsible").collapsible();
+    $(".modal").modal();
 
+    //Logger
+    accountLog = new Logger("#accountImport-log");
     //Import Job Caret
     new Caret($("#expandSearch"), {content: $("#expandSearchDiv")});
     //Account import json expand caret
@@ -5035,7 +5040,7 @@ $("#accountImport-submit").on("click", (e) => {
     buttonLoader.load("#accountImport-submit");
     //If on excel tab
     if($("#accountImport-excel-tab").hasClass("active")) {
-        Materialize.toast("Parsing excel file", 6000);
+        Materialize.toast("Parsing excel file", 4000);
         parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
             //un flatten the data
             $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
@@ -5047,6 +5052,9 @@ $("#accountImport-submit").on("click", (e) => {
             utils.throwError(err);
             buttonLoader.warning("#accountImport-submit", 2000);
         });
+    } else {
+        //If JSON 
+
     }
     /*setTimeout(() => {
         buttonLoader.fail("#accountImport-submit", 2000);
@@ -5071,12 +5079,35 @@ function parseWorkbook(excelWorkbook, sheet) {
     });
 }
 
+//PArse Account Structure button
 $("#accountImport-verifyJSONData").on("click", () => {
     buttonLoader.load("#accountImport-verifyJSONData");
     $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
-    let arr = JSON.parse($("#account-json-textbox").val());
+    if($("#account-json-textbox").val().length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    try {
+        let arr = JSON.parse($("#account-json-textbox").val());
+    } catch(e) {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+    }
+    if(arr.length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
     verifyAccountJSON(arr).then((errors) => {
         console.log(errors)
+        if(errors.length < 1) {
+            buttonLoader.success("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is valid", 6000);
+        } else {
+            logJSONErrors(errors);
+            $("#accountImport-log-model").modal("open");
+            buttonLoader.warning("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
+        }
     }).catch((err) => {
         buttonLoader.fail("#accountImport-verifyJSONData");
         utils.throwError(err);
@@ -5149,35 +5180,30 @@ function verifyAccountJSON(accountArray) {
         }
 
         Promise.all(checkPromise).then((tran) => {
-            tran = tran.filter((acc, val) => {
+            tran = tran.filter((val) => {
                 return !!val;
             })
             return resolve(tran);
         }).catch((err) => {
             return reject(err);
-        })
-
-        /*let type = `[{
-            name: {
-                first: String, 
-                last: String,
-                salutation: String
-            },
-            schoolID: Maybe String,
-            email: String,
-            userGroup: String,
-            isVerified: Maybe Boolean,
-            password: Maybe String,
-            graduationYear: Maybe Number
-        }]`;
-        if(!typeCheck(json, type)) {
-            //FIND PROBLEM ROWS 
-            
-        } else {
-            resolve();
-        }*/
+        });
     });
-};
+}
+
+
+
+
+function logJSONErrors(array) {
+    for(let x = 0; x < array.length; x++) {
+        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
+        for(let y = 0; y < array[x].errors.length; y++) {
+            string = string + "\n <strong>" + array[x].errors[y] + "</strong>";
+        }
+        string = string.replace(/\n/g, "<br/>").replace(/ /g, "\u00a0");
+
+        accountLog.error(string);
+    }
+}
 
 /***/ }),
 /* 23 */
@@ -35715,6 +35741,85 @@ module.exports = ZStream;
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+let utils = __webpack_require__(0);
+
+class Logger {
+    constructor(outElement, options) {
+        this._id = utils.uuidv4();
+        $(outElement).append($("<ul/>").attr("id", this._id));
+        this.elmLog = $(outElement).find("ul#" + this._id); 
+        this.fullLog = [];
+        this.options = options?options:{};
+        let defaults = {
+            verbose: false,
+        };
+        this.options = Object.assign(defaults, this.options);
+        
+    }
+    _newEntry(type, data) {
+        type = type.toUpperCase();
+        this.fullLog.push({type: type, data: data});
+        this.elmLog.prepend($("<li/>").append(type + ": " + data));
+    }
+    log(message) {
+        if(this.options.varbose){console.log(message);}
+        this._newEntry("log", message);
+    }
+    done(message) {
+        if(this.options.varbose){console.log("DONE:", message);}
+        this._newEntry("done", message);
+    }
+    working(message) {
+        if(this.options.varbose){console.log("WORKING:", message);}
+        this._newEntry("working", message);
+    }
+    debug(message) {
+        if(this.options.varbose){console.log("DEBUG:", message);}
+        this._newEntry("debug", message);
+    }
+    warn(message) {
+        if(this.options.varbose){console.warn(message);}
+        this._newEntry("warn", message);
+    }
+    error(message) {
+        if(this.options.varbose){console.error(message);}
+        this._newEntry("error", message);
+    }
+    fetchError(errorObject) {
+        if(this.options.varbose){console.error(errorObject);}
+        var message = errorObject.response.status + " " + errorObject.message + ": " + decodeURIComponent(errorObject.response.headers.get("errormessage"));
+        if(this.options.varbose){console.log("FETCH ERROR:", message);}
+        this._newEntry("fetch error", message);
+    }
+}
+
+module.exports = Logger;
 
 /***/ })
 /******/ ]);

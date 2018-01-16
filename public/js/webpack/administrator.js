@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ 	return __webpack_require__(__webpack_require__.s = 34);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -536,7 +536,7 @@ exports.warning = (element, fadeMS) => {
 
 /***/ }),
 
-/***/ 33:
+/***/ 34:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -563,7 +563,7 @@ email: hi@josephhassell.com
 
 let utils = __webpack_require__(0);
 let buttonLoader = __webpack_require__(17);
-let securityJS = __webpack_require__(34);
+let securityJS = __webpack_require__(35);
 //let moment = require("moment")
 
 
@@ -661,7 +661,7 @@ $("#accountPermKey-submit").on("click", (e) => {
 
 /***/ }),
 
-/***/ 34:
+/***/ 35:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*

@@ -22,40 +22,8 @@ email: hi@josephhassell.com
 <body class="grey darken-4">
   <nav class="nav-extended">
     <div class="nav-wrapper">
+      {{>sidenav}}
       <a href="#!" class="right brand-logo">Administrators</a>
-      <ul id="slide-out" class="side-nav">
-        <li>
-          <div class="user-view">
-            <div class="background">
-              <img src="/images/stunav.jpg">
-            </div>
-            <a href="#!user">
-              <img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img">
-            </a>
-            <a href="#!name">
-              <span class="white-text name">{{user.name.first}} {{user.name.last}}</span>
-            </a>
-            <a href="#!email">
-              <span class="white-text email">{{user.email}}</span>
-            </a>
-          </div>
-        </li>
-        <li>
-          <a href="/administrator" class="waves-effect active">
-            <i class="material-icons">home</i>Home</a>
-        </li>
-        <li>
-          <a href="#" class="waves-effect active">
-            <i class="material-icons">backup</i>Import</a>
-        </li>
-        <li>
-          <div class="divider"></div>
-        </li>
-        <li>
-          <a class="waves-effect" href="/auth/logout">
-            <i class="material-icons">lock</i>Logout</a>
-        </li>
-      </ul>
       <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
         <i class="material-icons">menu</i>
       </a>
@@ -72,6 +40,26 @@ email: hi@josephhassell.com
     </div>
   </nav>
 
+  <!--FAB-->
+  <div class="fixed-action-btn toolbar">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Import Log">error</i>
+    </a>
+    <ul>
+      <li class="waves-effect waves-light tooltipped" data-position="top" data-delay="50" data-tooltip="Account import log"><a class="modal-trigger" href="#accountImport-log-model"><i class="material-icons">face</i></a></li>
+      <li class="waves-effect waves-light tooltipped" data-position="top" data-delay="50" data-tooltip="Schedule import log"><a href="#!"><i class="material-icons">access_time</i></a></li>
+    </ul>
+  </div>
+  <!-- Error Models -->
+  <div id="accountImport-log-model" class="modal bottom-sheet">
+    <div class="modal-content">
+      <h4>Account import log</h4>
+      <div id="accountImport-log"></div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
 
   <div class="container">
     <div id="accountImport" class="col s12">
@@ -223,8 +211,6 @@ email: hi@josephhassell.com
   <script src="/js/materialize.js"></script>
   <script src="/js/passport.js"></script>
   <script src="/js/webpack/administratorImport.js"></script>
-  <script>
-  </script>
 
 </body>
 

@@ -28,15 +28,20 @@ let buttonLoader = require("../../common/buttonLoader");
 let typeCheck = require("type-check").typeCheck;
 let XLSX = require("xlsx");
 let flat = require("flat");
+let Logger = require("../../common/Logger.js");
 //var moment = require("moment");
 
 var bulkTable = null;
 let userGroups = null;
+let accountLog = null;
 window.onload = function() {
     $(".button-collapse").sideNav();
     $("select").material_select();
     $(".collapsible").collapsible();
+    $(".modal").modal();
 
+    //Logger
+    accountLog = new Logger("#accountImport-log");
     //Import Job Caret
     new Caret($("#expandSearch"), {content: $("#expandSearchDiv")});
     //Account import json expand caret
@@ -168,7 +173,7 @@ $("#accountImport-submit").on("click", (e) => {
     buttonLoader.load("#accountImport-submit");
     //If on excel tab
     if($("#accountImport-excel-tab").hasClass("active")) {
-        Materialize.toast("Parsing excel file", 6000);
+        Materialize.toast("Parsing excel file", 4000);
         parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
             //un flatten the data
             $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
@@ -180,10 +185,25 @@ $("#accountImport-submit").on("click", (e) => {
             utils.throwError(err);
             buttonLoader.warning("#accountImport-submit", 2000);
         });
+    } else {
+        //If JSON 
+        try {
+            let accounts = JSON.parse($("#account-json-textbox").val());
+        } catch(e) {
+            buttonLoader.fail("#accountImport-submit");
+            return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+        }
+        let importName = $("#accountImport-name");
+        if(importName.val().length < 1) {
+            buttonLoader.warning("#accountImport-submit");
+            importName.addClass("invalid").removeClass("valid");
+            return Materialize.toast("Import name required", 6000);
+        }
+        //upload
+        accountLog.working("Importing Accounts");
+        
     }
-    /*setTimeout(() => {
-        buttonLoader.fail("#accountImport-submit", 2000);
-    }, 1000);*/
+    
 });
 
 
@@ -204,12 +224,35 @@ function parseWorkbook(excelWorkbook, sheet) {
     });
 }
 
+//PArse Account Structure button
 $("#accountImport-verifyJSONData").on("click", () => {
     buttonLoader.load("#accountImport-verifyJSONData");
     $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
-    let arr = JSON.parse($("#account-json-textbox").val());
+    if($("#account-json-textbox").val().length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    try {
+        let arr = JSON.parse($("#account-json-textbox").val());
+    } catch(e) {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+    }
+    if(arr.length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
     verifyAccountJSON(arr).then((errors) => {
         console.log(errors)
+        if(errors.length < 1) {
+            buttonLoader.success("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is valid", 6000);
+        } else {
+            logJSONErrors(errors);
+            $("#accountImport-log-model").modal("open");
+            buttonLoader.warning("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
+        }
     }).catch((err) => {
         buttonLoader.fail("#accountImport-verifyJSONData");
         utils.throwError(err);
@@ -282,32 +325,27 @@ function verifyAccountJSON(accountArray) {
         }
 
         Promise.all(checkPromise).then((tran) => {
-            tran = tran.filter((acc, val) => {
+            tran = tran.filter((val) => {
                 return !!val;
             })
             return resolve(tran);
         }).catch((err) => {
             return reject(err);
-        })
-
-        /*let type = `[{
-            name: {
-                first: String, 
-                last: String,
-                salutation: String
-            },
-            schoolID: Maybe String,
-            email: String,
-            userGroup: String,
-            isVerified: Maybe Boolean,
-            password: Maybe String,
-            graduationYear: Maybe Number
-        }]`;
-        if(!typeCheck(json, type)) {
-            //FIND PROBLEM ROWS 
-            
-        } else {
-            resolve();
-        }*/
+        });
     });
-};
+}
+
+
+
+
+function logJSONErrors(array) {
+    for(let x = 0; x < array.length; x++) {
+        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
+        for(let y = 0; y < array[x].errors.length; y++) {
+            string = string + "\n <strong>" + array[x].errors[y] + "</strong>";
+        }
+        string = string.replace(/\n/g, "<br/>").replace(/ /g, "\u00a0");
+
+        accountLog.error(string);
+    }
+}

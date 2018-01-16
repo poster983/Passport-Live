@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ 	return __webpack_require__(__webpack_require__.s = 36);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -3115,7 +3115,8 @@ exports.get = (query) => {
 /* 32 */,
 /* 33 */,
 /* 34 */,
-/* 35 */
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -3140,12 +3141,12 @@ email: hi@josephhassell.com
 
 */
 var Caret = __webpack_require__(6);
-var StudentScheduleEditor = __webpack_require__(36);
-var TeacherScheduleEditor = __webpack_require__(37);
+var StudentScheduleEditor = __webpack_require__(37);
+var TeacherScheduleEditor = __webpack_require__(38);
 var utils = __webpack_require__(0);
 var scheduleJS = __webpack_require__(19);
-var unsavedWork = __webpack_require__(38)
-var anime = __webpack_require__(39);
+var unsavedWork = __webpack_require__(39)
+var anime = __webpack_require__(40);
 var Table = __webpack_require__(2)
 
 var studentScheduleEditor = null;
@@ -3597,7 +3598,7 @@ function spinneyMcSpinFace() {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4029,7 +4030,7 @@ class StudentScheduleEditor {
 module.exports = StudentScheduleEditor;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -4609,7 +4610,7 @@ class TeacherScheduleEditor {
 module.exports = TeacherScheduleEditor;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 /*
@@ -4760,7 +4761,7 @@ exports.destroy = (element) => {
 }
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
