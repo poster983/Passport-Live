@@ -5038,11 +5038,201 @@ $("#account-json-textbox").on("focusout", (e) => {
 //Submit Button
 $("#accountImport-submit").on("click", (e) => {
     buttonLoader.load("#accountImport-submit");
-    setTimeout(() => {
-        buttonLoader.fail("#accountImport-submit", 2000);
-    }, 1000);
+    //If on excel tab
+    if($("#accountImport-excel-tab").hasClass("active")) {
+        Materialize.toast("Parsing excel file", 4000);
+        parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
+            //un flatten the data
+            $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
+            $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+            buttonLoader.success("#accountImport-submit", 2000);
+            $("#account-json-textbox").trigger("autoresize");
+            Materialize.toast("Please review the parsed data", 6000);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.warning("#accountImport-submit", 2000);
+        });
+    } else {
+        //If JSON 
+        let accounts = "";
+        try {
+            accounts = JSON.parse($("#account-json-textbox").val());
+        } catch(e) {
+            buttonLoader.fail("#accountImport-submit");
+            return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+        }
+        let importName = $("#accountImport-name");
+        if(importName.val().length < 1) {
+            buttonLoader.warning("#accountImport-submit");
+            importName.addClass("invalid").removeClass("valid");
+            return Materialize.toast("Import name required", 6000);
+        }
+        if(accounts.length < 1) {
+            buttonLoader.warning("#accountImport-submit");
+            $("#account-json-textbox").addClass("invalid").removeClass("valid");
+            return Materialize.toast("Invalid JSON structure", 6000);
+        }
+
+        //upload
+        accountLog.working("Importing Accounts");
+        importAPI.accounts(importName.val(), accounts).then((res) => {
+            buttonLoader.success("#accountImport-submit", 3000);
+            accountLog.done(JSON.stringify(res, undefined, 4).replace(/\n/g, "<br/>").replace(/ /g, "\u00a0"));
+            $("#accountImport-log-model").modal("open");
+            Materialize.toast("Successfully imported.", 6000);
+            $("#accountImport-json-res").empty().prepend("Total Tried: " + res.totalTried + "<br/>").append("Total Imported: " + res.totalImported + "<br/>").append("Total Initialized: " + res.totalInitialized);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.fail("#accountImport-submit", 3000);
+            return accountLog.fetchError(err);
+        });
+    }
 });
 
+
+//May become a utill function someday 
+function parseWorkbook(excelWorkbook, sheet) {
+    return new Promise((resolve, reject) => {
+        if(!excelWorkbook) {
+            return reject(new TypeError("Excel workbook not specified"));
+        }
+        if(!typeCheck("String", sheet)) {
+            return reject(new TypeError("Sheet not specified"));
+        }
+        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);
+        json = json.map((row) => {
+            return flat.unflatten(row);
+        });
+        resolve(json);
+    });
+}
+
+//PArse Account Structure button
+$("#accountImport-verifyJSONData").on("click", () => {
+    buttonLoader.load("#accountImport-verifyJSONData");
+    $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+    if($("#account-json-textbox").val().length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    let arr = "";
+    try {
+        arr = JSON.parse($("#account-json-textbox").val());
+    } catch(e) {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+    }
+    if(arr.length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    verifyAccountJSON(arr).then((errors) => {
+        console.log(errors)
+        if(errors.length < 1) {
+            buttonLoader.success("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is valid", 6000);
+        } else {
+            logJSONErrors(errors);
+            $("#accountImport-log-model").modal("open");
+            buttonLoader.warning("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
+        }
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        utils.throwError(err);
+    });
+});
+
+function verifyAccountJSON(accountArray) {
+    return new Promise((resolve, reject) => {
+        if(!userGroups) {
+            return reject(new TypeError("Failed to get usergroups"));
+        }
+        let checkPromise = [];
+        for(let x = 0; x < accountArray.length; x++) {
+            checkPromise.push(new Promise((res, rej) => {
+                //console.log(accountArray[x])
+                let account = accountArray[x];
+                let errors = [];
+                //type 
+                if(!typeCheck("Object", account)) {
+                    errors.push("Not an object");
+                    //FAIL NOW
+                    return res({doc: account, errors});
+                }
+                //required fields
+                if(!account.name || typeof account.name.first !== "string") {
+                    errors.push("\"name.first\" must be a string");
+                }
+                if(!account.name || typeof account.name.last !== "string") {
+                    errors.push("\"name.last\" must be a string");
+                }
+                if(!account.name || typeof account.name.salutation !== "string") {
+                    errors.push("\"name.salutation\" must be a string");
+                }
+                if(typeof account.email !== "string") {
+                    errors.push("\"email\" must be a string");
+                }
+                if(typeof account.userGroup !== "string") {
+                    errors.push("\"userGroup\" must be a string");
+                } else if(!userGroups[account.userGroup]) {
+                    errors.push("\"userGroup\" must be a valid userGroup set in the configs. Valid userGroups: " + Object.keys(userGroups));
+                }
+
+                //optional
+                if(account.schoolID && typeof account.schoolID !== "string") {
+                    errors.push("\"schoolID\" is optional(undefined, null), but must be a string if set");
+                }
+                if(account.isVerified && typeof account.isVerified !== "boolean") {
+                    errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
+                }
+                if(account.graduationYear && typeof account.graduationYear !== "number") {
+                    errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
+                } else {
+                    //check if usergroup requires it
+                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && typeof account.graduationYear !== "number")) {
+                        errors.push("\"graduationYear\" is required to be a number by the userGroup");
+                    }
+                }
+                if(account.password && typeof account.password !== "string") {
+                    errors.push("\"password\" is optional(undefined, null), but must be a string if set");
+                }
+                
+
+                //end 
+                if(errors.length < 1) {
+                    return res();
+                } else {
+                    return res({doc: account, errors});
+                }
+            }));
+        }
+
+        Promise.all(checkPromise).then((tran) => {
+            tran = tran.filter((val) => {
+                return !!val;
+            })
+            return resolve(tran);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
+
+
+
+function logJSONErrors(array) {
+    for(let x = 0; x < array.length; x++) {
+        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
+        for(let y = 0; y < array[x].errors.length; y++) {
+            string = string + "\n <strong>" + array[x].errors[y] + "</strong>";
+        }
+        string = string.replace(/\n/g, "<br/>").replace(/ /g, "\u00a0");
+
+        accountLog.error(string);
+    }
+}
 
 /***/ }),
 /* 23 */
@@ -5116,6 +5306,7 @@ exports.accounts = (importName, accounts) => {
         importName: importName
     }});
 };
+
 
 
 
@@ -35594,201 +35785,6 @@ module.exports = ZStream;
 
 /* (ignored) */
 
-/***/ })
-/******/ ]);
-    //If on excel tab
-    if($("#accountImport-excel-tab").hasClass("active")) {
-        Materialize.toast("Parsing excel file", 4000);
-        parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
-            //un flatten the data
-            $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
-            $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
-            buttonLoader.success("#accountImport-submit", 2000);
-            $("#account-json-textbox").trigger("autoresize");
-            Materialize.toast("Please review the parsed data", 6000);
-        }).catch((err) => {
-            utils.throwError(err);
-            buttonLoader.warning("#accountImport-submit", 2000);
-        });
-    } else {
-        //If JSON 
-        let accounts = "";
-        try {
-            accounts = JSON.parse($("#account-json-textbox").val());
-        } catch(e) {
-            buttonLoader.fail("#accountImport-submit");
-            return Materialize.toast("JSON.parse, Invalid JSON", 6000);
-        }
-        let importName = $("#accountImport-name");
-        if(importName.val().length < 1) {
-            buttonLoader.warning("#accountImport-submit");
-            importName.addClass("invalid").removeClass("valid");
-            return Materialize.toast("Import name required", 6000);
-        }
-        if(accounts.length < 1) {
-            buttonLoader.warning("#accountImport-submit");
-            $("#account-json-textbox").addClass("invalid").removeClass("valid");
-            return Materialize.toast("Invalid JSON structure", 6000);
-        }
-
-        //upload
-        accountLog.working("Importing Accounts");
-        importAPI.accounts(importName.val(), accounts).then((res) => {
-            buttonLoader.success("#accountImport-submit", 3000);
-            accountLog.done(JSON.stringify(res, undefined, 4).replace(/\n/g, "<br/>").replace(/ /g, "\u00a0"));
-            $("#accountImport-log-model").modal("open");
-            Materialize.toast("Successfully imported.", 6000);
-            $("#accountImport-json-res").empty().prepend("Total Tried: " + res.totalTried + "<br/>").append("Total Imported: " + res.totalImported + "<br/>").append("Total Initialized: " + res.totalInitialized);
-        }).catch((err) => {
-            utils.throwError(err);
-            buttonLoader.fail("#accountImport-submit", 3000);
-            return accountLog.fetchError(err);
-        });
-    }
-//May become a utill function someday 
-function parseWorkbook(excelWorkbook, sheet) {
-    return new Promise((resolve, reject) => {
-        if(!excelWorkbook) {
-            return reject(new TypeError("Excel workbook not specified"));
-        }
-        if(!typeCheck("String", sheet)) {
-            return reject(new TypeError("Sheet not specified"));
-        }
-        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);
-        json = json.map((row) => {
-            return flat.unflatten(row);
-        });
-        resolve(json);
-    });
-}
-
-//PArse Account Structure button
-$("#accountImport-verifyJSONData").on("click", () => {
-    buttonLoader.load("#accountImport-verifyJSONData");
-    $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
-    if($("#account-json-textbox").val().length < 1) {
-        buttonLoader.warning("#accountImport-verifyJSONData");
-        return Materialize.toast("Nothing to verify", 6000);
-    }
-    let arr = "";
-    try {
-        arr = JSON.parse($("#account-json-textbox").val());
-    } catch(e) {
-        buttonLoader.fail("#accountImport-verifyJSONData");
-        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
-    }
-    if(arr.length < 1) {
-        buttonLoader.warning("#accountImport-verifyJSONData");
-        return Materialize.toast("Nothing to verify", 6000);
-    }
-    verifyAccountJSON(arr).then((errors) => {
-        console.log(errors)
-        if(errors.length < 1) {
-            buttonLoader.success("#accountImport-verifyJSONData");
-            Materialize.toast("Account JSON structure is valid", 6000);
-        } else {
-            logJSONErrors(errors);
-            $("#accountImport-log-model").modal("open");
-            buttonLoader.warning("#accountImport-verifyJSONData");
-            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
-        }
-    }).catch((err) => {
-        buttonLoader.fail("#accountImport-verifyJSONData");
-        utils.throwError(err);
-    });
-});
-
-function verifyAccountJSON(accountArray) {
-    return new Promise((resolve, reject) => {
-        if(!userGroups) {
-            return reject(new TypeError("Failed to get usergroups"));
-        }
-        let checkPromise = [];
-        for(let x = 0; x < accountArray.length; x++) {
-            checkPromise.push(new Promise((res, rej) => {
-                //console.log(accountArray[x])
-                let account = accountArray[x];
-                let errors = [];
-                //type 
-                if(!typeCheck("Object", account)) {
-                    errors.push("Not an object");
-                    //FAIL NOW
-                    return res({doc: account, errors});
-                }
-                //required fields
-                if(!account.name || typeof account.name.first !== "string") {
-                    errors.push("\"name.first\" must be a string");
-                }
-                if(!account.name || typeof account.name.last !== "string") {
-                    errors.push("\"name.last\" must be a string");
-                }
-                if(!account.name || typeof account.name.salutation !== "string") {
-                    errors.push("\"name.salutation\" must be a string");
-                }
-                if(typeof account.email !== "string") {
-                    errors.push("\"email\" must be a string");
-                }
-                if(typeof account.userGroup !== "string") {
-                    errors.push("\"userGroup\" must be a string");
-                } else if(!userGroups[account.userGroup]) {
-                    errors.push("\"userGroup\" must be a valid userGroup set in the configs. Valid userGroups: " + Object.keys(userGroups));
-                }
-
-                //optional
-                if(account.schoolID && typeof account.schoolID !== "string") {
-                    errors.push("\"schoolID\" is optional(undefined, null), but must be a string if set");
-                }
-                if(account.isVerified && typeof account.isVerified !== "boolean") {
-                    errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
-                }
-                if(account.graduationYear && typeof account.graduationYear !== "number") {
-                    errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
-                } else {
-                    //check if usergroup requires it
-                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && typeof account.graduationYear !== "number")) {
-                        errors.push("\"graduationYear\" is required to be a number by the userGroup");
-                    }
-                }
-                if(account.password && typeof account.password !== "string") {
-                    errors.push("\"password\" is optional(undefined, null), but must be a string if set");
-                }
-                
-
-                //end 
-                if(errors.length < 1) {
-                    return res();
-                } else {
-                    return res({doc: account, errors});
-                }
-            }));
-        }
-
-        Promise.all(checkPromise).then((tran) => {
-            tran = tran.filter((val) => {
-                return !!val;
-            })
-            return resolve(tran);
-        }).catch((err) => {
-            return reject(err);
-        });
-    });
-}
-
-
-
-
-function logJSONErrors(array) {
-    for(let x = 0; x < array.length; x++) {
-        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
-        for(let y = 0; y < array[x].errors.length; y++) {
-            string = string + "\n <strong>" + array[x].errors[y] + "</strong>";
-        }
-        string = string.replace(/\n/g, "<br/>").replace(/ /g, "\u00a0");
-
-        accountLog.error(string);
-    }
-}
-
 /***/ }),
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -35894,3 +35890,6 @@ class Logger {
 }
 
 module.exports = Logger;
+
+/***/ })
+/******/ ]);
