@@ -72,7 +72,7 @@ exports.success = (element, fadeMS) => {
         element.addClass("green");
         setTimeout(() => {
             element.removeClass("green");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -89,7 +89,7 @@ exports.fail = (element, fadeMS) => {
         element.addClass("red");
         setTimeout(() => {
             element.removeClass("red");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -106,6 +106,6 @@ exports.warning = (element, fadeMS) => {
         element.addClass("orange");
         setTimeout(() => {
             element.removeClass("orange");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };

@@ -41,16 +41,29 @@ exports.searchBulkLogs = (queries) => {
         fetch("/api/import/log?" + utils.urlQuery(queries), {
             method: "GET",
             headers: new Headers({
-              //"Content-Type": "application/json",
-              "x-xsrf-token": getCookie("XSRF-TOKEN")
+                //"Content-Type": "application/json",
+                "x-xsrf-token": utils.getCookie("XSRF-TOKEN")
             }),
-            credentials: 'same-origin'
+            credentials: "same-origin"
         }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
-          return resolve(json)
+            return resolve(json);
         }).catch((err) => {
-          return reject(err);
-        })
-    })
-}
+            return reject(err);
+        });
+    });
+};
 
+/** 
+* Imports accounts with JSON.
+* @link module:webpack/api/import
+* @param {accountImport[]} accounts - The accountImport objects 
+* @param {String} importName - a (non unique) name for this import job
+* @returns {Promise}
+*/
+exports.accounts = (importName, accounts) => {
+    return utils.fetch("POST", "/api/import/accounts", {auth: true, body: {
+        accounts: accounts,
+        importName: importName
+    }});
+};
 

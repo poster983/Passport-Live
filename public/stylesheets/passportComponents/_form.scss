@@ -1,5 +1,4 @@
 /*
-
 Passport-Live is a modern web app for schools that helps them manage passes.
     Copyright (C) 2017  Joseph Hassell
 
@@ -17,31 +16,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 email: hi@josephhassell.com
-
 */
 
-/**
-* Browser Misc Functions.
-* @module webpack/api/misc
-*/
-
-var utils = require("../utils/index.js");
-
-/** 
-* Gets all schedule configs from server.
-* @link module:webpack/api/misc
-* @returns {Promise}
-*/
-exports.getScheduleConfig = () => {
-    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false});
-};
-
-/** 
-* Gets all userGroup types from server.
-* @link module:webpack/api/misc
-* @returns {Promise}
-*/
-exports.getUserGroups = () => {
-    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false});
-};
-
+.textarea-less {
+    resize: vertical; 
+    max-height: 200px; 
+    overflow-x: hidden; 
+    overflow-y: scroll !important;
+}

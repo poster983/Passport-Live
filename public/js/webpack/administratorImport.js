@@ -424,8 +424,8 @@ exports.formatJSON = (json) => {
 (function(){
   var VERSION, parseType, parsedTypeCheck, typeCheck;
   VERSION = '0.3.2';
-  parseType = __webpack_require__(5);
-  parsedTypeCheck = __webpack_require__(6);
+  parseType = __webpack_require__(7);
+  parsedTypeCheck = __webpack_require__(8);
   typeCheck = function(type, input, options){
     return parsedTypeCheck(parseType(type), input, options);
   };
@@ -463,10 +463,10 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var flat = __webpack_require__(13);
+var flat = __webpack_require__(3);
 var utils = __webpack_require__(0);
 var typeCheck = __webpack_require__(1).typeCheck;
-var DeepKey = __webpack_require__(15);
+var DeepKey = __webpack_require__(16);
 
 /**
 * Takes structured data and makes a table from it. call this.generate() to create a table,
@@ -814,29 +814,118 @@ module.exports = Table;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var g;
+var isBuffer = __webpack_require__(15)
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
+module.exports = flatten
+flatten.flatten = flatten
+flatten.unflatten = unflatten
 
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
+function flatten (target, opts) {
+  opts = opts || {}
+
+  var delimiter = opts.delimiter || '.'
+  var maxDepth = opts.maxDepth
+  var output = {}
+
+  function step (object, prev, currentDepth) {
+    currentDepth = currentDepth || 1
+    Object.keys(object).forEach(function (key) {
+      var value = object[key]
+      var isarray = opts.safe && Array.isArray(value)
+      var type = Object.prototype.toString.call(value)
+      var isbuffer = isBuffer(value)
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      var newKey = prev
+        ? prev + delimiter + key
+        : key
+
+      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
+        (!opts.maxDepth || currentDepth < maxDepth)) {
+        return step(value, newKey, currentDepth + 1)
+      }
+
+      output[newKey] = value
+    })
+  }
+
+  step(target)
+
+  return output
 }
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+function unflatten (target, opts) {
+  opts = opts || {}
 
-module.exports = g;
+  var delimiter = opts.delimiter || '.'
+  var overwrite = opts.overwrite || false
+  var result = {}
+
+  var isbuffer = isBuffer(target)
+  if (isbuffer || Object.prototype.toString.call(target) !== '[object Object]') {
+    return target
+  }
+
+  // safely ensure that the key is
+  // an integer.
+  function getkey (key) {
+    var parsedKey = Number(key)
+
+    return (
+      isNaN(parsedKey) ||
+      key.indexOf('.') !== -1 ||
+      opts.object
+    ) ? key
+      : parsedKey
+  }
+
+  var sortedKeys = Object.keys(target).sort(function (keyA, keyB) {
+    return keyA.length - keyB.length
+  })
+
+  sortedKeys.forEach(function (key) {
+    var split = key.split(delimiter)
+    var key1 = getkey(split.shift())
+    var key2 = getkey(split[0])
+    var recipient = result
+
+    while (key2 !== undefined) {
+      var type = Object.prototype.toString.call(recipient[key1])
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      // do not write over falsey, non-undefined values if overwrite is false
+      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
+        return
+      }
+
+      if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
+        recipient[key1] = (
+          typeof key2 === 'number' &&
+          !opts.object ? [] : {}
+        )
+      }
+
+      recipient = recipient[key1]
+      if (split.length > 0) {
+        key1 = getkey(split.shift())
+        key2 = getkey(split[0])
+      }
+    }
+
+    // unflatten again for 'messy objects'
+    recipient[key1] = unflatten(target[key], opts)
+  })
+
+  return result
+}
 
 
 /***/ }),
@@ -864,49 +953,145 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var typeCheck = __webpack_require__(1).typeCheck
+
+/**
+* Browser Misc Functions.
+* @module webpack/api/misc
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule configs from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getScheduleConfig = () => {
+    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false});
+};
+
+/** 
+* Gets all userGroup types from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getUserGroups = () => {
+    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false});
+};
+
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var typeCheck = __webpack_require__(1).typeCheck;
 
 /**
 * Pairs a caret "^" button with a hidden element.  Shows element when carot is clicked and flips carot.
 * @link module:webpack/framework
 * @class 
 * @param {Selector} caretButton - The clickable element.
-* @param {Selector} content - The element to be shown.
-* @param {(Object|undefined)} options - The clickable element.
-* @param {(Boolean|undefined)} options.isOpen - True if the element should be shown by default.
-* @param {(Number|undefine)} options.timing - How fast the element will be shown. In ms.
-* @param {(Function|undefine)} options.callback - Passes one argument, "isOpen" (bool). Fires whenever the Caret is opened.
+* @param {Object} [options] - The clickable element.
+* @param {Selector} [options.content] - The element to be shown/hide.
+* @param {Boolean} [options.isOpen] - True if the element should be shown by default.
+* @param {Number} [options.timing] - How fast the element will be shown. In ms.
+* @param {Function} [options.callback] - Passes one argument, "isOpen" (bool). Fires whenever the Caret is clicked.
+* @param {Boolean} [options.initialise=true] - Will automaticly call .initialize()
 */
 class Caret {
-    constructor(caretButton, content, options) {
-        if(!typeCheck("Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}\"");
+    constructor(caretButton, options) {
+        let type = `Maybe {
+            isOpen: Maybe Boolean, 
+            content: Maybe String|Object, 
+            initialise: Maybe Boolean, 
+            timing: Maybe Number, 
+            callback: Maybe Function
+        }`
+        if(!typeCheck(type, options)) {
+            throw new TypeError("Options expected an object with structure: \" " + type +"\"");
         }
-        if(!options) {options = {}}
+        if(!options) {options = {};}
         this.options = options;
         this.caretButton = caretButton;
-        this.contentElm = content;
+        this.contentElm = options.content;
         this.state = (this.options.isOpen || false);
         this.caretButton.css("transition", "transform 0.2s");
-        this.showContent(this.state, 0)
+        this._showContent(this.state, 0);
+        if(options.initialise !== false) {
+            this.initialize();
+        }
     }
+    /** Starts listening for clicks on the button*/
     initialize() {
-        this.caretButton.on("click", e=> this._onClick(e));
+        this.caretButton.on("click", e=> this.toggle(e));
     }
+    /** Stops listening for clicks on the button*/
     destroy() {
         this.caretButton.off("click");
     }
-    _onClick(event) {
-        if(this.state) {this.caretButton.css("transform", "rotate(0deg)")} else {this.caretButton.css("transform", "rotate(180deg)")}
-        if(typeCheck("Function", this.options.callback)) {this.options.callback(!this.state)}
-        this.showContent(!this.state);
+    /**Opens or closes the Caret*/
+    toggle() {
+        if(this.state) {this.caretButton.css("transform", "rotate(0deg)");} else {this.caretButton.css("transform", "rotate(180deg)");}
+        if(typeCheck("Function", this.options.callback)) {this.options.callback(!this.state);}
+        this._showContent(!this.state);
     }
-    showContent(isShown, time) {
-        if(!typeCheck("Number", time)) {time = (this.options.timing || 200)}
-        if(time > 0) {
-            if(isShown) {this.contentElm.slideDown(time)} else {this.contentElm.slideUp(time)}
-        } else {
-            if(isShown) {this.contentElm.show()} else {this.contentElm.hide()}
+    _showContent(isShown, time) {
+        if(this.options.content) {
+            if(!typeCheck("Number", time)) {time = (this.options.timing || 200);}
+            if(time > 0) {
+                if(isShown) {this.contentElm.slideDown(time);} else {this.contentElm.slideUp(time);}
+            } else {
+                if(isShown) {this.contentElm.show();} else {this.contentElm.hide();}
+            }
         }
         this.state = isShown;
     }
@@ -915,7 +1100,7 @@ class Caret {
 module.exports = Caret;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -1117,13 +1302,13 @@ module.exports = Caret;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by LiveScript 1.4.0
 (function(){
   var ref$, any, all, isItNaN, types, defaultType, customTypes, toString$ = {}.toString;
-  ref$ = __webpack_require__(7), any = ref$.any, all = ref$.all, isItNaN = ref$.isItNaN;
+  ref$ = __webpack_require__(9), any = ref$.any, all = ref$.all, isItNaN = ref$.isItNaN;
   types = {
     Number: {
       typeOf: 'Number',
@@ -1249,16 +1434,16 @@ module.exports = Caret;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by LiveScript 1.4.0
 var Func, List, Obj, Str, Num, id, isType, replicate, prelude, toString$ = {}.toString;
-Func = __webpack_require__(8);
-List = __webpack_require__(9);
-Obj = __webpack_require__(10);
-Str = __webpack_require__(11);
-Num = __webpack_require__(12);
+Func = __webpack_require__(10);
+List = __webpack_require__(11);
+Obj = __webpack_require__(12);
+Str = __webpack_require__(13);
+Num = __webpack_require__(14);
 id = function(x){
   return x;
 };
@@ -1432,7 +1617,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -1502,7 +1687,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2193,7 +2378,7 @@ function compose$() {
 function not$(x){ return !x; }
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2352,7 +2537,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2449,7 +2634,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2584,123 +2769,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isBuffer = __webpack_require__(14)
-
-module.exports = flatten
-flatten.flatten = flatten
-flatten.unflatten = unflatten
-
-function flatten (target, opts) {
-  opts = opts || {}
-
-  var delimiter = opts.delimiter || '.'
-  var maxDepth = opts.maxDepth
-  var output = {}
-
-  function step (object, prev, currentDepth) {
-    currentDepth = currentDepth || 1
-    Object.keys(object).forEach(function (key) {
-      var value = object[key]
-      var isarray = opts.safe && Array.isArray(value)
-      var type = Object.prototype.toString.call(value)
-      var isbuffer = isBuffer(value)
-      var isobject = (
-        type === '[object Object]' ||
-        type === '[object Array]'
-      )
-
-      var newKey = prev
-        ? prev + delimiter + key
-        : key
-
-      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
-        (!opts.maxDepth || currentDepth < maxDepth)) {
-        return step(value, newKey, currentDepth + 1)
-      }
-
-      output[newKey] = value
-    })
-  }
-
-  step(target)
-
-  return output
-}
-
-function unflatten (target, opts) {
-  opts = opts || {}
-
-  var delimiter = opts.delimiter || '.'
-  var overwrite = opts.overwrite || false
-  var result = {}
-
-  var isbuffer = isBuffer(target)
-  if (isbuffer || Object.prototype.toString.call(target) !== '[object Object]') {
-    return target
-  }
-
-  // safely ensure that the key is
-  // an integer.
-  function getkey (key) {
-    var parsedKey = Number(key)
-
-    return (
-      isNaN(parsedKey) ||
-      key.indexOf('.') !== -1 ||
-      opts.object
-    ) ? key
-      : parsedKey
-  }
-
-  var sortedKeys = Object.keys(target).sort(function (keyA, keyB) {
-    return keyA.length - keyB.length
-  })
-
-  sortedKeys.forEach(function (key) {
-    var split = key.split(delimiter)
-    var key1 = getkey(split.shift())
-    var key2 = getkey(split[0])
-    var recipient = result
-
-    while (key2 !== undefined) {
-      var type = Object.prototype.toString.call(recipient[key1])
-      var isobject = (
-        type === '[object Object]' ||
-        type === '[object Array]'
-      )
-
-      // do not write over falsey, non-undefined values if overwrite is false
-      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
-        return
-      }
-
-      if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
-        recipient[key1] = (
-          typeof key2 === 'number' &&
-          !opts.object ? [] : {}
-        )
-      }
-
-      recipient = recipient[key1]
-      if (split.length > 0) {
-        key1 = getkey(split.shift())
-        key2 = getkey(split[0])
-      }
-    }
-
-    // unflatten again for 'messy objects'
-    recipient[key1] = unflatten(target[key], opts)
-  })
-
-  return result
-}
-
-
-/***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /*!
@@ -2727,7 +2796,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2872,7 +2941,7 @@ module.exports = {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2949,7 +3018,7 @@ exports.success = (element, fadeMS) => {
         element.addClass("green");
         setTimeout(() => {
             element.removeClass("green");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -2966,7 +3035,7 @@ exports.fail = (element, fadeMS) => {
         element.addClass("red");
         setTimeout(() => {
             element.removeClass("red");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -2983,12 +3052,12 @@ exports.warning = (element, fadeMS) => {
         element.addClass("orange");
         setTimeout(() => {
             element.removeClass("orange");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4782,17 +4851,16 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 18 */,
-/* 19 */
+/* 19 */,
+/* 20 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 20 */,
 /* 21 */,
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -4818,18 +4886,44 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var Caret = __webpack_require__(4);
+var Caret = __webpack_require__(6);
 var Table = __webpack_require__(2);
 var utils = __webpack_require__(0);
 var importAPI = __webpack_require__(23);
-let buttonLoader = __webpack_require__(16);
+var miscAPI = __webpack_require__(4);
+let buttonLoader = __webpack_require__(17);
+let typeCheck = __webpack_require__(1).typeCheck;
 let XLSX = __webpack_require__(24);
+let flat = __webpack_require__(3);
+let Logger = __webpack_require__(33);
 //var moment = require("moment");
 
 var bulkTable = null;
+let userGroups = null;
+let accountLog = null;
 window.onload = function() {
-    var caret = new Caret($("#expandSearch"), $("#expandSearchDiv"));
-    caret.initialize();
+    $(".button-collapse").sideNav();
+    $("select").material_select();
+    $(".collapsible").collapsible();
+    $(".modal").modal();
+
+    //Logger
+    accountLog = new Logger("#accountImport-log");
+    //Import Job Caret
+    new Caret($("#expandSearch"), {content: $("#expandSearchDiv")});
+    //Account import json expand caret
+    new Caret($("#account-json-expand"), {
+        callback: (isOpen) => {
+            if(isOpen) {
+                $("#account-json-textbox").removeClass("textarea-less");
+                $("#account-json-textbox").trigger("autoresize");
+            } else {
+                $("#account-json-textbox").addClass("textarea-less");
+            }
+            
+        }
+    });
+
     
     //get initial table values and create table object.
     bulkTable = new Table($("#bulkLogTable"), [], {
@@ -4853,6 +4947,22 @@ window.onload = function() {
         bulkTable.addData(data);
         bulkTable.generate().catch(err=>utils.throwError(err));
     }).catch(err=>utils.throwError(err));
+
+    //get usergroup premissions
+    buttonLoader.load("#accountImport-submit");
+    buttonLoader.load("#accountImport-verifyJSONData");
+    miscAPI.getUserGroups().then((uG) => {
+        userGroups = uG;
+        buttonLoader.done("#accountImport-submit");
+        buttonLoader.done("#accountImport-verifyJSONData");
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-submit");
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        $("#accountImport-submit").attr("disabled", "disabled");
+        $("#accountImport-verifyJSONData").attr("disabled", "disabled");
+        utils.throwError(err);
+    });
+
 };
 
 function searchBulkLogsForm() {
@@ -4861,44 +4971,66 @@ function searchBulkLogsForm() {
 
 
 /**ACCOUNT IMPORT **/
-
+var excelWorkbook = null;
 //Process Excel after input change
 $("input[name=accountImport-excel]").on("change", (e) => {
+    let sheetSelect = $("#accountImport-excel-sheet");
+    //reset sheet select
+    sheetSelect.find("option").not(":first").remove();
+    sheetSelect.off("change");
+
     let fileList = $("input[name=accountImport-excel]")[0].files;
-    console.log($("input[name=accountImport-excel]"))
     if(fileList.length == 1) {
+        buttonLoader.load("#accountImport-excel-filebutton");
+        Materialize.toast("Loading excel file", 6000);
         //load file 
         let reader = new FileReader();
         reader.onload = function(e) {
             let data = e.target.result;
             let workbook = XLSX.read(data, {type: "binary"});
             console.log(workbook);
-            let json = XLSX.utils.sheet_to_json(workbook.Sheets["studentinfohassell"]);
-            console.log(json);
+            
+            excelWorkbook = workbook;
+            //set sheet select
+            for(let i = 0; i < workbook.SheetNames.length; i++) {
+                sheetSelect.append($("<option/>").val(workbook.SheetNames[i]).html(workbook.SheetNames[i]));
+            }
+            sheetSelect.material_select();
+            buttonLoader.success("#accountImport-excel-filebutton");
+            Materialize.toast("Excel file loaded", 6000);
+        };
+        reader.onerror = function(e) {
+            buttonLoader.fail("#accountImport-excel-filebutton");
+            utils.throwError(e);
         };
         //read
         reader.readAsBinaryString(fileList[0]);
     } else if(fileList.length < 1) {
         // no file selected
-        Materialize.toast("Please select a file", 6000)
+        Materialize.toast("Please select a file", 6000);
     } else {
-        Materialize.toast("One file at a time", 4000)
+        Materialize.toast("One file at a time", 4000);
     }
 
     
 });
 
 
+
+//JSON EXPAND
+
+
 // JSON PROSESS
+
 $("#account-json-textbox").on("focusout", (e) => {
     try {
         
         $("#account-json-textbox").val(utils.formatJSON($("#account-json-textbox").val()));
-        $("#accountImport-json-error").html(null)
+        $("#accountImport-json-error").html(null);
         $("#account-json-textbox").addClass("valid").removeClass("invalid");
     } catch(err) {
         $("#accountImport-json-error").html(err.message);
-        $("#account-json-textbox").removeClass("valid").addClass("invalid")
+        $("#account-json-textbox").removeClass("valid").addClass("invalid");
     }
     $("#account-json-textbox").trigger("autoresize");
 });
@@ -4906,11 +5038,201 @@ $("#account-json-textbox").on("focusout", (e) => {
 //Submit Button
 $("#accountImport-submit").on("click", (e) => {
     buttonLoader.load("#accountImport-submit");
-    setTimeout(() => {
-        buttonLoader.fail("#accountImport-submit", 2000);
-    }, 1000);
+    //If on excel tab
+    if($("#accountImport-excel-tab").hasClass("active")) {
+        Materialize.toast("Parsing excel file", 4000);
+        parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
+            //un flatten the data
+            $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
+            $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+            buttonLoader.success("#accountImport-submit", 2000);
+            $("#account-json-textbox").trigger("autoresize");
+            Materialize.toast("Please review the parsed data", 6000);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.warning("#accountImport-submit", 2000);
+        });
+    } else {
+        //If JSON 
+        let accounts = "";
+        try {
+            accounts = JSON.parse($("#account-json-textbox").val());
+        } catch(e) {
+            buttonLoader.fail("#accountImport-submit");
+            return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+        }
+        let importName = $("#accountImport-name");
+        if(importName.val().length < 1) {
+            buttonLoader.warning("#accountImport-submit");
+            importName.addClass("invalid").removeClass("valid");
+            return Materialize.toast("Import name required", 6000);
+        }
+        if(accounts.length < 1) {
+            buttonLoader.warning("#accountImport-submit");
+            $("#account-json-textbox").addClass("invalid").removeClass("valid");
+            return Materialize.toast("Invalid JSON structure", 6000);
+        }
+
+        //upload
+        accountLog.working("Importing Accounts");
+        importAPI.accounts(importName.val(), accounts).then((res) => {
+            buttonLoader.success("#accountImport-submit", 3000);
+            accountLog.done(JSON.stringify(res, undefined, 4).replace(/\n/g, "<br/>").replace(/ /g, "\u00a0"));
+            $("#accountImport-log-model").modal("open");
+            Materialize.toast("Successfully imported.", 6000);
+            $("#accountImport-json-res").empty().prepend("Total Tried: " + res.totalTried + "<br/>").append("Total Imported: " + res.totalImported + "<br/>").append("Total Initialized: " + res.totalInitialized);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.fail("#accountImport-submit", 3000);
+            return accountLog.fetchError(err);
+        });
+    }
 });
 
+
+//May become a utill function someday 
+function parseWorkbook(excelWorkbook, sheet) {
+    return new Promise((resolve, reject) => {
+        if(!excelWorkbook) {
+            return reject(new TypeError("Excel workbook not specified"));
+        }
+        if(!typeCheck("String", sheet)) {
+            return reject(new TypeError("Sheet not specified"));
+        }
+        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);
+        json = json.map((row) => {
+            return flat.unflatten(row);
+        });
+        resolve(json);
+    });
+}
+
+//PArse Account Structure button
+$("#accountImport-verifyJSONData").on("click", () => {
+    buttonLoader.load("#accountImport-verifyJSONData");
+    $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+    if($("#account-json-textbox").val().length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    let arr = "";
+    try {
+        arr = JSON.parse($("#account-json-textbox").val());
+    } catch(e) {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+    }
+    if(arr.length < 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    verifyAccountJSON(arr).then((errors) => {
+        console.log(errors)
+        if(errors.length < 1) {
+            buttonLoader.success("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is valid", 6000);
+        } else {
+            logJSONErrors(errors);
+            $("#accountImport-log-model").modal("open");
+            buttonLoader.warning("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
+        }
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        utils.throwError(err);
+    });
+});
+
+function verifyAccountJSON(accountArray) {
+    return new Promise((resolve, reject) => {
+        if(!userGroups) {
+            return reject(new TypeError("Failed to get usergroups"));
+        }
+        let checkPromise = [];
+        for(let x = 0; x < accountArray.length; x++) {
+            checkPromise.push(new Promise((res, rej) => {
+                //console.log(accountArray[x])
+                let account = accountArray[x];
+                let errors = [];
+                //type 
+                if(!typeCheck("Object", account)) {
+                    errors.push("Not an object");
+                    //FAIL NOW
+                    return res({doc: account, errors});
+                }
+                //required fields
+                if(!account.name || typeof account.name.first !== "string") {
+                    errors.push("\"name.first\" must be a string");
+                }
+                if(!account.name || typeof account.name.last !== "string") {
+                    errors.push("\"name.last\" must be a string");
+                }
+                if(!account.name || typeof account.name.salutation !== "string") {
+                    errors.push("\"name.salutation\" must be a string");
+                }
+                if(typeof account.email !== "string") {
+                    errors.push("\"email\" must be a string");
+                }
+                if(typeof account.userGroup !== "string") {
+                    errors.push("\"userGroup\" must be a string");
+                } else if(!userGroups[account.userGroup]) {
+                    errors.push("\"userGroup\" must be a valid userGroup set in the configs. Valid userGroups: " + Object.keys(userGroups));
+                }
+
+                //optional
+                if(account.schoolID && typeof account.schoolID !== "string") {
+                    errors.push("\"schoolID\" is optional(undefined, null), but must be a string if set");
+                }
+                if(account.isVerified && typeof account.isVerified !== "boolean") {
+                    errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
+                }
+                if(account.graduationYear && typeof account.graduationYear !== "number") {
+                    errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
+                } else {
+                    //check if usergroup requires it
+                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && typeof account.graduationYear !== "number")) {
+                        errors.push("\"graduationYear\" is required to be a number by the userGroup");
+                    }
+                }
+                if(account.password && typeof account.password !== "string") {
+                    errors.push("\"password\" is optional(undefined, null), but must be a string if set");
+                }
+                
+
+                //end 
+                if(errors.length < 1) {
+                    return res();
+                } else {
+                    return res({doc: account, errors});
+                }
+            }));
+        }
+
+        Promise.all(checkPromise).then((tran) => {
+            tran = tran.filter((val) => {
+                return !!val;
+            })
+            return resolve(tran);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
+
+
+
+function logJSONErrors(array) {
+    for(let x = 0; x < array.length; x++) {
+        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
+        for(let y = 0; y < array[x].errors.length; y++) {
+            string = string + "\n <strong>" + array[x].errors[y] + "</strong>";
+        }
+        string = string.replace(/\n/g, "<br/>").replace(/ /g, "\u00a0");
+
+        accountLog.error(string);
+    }
+}
 
 /***/ }),
 /* 23 */
@@ -4959,18 +5281,31 @@ exports.searchBulkLogs = (queries) => {
         fetch("/api/import/log?" + utils.urlQuery(queries), {
             method: "GET",
             headers: new Headers({
-              //"Content-Type": "application/json",
-              "x-xsrf-token": getCookie("XSRF-TOKEN")
+                //"Content-Type": "application/json",
+                "x-xsrf-token": utils.getCookie("XSRF-TOKEN")
             }),
-            credentials: 'same-origin'
+            credentials: "same-origin"
         }).then(utils.fetchStatus).then(utils.fetchJSON).then((json) => {
-          return resolve(json)
+            return resolve(json);
         }).catch((err) => {
-          return reject(err);
-        })
-    })
-}
+            return reject(err);
+        });
+    });
+};
 
+/** 
+* Imports accounts with JSON.
+* @link module:webpack/api/import
+* @param {accountImport[]} accounts - The accountImport objects 
+* @param {String} importName - a (non unique) name for this import job
+* @returns {Promise}
+*/
+exports.accounts = (importName, accounts) => {
+    return utils.fetch("POST", "/api/import/accounts", {auth: true, body: {
+        accounts: accounts,
+        importName: importName
+    }});
+};
 
 
 
@@ -6070,7 +6405,7 @@ function filename(p) {
 	return (c === -1) ? p : p.slice(c+1);
 }
 var fs;
-function get_fs() { return fs || (fs = __webpack_require__(19)); }
+function get_fs() { return fs || (fs = __webpack_require__(20)); }
 function parse(file, options) {
 var mver = 3;
 var ssz = 512;
@@ -6947,7 +7282,7 @@ if(typeof JSZip !== 'undefined') jszip = JSZip;
 if (true) {
 	if (typeof module !== 'undefined' && module.exports) {
 		if(typeof jszip === 'undefined') jszip = __webpack_require__(30);
-		try { _fs = __webpack_require__(19); } catch(e) { }
+		try { _fs = __webpack_require__(20); } catch(e) { }
 	}
 }
 
@@ -24527,7 +24862,7 @@ XLSX.CFB = CFB;
 /*exported XLS, ODS */
 var XLS = XLSX, ODS = XLSX;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(17).Buffer, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(18).Buffer, __webpack_require__(28)))
 
 /***/ }),
 /* 25 */
@@ -26437,7 +26772,7 @@ if (typeof module !== 'undefined' && module.exports && typeof DO_NOT_EXPORT_CODE
   return cpt;
 }));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ }),
 /* 30 */
@@ -35435,7 +35770,7 @@ module.exports = ZStream;
 (9)
 }));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ }),
 /* 31 */
@@ -35448,6 +35783,112 @@ module.exports = ZStream;
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+let utils = __webpack_require__(0);
+/**
+ * Manages a user friendly log for the front end
+ * @class
+ * @param {(String|Object)} outElement - where the log will be printed
+ * @param {Object} [options]
+ * @param {Boolean} [options.verbose] - if true, console.log/warn/error may be called automaticly
+ */
+class Logger {
+    constructor(outElement, options) {
+        this._id = utils.uuidv4();
+        $(outElement).append($("<ul/>").attr("id", this._id));
+        this.elmLog = $(outElement).find("ul#" + this._id); 
+        this.fullLog = [];
+        this.options = options?options:{};
+        let defaults = {
+            verbose: false,
+        };
+        this.options = Object.assign(defaults, this.options);
+        
+    }
+    _newEntry(type, data) {
+        type = type.toUpperCase();
+        this.fullLog.push({type: type, data: data});
+        this.elmLog.prepend($("<li/>").append(type + ": " + data));
+    }
+    /** A simple log
+     * @param {String} message
+     */
+    log(message) {
+        if(this.options.varbose){console.log(message);}
+        this._newEntry("log", message);
+    }
+    /** Called when something is finished
+     * @param {String} message
+     */
+    done(message) {
+        if(this.options.varbose){console.log("DONE:", message);}
+        this._newEntry("done", message);
+    }
+    /** Called when something is working
+     * @param {String} message
+     */
+    working(message) {
+        if(this.options.varbose){console.log("WORKING:", message);}
+        this._newEntry("working", message);
+    }
+    /** Called when debugging something
+     * @param {String} message
+     */
+    debug(message) {
+        if(this.options.varbose){console.log("DEBUG:", message);}
+        this._newEntry("debug", message);
+    }
+    /** Called when warning the user of a non fatal problem
+     * @param {String} message
+     */
+    warn(message) {
+        if(this.options.varbose){console.warn(message);}
+        this._newEntry("warn", message);
+    }
+    /** Called when something exploded
+     * @param {String} message
+     */
+    error(message) {
+        if(this.options.varbose){console.error(message);}
+        this._newEntry("error", message);
+    }
+    /** Called when a fetch request fails
+     * @param {Object} errorObject
+     */
+    fetchError(errorObject) {
+        if(this.options.varbose){console.error(errorObject);}
+        var message = errorObject.response.status + " " + errorObject.message + ": " + decodeURIComponent(errorObject.response.headers.get("errormessage"));
+        if(this.options.varbose){console.log("FETCH ERROR:", message);}
+        this._newEntry("fetch error", message);
+    }
+}
+
+module.exports = Logger;
 
 /***/ })
 /******/ ]);

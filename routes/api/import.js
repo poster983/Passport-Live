@@ -59,6 +59,26 @@ router.get("/log", passport.authenticate("jwt", { session: false}), ssarv(["admi
 
 });
 
+/** 
+* Takes in an array of account json objects and imports them 
+* NOTE: Email domains are still must follow userGroup settings.
+* If the json object lacks the nessessary values to create an account, the row is skipped 
+* @link module:api/import
+* @function rollback
+* @api DELETE /api/import/accounts/rollback/:bulkID
+* @apiparam {Object} req.body - Include these in the body
+* @apibody {Object} req.body
+* @apiresponse {Object[]} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
+*/
+
+/*router.post("/log/rollback/:bulkID", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function rollback(req, res, next) {
+    importJS.accounts.json(req.body.accounts, req.body.importName).then((trans) => {
+        return res.json(trans);
+    }).catch((err) => {
+        return next(err);
+    });
+});*/
+
 
 /** 
 * Takes in an array of account json objects and imports them 
@@ -79,8 +99,9 @@ router.post("/accounts", passport.authenticate("jwt", { session: false}), utils.
         return res.json(trans);
     }).catch((err) => {
         return next(err);
-    })
+    });
 });
+
 
 
 
