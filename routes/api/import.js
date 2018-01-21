@@ -45,7 +45,7 @@ router.options("*", cors());
 * @apiquery {(String|undefined)} to - ISO Strng High end. inclusive
 * @apiresponse {Object[]}
 */
-router.get("/log", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "admin", "dev"], {locationOfRoles: "user.userGroup"}), function searchBulkImport(req, res, next) {
+router.get("/log", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function searchBulkImport(req, res, next) {
     importJS.searchBulkLogs({
         name: req.query.name,
         type: req.query.type,
@@ -59,25 +59,7 @@ router.get("/log", passport.authenticate("jwt", { session: false}), ssarv(["admi
 
 });
 
-/** 
-* Takes in an array of account json objects and imports them 
-* NOTE: Email domains are still must follow userGroup settings.
-* If the json object lacks the nessessary values to create an account, the row is skipped 
-* @link module:api/import
-* @function rollback
-* @api DELETE /api/import/log/rollback/:bulkID
-* @apiparam {Object} req.body - Include these in the body
-* @apibody {Object} req.body
-* @apiresponse {Object[]} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
-*/
 
-router.delete("/log/rollback/:bulkID", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function rollback(req, res, next) {
-    importJS.accounts.json(req.body.accounts, req.body.importName).then((trans) => {
-        return res.json(trans);
-    }).catch((err) => {
-        return next(err);
-    });
-});
 
 
 /** 
@@ -102,11 +84,45 @@ router.post("/accounts", passport.authenticate("jwt", { session: false}), utils.
     });
 });
 
+/** 
+* Sends activation emails to all unverified accounts
+* @link module:api/import
+* @function activate
+* @api PATCH /api/import/accounts/:bulkID/activate
+* @apiparam {String} bulkID - The id of the bulk import log.
+* @apiresponse {Object} - A 202 accepted will be returned 
+*/
+
+router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function activate(req, res, next) {
+    if(typeof req.params.bulkID !== "string") {let err = new Error("Not Found"); err.status = 404; return next(err);}
+    importJS.accounts.sendActivation(req.params.bulkID).then((trans) => {
+        return res.json(trans);
+    }).catch((err) => {
+        return next(err);  
+    });
+});
 
 
 
+/** 
+* Undos a bulk import for accounts.  This will delete records and cannot be undone.
+* @link module:api/import
+* @function rollback
+* @api delete /api/import/accounts/:bulkID/rollback
+* @apiquery {Boolean} [ignoreVerified=true] - Will leave accounts that have been verified untouched
+* @apiparam {String} bulkID - The id of the bulk import log.
+* @apiresponse {Object} - The transaction statement
+*/
 
-
+router.delete("/accounts/:bulkID/rollback", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function rollback(req, res, next) {
+    if(typeof req.params.bulkID !== "string") {let err = new Error("Not Found"); err.status = 404; return next(err);}
+    if(req.query.ignoreVerified === "false") {req.query.ignoreVerified = false;} else {req.query.ignoreVerified = true;}
+    importJS.accounts.rollback(req.params.bulkID, req.query.ignoreVerified).then((trans) => {
+        return res.json(trans);
+    }).catch((err) => {
+        return next(err);  
+    });
+});
 
 
 

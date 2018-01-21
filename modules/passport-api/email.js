@@ -136,18 +136,18 @@ exports.sendActivationEmail = function(mailOptions) {
         if(Array.isArray(mailOptions)) {
             var jobs = [];
             if(mailOptions.length)
-            for(var x = 0; x < mailOptions.length; x++) {
-                var job = db.queue.activateEmail().createJob()
-                job.to = mailOptions[x].to;
-                job.name = mailOptions[x].name;
-                job.accountID = mailOptions[x].accountID;
-                jobs.push(job);
-                if(x >= mailOptions.length-1) {
-                    db.queue.activateEmail().addJob(jobs).then((cur) => {
-                        return resolve(cur);
-                    });
+                for(var x = 0; x < mailOptions.length; x++) {
+                    var job = db.queue.activateEmail().createJob()
+                    job.to = mailOptions[x].to;
+                    job.name = mailOptions[x].name;
+                    job.accountID = mailOptions[x].accountID;
+                    jobs.push(job);
+                    if(x >= mailOptions.length-1) {
+                        db.queue.activateEmail().addJob(jobs).then((cur) => {
+                            return resolve(cur);
+                        });
+                    }
                 }
-            }
         } else if (typeof mailOptions === "object") {
             var job = db.queue.activateEmail().createJob();
             job.to = mailOptions.to;
@@ -185,18 +185,18 @@ exports.sendResetPasswordEmail = function(mailOptions) {
         if(Array.isArray(mailOptions)) {
             var jobs = [];
             if(mailOptions.length)
-            for(var x = 0; x < mailOptions.length; x++) {
-                var job = db.queue.resetPasswordEmail().createJob()
-                job.to = mailOptions[x].to;
-                job.name = mailOptions[x].name;
-                job.accountID = mailOptions[x].accountID;
-                jobs.push(job);
-                if(x >= mailOptions.length-1) {
-                    db.queue.resetPasswordEmail().addJob(jobs).then((cur) => {
-                        return resolve(cur);
-                    });
+                for(var x = 0; x < mailOptions.length; x++) {
+                    var job = db.queue.resetPasswordEmail().createJob()
+                    job.to = mailOptions[x].to;
+                    job.name = mailOptions[x].name;
+                    job.accountID = mailOptions[x].accountID;
+                    jobs.push(job);
+                    if(x >= mailOptions.length-1) {
+                        db.queue.resetPasswordEmail().addJob(jobs).then((cur) => {
+                            return resolve(cur);
+                        });
+                    }
                 }
-            }
         } else if (typeof mailOptions === "object") {
             var job = db.queue.resetPasswordEmail().createJob();
             job.to = mailOptions.to;
