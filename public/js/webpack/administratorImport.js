@@ -5042,7 +5042,15 @@ $("#accountImport-submit").on("click", (e) => {
     if($("#accountImport-excel-tab").hasClass("active")) {
         Materialize.toast("Parsing excel file", 4000);
         parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
-            //un flatten the data
+            //fix graduationYear type
+            json = json.map((val) => {
+                if(typeof val.graduationYear === "string") {
+                    if(!isNaN(parseInt(val.graduationYear))) {
+                        val.graduationYear = parseInt(val.graduationYear);
+                    }
+                }
+                return val;
+            });
             $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
             $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
             buttonLoader.success("#accountImport-submit", 2000);
@@ -5099,10 +5107,22 @@ function parseWorkbook(excelWorkbook, sheet) {
         if(!typeCheck("String", sheet)) {
             return reject(new TypeError("Sheet not specified"));
         }
-        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);
+        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);        
+        //loop through object array
+        for(let x = 0; x < json.length; x++) {
+            let keys = Object.keys(json[x]);
+            //loop through each individule object
+            for(let y = 0; y < keys.length; y++) {
+                if(keys[y].substring(0, 2) === "//") {
+                    delete json[x][keys[y]];
+                    continue;
+                }
+            }
+        }
         json = json.map((row) => {
             return flat.unflatten(row);
         });
+        
         resolve(json);
     });
 }
@@ -5186,11 +5206,12 @@ function verifyAccountJSON(accountArray) {
                 if(account.isVerified && typeof account.isVerified !== "boolean") {
                     errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
                 }
-                if(account.graduationYear && typeof account.graduationYear !== "number") {
+                if(account.graduationYear && !typeCheck("Number", account.graduationYear)) {
                     errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
                 } else {
+                    
                     //check if usergroup requires it
-                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && typeof account.graduationYear !== "number")) {
+                    if(userGroups[account.userGroup] && (userGroups[account.userGroup].graduates && !typeCheck("Number", account.graduationYear))) {
                         errors.push("\"graduationYear\" is required to be a number by the userGroup");
                     }
                 }
@@ -5211,7 +5232,7 @@ function verifyAccountJSON(accountArray) {
         Promise.all(checkPromise).then((tran) => {
             tran = tran.filter((val) => {
                 return !!val;
-            })
+            });
             return resolve(tran);
         }).catch((err) => {
             return reject(err);
