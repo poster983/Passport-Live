@@ -22,12 +22,12 @@ email: hi@josephhassell.com
 * A set of Apis for importing large amounts of data into passport
 * @module js/import
 */
-const convertExcel = require('excel-as-json').processFile;
+const convertExcel = require("excel-as-json").processFile;
 const accountAPI = require("./accounts.js");
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
-var r_ = db.dash()
-var utils = require('../passport-utils/index.js');
+var r = require("rethinkdb");
+var db = require("../../modules/db/index.js");
+var r_ = db.dash();
+var utils = require("../passport-utils/index.js");
 var typeCheck = require("type-check").typeCheck;
 var moment = require("moment");
 var emailJS = require("./email.js");
@@ -42,7 +42,7 @@ var emailJS = require("./email.js");
 */
 function newBulkLog(name, importType) {
     //return new Promise((resolve, reject) => {
-       return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
+    return r.table("bulkImports").insert({name: name, date: r.now(), importType: importType}).run(db.conn());
     //})
 }
 /**
@@ -91,40 +91,40 @@ exports.searchBulkLogs = (queries) => {
         }
         //            date: r.ISO8601(queries.date),
         if(queries.date && typeCheck("Date", queries.date.from)) {
-            queries.date.from = moment(queries.date.from).toISOString()
+            queries.date.from = moment(queries.date.from).toISOString();
         }
         if(queries.date && typeCheck("Date", queries.date.to)) {
-            queries.date.to = moment(queries.date.to).toISOString()
+            queries.date.to = moment(queries.date.to).toISOString();
         }
         return r_.table("bulkImports")
-        .filter((date) => {
-            if(queries.date && queries.date.from && queries.date.to) {
-                return date("date").during(r_.ISO8601(queries.date.from), r_.ISO8601(queries.date.to), {leftBound: "closed", rightBound: "closed"});
-            } else if(queries.date && queries.date.from) {
-                return date("date").ge(r_.ISO8601(queries.date.from));
-            } else if(queries.date && queries.date.to) {
-                return date("date").le(r_.ISO8601(queries.date.to));
-            } else {
-                return true;
-            }
-        })
-        .filter((row) => {
-            if(queries.name != undefined) {
-                return row("name").match("(?i)"+queries.name.replace(/\s/g,''))
-            } else {
-                return true;
-            }
-        })
-        .filter((row) => {
-            if(queries.type != undefined) {
-                return row("importType").eq(queries.type)
-            } else {
-                return true;
-            }
-        })
-        .run().then(resolve).catch(reject)
-    })
-}
+            .filter((date) => {
+                if(queries.date && queries.date.from && queries.date.to) {
+                    return date("date").during(r_.ISO8601(queries.date.from), r_.ISO8601(queries.date.to), {leftBound: "closed", rightBound: "closed"});
+                } else if(queries.date && queries.date.from) {
+                    return date("date").ge(r_.ISO8601(queries.date.from));
+                } else if(queries.date && queries.date.to) {
+                    return date("date").le(r_.ISO8601(queries.date.to));
+                } else {
+                    return true;
+                }
+            })
+            .filter((row) => {
+                if(queries.name != undefined) {
+                    return row("name").match("(?i)"+queries.name.replace(/\s/g,""));
+                } else {
+                    return true;
+                }
+            })
+            .filter((row) => {
+                if(queries.type != undefined) {
+                    return row("importType").eq(queries.type);
+                } else {
+                    return true;
+                }
+            })
+            .run().then(resolve).catch(reject);
+    });
+};
 
 
 
@@ -138,7 +138,7 @@ exports.searchBulkLogs = (queries) => {
  * @property {function} accounts.rollback - Deletes all accounts linked to a given import job
  */
 var accounts = {};
- /**
+/**
  * Deletes all accounts linked to a given import job ID
  * @function
  * @memberof js/import
@@ -146,7 +146,7 @@ var accounts = {};
  * @param {Boolean} ignoreActivated - If true, activated accounts will be skipped.
  * @returns {Promise} - Transaction Statement  
  */
- accounts.rollback = (bulkID, ignoreVerified) => {
+accounts.rollback = (bulkID, ignoreVerified) => {
     return new Promise((resolve, reject) => {
         return r_.table("accounts").filter((row) => {
             return row("flags")("bulkImportID").eq(bulkID);
@@ -157,7 +157,7 @@ var accounts = {};
                 return true;
             }
         }).delete().run().then((trans) => {
-             if(trans.deleted > 0) {
+            if(trans.deleted > 0) {
                 r_.table("bulkImports").get(bulkID).update({rollback: {on: r_.now(), deleted: trans.deleted}}).run().then(() => {
                     return resolve(trans);
                 }).catch((err)=>{return reject(err);});
@@ -165,51 +165,187 @@ var accounts = {};
                 return resolve(trans);
             }
         }).catch(reject);
-    })
- }
+    });
+};
 
 //accounts.rollback("8e4a8ff9-5503-4e6f-920c-7b07f1109601", true).then((res)=>{console.log(res)}).catch((err)=>{console.error(err)});
 
- /**
+/**
  * Sends athe activation email to all unverified users.  
  * @function
  * @memberof js/import
  * @param {String} bulkID - Id of the bulk import.
- * @returns {Promise} - arg0: Accounts, arg1: sendActivationEmail Cursor
+ * @returns {Promise} - accounts: Accounts, cursor: sendActivationEmail Cursor
  */
 accounts.sendActivation = (bulkID) => {
     return new Promise((resolve, reject) => {
         return r_.table("accounts")
-        .filter((row) => {
-            return row("flags")("bulkImportID").eq(bulkID);
-        })
-        .filter((row) => {
-            return row("isVerified").eq(false);
-        })
-        .withFields("id", "email", {name: "first"})
-        .map((doc) => {
-            return doc.merge({accountID: doc('id')}).without('id');
-        })
-        .map((doc) => {
-            return doc.merge({to: doc('email')}).without('email');
-        })
-        .run().then((accounts) => {
-            emailJS.sendActivationEmail(accounts).then((cur) => {
-                return resolve(accounts, cur)
-            }).catch(reject)
+            .filter((row) => {
+                return row("flags")("bulkImportID").eq(bulkID);
+            })
+            .filter((row) => {
+                return row("isVerified").eq(false);
+            })
+            .withFields("id", "email", {name: "first"})
+            .map((doc) => {
+                return doc.merge({accountID: doc("id")}).without("id");
+            })
+            .map((doc) => {
+                return doc.merge({to: doc("email")}).without("email");
+            })
+            .run().then((accounts) => {
+                if(accounts.length < 1) {
+                    let err = new Error("No accounts linked to that bulkID");
+                    err.status = 404;
+                    return reject(err);
+                } else {
+                    emailJS.sendActivationEmail(accounts).then((cur) => {
+                        return resolve({accounts: accounts, cursor: cur});
+                    }).catch(reject);
+                }
             
-        }).catch(reject)
+            }).catch(reject);
+    });
+};
+/*
+setTimeout(() => {
+    accounts.sendActivation("61b8ea46-c329-4b2f-b0c7-88be7718cd4c").then((res) => {
+        console.log(res)
+    }).catch((err) => {
+        console.error(err)
     })
-}
-//accounts.sendActivation("089aa0ae-c8ab-42c2-9807-b6b6c6dc27de").then((res, cur)=>{console.log(res); console.log(cur)}).catch((err)=>{console.error(err)});
+})*/
+
+
+/** 
+* Takes in an array of account json objects and imports them
+* NOTE: Email domains are still must follow userGroup settings.
+* If the json object lacks the nessessary values to create an account, the row is skipped 
+* @link module:js/import
+* @param {accountImport[]} accounts - The accountImport objects 
+* @param {String} importName - a (non unique) name for this import job
+* @returns {Promise} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 
+*/
+
+accounts.json = (accounts, importName) => {
+    console.log(accounts);
+    return new Promise((resolve, reject) => {
+        let typeDef = `[{
+            name: {
+                first: String, 
+                last: String,
+                salutation: String
+            },
+            schoolID: Maybe String,
+            email: String,
+            userGroup: userGroup,
+            isVerified: Maybe Boolean,
+            password: Maybe String,
+            graduationYear: Maybe Number
+        }]`;
+        //check type
+        if(!typeCheck(typeDef, accounts, utils.typeCheck) || accounts.length < 1) {
+            let err = new TypeError("\"accounts\" expected an array with structure: " + typeDef);
+            err.status = 400;
+            return reject(err);
+        }
+        if(typeof importName !== "string") {
+            let err = new TypeError("\"importName\" expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        //declare 
+        let loopPromice = [];
+        let errors = [];
+        let imported = 0;
+        let initialized = 0;
+        let defaults = {
+            schoolID: null,
+            isVerified: false,
+            password: null,
+            graduationYear: null
+        };
+        //loop through accounts
+        newBulkLog(importName, "account").then((jResp) => {
+            if(jResp.inserted == 1) {
+                for(let x = 0; x < accounts.length; x++) {
+                    loopPromice.push(new Promise((lRes, lRej) => {
+                        //set default values
+                        let account = Object.assign(defaults, accounts[x]);
+                        
+                        //Import each account
+                        accountAPI.createAccount({
+                            userGroup: account.userGroup, 
+                            name: account.name, 
+                            email: account.email, 
+                            password: account.password, 
+                            schoolID: account.schoolID, 
+                            graduationYear: account.graduationYear, 
+                            flags: {
+                                bulkImportID: jResp.generated_keys[0]
+                            }
+                        }, {
+                            skipEmail: true,
+                            allowNullPassword: true,
+                            generatePassword: false
+                        }).then(function(transSummery) {
+                            //success 
+                            if(transSummery.transaction.inserted > 0) {
+                                imported += transSummery.transaction.inserted;
+                                if(account.password) {initialized++;}
+                            }
+                            console.log(transSummery);
+                            lRes({account: account, error: null, transaction: transSummery.transaction});
+                        }).catch((err) => {
+                            if(err.status == 500) {
+                                return lRej(err); 
+                            } else {
+                                errors.push({status: err.status, message: err.message});
+                                //failed, but continue import
+                                return lRes({account: account, error: {status: err.status, message: err.message}});
+                            }
+                        });
+                    }));
+                }
+
+                // wrap up transaction 
+                Promise.all(loopPromice).then((sumArray) => {
+                    let finalLog = [];
+                    let bulkID = jResp.generated_keys[0];
+                    if(imported == 0) {
+                        //deletes log if theere was nothing that could be imported
+                        finalLog.push(deleteBulkLog(bulkID));
+                        bulkID = null;
+                    } else {
+                        //updates the log with more job info
+                        finalLog.push(updateBulkLog(bulkID, accounts.length, imported, errors, {totalInitialized: initialized}));
+                    }
+                    Promise.all(finalLog).then(() => {
+                        resolve({bulkID: bulkID, summary: sumArray, totalTried: accounts.length, totalImported: imported, totalInitialized: initialized});
+                    }).catch((err) => {
+                        return reject(err);
+                    });
+                });
+            } else {
+                let err = new Error("Failed to log import job");
+                err.status = 500;
+                return reject(err);
+            }
+        });
+
+
+        
+    });
+};
+
+
 exports.accounts = accounts;
 
-//exports.searchBulkLogs({date: {to: "2017-11-25T13:10:00-05:00", from: "2017-11-25T13:00:00-05:00"}}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
-//exports.searchBulkLogs({name: "testFaculty"}).then((res)=> {console.log(res)}).catch((err)=> {console.error(err)});
 /** 
 * Takes in a flat array of messy named data and then maps it to a passport standard
 * @function mapAccounts
 * @link module:js/import
+* @deprecated
 * @param {Object[]} arrayToMap - most likely imported from excel using the import api; the messy data that must be sorted
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
 * @param {accountDefaultRule} defaultRule - The fallback Json object for missing values in the arrayToMap and mapRule See: {@link accountDefaultRule}
@@ -304,7 +440,7 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePasswor
                         if(generatePassword == true) {
                             returner.password = utils.generateSecureKey();
                         } else {
-                           return null;
+                            return null;
                         }
                         
                     }
@@ -313,26 +449,27 @@ exports.mapAccounts = function(arrayToMap, mapRule, defaultRule, generatePasswor
                 }
 
                 return returner;
-            })
+            });
             results = mappedData.filter(function(v) {
                 return (v !== null);
-            })
+            });
             return resolve(results);
         } catch(err) {
             return reject(err);
         }
 
 
-    })
+    });
 
     
-}
+};
 
 /** 
 * Takes in an excel file and with some mapping rules, imports them to the accounts table
 * NOTE: Email domains are still must follow userGroup settings.
 * If the account cant be impoirted using the accountApi, the row is skipped
 * @function importAccountsExcel
+* @deprecated
 * @link module:js/import
 * @param {string} excelFilePath - The path to the excel file.
 * @param {accountMapRule} mapRule - Json object that relates each required field to a key in another dataset. See: {@link accountMapRule}
@@ -378,7 +515,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                         for(var x = 0; x < results.length; x++) {
                             transPromice.push(new Promise(function(rRes, rRej) {
                                 var promRes = results[x];
-                                var flags = {}
+                                var flags = {};
                                 var newAccountOptions = {};
                                 newAccountOptions.skipEmail = true;
                                 newAccountOptions.allowNullPassword = true;
@@ -389,21 +526,21 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                 accountAPI.createAccount({userGroup: results[x].userGroup, name: results[x].name, email: results[x].email, password: results[x].password, schoolID: results[x].schoolID, graduationYear: results[x].graduationYear, flags: flags}, newAccountOptions).then(function(transSummery) {
                                     //promRes.password = undefined;
                                     imported++;
-                                    if(promRes.password) {initialized++}
+                                    if(promRes.password) {initialized++;}
                                     rRes({onUser: promRes, error: null});
-                            }).catch((err) => {
-                                if(err.status == 500) {
-                                    return reject(err); 
-                                } else {
+                                }).catch((err) => {
+                                    if(err.status == 500) {
+                                        return reject(err); 
+                                    } else {
                                     //promRes.password = undefined;
-                                    errors.push(err)
-                                    rRes({onUser: promRes, error: err});
-                                }
-                            })}));
+                                        errors.push(err);
+                                        rRes({onUser: promRes, error: err});
+                                    }
+                                });}));
 
                             //end 
                             if(x >= results.length-1) {
-                                console.log(results.length, errors.length)
+                                console.log(results.length, errors.length);
                                 Promise.all(transPromice).then(function(sumArray) {
                                     var finalLog = [];
                                     if(imported == 0) {
@@ -411,15 +548,15 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                                         finalLog.push(deleteBulkLog(jResp.generated_keys[0]));
                                     } else {
                                         //updates the log with more job info
-                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors, {totalInitialized: initialized}))
+                                        finalLog.push(updateBulkLog(jResp.generated_keys[0], results.length, imported, errors, {totalInitialized: initialized}));
                                     }
                                     Promise.all(finalLog).then(() => {
                                         resolve({summary: sumArray, totalTried: results.length, totalImported: imported, totalInitialized: initialized});
                                     }).catch((err) => {
                                         return reject(err);
-                                    })
+                                    });
                                     
-                                })
+                                });
                                 //return resolve({errors: errors, totalTried: results.length, totalImported: results.length-errors.length})
                                 
                             }
@@ -431,20 +568,33 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
                     }
                 }).catch((err) => {
                     return reject(err);
-                })
+                });
                 
                 
             }).catch(function(err) {
                 return reject(err);
-            })
+            });
         });
     });
-}
+};
 
 
 
 
-
+/**
+ * An object representing a new account
+ * @typedef {Object} accountImport
+ * @property {Object} name
+ * @property {String} name.first 
+ * @property {String} name.last
+ * @property {String} name.salutation
+ * @property {String} [schoolID=null] 
+ * @property {String} email 
+ * @property {userGroup} userGroup 
+ * @property {Boolean} [isVerified=false] 
+ * @property {String} [password=null] - If no password is given or is null or undefined, the account will start off inactive.  When the activation email is sent out, the user will be prompted to create a password. Importing is SIGNIFICANTLY faster when you don't include a password
+ * @property {Number} [graduationYear=null] - only required on userGroups that define it in the configs.
+ */
 
 
 /**
@@ -476,7 +626,7 @@ exports.importAccountsExcel = function(excelFilePath, mapRule, defaultRule, jobP
  *   }
  */
 
- /**
+/**
  * Fallback for {@link accountMapRule}.
  * If the key is undefined, and a user lacks a value from the array, the user will be skipped.
  * @typedef {Object} accountDefaultRule

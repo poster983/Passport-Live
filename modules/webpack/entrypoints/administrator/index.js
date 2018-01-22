@@ -29,24 +29,24 @@ let securityJS = require("../../api/security.js");
 let pageLoadProm = [];
 window.onload = function() {
     $(".button-collapse").sideNav();
-    $('.datepicker').pickadate({
-      formatSubmit: 'yyyy-mm-dd',
-      hiddenName: true,
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 15 // Creates a dropdown of 15 years to control year
+    $(".datepicker").pickadate({
+        formatSubmit: "yyyy-mm-dd",
+        hiddenName: true,
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
     });
-    $('.timepicker').pickatime({
-      default: 'now', // Set default time
-      fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-      twelvehour: true, // Use AM/PM or 24-hour format
-      donetext: 'OK', // text for done-button
-      cleartext: 'Clear', // text for clear-button
-      canceltext: 'Cancel', // Text for cancel-button
-      autoclose: false, // automatic close timepicker
-      ampmclickable: true, // make AM PM clickable
-      aftershow: function(){} //Function for after opening timepicker  
+    $(".timepicker").pickatime({
+        default: "now", // Set default time
+        fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+        twelvehour: true, // Use AM/PM or 24-hour format
+        donetext: "OK", // text for done-button
+        cleartext: "Clear", // text for clear-button
+        canceltext: "Cancel", // Text for cancel-button
+        autoclose: false, // automatic close timepicker
+        ampmclickable: true, // make AM PM clickable
+        aftershow: function(){} //Function for after opening timepicker  
     });
-    $('select').material_select();
+    $("select").material_select();
 
 };
 
@@ -67,13 +67,13 @@ $("#accountPermKey-submit").on("click", (e) => {
     //console.log(new Date(date).)
     if(!date.val() && time.val()) {
         buttonLoader.warning("#accountPermKey-submit", 2000)
-        return Materialize.toast('Date required for timeout', 4000)
+        return Materialize.toast("Date required for timeout", 4000)
     }
 
     //check tally 
     let tallyNum = parseInt(tally.val())
     if(tally.val() && isNaN(tallyNum)) {
-        Materialize.toast('Invalid tally', 4000)
+        Materialize.toast("Invalid tally", 4000)
         return buttonLoader.warning("#accountPermKey-submit", 2000)
     }
     if(userGroups.val().length > 0) {
@@ -95,21 +95,21 @@ $("#accountPermKey-submit").on("click", (e) => {
         securityJS.newAccount(returner).then((res) => {
             if(res.key) {
                 buttonLoader.success("#accountPermKey-submit", 2000)
-                let fullURL = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+                let fullURL = location.protocol+"//"+location.hostname+(location.port ? ":"+location.port: "");
                 let link = fullURL + "/auth/signup?pk=" + res.key;
                 $("#accountPermKey-response").html("<p>Permission Key: <strong>" + res.key + "</strong></p><br> <p>Signup link: <a href=\"" + link + "\">" + link + "</a></p>");
                 userGroups.val(null)
                 userGroups.material_select();
                 return true;
             } else {
-                Materialize.toast('Key was not returned. Please try again.', 4000)
+                Materialize.toast("Key was not returned. Please try again.", 4000)
                 return buttonLoader.warning("#accountPermKey-submit", 2000)
             }
         })
         
 
     } else {
-        Materialize.toast('User Group Required', 4000)
+        Materialize.toast("User Group Required", 4000)
         buttonLoader.warning("#accountPermKey-submit", 2000)
     }
 })

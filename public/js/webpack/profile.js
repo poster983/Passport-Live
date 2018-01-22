@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 36);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -396,6 +396,26 @@ exports.loader = ({size, color, active}) => {
     return htmlLoader;
 };
 
+
+/** 
+* Returns a nicely formatted json string
+* use with <textarea> for an nice json editor
+* @link module:webpack/utils
+* @param {Object} json
+* @returns {String} - Json STRING
+*/
+exports.formatJSON = (json) => {
+    let obj = JSON.parse(json);
+    let pretty = JSON.stringify(obj, undefined, 4);
+    return pretty;
+    /*try {
+        
+    } catch(err) {
+        throw err;
+    }*/
+    
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -404,8 +424,8 @@ exports.loader = ({size, color, active}) => {
 (function(){
   var VERSION, parseType, parsedTypeCheck, typeCheck;
   VERSION = '0.3.2';
-  parseType = __webpack_require__(4);
-  parsedTypeCheck = __webpack_require__(5);
+  parseType = __webpack_require__(7);
+  parsedTypeCheck = __webpack_require__(8);
   typeCheck = function(type, input, options){
     return parsedTypeCheck(parseType(type), input, options);
   };
@@ -443,10 +463,10 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var flat = __webpack_require__(12);
+var flat = __webpack_require__(3);
 var utils = __webpack_require__(0);
 var typeCheck = __webpack_require__(1).typeCheck;
-var DeepKey = __webpack_require__(14);
+var DeepKey = __webpack_require__(16);
 
 /**
 * Takes structured data and makes a table from it. call this.generate() to create a table,
@@ -796,6 +816,122 @@ module.exports = Table;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var isBuffer = __webpack_require__(15)
+
+module.exports = flatten
+flatten.flatten = flatten
+flatten.unflatten = unflatten
+
+function flatten (target, opts) {
+  opts = opts || {}
+
+  var delimiter = opts.delimiter || '.'
+  var maxDepth = opts.maxDepth
+  var output = {}
+
+  function step (object, prev, currentDepth) {
+    currentDepth = currentDepth || 1
+    Object.keys(object).forEach(function (key) {
+      var value = object[key]
+      var isarray = opts.safe && Array.isArray(value)
+      var type = Object.prototype.toString.call(value)
+      var isbuffer = isBuffer(value)
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      var newKey = prev
+        ? prev + delimiter + key
+        : key
+
+      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
+        (!opts.maxDepth || currentDepth < maxDepth)) {
+        return step(value, newKey, currentDepth + 1)
+      }
+
+      output[newKey] = value
+    })
+  }
+
+  step(target)
+
+  return output
+}
+
+function unflatten (target, opts) {
+  opts = opts || {}
+
+  var delimiter = opts.delimiter || '.'
+  var overwrite = opts.overwrite || false
+  var result = {}
+
+  var isbuffer = isBuffer(target)
+  if (isbuffer || Object.prototype.toString.call(target) !== '[object Object]') {
+    return target
+  }
+
+  // safely ensure that the key is
+  // an integer.
+  function getkey (key) {
+    var parsedKey = Number(key)
+
+    return (
+      isNaN(parsedKey) ||
+      key.indexOf('.') !== -1 ||
+      opts.object
+    ) ? key
+      : parsedKey
+  }
+
+  var sortedKeys = Object.keys(target).sort(function (keyA, keyB) {
+    return keyA.length - keyB.length
+  })
+
+  sortedKeys.forEach(function (key) {
+    var split = key.split(delimiter)
+    var key1 = getkey(split.shift())
+    var key2 = getkey(split[0])
+    var recipient = result
+
+    while (key2 !== undefined) {
+      var type = Object.prototype.toString.call(recipient[key1])
+      var isobject = (
+        type === '[object Object]' ||
+        type === '[object Array]'
+      )
+
+      // do not write over falsey, non-undefined values if overwrite is false
+      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
+        return
+      }
+
+      if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
+        recipient[key1] = (
+          typeof key2 === 'number' &&
+          !opts.object ? [] : {}
+        )
+      }
+
+      recipient = recipient[key1]
+      if (split.length > 0) {
+        key1 = getkey(split.shift())
+        key2 = getkey(split[0])
+      }
+    }
+
+    // unflatten again for 'messy objects'
+    recipient[key1] = unflatten(target[key], opts)
+  })
+
+  return result
+}
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*
 
 Passport-Live is a modern web app for schools that helps them manage passes.
@@ -817,49 +953,145 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var typeCheck = __webpack_require__(1).typeCheck
+
+/**
+* Browser Misc Functions.
+* @module webpack/api/misc
+*/
+
+var utils = __webpack_require__(0);
+
+/** 
+* Gets all schedule configs from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getScheduleConfig = () => {
+    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false});
+};
+
+/** 
+* Gets all userGroup types from server.
+* @link module:webpack/api/misc
+* @returns {Promise}
+*/
+exports.getUserGroups = () => {
+    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false});
+};
+
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var typeCheck = __webpack_require__(1).typeCheck;
 
 /**
 * Pairs a caret "^" button with a hidden element.  Shows element when carot is clicked and flips carot.
 * @link module:webpack/framework
 * @class 
 * @param {Selector} caretButton - The clickable element.
-* @param {Selector} content - The element to be shown.
-* @param {(Object|undefined)} options - The clickable element.
-* @param {(Boolean|undefined)} options.isOpen - True if the element should be shown by default.
-* @param {(Number|undefine)} options.timing - How fast the element will be shown. In ms.
-* @param {(Function|undefine)} options.callback - Passes one argument, "isOpen" (bool). Fires whenever the Caret is opened.
+* @param {Object} [options] - The clickable element.
+* @param {Selector} [options.content] - The element to be shown/hide.
+* @param {Boolean} [options.isOpen] - True if the element should be shown by default.
+* @param {Number} [options.timing] - How fast the element will be shown. In ms.
+* @param {Function} [options.callback] - Passes one argument, "isOpen" (bool). Fires whenever the Caret is clicked.
+* @param {Boolean} [options.initialise=true] - Will automaticly call .initialize()
 */
 class Caret {
-    constructor(caretButton, content, options) {
-        if(!typeCheck("Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}"), options) {
-            throw new TypeError("Options expected an object with structure: \"Maybe {isOpen: Maybe Boolean, timing: Maybe Number, callback: Maybe Function}\"");
+    constructor(caretButton, options) {
+        let type = `Maybe {
+            isOpen: Maybe Boolean, 
+            content: Maybe String|Object, 
+            initialise: Maybe Boolean, 
+            timing: Maybe Number, 
+            callback: Maybe Function
+        }`
+        if(!typeCheck(type, options)) {
+            throw new TypeError("Options expected an object with structure: \" " + type +"\"");
         }
-        if(!options) {options = {}}
+        if(!options) {options = {};}
         this.options = options;
         this.caretButton = caretButton;
-        this.contentElm = content;
+        this.contentElm = options.content;
         this.state = (this.options.isOpen || false);
         this.caretButton.css("transition", "transform 0.2s");
-        this.showContent(this.state, 0)
+        this._showContent(this.state, 0);
+        if(options.initialise !== false) {
+            this.initialize();
+        }
     }
+    /** Starts listening for clicks on the button*/
     initialize() {
-        this.caretButton.on("click", e=> this._onClick(e));
+        this.caretButton.on("click", e=> this.toggle(e));
     }
+    /** Stops listening for clicks on the button*/
     destroy() {
         this.caretButton.off("click");
     }
-    _onClick(event) {
-        if(this.state) {this.caretButton.css("transform", "rotate(0deg)")} else {this.caretButton.css("transform", "rotate(180deg)")}
-        if(typeCheck("Function", this.options.callback)) {this.options.callback(!this.state)}
-        this.showContent(!this.state);
+    /**Opens or closes the Caret*/
+    toggle() {
+        if(this.state) {this.caretButton.css("transform", "rotate(0deg)");} else {this.caretButton.css("transform", "rotate(180deg)");}
+        if(typeCheck("Function", this.options.callback)) {this.options.callback(!this.state);}
+        this._showContent(!this.state);
     }
-    showContent(isShown, time) {
-        if(!typeCheck("Number", time)) {time = (this.options.timing || 200)}
-        if(time > 0) {
-            if(isShown) {this.contentElm.slideDown(time)} else {this.contentElm.slideUp(time)}
-        } else {
-            if(isShown) {this.contentElm.show()} else {this.contentElm.hide()}
+    _showContent(isShown, time) {
+        if(this.options.content) {
+            if(!typeCheck("Number", time)) {time = (this.options.timing || 200);}
+            if(time > 0) {
+                if(isShown) {this.contentElm.slideDown(time);} else {this.contentElm.slideUp(time);}
+            } else {
+                if(isShown) {this.contentElm.show();} else {this.contentElm.hide();}
+            }
         }
         this.state = isShown;
     }
@@ -868,7 +1100,7 @@ class Caret {
 module.exports = Caret;
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -1070,13 +1302,13 @@ module.exports = Caret;
 
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by LiveScript 1.4.0
 (function(){
   var ref$, any, all, isItNaN, types, defaultType, customTypes, toString$ = {}.toString;
-  ref$ = __webpack_require__(6), any = ref$.any, all = ref$.all, isItNaN = ref$.isItNaN;
+  ref$ = __webpack_require__(9), any = ref$.any, all = ref$.all, isItNaN = ref$.isItNaN;
   types = {
     Number: {
       typeOf: 'Number',
@@ -1202,16 +1434,16 @@ module.exports = Caret;
 
 
 /***/ }),
-/* 6 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by LiveScript 1.4.0
 var Func, List, Obj, Str, Num, id, isType, replicate, prelude, toString$ = {}.toString;
-Func = __webpack_require__(7);
-List = __webpack_require__(8);
-Obj = __webpack_require__(9);
-Str = __webpack_require__(10);
-Num = __webpack_require__(11);
+Func = __webpack_require__(10);
+List = __webpack_require__(11);
+Obj = __webpack_require__(12);
+Str = __webpack_require__(13);
+Num = __webpack_require__(14);
 id = function(x){
   return x;
 };
@@ -1385,7 +1617,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -1455,7 +1687,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2146,7 +2378,7 @@ function compose$() {
 function not$(x){ return !x; }
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2305,7 +2537,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2402,7 +2634,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports) {
 
 // Generated by LiveScript 1.4.0
@@ -2537,123 +2769,7 @@ function curry$(f, bound){
 }
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isBuffer = __webpack_require__(13)
-
-module.exports = flatten
-flatten.flatten = flatten
-flatten.unflatten = unflatten
-
-function flatten (target, opts) {
-  opts = opts || {}
-
-  var delimiter = opts.delimiter || '.'
-  var maxDepth = opts.maxDepth
-  var output = {}
-
-  function step (object, prev, currentDepth) {
-    currentDepth = currentDepth || 1
-    Object.keys(object).forEach(function (key) {
-      var value = object[key]
-      var isarray = opts.safe && Array.isArray(value)
-      var type = Object.prototype.toString.call(value)
-      var isbuffer = isBuffer(value)
-      var isobject = (
-        type === '[object Object]' ||
-        type === '[object Array]'
-      )
-
-      var newKey = prev
-        ? prev + delimiter + key
-        : key
-
-      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
-        (!opts.maxDepth || currentDepth < maxDepth)) {
-        return step(value, newKey, currentDepth + 1)
-      }
-
-      output[newKey] = value
-    })
-  }
-
-  step(target)
-
-  return output
-}
-
-function unflatten (target, opts) {
-  opts = opts || {}
-
-  var delimiter = opts.delimiter || '.'
-  var overwrite = opts.overwrite || false
-  var result = {}
-
-  var isbuffer = isBuffer(target)
-  if (isbuffer || Object.prototype.toString.call(target) !== '[object Object]') {
-    return target
-  }
-
-  // safely ensure that the key is
-  // an integer.
-  function getkey (key) {
-    var parsedKey = Number(key)
-
-    return (
-      isNaN(parsedKey) ||
-      key.indexOf('.') !== -1 ||
-      opts.object
-    ) ? key
-      : parsedKey
-  }
-
-  var sortedKeys = Object.keys(target).sort(function (keyA, keyB) {
-    return keyA.length - keyB.length
-  })
-
-  sortedKeys.forEach(function (key) {
-    var split = key.split(delimiter)
-    var key1 = getkey(split.shift())
-    var key2 = getkey(split[0])
-    var recipient = result
-
-    while (key2 !== undefined) {
-      var type = Object.prototype.toString.call(recipient[key1])
-      var isobject = (
-        type === '[object Object]' ||
-        type === '[object Array]'
-      )
-
-      // do not write over falsey, non-undefined values if overwrite is false
-      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
-        return
-      }
-
-      if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
-        recipient[key1] = (
-          typeof key2 === 'number' &&
-          !opts.object ? [] : {}
-        )
-      }
-
-      recipient = recipient[key1]
-      if (split.length > 0) {
-        key1 = getkey(split.shift())
-        key2 = getkey(split[0])
-      }
-    }
-
-    // unflatten again for 'messy objects'
-    recipient[key1] = unflatten(target[key], opts)
-  })
-
-  return result
-}
-
-
-/***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /*!
@@ -2680,7 +2796,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2825,7 +2941,9 @@ module.exports = {
 
 
 /***/ }),
-/* 15 */
+/* 17 */,
+/* 18 */,
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2903,7 +3021,8 @@ exports.replaceSchedule = (dashboard, schedule) => {
 }
 
 /***/ }),
-/* 16 */
+/* 20 */,
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2941,8 +3060,8 @@ var utils = __webpack_require__(0);
 * @returns {Promise}
 */
 exports.getWithClasses = () => {
-    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
-}
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true});
+};
 
 /** 
     * Searches accounts that match the query
@@ -2978,70 +3097,26 @@ exports.get = (query) => {
                 delete query.name.last;
             }
         }
-        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject)
-    })   
-}
+        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject);
+    });   
+};
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-
-Passport-Live is a modern web app for schools that helps them manage passes.
-    Copyright (C) 2017  Joseph Hassell
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-email: hi@josephhassell.com
-
-*/
-
-/**
-* Browser Misc Functions.
-* @module webpack/api/misc
-*/
-
-var utils = __webpack_require__(0);
-
-/** 
-* Gets all schedule configs from server.
-* @link module:webpack/api/misc
-* @returns {Promise}
-*/
-exports.getScheduleConfig = () => {
-    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
-}
-
-/** 
-* Gets all userGroup types from server.
-* @link module:webpack/api/misc
-* @returns {Promise}
-*/
-exports.getUserGroups = () => {
-    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false})
-}
-
-
-
-/***/ }),
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
 /* 22 */,
-/* 23 */
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -3065,13 +3140,13 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
-var Caret = __webpack_require__(3);
-var StudentScheduleEditor = __webpack_require__(24);
-var TeacherScheduleEditor = __webpack_require__(25);
+var Caret = __webpack_require__(6);
+var StudentScheduleEditor = __webpack_require__(37);
+var TeacherScheduleEditor = __webpack_require__(38);
 var utils = __webpack_require__(0);
-var scheduleJS = __webpack_require__(15);
-var unsavedWork = __webpack_require__(26)
-var anime = __webpack_require__(27);
+var scheduleJS = __webpack_require__(19);
+var unsavedWork = __webpack_require__(39)
+var anime = __webpack_require__(40);
 var Table = __webpack_require__(2)
 
 var studentScheduleEditor = null;
@@ -3093,8 +3168,7 @@ window.onload = function() {
 
     
     //Advanced Options for schedule editor 
-    var ADVschedule = new Caret($("#se-advancedOptionsCaret"), $("#se-advancedOptionsDIV"));
-    ADVschedule.initialize();
+    new Caret($("#se-advancedOptionsCaret"), {content: $("#se-advancedOptionsDIV")});
 
 }
 
@@ -3118,7 +3192,7 @@ function routeHash() {
 }
 
 
-/** SCHEDULE EDITOR **/ 
+/* SCHEDULE EDITOR */ 
 function initScheduleEditor() {
     //init the back button
     unsavedWork.button("#mixenSEBack", {
@@ -3524,7 +3598,7 @@ function spinneyMcSpinFace() {
 
 
 /***/ }),
-/* 24 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -3550,9 +3624,9 @@ email: hi@josephhassell.com
 */
 
 var Table = __webpack_require__(2);
-var scheduleAPI = __webpack_require__(15);
-var accountAPI = __webpack_require__(16);
-var miscAPI = __webpack_require__(17);
+var scheduleAPI = __webpack_require__(19);
+var accountAPI = __webpack_require__(21);
+var miscAPI = __webpack_require__(4);
 var utils = __webpack_require__(0);
 /**
 * Class that Generates a Schedule editor for students.
@@ -3956,7 +4030,7 @@ class StudentScheduleEditor {
 module.exports = StudentScheduleEditor;
 
 /***/ }),
-/* 25 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -3982,9 +4056,9 @@ email: hi@josephhassell.com
 */
 
 var Table = __webpack_require__(2);
-var scheduleAPI = __webpack_require__(15);
-var accountAPI = __webpack_require__(16);
-var miscAPI = __webpack_require__(17);
+var scheduleAPI = __webpack_require__(19);
+var accountAPI = __webpack_require__(21);
+var miscAPI = __webpack_require__(4);
 var utils = __webpack_require__(0);
 /**
 * Class that Generates a Schedule editor for teachers.
@@ -4536,7 +4610,7 @@ class TeacherScheduleEditor {
 module.exports = TeacherScheduleEditor;
 
 /***/ }),
-/* 26 */
+/* 39 */
 /***/ (function(module, exports) {
 
 /*
@@ -4687,7 +4761,7 @@ exports.destroy = (element) => {
 }
 
 /***/ }),
-/* 27 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -4726,34 +4800,7 @@ n)k=l;else{var l=h,h=h+.1,g=0;do m=l+(h-l)/2,n=a(m,c,b)-k,0<n?h=m:l=m;while(1e-7
 d:A.apply($jscomp$this,d)}}(f)),f={type:f.type};return b}(),ha={css:function(a,c,d){return a.style[c]=d},attribute:function(a,c,d){return a.setAttribute(c,d)},object:function(a,c,d){return a[c]=d},transform:function(a,c,d,b,f){b[f]||(b[f]=[]);b[f].push(c+"("+d+")")}},v=[],B=0,ia=function(){function a(){B=requestAnimationFrame(c)}function c(c){var b=v.length;if(b){for(var d=0;d<b;)v[d]&&v[d].tick(c),d++;a()}else cancelAnimationFrame(B),B=0}return a}();q.version="2.2.0";q.speed=1;q.running=v;q.remove=
 function(a){a=P(a);for(var c=v.length;c--;)for(var d=v[c],b=d.animations,f=b.length;f--;)u(a,b[f].animatable.target)&&(b.splice(f,1),b.length||d.pause())};q.getValue=K;q.path=function(a,c){var d=h.str(a)?e(a)[0]:a,b=c||100;return function(a){return{el:d,property:a,totalLength:N(d)*(b/100)}}};q.setDashoffset=function(a){var c=N(a);a.setAttribute("stroke-dasharray",c);return c};q.bezier=A;q.easings=Q;q.timeline=function(a){var c=q(a);c.pause();c.duration=0;c.add=function(d){c.children.forEach(function(a){a.began=
 !0;a.completed=!0});m(d).forEach(function(b){var d=z(b,D(S,a||{}));d.targets=d.targets||a.targets;b=c.duration;var e=d.offset;d.autoplay=!1;d.direction=c.direction;d.offset=h.und(e)?b:L(e,b);c.began=!0;c.completed=!0;c.seek(d.offset);d=q(d);d.began=!0;d.completed=!0;d.duration>b&&(c.duration=d.duration);c.children.push(d)});c.seek(0);c.reset();c.autoplay&&c.restart();return c};return c};q.random=function(a,c){return Math.floor(Math.random()*(c-a+1))+a};return q});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ })
 /******/ ]);

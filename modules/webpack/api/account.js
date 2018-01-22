@@ -33,8 +33,8 @@ var utils = require("../utils/index.js");
 * @returns {Promise}
 */
 exports.getWithClasses = () => {
-    return utils.fetch("GET", "/api/account/hasClasses", {auth: true})
-}
+    return utils.fetch("GET", "/api/account/hasClasses", {auth: true});
+};
 
 /** 
     * Searches accounts that match the query
@@ -70,6 +70,6 @@ exports.get = (query) => {
                 delete query.name.last;
             }
         }
-        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject)
-    })   
-}
+        return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject);
+    });   
+};

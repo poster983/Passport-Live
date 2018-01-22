@@ -17,7 +17,10 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-
+/** 
+* Account manipulation APIs
+* @module api/accounts
+*/
 var express = require("express");
 var router = express.Router();
 var r = require("../../modules/db/index.js");
@@ -59,6 +62,7 @@ function serializeUser(req, res, done) {
 /**
     * Creates A New Account
     * @function handleNewAccount
+    * @link module:api/accounts
     * @api POST /api/account/new/:userGroup/
     * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config
     * @apibody {(application/json | application/x-www-form-urlencoded)}
@@ -143,6 +147,7 @@ function serializeUser(req, res, done) {
 /**
     * Searches Accounts
     * @function searchAccounts
+    * @link module:api/accounts
     * @api GET /api/account/
     * @apiquery {(string|undefined)} id - The id of the user. A Primary Key. Uses getAll.
     * @apiquery {(string|undefined)} email
@@ -187,7 +192,7 @@ router.get("/", passport.authenticate('jwt', { session: false}), function search
 /**
     * GETs accounts by id
     * @function handleGetAccountsById
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -210,7 +215,7 @@ router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function
 /**
     * GETs accounts by email
     * @function getAccountsByEmail
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -244,7 +249,7 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
 /**
     * GETs all accounts by usergroup
     * @function handleGetAccountsByUserGroup
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -282,7 +287,7 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
 /**
     * GETs accounts by name and usergroup
     * @function handleGetAccountsByNameAndUserGroup
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -320,7 +325,7 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
 /**
     * GETs accounts by name
     * @function handleGetAccountsByName
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -358,7 +363,7 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
 /**
     * GETs accounts That have hasClasses option set to true in the configs
     * @function getAccountsWithClasses
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -426,7 +431,7 @@ function recurrConcatHasClass(keys, finalArr, done) {
     * account must be in the usergroup for it to update
     * Check Example usergroup model for more examples 
     * @function handleUpdateAccountGroupFieldsByUser
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -519,7 +524,7 @@ router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), f
 
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -711,7 +716,7 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
 
 /** Checks if an accuunt is missing required fields by that dashboard  
     * @function studentCheckIfIncomplete
-    * @async
+    * @link module:api/accounts
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -728,6 +733,7 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
 
 /** Updates user Password   
     * @function updateUserPassword
+    * @link module:api/accounts
     * @param {request} req
     * @property {Object} body
     * @property {String} body.current - The user's current password.

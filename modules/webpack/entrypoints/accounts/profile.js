@@ -47,8 +47,7 @@ window.onload = function() {
 
     
     //Advanced Options for schedule editor 
-    var ADVschedule = new Caret($("#se-advancedOptionsCaret"), $("#se-advancedOptionsDIV"));
-    ADVschedule.initialize();
+    new Caret($("#se-advancedOptionsCaret"), {content: $("#se-advancedOptionsDIV")});
 
 }
 
@@ -72,7 +71,7 @@ function routeHash() {
 }
 
 
-/** SCHEDULE EDITOR **/ 
+/* SCHEDULE EDITOR */ 
 function initScheduleEditor() {
     //init the back button
     unsavedWork.button("#mixenSEBack", {

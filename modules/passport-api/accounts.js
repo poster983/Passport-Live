@@ -45,21 +45,21 @@ var accountScheduleJS = require("./accountSchedule.js");
  * @property {String} id - Assigned by RethinkDB. A Primary Key / Primary Index
  * @property {String} email - Must be unique. (TODO: Secondary Index)
  * @property {Object} name
- * @property {string} name.salutation - Prefix (Mr., Ms., Mx., ECT...)
- * @property {string} name.first - Given name
- * @property {string} name.last - Family name
+ * @property {String} name.salutation - Prefix (Mr., Ms., Mx., ECT...)
+ * @property {String} name.first - Given name
+ * @property {String} name.last - Family name
  * @property {userGroup} userGroup
  * @property {Object} groupFields - unused
  * @property {boolean} isArchived - If true the user's account is frozen and no manipulation will take place.
  * @property {boolean} isVerified - If true, the user will be able to make passes and email notifications will work.
- * @property {(string|null)} password - Will be removed when returned from a REST endpoint
- * @property {int} [graduationYear=null] - only required on userGroups that define it in the configs.
- * @property {string} [schoolID=null]
+ * @property {(String|null)} password - Will be removed when returned from a REST endpoint
+ * @property {Number} [graduationYear=null] - only required on userGroups that define it in the configs.
+ * @property {String} [schoolID=null]
  * @property {Object} properties
  * @property {Date} properties.createdOn
  * @property {(Date|null)} properties.verifiedOn
  * @property {Object} flags 
- * @property {string} [flags.bulkImportID=undefined] - The ID of the account import job that imported this account. 
+ * @property {String} [flags.bulkImportID=undefined] - The ID of the account import job that imported this account. 
  * @property {Object} integrations - holds ids and keys of services that integrate with passport 
  * @property {Object} integrations.google - OAuth2 Login
  * @property {Object} integrations.google.id - Google ID used to match the google account to the passport user

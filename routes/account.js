@@ -18,18 +18,18 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
-var config = require('config');
-var utils = require("../modules/passport-utils/index.js")
-var accountJS = require('../modules/passport-api/accounts.js');
-var securityJS = require('../modules/passport-api/security.js');
-var emailJS = require('../modules/passport-api/email.js');
+var express = require("express");
+var config = require("config");
+var utils = require("../modules/passport-utils/index.js");
+var accountJS = require("../modules/passport-api/accounts.js");
+var securityJS = require("../modules/passport-api/security.js");
+var emailJS = require("../modules/passport-api/email.js");
 var typeCheck = require("type-check").typeCheck;
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 var ms = require("ms");
 var router = express.Router();
-var db = require('../modules/db/index.js');
-var checkAuth = require('connect-ensure-login');
+var db = require("../modules/db/index.js");
+var checkAuth = require("connect-ensure-login");
 
 let customHead = null;
 if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
@@ -37,7 +37,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 }
 
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardNav, function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardNav, function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
@@ -52,13 +52,13 @@ router.get('/', checkAuth.ensureLoggedIn('/auth/login'), utils.compileDashboardN
     
     //set links in sidenav
     if(req.query.referral) {
-        req.sidenav.links = ['<li><a class="waves-effect" href="/' + req.query.referral + '"><i class="material-icons">home</i>Home</a></li>']
+        req.sidenav.links = ["<li><a class=\"waves-effect\" href=\"/" + req.query.referral + "\"><i class=\"material-icons\">home</i>Home</a></li>"]
     } else {
         req.sidenav.dashboards.show = true;
         req.sidenav.dashboards.showPicker = true;
     }
 
-    res.render('accounts/profile', { doc_Title: 'Your Account Passport-Student', user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    res.render("accounts/profile", { doc_Title: "Your Account Passport-Student", user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 
@@ -73,28 +73,28 @@ router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, 
                 newPayload.dscm = Math.random().toString(36).slice(2);
                 newPayload.key = permissionKey;
                 //console.log(payload)
-                jwt.sign(newPayload, config.get('secrets.api-secret-key'), {
+                jwt.sign(newPayload, config.get("secrets.api-secret-key"), {
                     expiresIn: "2m",
                 }, (err, token) => {
                     if(err) {return next(err);}
-                    res.cookie('JWT', "JWT " + token, {httpOnly: true, signed: true, maxAge: ms("2m")});
-                    res.cookie('XSRF-TOKEN', newPayload.dscm, {maxAge: ms("2m")});
+                    res.cookie("JWT", "JWT " + token, {httpOnly: true, signed: true, maxAge: ms("2m")});
+                    res.cookie("XSRF-TOKEN", newPayload.dscm, {maxAge: ms("2m")});
 
-                    res.render("accounts/passwordReset", {doc_Title: 'Reset Your Password -- Passport', customHead: customHead, notification: notif});
+                    res.render("accounts/passwordReset", {doc_Title: "Reset Your Password -- Passport", customHead: customHead, notification: notif});
                 });
             } else {
-                res.redirect('/auth/login?notif=' + encodeURIComponent("\"key\" invalid")); 
+                res.redirect("/auth/login?notif=" + encodeURIComponent("\"key\" invalid")); 
             }
         }).catch((err)=>{return next(err);})
     } else {
-        res.redirect('/auth/login?notif=' + encodeURIComponent("Query \"key\" invalid.")); 
+        res.redirect("/auth/login?notif=" + encodeURIComponent("Query \"key\" invalid.")); 
     }
 })
 //RaTE LIMIT RATE LIMIT!!
 router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
     //console.log(req.signedCookies.JWT);
     if(req.header("authorization")) {
-        jwt.verify(req.header("authorization").substring(4), config.get('secrets.api-secret-key'), (err, decode) => {
+        jwt.verify(req.header("authorization").substring(4), config.get("secrets.api-secret-key"), (err, decode) => {
             if(err) {return next(err);}
             securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((payload) => {
                 if(payload && payload.params && payload.params.accountID) {
@@ -172,11 +172,11 @@ router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(re
                     db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
                         if(hasPass) {
                             //send to login page
-                            res.redirect('/auth/login?notif=' + encodeURIComponent("Your account is now active")); 
+                            res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is now active")); 
                         } else {
                             //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
                             securityJS.newKey.resetPassword(payload.params.accountID).then((key) => {
-                                res.redirect('/account/resetPassword?key=' + encodeURIComponent(key) + "&notif=" + encodeURIComponent("Your account is now active. Please create a password.")); 
+                                res.redirect("/account/resetPassword?key=" + encodeURIComponent(key) + "&notif=" + encodeURIComponent("Your account is now active. Please create a password.")); 
                             }).catch((err)=>{return next(err)});
                         }
                     }).catch((err)=>{return next(err)})
@@ -190,7 +190,7 @@ router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(re
             } else if(resp && resp.unchanged > 0) {
                 //console.log(resp)
                 securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
-                res.redirect('/auth/login?notif=' + encodeURIComponent("Your account is already verified")); 
+                res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is already verified")); 
             } else {
                 var err = new Error("User Not Found");
                 err.status = 500;
@@ -199,7 +199,7 @@ router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(re
         }).catch((err)=>{return next(err)})
     }).catch((err)=>{return next(err)});
   } else {
-    res.redirect('/auth/login'); 
+    res.redirect("/auth/login"); 
   }
 })
 

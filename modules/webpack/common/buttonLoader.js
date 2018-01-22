@@ -37,6 +37,7 @@ exports.load = (element) => {
     element.addClass("disabled");
     let loader = element.find("#" + element.attr("data-button-loader"));
     if(loader.length > 0) {
+        loader.removeClass("no-animation").css("opacity", 1);
         loader.find("div.preloader-wrapper").addClass("active");
     } else {
         let id = utils.uuidv4();
@@ -55,6 +56,7 @@ exports.done = (element) => {
     element.removeClass("disabled");
     let loader = element.find("#" + element.attr("data-button-loader"));
     loader.find("div.preloader-wrapper").removeClass("active");
+    loader.addClass("no-animation").css("opacity", 0);
 };
 
 /**
@@ -70,7 +72,7 @@ exports.success = (element, fadeMS) => {
         element.addClass("green");
         setTimeout(() => {
             element.removeClass("green");
-        }, fadeMS);
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
 };
 
@@ -84,12 +86,12 @@ exports.fail = (element, fadeMS) => {
     element = $(element);
     exports.done(element);
     if(!element.hasClass("red")) {
-        element.addClass("red")
+        element.addClass("red");
         setTimeout(() => {
-            element.removeClass("red")
-        }, fadeMS);
+            element.removeClass("red");
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
-}
+};
 
 /**
  * Like {@link module:webpack/buttonLoader.done} but has a orange warning animation
@@ -101,9 +103,9 @@ exports.warning = (element, fadeMS) => {
     element = $(element);
     exports.done(element);
     if(!element.hasClass("orange")) {
-        element.addClass("orange")
+        element.addClass("orange");
         setTimeout(() => {
-            element.removeClass("orange")
-        }, fadeMS);
+            element.removeClass("orange");
+        }, typeof fadeMS === "number"?fadeMS:3000);
     }
-}
+};

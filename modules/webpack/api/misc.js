@@ -33,8 +33,8 @@ var utils = require("../utils/index.js");
 * @returns {Promise}
 */
 exports.getScheduleConfig = () => {
-    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false})
-}
+    return utils.fetch("GET", "/api/server/config/schedule/", {auth: false});
+};
 
 /** 
 * Gets all userGroup types from server.
@@ -42,6 +42,6 @@ exports.getScheduleConfig = () => {
 * @returns {Promise}
 */
 exports.getUserGroups = () => {
-    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false})
-}
+    return utils.fetch("GET", "/api/server/config/userGroups/", {auth: false});
+};
 

@@ -18,31 +18,31 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
-var config = require('config');
+var express = require("express");
+var config = require("config");
 var router = express.Router();
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-var checkAuth = require('connect-ensure-login');
-var ssarv = require('ssarv');
-var utils = require("../modules/passport-utils/index.js")
+var passport = require("passport")
+    , LocalStrategy = require("passport-local").Strategy;
+var checkAuth = require("connect-ensure-login");
+var ssarv = require("ssarv");
+var utils = require("../modules/passport-utils/index.js");
 
 let customHead = null;
 if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
     customHead = config.get("webInterface.customHeadCode");
 }
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
-    var user = {}
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+    var user = {};
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
     req.sidenav.links = [
-    '<li><a class="waves-effect" href="/teacher"><i class="material-icons">home</i>Home</a></li>',
-    '<li><a class="waves-effect" href="/account?referral=teacher"><i class="material-icons">account_circle</i>My Account</a></li>'
-    ]
+        "<li><a class=\"waves-effect\" href=\"/teacher\"><i class=\"material-icons\">home</i>Home</a></li>",
+        "<li><a class=\"waves-effect\" href=\"/account?referral=teacher\"><i class=\"material-icons\">account_circle</i>My Account</a></li>"
+    ];
 
-    res.render('teacher/index', { doc_Title: 'Passport-Teacher', user, customHead: customHead, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    res.render("teacher/index", { doc_Title: "Passport-Teacher", user, customHead: customHead, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 //Teacher Account Page
