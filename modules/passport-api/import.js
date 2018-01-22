@@ -294,7 +294,7 @@ accounts.json = (accounts, importName) => {
                                 imported += transSummery.transaction.inserted;
                                 if(account.password) {initialized++;}
                             }
-                            console.log(transSummery);
+                            console.log(account, transSummery);
                             lRes({account: account, error: null, transaction: transSummery.transaction});
                         }).catch((err) => {
                             if(err.status == 500) {

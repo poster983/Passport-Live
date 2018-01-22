@@ -217,6 +217,7 @@ $("#accountImport-submit").on("click", (e) => {
         //upload
         accountLog.working("Importing Accounts");
         importAPI.accounts(importName.val(), accounts).then((res) => {
+            console.log("Import Log:", res)
             buttonLoader.success("#accountImport-submit", 3000);
             accountLog.done(JSON.stringify(res, undefined, 4).replace(/\n/g, "<br/>").replace(/ /g, "\u00a0"));
             $("#accountImport-log-model").modal("open");

@@ -22,16 +22,16 @@ email: hi@josephhassell.com
 * Account manipulation APIs
 * @module js/accounts
 */
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
-var r_ = db.dash()
-var config = require('config');
-var bcrypt = require('bcrypt-nodejs');
-var utils = require("../passport-utils/index.js")
-var human = require('humanparser');
+var r = require("rethinkdb");
+var db = require("../../modules/db/index.js");
+var r_ = db.dash();
+var config = require("config");
+var bcrypt = require("bcrypt-nodejs");
+var utils = require("../passport-utils/index.js");
+var human = require("humanparser");
 var moment = require("moment");
 var _ = require("underscore");
-const util = require('util')
+const util = require("util");
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
 var emailJS = require("./email.js");
@@ -176,7 +176,7 @@ exports.createAccount = function(user, options) {
             user.schoolID = user.schoolID + "";
         }
         if(!user.graduationYear || user.graduationYear == "") {
-            if(config.has('userGroups.' + user.userGroup + '.graduates') && config.get('userGroups.' + user.userGroup + '.graduates') == true) {
+            if(config.has("userGroups." + user.userGroup + ".graduates") && config.get("userGroups." + user.userGroup + ".graduates") == true) {
                 var err = new Error("usergroup \"" + user.userGroup + "\" graduates. user.graduationYear must be a year.");
                 err.status = 400;
                 return reject(err);  
@@ -187,7 +187,7 @@ exports.createAccount = function(user, options) {
             err.status = 400;
             return reject(err);   
         } else {
-            user.graduationYear = parseInt(user.graduationYear)
+            user.graduationYear = parseInt(user.graduationYear);
         }
         if(typeof user.groupFields == "undefined" || !!user.groupFields || (user.groupFields.constructor === Object && Object.keys(user.groupFields).length === 0)) {
             user.groupFields = {};
@@ -195,10 +195,10 @@ exports.createAccount = function(user, options) {
         //console.log(user)
         //console.log(email.substring(email.indexOf("@")))
         var emailPromise = new Promise(function(resolveE, rejectE) {
-            if (config.has('userGroups.' + user.userGroup)) {
+            if (config.has("userGroups." + user.userGroup)) {
                 if(config.has("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")) {
-                    var uGD = config.get("userGroups." + user.userGroup + ".permissions.allowedEmailDomains")
-                    console.log(uGD)
+                    var uGD = config.get("userGroups." + user.userGroup + ".permissions.allowedEmailDomains");
+                    console.log(uGD);
                     if(uGD != false && uGD.length > 0) {
                         for(var z = 0; z < uGD.length; z++) {
                             //console.log(uGD[z], "email")
@@ -206,7 +206,7 @@ exports.createAccount = function(user, options) {
                                 resolveE();
                             }
                             if(z >= uGD.length - 1 ) {
-                                var err = new Error("Email Domain Not Allowed.")
+                                var err = new Error("Email Domain Not Allowed.");
                                 err.status = 403;
                                 rejectE(err);
                             }
@@ -230,7 +230,7 @@ exports.createAccount = function(user, options) {
             function afterHash(passwordImport) {
                 try {
                   // Store hash in your password DB.
-                  r.table("accounts")('email').contains(user.email).run(db.conn(), function(err, con){
+                  r.table("accounts")("email").contains(user.email).run(db.conn(), function(err, con){
                     if(err) {
                         console.error(err);
                         return reject(err);
@@ -239,7 +239,7 @@ exports.createAccount = function(user, options) {
                     if(con){
                       //THe email has been taken
                       var err = new Error("Email Taken");
-                      err.status = 409
+                      err.status = 409;
                       return reject(err);
                     } else {
                         //insert new account
@@ -289,16 +289,16 @@ exports.createAccount = function(user, options) {
                                         return resolve(resp);
                                     }).catch((err)=> {
                                         return reject(err);
-                                    })
+                                    });
                                 }
                             } else {
                                 var err = new Error("Failed to store user in the database");
                                 err.status = 500;
-                                return reject(err, results)
+                                return reject(err, results);
                             }
                             
                       }).catch(function(err) {
-                        return reject(err)
+                        return reject(err);
                       });
                     }
                   });
@@ -322,9 +322,9 @@ exports.createAccount = function(user, options) {
 
         }, function(err) {
             return reject(err);
-        })
-    })
-}
+        });
+    });
+};
 /**
     * @callback createAccountCallback
     * @param {object} err - Returns an error object if any.
@@ -377,19 +377,19 @@ exports.get = (query) => {
             let nameStr = query.name;
             delete query.name;
             dbquery = dbquery.filter(function(doc){
-                return r_.or(doc('name')('first').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
-                            doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,'')),
-                            doc('name')('salutation').add(doc('name')('last')).match("(?i)"+nameStr.replace(/\s/g,''))
-                        )
-            })
+                return r_.or(doc("name")("first").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
+                            doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
+                            doc("name")("salutation").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,""))
+                        );
+            });
 
         }
         //leftover query
         dbquery = dbquery.filter(query);
         //run query
-        dbquery.run().then(resolve).catch(reject)
-    })
-}
+        dbquery.run().then(resolve).catch(reject);
+    });
+};
 /*
 setTimeout(() => {
 exports.get({
@@ -418,13 +418,13 @@ exports.get({
 exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) { 
      r.table("accounts")
      .filter(function(doc){
-            return doc('userGroup').match(userGroup).and(
-                    doc('name')('first').add(doc('name')('last')).match("(?i)"+name.replace(/\s/g,'')).or(
-                        doc('name')('salutation').add(doc('name')('first'), doc('name')('last')).match("(?i)"+name.replace(/\s/g,'')).or(
-                            doc('name')('salutation').add(doc('name')('last')).match("(?i)"+name.replace(/\s/g,''))
+            return doc("userGroup").match(userGroup).and(
+                    doc("name")("first").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
+                        doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
+                            doc("name")("salutation").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,""))
                         )
                     )
-                )
+                );
         }).run(dbConn, function(err, document) {
 
          if(err) {
@@ -434,12 +434,12 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
 
         document.toArray(function(err, arr) {
             if(err) {
-                return done(err)
+                return done(err);
             }
             return done(null, arr);            
         });
     });
-}
+};
     
 /** 
     * Searches by usergroup the account database 
@@ -464,8 +464,8 @@ exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) {
             }
             return done(null, arr);
         });
-     })
-}
+     });
+};
 
 /** 
     * Searches by email the account database 
@@ -489,8 +489,8 @@ exports.getAccountByEmail = function(email, done) {
             }
             return done(null, arr);
         });
-     })
-}
+     });
+};
 
 /** 
     * Searches by id in the account database 
@@ -505,7 +505,7 @@ exports.getUserByID = function(id, done) {
     if(!typeCheck("String", id)) {
         var err = new TypeError("Expected ID to be type \"String\" Got: " + typeof id);
         err.status = 400;
-        return done(err)
+        return done(err);
     }
      r.table("accounts").get(id).run(db.conn(), function(err, document) {
         if(err) {
@@ -513,8 +513,8 @@ exports.getUserByID = function(id, done) {
         }
         return done(null, document);
        
-     })
-}
+     });
+};
 
 /** 
     * Updates/sets any account field by its id 
@@ -541,11 +541,11 @@ exports.updateAccountGroupFieldsByID = function(dbConn, id, doc, done) {
             if(err) {
                 return done(err);
             }
-            return done(null, data)
-        })
+            return done(null, data);
+        });
     }
 
-}
+};
 
 
 
@@ -563,9 +563,9 @@ exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
     accountScheduleJS.update(userID, dashboard, schedule_UIN).then((res) => {
         return done(null, res);
     }).catch((err) => {
-        return done(err)
-    })
-}
+        return done(err);
+    });
+};
 
 
 /** 
@@ -579,7 +579,7 @@ exports.updateUserSchedule = function(userID, dashboard, schedule, done) {
     */
 exports.replaceUserSchedule = (userID, dashboard, schedule) => {
     return accountScheduleJS.replace(userID, dashboard, schedule_UIN);
-}
+};
 
 
 
@@ -597,9 +597,9 @@ exports.newUserSchedule = function(userID, dashboard, schedule_UIN, done) {
     accountScheduleJS.new(userID, dashboard, schedule_UIN).then((res) => {
         return done(null, res);
     }).catch((err) => {
-        return done(err)
-    })
-}
+        return done(err);
+    });
+};
 
 
 
@@ -618,9 +618,9 @@ exports.getStudentSchedule = function(userID, done) {
     accountScheduleJS.getStudentSchedule(userID).then((res) => {
         return done(null, res);
     }).catch((err) => {
-        return done(err)
-    })
-}
+        return done(err);
+    });
+};
 
 
 /** 
@@ -636,9 +636,9 @@ exports.getTeacherSchedule = function(userID, done) {
     accountScheduleJS.getTeacherSchedule(userID).then((res) => {
         return done(null, res);
     }).catch((err) => {
-        return done(err)
-    })
-}
+        return done(err);
+    });
+};
 
 /** 
     * Gets Specific Periods based of user.  
@@ -653,21 +653,21 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     if(periodArray.length <= 0) {
         var err = new Error("No Periods Specified");
             err.status = 400;
-            return done(err)
+            return done(err);
     }
     exports.getUserByID(userID, function(err, userData) {
         if(err) {
-            return done(err)
+            return done(err);
         } 
         if(!userData) {
             var err = new Error("Account Not Found");
             err.status = 404;
-            return done(err)
+            return done(err);
         }
         if(!userData.schedules || (!userData.schedules.student && !userData.schedules.teacher)) {
             var err = new Error("Account Has No Schedules Linked");
             err.status = 404;
-            return done(err)
+            return done(err);
         }
     
         if(userData.schedules.student) {
@@ -679,18 +679,18 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
                     if(!studentSchedule.schedule) {
                         var err = new Error("Schedule Not Found");
                         err.status = 404;
-                        return reject(err)
+                        return reject(err);
                     }
                     var studentReturn = {student: []};
                     for(var x = 0; x < periodArray.length; x++) {
-                        studentReturn.student.push({period: periodArray[x], periodData: studentSchedule.schedule[periodArray[x]]})
+                        studentReturn.student.push({period: periodArray[x], periodData: studentSchedule.schedule[periodArray[x]]});
                         if(x >= periodArray.length-1 ) {
                             return resolve(studentReturn);                            
                         }
                         
                     }
                     
-                })
+                });
                 
             }));
         }
@@ -703,32 +703,32 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
                     if(!teacherSchedule.schedule) {
                         var err = new Error("Schedule Not Found");
                         err.status = 404;
-                        return reject(err)
+                        return reject(err);
                     }
                     var teacherReturn = {teacher: []};
                     for(var x = 0; x < periodArray.length; x++) {
-                        teacherReturn.teacher.push({period: periodArray[x], periodData: teacherSchedule.schedule[periodArray[x]]})
+                        teacherReturn.teacher.push({period: periodArray[x], periodData: teacherSchedule.schedule[periodArray[x]]});
                         if(x >= periodArray.length-1 ) {
                             return resolve(teacherReturn);                            
                         }
                         
                     }
-                })
+                });
             }));
         }
 
         Promise.all(promises).then(function(periods){
             if(periods.length == 2) {
-                return done(null, Object.assign({},periods[0], periods[1]))
+                return done(null, Object.assign({},periods[0], periods[1]));
             } else {
-                return done(null, periods[0])
+                return done(null, periods[0]);
             }
             
         }).catch(function(err) {
-            return done(err)
+            return done(err);
         });
     });
-}
+};
 
 
 
@@ -751,11 +751,11 @@ exports.updatePassword = function(id, newPassword) {
                     return reject(err);
                   }
                   if(hash) {
-                      r.table('accounts').get(id).update({password: hash}).run(db.conn()).then(function(trans) {
+                      r.table("accounts").get(id).update({password: hash}).run(db.conn()).then(function(trans) {
                         return resolve(trans);
                       }).catch(function(err) {
                         return reject(err);
-                      })
+                      });
                   } else {
                     var err = new Error("Unknown Hashing Error");
                         err.status = 500;
@@ -767,11 +767,11 @@ exports.updatePassword = function(id, newPassword) {
                     err.status = 400;
                     return reject(err);
             }
-        }).catch((err) => {return reject(err)})
+        }).catch((err) => {return reject(err);});
         
         //
-    })
-}
+    });
+};
 
 /**
 * Verifies if the given password is the correct password for the given account.
@@ -783,7 +783,7 @@ exports.updatePassword = function(id, newPassword) {
 */
 exports.verifyPassword = function(id, password) { 
     return new Promise(function(resolve, reject) {
-        r.table('accounts').get(id).run(db.conn()).then(function(account) {
+        r.table("accounts").get(id).run(db.conn()).then(function(account) {
             if(!account) {
                 var err = new Error("Account Not Found");
                 err.status = 404;
@@ -802,9 +802,9 @@ exports.verifyPassword = function(id, password) {
             });
         }).catch(function(err) {
             return reject(err);
-        })
-    })
-}
+        });
+    });
+};
 
 
 
@@ -826,7 +826,7 @@ exports.changePassword = function(id, currentPassword, newPassword) {
                 }).catch(function(err) {
                     //console.log(err)
                     return reject(err);
-                })
+                });
             } else {
                 var err = new Error("Unauthorized");
                 err.status = 401;
@@ -834,9 +834,9 @@ exports.changePassword = function(id, currentPassword, newPassword) {
             }
         }).catch(function(err) {
             return reject(err);
-        })
-    })
-}
+        });
+    });
+};
 
 /**
 * Wrapper Function to update tag data.  
@@ -859,10 +859,10 @@ exports.updateTags = function(id, tagData) {
             return resolve(res);
         }).catch((err) => {
             return reject(err);
-        })
-    })
+        });
+    });
     
-}
+};
 
 
 /**
@@ -878,12 +878,12 @@ exports.setVerification = function(id, isVerified) {
         if(!typeCheck("String", id)) {
             var err = new TypeError("Expected ID to be type \"String\" Got: " + typeof id);
             err.status = 400;
-            return reject(err)
+            return reject(err);
         }
         if(!typeCheck("Boolean", isVerified)) {
             var err = new TypeError("Expected isVerified to be type \"Boolean\" Got: " + typeof isVerified);
             err.status = 400;
-            return reject(err)
+            return reject(err);
         }
 
         function verTime() {
@@ -895,7 +895,7 @@ exports.setVerification = function(id, isVerified) {
         }
         return r.table("accounts").get(id).update({isVerified: isVerified, properties: {verifiedOn: verTime()}}).run(db.conn()).then(resolve).catch(reject);
     });
-}
+};
 
 /*setTimeout(function() {
     exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
