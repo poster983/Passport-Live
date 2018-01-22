@@ -94,7 +94,7 @@ router.post("/accounts", passport.authenticate("jwt", {
  * Sends activation emails to all unverified accounts
  * @link module:api/import
  * @function activate
- * @api PATCH /api/import/accounts/:bulkID/activate
+ * @api POST /api/import/accounts/:bulkID/activate
  * @apiparam {String} bulkID - The id of the bulk import log.
  * @apiresponse {Object} - A 202 accepted will be returned 
  */
