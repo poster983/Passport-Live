@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>blackoutRESTAPI - Documentation</title>
+    <title>modules/webpack/common/Logger.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">blackoutRESTAPI</h1>
+    <h1 class="page-title">modules/webpack/common/Logger.js</h1>
     
 
     <!--container.tmpl-->
@@ -42,991 +42,114 @@
 
 
 
+    <!--source.tmpl-->
 
-<section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
 
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-<header data-tmpl="container.tmpl">
-    
-      <h2>Module: blackoutRESTAPI</h2>
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+let utils = require("../utils/index.js");
+/**
+ * Manages a user friendly log for the front end
+ * @class
+ * @param {(String|Object)} outElement - where the log will be printed
+ * @param {Object} [options]
+ * @param {Boolean} [options.verbose] - if true, console.log/warn/error may be called automaticly
+ */
+class Logger {
+    constructor(outElement, options) {
+        this._id = utils.uuidv4();
+        $(outElement).append($("&lt;ul/>").attr("id", this._id));
+        this.elmLog = $(outElement).find("ul#" + this._id); 
+        this.fullLog = [];
+        this.options = options?options:{};
+        let defaults = {
+            verbose: false,
+        };
+        this.options = Object.assign(defaults, this.options);
         
-    
+    }
+    _newEntry(type, data) {
+        type = type.toUpperCase();
+        this.fullLog.push({type: type, data: data});
+        this.elmLog.prepend($("&lt;li/>").append(type + ": " + data));
+    }
+    /** A simple log
+     * @param {String} message
+     */
+    log(message) {
+        if(this.options.varbose){console.log(message);}
+        this._newEntry("log", message);
+    }
+    /** Called when something is finished
+     * @param {String} message
+     */
+    done(message) {
+        if(this.options.varbose){console.log("DONE:", message);}
+        this._newEntry("done", message);
+    }
+    /** Called when something is working
+     * @param {String} message
+     */
+    working(message) {
+        if(this.options.varbose){console.log("WORKING:", message);}
+        this._newEntry("working", message);
+    }
+    /** Called when debugging something
+     * @param {String} message
+     */
+    debug(message) {
+        if(this.options.varbose){console.log("DEBUG:", message);}
+        this._newEntry("debug", message);
+    }
+    /** Called when warning the user of a non fatal problem
+     * @param {String} message
+     */
+    warn(message) {
+        if(this.options.varbose){console.warn(message);}
+        this._newEntry("warn", message);
+    }
+    /** Called when something exploded
+     * @param {String} message
+     */
+    error(message) {
+        if(this.options.varbose){console.error(message);}
+        this._newEntry("error", message);
+    }
+    /** Called when a fetch request fails
+     * @param {Object} errorObject
+     */
+    fetchError(errorObject) {
+        if(this.options.varbose){console.error(errorObject);}
+        var message = errorObject.response.status + " " + errorObject.message + ": " + decodeURIComponent(errorObject.response.headers.get("errormessage"));
+        if(this.options.varbose){console.log("FETCH ERROR:", message);}
+        this._newEntry("fetch error", message);
+    }
+}
+
+module.exports = Logger;</code></pre>
+        </article>
+    </section>
 
-    
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#getBlackoutByDate">getBlackoutByDate</a></li>
-            
-            <li><a href="#getBlackoutByUserId">getBlackoutByUserId</a></li>
-            
-            <li><a href="#getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li>
-            
-            <li><a href="#newBlackout">newBlackout</a></li>
-            </ul></dd></dl></div>
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line87">87</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByDate">
-      <a href="#params-getBlackoutByDate"><span class="type-signature">(inner) </span>getBlackoutByDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByDate">
-        <span class="label label-api">API: POST /api/blackout/date/:date</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the date</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByDate">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByDate">
-    <h5>
-      API Route:
-      POST /api/blackout/date/:date
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The date of the blackout</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the date\n    * @function getBlackoutByDate\n    * @api POST /api/blackout/date/:date\n    * @apiparam {string} date - The date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":87,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the date</p>","kind":"function","name":"getBlackoutByDate","route":"POST /api/blackout/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - The date of the blackout","value":{"type":{"names":["string"]},"description":"The date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002108","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line71">71</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByUserId">
-      <a href="#params-getBlackoutByUserId"><span class="type-signature">(inner) </span>getBlackoutByUserId</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByUserId">
-        <span class="label label-api">API: POST /api/blackout/user/:userId</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByUserId">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserId">
-    <h5>
-      API Route:
-      POST /api/blackout/user/:userId
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID corresponding to an account</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function getBlackoutByUserId\n    * @api POST /api/blackout/user/:userId\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":71,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"getBlackoutByUserId","route":"POST /api/blackout/user/:userId","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserId","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002106","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserId","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line103">103</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByUserIdAndDate">
-      <a href="#params-getBlackoutByUserIdAndDate"><span class="type-signature">(inner) </span>getBlackoutByUserIdAndDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByUserIdAndDate">
-        <span class="label label-api">API: POST /api/blackout/user/:userId/date/:date</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID and date</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByUserIdAndDate">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserIdAndDate">
-    <h5>
-      API Route:
-      POST /api/blackout/user/:userId/date/:date
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID corresponding to an account</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the date of the blackout</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID and date\n    * @function getBlackoutByUserIdAndDate\n    * @api POST /api/blackout/user/:userId/date/:date\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @apiparam {string} date - the date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID and date</p>","kind":"function","name":"getBlackoutByUserIdAndDate","route":"POST /api/blackout/user/:userId/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - the date of the blackout","value":{"type":{"names":["string"]},"description":"the date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserIdAndDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002110","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserIdAndDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line42">42</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~newBlackout">
-      <a href="#params-newBlackout"><span class="type-signature">(inner) </span>newBlackout</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-newBlackout">
-        <span class="label label-api">API: POST /api/blackout/</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body Structure (application/json): </p>
-    
-    <pre class="prettyprint"><code>{
-   "date": "2017-07-11",
-   "periods": ["a", "b". "c"],
-   "userId": "1fgsdfdsg879f6f879d79f98d7g8",
-   "message": "I am sick."
-}</code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-newBlackout">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-newBlackout">
-    <h5>
-      API Route:
-      POST /api/blackout/
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userGroup</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#userGroup">userGroup</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A Usergroup constant defined in the config</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">none</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function newBlackout\n    * @api POST /api/blackout/\n    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config\n    * @apibody {none}\n    * @example \n    * <caption>Body Structure (application/json): </caption>\n    * {\n    *    \"date\": \"2017-07-11\",\n    *    \"periods\": [\"a\", \"b\". \"c\"],\n    *    \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n    *    \"message\": \"I am sick.\"\n    * }\n    */","meta":{"filename":"blackout.js","lineno":42,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"newBlackout","route":"POST /api/blackout/","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{userGroup} userGroup - A Usergroup constant defined in the config","value":{"type":{"names":["userGroup"]},"description":"A Usergroup constant defined in the config","name":"userGroup"}}],"body":{"type":{"names":["none"]}},"examples":[{"caption":"Body Structure (application/json): ","code":"{\n   \"date\": \"2017-07-11\",\n   \"periods\": [\"a\", \"b\". \"c\"],\n   \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n   \"message\": \"I am sick.\"\n}"}],"longname":"module:blackoutRESTAPI~newBlackout","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002100","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newBlackout","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>blackoutRESTAPI - Documentation</title>
+    <title>modules/webpack/entrypoints/administrator/import.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">blackoutRESTAPI</h1>
+    <h1 class="page-title">modules/webpack/entrypoints/administrator/import.js</h1>
     
 
     <!--container.tmpl-->
@@ -42,991 +42,402 @@
 
 
 
+    <!--source.tmpl-->
 
-<section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
 
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-<header data-tmpl="container.tmpl">
-    
-      <h2>Module: blackoutRESTAPI</h2>
-        
-    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-    
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#getBlackoutByDate">getBlackoutByDate</a></li>
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+
+*/
+var Caret = require("../../common/Caret.js");
+var Table = require("../../common/Table.js");
+var utils = require("../../utils/index.js");
+var importAPI = require("../../api/import.js");
+var miscAPI = require("../../api/misc.js");
+let buttonLoader = require("../../common/buttonLoader");
+let typeCheck = require("type-check").typeCheck;
+let XLSX = require("xlsx");
+let flat = require("flat");
+let Logger = require("../../common/Logger.js");
+//var moment = require("moment");
+
+var bulkTable = null;
+let userGroups = null;
+let accountLog = null;
+window.onload = function() {
+    $(".button-collapse").sideNav();
+    $("select").material_select();
+    $(".collapsible").collapsible();
+    $(".modal").modal();
+
+    //Logger
+    accountLog = new Logger("#accountImport-log");
+    //Import Job Caret
+    new Caret($("#expandSearch"), {content: $("#expandSearchDiv")});
+    //Account import json expand caret
+    new Caret($("#account-json-expand"), {
+        callback: (isOpen) => {
+            if(isOpen) {
+                $("#account-json-textbox").removeClass("textarea-less");
+                $("#account-json-textbox").trigger("autoresize");
+            } else {
+                $("#account-json-textbox").addClass("textarea-less");
+            }
             
-            <li><a href="#getBlackoutByUserId">getBlackoutByUserId</a></li>
+        }
+    });
+
+    
+    //get initial table values and create table object.
+    bulkTable = new Table($("#bulkLogTable"), [], {
+        ignoredKeys: ["id"],
+        idKey: "id",
+        sort: ["Actions", "name", "importType", "date", "totalImported", "totalTried"],
+        hiddenKeys: ["loggedErrors", "rollback", "properties"],
+        tableClasses: "white-text responsive-table",
+        inject: function(row, done) {
+            return done([{
+                column: "Actions", 
+                strictColumn: true,
+                dom: $("&lt;div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+            //dom: {hello: "there", howAre: "you"}
+            }]);
+        } 
+    });
+
+    importAPI.searchBulkLogs({}).then((data) => {
+    //console.log(data)
+        bulkTable.addData(data);
+        bulkTable.generate().catch(err=>utils.throwError(err));
+    }).catch(err=>utils.throwError(err));
+
+    //get usergroup premissions
+    buttonLoader.load("#accountImport-submit");
+    buttonLoader.load("#accountImport-verifyJSONData");
+    miscAPI.getUserGroups().then((uG) => {
+        userGroups = uG;
+        buttonLoader.done("#accountImport-submit");
+        buttonLoader.done("#accountImport-verifyJSONData");
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-submit");
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        $("#accountImport-submit").attr("disabled", "disabled");
+        $("#accountImport-verifyJSONData").attr("disabled", "disabled");
+        utils.throwError(err);
+    });
+
+};
+
+function searchBulkLogsForm() {
+    
+}
+
+
+/**ACCOUNT IMPORT **/
+var excelWorkbook = null;
+//Process Excel after input change
+$("input[name=accountImport-excel]").on("change", (e) => {
+    let sheetSelect = $("#accountImport-excel-sheet");
+    //reset sheet select
+    sheetSelect.find("option").not(":first").remove();
+    sheetSelect.off("change");
+
+    let fileList = $("input[name=accountImport-excel]")[0].files;
+    if(fileList.length == 1) {
+        buttonLoader.load("#accountImport-excel-filebutton");
+        Materialize.toast("Loading excel file", 6000);
+        //load file 
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let data = e.target.result;
+            let workbook = XLSX.read(data, {type: "binary"});
+            console.log(workbook);
             
-            <li><a href="#getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li>
-            
-            <li><a href="#newBlackout">newBlackout</a></li>
-            </ul></dd></dl></div>
-</header>
+            excelWorkbook = workbook;
+            //set sheet select
+            for(let i = 0; i &lt; workbook.SheetNames.length; i++) {
+                sheetSelect.append($("&lt;option/>").val(workbook.SheetNames[i]).html(workbook.SheetNames[i]));
+            }
+            sheetSelect.material_select();
+            buttonLoader.success("#accountImport-excel-filebutton");
+            Materialize.toast("Excel file loaded", 6000);
+        };
+        reader.onerror = function(e) {
+            buttonLoader.fail("#accountImport-excel-filebutton");
+            utils.throwError(e);
+        };
+        //read
+        reader.readAsBinaryString(fileList[0]);
+    } else if(fileList.length &lt; 1) {
+        // no file selected
+        Materialize.toast("Please select a file", 6000);
+    } else {
+        Materialize.toast("One file at a time", 4000);
+    }
 
-<article>
-    <div class="container-overview">
     
+});
+
+
+
+//JSON EXPAND
+
+
+// JSON PROSESS
+
+$("#account-json-textbox").on("focusout", (e) => {
+    try {
         
+        $("#account-json-textbox").val(utils.formatJSON($("#account-json-textbox").val()));
+        $("#accountImport-json-error").html(null);
+        $("#account-json-textbox").addClass("valid").removeClass("invalid");
+    } catch(err) {
+        $("#accountImport-json-error").html(err.message);
+        $("#account-json-textbox").removeClass("valid").addClass("invalid");
+    }
+    $("#account-json-textbox").trigger("autoresize");
+});
 
+//Submit Button
+$("#accountImport-submit").on("click", (e) => {
+    buttonLoader.load("#accountImport-submit");
+    //If on excel tab
+    if($("#accountImport-excel-tab").hasClass("active")) {
+        Materialize.toast("Parsing excel file", 4000);
+        parseWorkbook(excelWorkbook, $("#accountImport-excel-sheet").val()).then((json) => {
+            //fix graduationYear type
+            json = json.map((val) => {
+                if(typeof val.graduationYear === "string") {
+                    if(!isNaN(parseInt(val.graduationYear))) {
+                        val.graduationYear = parseInt(val.graduationYear);
+                    }
+                }
+                return val;
+            });
+            $("#account-json-textbox").val(JSON.stringify(json, undefined, 4));
+            $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+            buttonLoader.success("#accountImport-submit", 2000);
+            $("#account-json-textbox").trigger("autoresize");
+            Materialize.toast("Please review the parsed data", 6000);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.warning("#accountImport-submit", 2000);
+        });
+    } else {
+        //If JSON 
+        let accounts = "";
+        try {
+            accounts = JSON.parse($("#account-json-textbox").val());
+        } catch(e) {
+            buttonLoader.fail("#accountImport-submit");
+            return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+        }
+        let importName = $("#accountImport-name");
+        if(importName.val().length &lt; 1) {
+            buttonLoader.warning("#accountImport-submit");
+            importName.addClass("invalid").removeClass("valid");
+            return Materialize.toast("Import name required", 6000);
+        }
+        if(accounts.length &lt; 1) {
+            buttonLoader.warning("#accountImport-submit");
+            $("#account-json-textbox").addClass("invalid").removeClass("valid");
+            return Materialize.toast("Invalid JSON structure", 6000);
+        }
+
+        //upload
+        accountLog.working("Importing Accounts");
+        importAPI.accounts(importName.val(), accounts).then((res) => {
+            buttonLoader.success("#accountImport-submit", 3000);
+            accountLog.done(JSON.stringify(res, undefined, 4).replace(/\n/g, "&lt;br/>").replace(/ /g, "\u00a0"));
+            $("#accountImport-log-model").modal("open");
+            Materialize.toast("Successfully imported.", 6000);
+            $("#accountImport-json-res").empty().prepend("Total Tried: " + res.totalTried + "&lt;br/>").append("Total Imported: " + res.totalImported + "&lt;br/>").append("Total Initialized: " + res.totalInitialized);
+        }).catch((err) => {
+            utils.throwError(err);
+            buttonLoader.fail("#accountImport-submit", 3000);
+            return accountLog.fetchError(err);
+        });
+    }
+});
+
+
+//May become a utill function someday 
+function parseWorkbook(excelWorkbook, sheet) {
+    return new Promise((resolve, reject) => {
+        if(!excelWorkbook) {
+            return reject(new TypeError("Excel workbook not specified"));
+        }
+        if(!typeCheck("String", sheet)) {
+            return reject(new TypeError("Sheet not specified"));
+        }
+        let json = XLSX.utils.sheet_to_json(excelWorkbook.Sheets[sheet]);        
+        //loop through object array
+        for(let x = 0; x &lt; json.length; x++) {
+            let keys = Object.keys(json[x]);
+            //loop through each individule object
+            for(let y = 0; y &lt; keys.length; y++) {
+                if(keys[y].substring(0, 2) === "//") {
+                    delete json[x][keys[y]];
+                    continue;
+                }
+            }
+        }
+        json = json.map((row) => {
+            return flat.unflatten(row);
+        });
         
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line87">87</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByDate">
-      <a href="#params-getBlackoutByDate"><span class="type-signature">(inner) </span>getBlackoutByDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByDate">
-        <span class="label label-api">API: POST /api/blackout/date/:date</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the date</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByDate">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByDate">
-    <h5>
-      API Route:
-      POST /api/blackout/date/:date
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
-            
-
-            <td class="type">
-            
+        resolve(json);
+    });
+}
+
+//PArse Account Structure button
+$("#accountImport-verifyJSONData").on("click", () => {
+    buttonLoader.load("#accountImport-verifyJSONData");
+    $("#accountImport-excel-tabs").tabs("select_tab", "accountImport-json");
+    if($("#account-json-textbox").val().length &lt; 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    let arr = "";
+    try {
+        arr = JSON.parse($("#account-json-textbox").val());
+    } catch(e) {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        return Materialize.toast("JSON.parse, Invalid JSON", 6000);
+    }
+    if(arr.length &lt; 1) {
+        buttonLoader.warning("#accountImport-verifyJSONData");
+        return Materialize.toast("Nothing to verify", 6000);
+    }
+    verifyAccountJSON(arr).then((errors) => {
+        console.log(errors)
+        if(errors.length &lt; 1) {
+            buttonLoader.success("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is valid", 6000);
+        } else {
+            logJSONErrors(errors);
+            $("#accountImport-log-model").modal("open");
+            buttonLoader.warning("#accountImport-verifyJSONData");
+            Materialize.toast("Account JSON structure is not valid. Please see errors", 6000);
+        }
+    }).catch((err) => {
+        buttonLoader.fail("#accountImport-verifyJSONData");
+        utils.throwError(err);
+    });
+});
+
+function verifyAccountJSON(accountArray) {
+    return new Promise((resolve, reject) => {
+        if(!userGroups) {
+            return reject(new TypeError("Failed to get usergroups"));
+        }
+        let checkPromise = [];
+        for(let x = 0; x &lt; accountArray.length; x++) {
+            checkPromise.push(new Promise((res, rej) => {
+                //console.log(accountArray[x])
+                let account = accountArray[x];
+                let errors = [];
+                //type 
+                if(!typeCheck("Object", account)) {
+                    errors.push("Not an object");
+                    //FAIL NOW
+                    return res({doc: account, errors});
+                }
+                //required fields
+                if(!account.name || typeof account.name.first !== "string") {
+                    errors.push("\"name.first\" must be a string");
+                }
+                if(!account.name || typeof account.name.last !== "string") {
+                    errors.push("\"name.last\" must be a string");
+                }
+                if(!account.name || typeof account.name.salutation !== "string") {
+                    errors.push("\"name.salutation\" must be a string");
+                }
+                if(typeof account.email !== "string") {
+                    errors.push("\"email\" must be a string");
+                }
+                if(typeof account.userGroup !== "string") {
+                    errors.push("\"userGroup\" must be a string");
+                } else if(!userGroups[account.userGroup]) {
+                    errors.push("\"userGroup\" must be a valid userGroup set in the configs. Valid userGroups: " + Object.keys(userGroups));
+                }
+
+                //optional
+                if(account.schoolID &amp;&amp; typeof account.schoolID !== "string") {
+                    errors.push("\"schoolID\" is optional(undefined, null), but must be a string if set");
+                }
+                if(account.isVerified &amp;&amp; typeof account.isVerified !== "boolean") {
+                    errors.push("\"isVerified\" is optional(undefined, null), but must be a boolean if set");
+                }
+                if(account.graduationYear &amp;&amp; !typeCheck("Number", account.graduationYear)) {
+                    errors.push("\"graduationYear\" is optional(undefined, null), but must be a number if set");
+                } else {
+                    
+                    //check if usergroup requires it
+                    if(userGroups[account.userGroup] &amp;&amp; (userGroups[account.userGroup].graduates &amp;&amp; !typeCheck("Number", account.graduationYear))) {
+                        errors.push("\"graduationYear\" is required to be a number by the userGroup");
+                    }
+                }
+                if(account.password &amp;&amp; typeof account.password !== "string") {
+                    errors.push("\"password\" is optional(undefined, null), but must be a string if set");
+                }
                 
-<span class="param-type">string</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The date of the blackout</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the date\n    * @function getBlackoutByDate\n    * @api POST /api/blackout/date/:date\n    * @apiparam {string} date - The date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":87,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the date</p>","kind":"function","name":"getBlackoutByDate","route":"POST /api/blackout/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - The date of the blackout","value":{"type":{"names":["string"]},"description":"The date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002108","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line71">71</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByUserId">
-      <a href="#params-getBlackoutByUserId"><span class="type-signature">(inner) </span>getBlackoutByUserId</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByUserId">
-        <span class="label label-api">API: POST /api/blackout/user/:userId</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByUserId">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserId">
-    <h5>
-      API Route:
-      POST /api/blackout/user/:userId
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID corresponding to an account</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function getBlackoutByUserId\n    * @api POST /api/blackout/user/:userId\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":71,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"getBlackoutByUserId","route":"POST /api/blackout/user/:userId","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserId","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002106","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserId","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line103">103</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByUserIdAndDate">
-      <a href="#params-getBlackoutByUserIdAndDate"><span class="type-signature">(inner) </span>getBlackoutByUserIdAndDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByUserIdAndDate">
-        <span class="label label-api">API: POST /api/blackout/user/:userId/date/:date</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID and date</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByUserIdAndDate">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserIdAndDate">
-    <h5>
-      API Route:
-      POST /api/blackout/user/:userId/date/:date
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID corresponding to an account</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the date of the blackout</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID and date\n    * @function getBlackoutByUserIdAndDate\n    * @api POST /api/blackout/user/:userId/date/:date\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @apiparam {string} date - the date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID and date</p>","kind":"function","name":"getBlackoutByUserIdAndDate","route":"POST /api/blackout/user/:userId/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - the date of the blackout","value":{"type":{"names":["string"]},"description":"the date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserIdAndDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002110","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserIdAndDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line42">42</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~newBlackout">
-      <a href="#params-newBlackout"><span class="type-signature">(inner) </span>newBlackout</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-newBlackout">
-        <span class="label label-api">API: POST /api/blackout/</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body Structure (application/json): </p>
-    
-    <pre class="prettyprint"><code>{
-   "date": "2017-07-11",
-   "periods": ["a", "b". "c"],
-   "userId": "1fgsdfdsg879f6f879d79f98d7g8",
-   "message": "I am sick."
+                //end 
+                if(errors.length &lt; 1) {
+                    return res();
+                } else {
+                    return res({doc: account, errors});
+                }
+            }));
+        }
+
+        Promise.all(checkPromise).then((tran) => {
+            tran = tran.filter((val) => {
+                return !!val;
+            });
+            return resolve(tran);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
+
+
+
+function logJSONErrors(array) {
+    for(let x = 0; x &lt; array.length; x++) {
+        let string = "\"" + JSON.stringify(array[x].doc, undefined, 4) + "\": ";
+        for(let y = 0; y &lt; array[x].errors.length; y++) {
+            string = string + "\n &lt;strong>" + array[x].errors[y] + "&lt;/strong>";
+        }
+        string = string.replace(/\n/g, "&lt;br/>").replace(/ /g, "\u00a0");
+
+        accountLog.error(string);
+    }
 }</code></pre>
+        </article>
+    </section>
 
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-newBlackout">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-newBlackout">
-    <h5>
-      API Route:
-      POST /api/blackout/
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userGroup</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#userGroup">userGroup</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A Usergroup constant defined in the config</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-        <h6>Body</h6>
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">none</span>
-
-
-    </dd>
-</dl>
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function newBlackout\n    * @api POST /api/blackout/\n    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config\n    * @apibody {none}\n    * @example \n    * <caption>Body Structure (application/json): </caption>\n    * {\n    *    \"date\": \"2017-07-11\",\n    *    \"periods\": [\"a\", \"b\". \"c\"],\n    *    \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n    *    \"message\": \"I am sick.\"\n    * }\n    */","meta":{"filename":"blackout.js","lineno":42,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"newBlackout","route":"POST /api/blackout/","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{userGroup} userGroup - A Usergroup constant defined in the config","value":{"type":{"names":["userGroup"]},"description":"A Usergroup constant defined in the config","name":"userGroup"}}],"body":{"type":{"names":["none"]}},"examples":[{"caption":"Body Structure (application/json): ","code":"{\n   \"date\": \"2017-07-11\",\n   \"periods\": [\"a\", \"b\". \"c\"],\n   \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n   \"message\": \"I am sick.\"\n}"}],"longname":"module:blackoutRESTAPI~newBlackout","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002100","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newBlackout","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 

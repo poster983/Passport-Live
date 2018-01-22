@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>blackoutRESTAPI - Documentation</title>
+    <title>api/import - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">blackoutRESTAPI</h1>
+    <h1 class="page-title">api/import</h1>
     
 
     <!--container.tmpl-->
@@ -49,7 +49,9 @@
 
 <header data-tmpl="container.tmpl">
     
-      <h2>Module: blackoutRESTAPI</h2>
+      <h2>Module: api/import</h2>
+        
+            
         
     
 
@@ -59,13 +61,13 @@
         <br />
         <dl class="dl-horizontal methods-members">
         <dt>Methods</dt><dd><ul>
-            <li><a href="#getBlackoutByDate">getBlackoutByDate</a></li>
+            <li><a href="#activate">activate</a></li>
             
-            <li><a href="#getBlackoutByUserId">getBlackoutByUserId</a></li>
+            <li><a href="#importJsonAccounts">importJsonAccounts</a></li>
             
-            <li><a href="#getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li>
+            <li><a href="#rollback">rollback</a></li>
             
-            <li><a href="#newBlackout">newBlackout</a></li>
+            <li><a href="#searchBulkImport">searchBulkImport</a></li>
             </ul></dd></dl></div>
 </header>
 
@@ -73,6 +75,133 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>A set of Apis for importing large amounts of data into passport</p></div>
+        
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line20">20</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-api/import">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line20">20</a>
+  </code>
+</div>
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n * A set of Apis for importing large amounts of data into passport\n * @module api/import\n */","meta":{"filename":"import.js","lineno":20,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/import.js"},"description":"<p>A set of Apis for importing large amounts of data into passport</p>","kind":"module","name":"api/import","longname":"module:api/import","___id":"T000002R002128","___s":true,"attribs":"","id":"api/import","ancestors":[]}
+</pre>
+-->
+</div>
 
         
     
@@ -105,7 +234,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line87">87</a>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line93">93</a>
   </code>
 </div>
 
@@ -116,8 +245,8 @@
 
     
 
-    <h4 class="name" id="~getBlackoutByDate">
-      <a href="#params-getBlackoutByDate"><span class="type-signature">(inner) </span>getBlackoutByDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
+    <h4 class="name" id="~activate">
+      <a href="#params-activate"><span class="type-signature">(inner) </span>activate</a><span class="signature">()</span><span class="type-signature"></span>
 
     </h4>
 
@@ -127,8 +256,8 @@
 
 
 
-      <a href="#api-getBlackoutByDate">
-        <span class="label label-api">API: POST /api/blackout/date/:date</span>
+      <a href="#api-activate">
+        <span class="label label-api">API: PATCH /api/import/accounts/:bulkID/activate</span>
       </a>
     
 
@@ -140,7 +269,7 @@
 
 
 <div class="description">
-    <p>Returns all blackouts by the date</p>
+    <p>Sends activation emails to all unverified accounts</p>
 </div>
 
 
@@ -150,7 +279,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getBlackoutByDate">
+<div class="collapse_" id="methodCollapse-activate">
 
   
 
@@ -211,39 +340,12 @@
 
 
 
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
 
 
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByDate">
+  <div class="bs-callout bs-callout-api" id="api-activate">
     <h5>
       API Route:
-      POST /api/blackout/date/:date
+      PATCH /api/import/accounts/:bulkID/activate
     </h5>
 
     
@@ -273,13 +375,13 @@
 
         <tr>
             
-                <td class="name"><code>date</code></td>
+                <td class="name"><code>bulkID</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -289,7 +391,7 @@
 
             
 
-            <td class="description last">The date of the blackout</td>
+            <td class="description last">The id of the bulk import log.</td>
         </tr>
 
     
@@ -303,6 +405,27 @@
     
 
     
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    - A 202 accepted will be returned
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
   </div>
 
 
@@ -313,7 +436,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n    * Returns all blackouts by the date\n    * @function getBlackoutByDate\n    * @api POST /api/blackout/date/:date\n    * @apiparam {string} date - The date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":87,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the date</p>","kind":"function","name":"getBlackoutByDate","route":"POST /api/blackout/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - The date of the blackout","value":{"type":{"names":["string"]},"description":"The date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002108","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
+{"comment":"/** \n * Sends activation emails to all unverified accounts\n * @link module:api/import\n * @function activate\n * @api PATCH /api/import/accounts/:bulkID/activate\n * @apiparam {String} bulkID - The id of the bulk import log.\n * @apiresponse {Object} - A 202 accepted will be returned \n */","meta":{"filename":"import.js","lineno":93,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/import.js"},"description":"<p>Sends activation emails to all unverified accounts</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/import","value":"module:api/import"}],"kind":"function","name":"activate","route":"PATCH /api/import/accounts/:bulkID/activate","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{String} bulkID - The id of the bulk import log.","value":{"type":{"names":["String"]},"description":"The id of the bulk import log.","name":"bulkID"}}],"response":{"type":{"names":["Object"]},"description":"- A 202 accepted will be returned"},"longname":"module:api/import~activate","scope":"inner","memberof":"module:api/import","___id":"T000002R002147","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~activate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-api_import.html\">api/import</a>~"]}
 </pre>
 -->
 </div>
@@ -330,7 +453,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line71">71</a>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line69">69</a>
   </code>
 </div>
 
@@ -341,8 +464,8 @@
 
     
 
-    <h4 class="name" id="~getBlackoutByUserId">
-      <a href="#params-getBlackoutByUserId"><span class="type-signature">(inner) </span>getBlackoutByUserId</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
+    <h4 class="name" id="~importJsonAccounts">
+      <a href="#params-importJsonAccounts"><span class="type-signature">(inner) </span>importJsonAccounts</a><span class="signature">()</span><span class="type-signature"></span>
 
     </h4>
 
@@ -352,8 +475,8 @@
 
 
 
-      <a href="#api-getBlackoutByUserId">
-        <span class="label label-api">API: POST /api/blackout/user/:userId</span>
+      <a href="#api-importJsonAccounts">
+        <span class="label label-api">API: POST /api/import/accounts</span>
       </a>
     
 
@@ -365,7 +488,9 @@
 
 
 <div class="description">
-    <p>Returns all blackouts by the user ID</p>
+    <p>Takes in an array of account json objects and imports them 
+NOTE: Email domains are still must follow userGroup settings.
+If the json object lacks the nessessary values to create an account, the row is skipped</p>
 </div>
 
 
@@ -375,7 +500,7 @@
 
 
 
-<div class="collapse_" id="methodCollapse-getBlackoutByUserId">
+<div class="collapse_" id="methodCollapse-importJsonAccounts">
 
   
 
@@ -424,56 +549,9 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserId">
-    <h5>
-      API Route:
-      POST /api/blackout/user/:userId
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
+  <div id="params-importJsonAccounts" class="bs-callout bs-callout-primary">
+    <h5>Parameters</h5>
+    <!--params.tmpl-->
 
 
 <table class="table table-bordered">
@@ -498,13 +576,13 @@
 
         <tr>
             
-                <td class="name"><code>userId</code></td>
+                <td class="name"><code>req.body</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Object</span>
 
 
             
@@ -514,470 +592,107 @@
 
             
 
-            <td class="description last">The ID corresponding to an account</td>
+            <td class="description last"><p>Include these in the body</p>
+                <h6>Properties</h6>
+                <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>accounts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="global.html#accountImport">accountImport</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The accountImport objects</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>importName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a (non unique) name for this import job</p></td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
+            </td>
+        </tr>
 
     
+    </tbody>
+</table>
 
-    
-
-    
   </div>
 
 
 
 
 
-</div>
 
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function getBlackoutByUserId\n    * @api POST /api/blackout/user/:userId\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":71,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"getBlackoutByUserId","route":"POST /api/blackout/user/:userId","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserId","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002106","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserId","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
 
-        
-            <!--method.tmpl-->
-<div class="method-details">
 
 
 
-  <!--source-link.tmpl-->
 
 
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line103">103</a>
-  </code>
-</div>
 
 
 
-
-    
-
-    
-
-    <h4 class="name" id="~getBlackoutByUserIdAndDate">
-      <a href="#params-getBlackoutByUserIdAndDate"><span class="type-signature">(inner) </span>getBlackoutByUserIdAndDate</a><span class="signature">()</span><span class="type-signature"> &rarr; {json}</span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-getBlackoutByUserIdAndDate">
-        <span class="label label-api">API: POST /api/blackout/user/:userId/date/:date</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID and date</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-getBlackoutByUserIdAndDate">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-success">
-    <h5>Returns </h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>blackout row</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">json</span>
-
-
-    </dd>
-</dl>
-
-    
-</div>
-  
-
-
-  <div class="bs-callout bs-callout-api" id="api-getBlackoutByUserIdAndDate">
+  <div class="bs-callout bs-callout-api" id="api-importJsonAccounts">
     <h5>
       API Route:
-      POST /api/blackout/user/:userId/date/:date
+      POST /api/import/accounts
     </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID corresponding to an account</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>date</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the date of the blackout</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-
-    
-
-    
-  </div>
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID and date\n    * @function getBlackoutByUserIdAndDate\n    * @api POST /api/blackout/user/:userId/date/:date\n    * @apiparam {string} userId - The ID corresponding to an account \n    * @apiparam {string} date - the date of the blackout\n    * @returns {json} - blackout row\n    */","meta":{"filename":"blackout.js","lineno":103,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID and date</p>","kind":"function","name":"getBlackoutByUserIdAndDate","route":"POST /api/blackout/user/:userId/date/:date","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{string} userId - The ID corresponding to an account","value":{"type":{"names":["string"]},"description":"The ID corresponding to an account","name":"userId"}},{"originalTitle":"apiparam","title":"apiparam","text":"{string} date - the date of the blackout","value":{"type":{"names":["string"]},"description":"the date of the blackout","name":"date"}}],"returns":[{"type":{"names":["json"]},"description":"<ul>\n<li>blackout row</li>\n</ul>"}],"longname":"module:blackoutRESTAPI~getBlackoutByUserIdAndDate","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002110","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~getBlackoutByUserIdAndDate","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"> &rarr; {json}</span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="routes_api_blackout.js.html">blackout.js</a>:<a href="routes_api_blackout.js.html#line42">42</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="~newBlackout">
-      <a href="#params-newBlackout"><span class="type-signature">(inner) </span>newBlackout</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-      <a href="#api-newBlackout">
-        <span class="label label-api">API: POST /api/blackout/</span>
-      </a>
-    
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Returns all blackouts by the user ID</p>
-</div>
-
-
-
-
-    <h5>Example</h5>
-    
-        <p class="code-caption">Body Structure (application/json): </p>
-    
-    <pre class="prettyprint"><code>{
-   "date": "2017-07-11",
-   "periods": ["a", "b". "c"],
-   "userId": "1fgsdfdsg879f6f879d79f98d7g8",
-   "message": "I am sick."
-}</code></pre>
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-newBlackout">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="bs-callout bs-callout-api" id="api-newBlackout">
-    <h5>
-      API Route:
-      POST /api/blackout/
-    </h5>
-
-    
-        <h6>Route Params</h6>
-        <!--params.tmpl-->
-
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userGroup</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#userGroup">userGroup</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A Usergroup constant defined in the config</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
     
 
@@ -986,6 +701,10 @@
     
         <h6>Body</h6>
         
+<div class="param-desc">
+    req.body
+</div>
+
 
 
 <dl class="param-type">
@@ -994,13 +713,34 @@
     </dt>
     <dd>
         
-<span class="param-type">none</span>
+<span class="param-type">Object</span>
 
 
     </dd>
 </dl>
 
     
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </dd>
+</dl>
 
     
   </div>
@@ -1013,7 +753,592 @@
 
 <!--
 <pre>
-{"comment":"/**\n    * Returns all blackouts by the user ID\n    * @function newBlackout\n    * @api POST /api/blackout/\n    * @apiparam {userGroup} userGroup - A Usergroup constant defined in the config\n    * @apibody {none}\n    * @example \n    * <caption>Body Structure (application/json): </caption>\n    * {\n    *    \"date\": \"2017-07-11\",\n    *    \"periods\": [\"a\", \"b\". \"c\"],\n    *    \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n    *    \"message\": \"I am sick.\"\n    * }\n    */","meta":{"filename":"blackout.js","lineno":42,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/blackout.js"},"description":"<p>Returns all blackouts by the user ID</p>","kind":"function","name":"newBlackout","route":"POST /api/blackout/","routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{userGroup} userGroup - A Usergroup constant defined in the config","value":{"type":{"names":["userGroup"]},"description":"A Usergroup constant defined in the config","name":"userGroup"}}],"body":{"type":{"names":["none"]}},"examples":[{"caption":"Body Structure (application/json): ","code":"{\n   \"date\": \"2017-07-11\",\n   \"periods\": [\"a\", \"b\". \"c\"],\n   \"userId\": \"1fgsdfdsg879f6f879d79f98d7g8\",\n   \"message\": \"I am sick.\"\n}"}],"longname":"module:blackoutRESTAPI~newBlackout","scope":"inner","memberof":"module:blackoutRESTAPI","___id":"T000002R002100","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~newBlackout","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-blackoutRESTAPI.html\">blackoutRESTAPI</a>~"]}
+{"comment":"/** \n * Takes in an array of account json objects and imports them \n * NOTE: Email domains are still must follow userGroup settings.\n * If the json object lacks the nessessary values to create an account, the row is skipped \n * @link module:api/import\n * @function importJsonAccounts\n * @api POST /api/import/accounts\n * @param {Object} req.body - Include these in the body\n * @param {accountImport[]} req.body.accounts - The accountImport objects \n * @param {String} req.body.importName - a (non unique) name for this import job\n * @apibody {Object} req.body\n * @apiresponse {Object[]} - Array of objects with key \"account\" containing the user imported, and key \"error\" with an error that occured during import for that user \n */","meta":{"filename":"import.js","lineno":69,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/import.js"},"description":"<p>Takes in an array of account json objects and imports them \nNOTE: Email domains are still must follow userGroup settings.\nIf the json object lacks the nessessary values to create an account, the row is skipped</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/import","value":"module:api/import"}],"kind":"function","name":"importJsonAccounts","route":"POST /api/import/accounts","params":[{"type":{"names":["Object"]},"description":"<p>Include these in the body</p>","name":"req.body","subparams":[{"type":{"names":["Array.<accountImport>"]},"description":"<p>The accountImport objects</p>","name":"accounts"},{"type":{"names":["String"]},"description":"<p>a (non unique) name for this import job</p>","name":"importName"}]},null,null],"body":{"type":{"names":["Object"]},"description":"req.body"},"response":{"type":{"names":["Array.<Object>"]},"description":"- Array of objects with key \"account\" containing the user imported, and key \"error\" with an error that occured during import for that user"},"longname":"module:api/import~importJsonAccounts","scope":"inner","memberof":"module:api/import","___id":"T000002R002145","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~importJsonAccounts","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-api_import.html\">api/import</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line119">119</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~rollback">
+      <a href="#params-rollback"><span class="type-signature">(inner) </span>rollback</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-rollback">
+        <span class="label label-api">API: delete /api/import/accounts/:bulkID/rollback</span>
+      </a>
+    
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Undos a bulk import for accounts.  This will delete records and cannot be undone.</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-rollback">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-rollback">
+    <h5>
+      API Route:
+      delete /api/import/accounts/:bulkID/rollback
+    </h5>
+
+    
+        <h6>Route Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bulkID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The id of the bulk import log.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+        <h6>Query Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ignoreVerified</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Will leave accounts that have been verified untouched</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+<div class="param-desc">
+    - The transaction statement
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/** \n * Undos a bulk import for accounts.  This will delete records and cannot be undone.\n * @link module:api/import\n * @function rollback\n * @api delete /api/import/accounts/:bulkID/rollback\n * @apiquery {Boolean} [ignoreVerified=true] - Will leave accounts that have been verified untouched\n * @apiparam {String} bulkID - The id of the bulk import log.\n * @apiresponse {Object} - The transaction statement\n */","meta":{"filename":"import.js","lineno":119,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/import.js"},"description":"<p>Undos a bulk import for accounts.  This will delete records and cannot be undone.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/import","value":"module:api/import"}],"kind":"function","name":"rollback","route":"delete /api/import/accounts/:bulkID/rollback","queryParams":[{"originalTitle":"apiquery","title":"apiquery","text":"{Boolean} [ignoreVerified=true] - Will leave accounts that have been verified untouched","value":{"type":{"names":["Boolean"]},"optional":true,"defaultvalue":true,"description":"Will leave accounts that have been verified untouched","name":"ignoreVerified"}}],"routeParams":[{"originalTitle":"apiparam","title":"apiparam","text":"{String} bulkID - The id of the bulk import log.","value":{"type":{"names":["String"]},"description":"The id of the bulk import log.","name":"bulkID"}}],"response":{"type":{"names":["Object"]},"description":"- The transaction statement"},"longname":"module:api/import~rollback","scope":"inner","memberof":"module:api/import","___id":"T000002R002151","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~rollback","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-api_import.html\">api/import</a>~"]}
+</pre>
+-->
+</div>
+
+        
+            <!--method.tmpl-->
+<div class="method-details">
+
+
+
+  <!--source-link.tmpl-->
+
+
+<div class="pull-right source-link-container">
+  <code class="source-link" data-tmpl="method-tmpl(1)">
+    <i class="fa fa-file-o"></i>
+    <a href="routes_api_import.js.html">import.js</a>:<a href="routes_api_import.js.html#line37">37</a>
+  </code>
+</div>
+
+
+
+
+    
+
+    
+
+    <h4 class="name" id="~searchBulkImport">
+      <a href="#params-searchBulkImport"><span class="type-signature">(inner) </span>searchBulkImport</a><span class="signature">()</span><span class="type-signature"></span>
+
+    </h4>
+
+    
+
+
+
+
+
+      <a href="#api-searchBulkImport">
+        <span class="label label-api">API: GET /api/import/log</span>
+      </a>
+    
+
+
+
+
+
+
+
+
+<div class="description">
+    <p>Searches the bulk log database</p>
+</div>
+
+
+
+
+
+
+
+
+<div class="collapse_" id="methodCollapse-searchBulkImport">
+
+  
+
+  
+
+<!-- details.tmpl -->
+
+
+
+
+
+
+
+
+<dl class="dl-horizontal">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="bs-callout bs-callout-api" id="api-searchBulkImport">
+    <h5>
+      API Route:
+      GET /api/import/log
+    </h5>
+
+    
+
+    
+        <h6>Query Params</h6>
+        <!--params.tmpl-->
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Bulk Log Name</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">importType. Current values: "account", "schedule"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ISO Strng Low end.  inclusive</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>to</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ISO Strng High end. inclusive</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+
+    
+        <h6>Response</h6>
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+  </div>
+
+
+
+
+
+</div>
+
+<!--
+<pre>
+{"comment":"/**\n * Searches the bulk log database \n * @link module:api/import\n * @function searchBulkImport\n * @api GET /api/import/log\n * @apiquery {(String|undefined)} name - Bulk Log Name\n * @apiquery {(String|undefined)} type - importType. Current values: \"account\", \"schedule\" \n * @apiquery {(String|undefined)} from - ISO Strng Low end.  inclusive\n * @apiquery {(String|undefined)} to - ISO Strng High end. inclusive\n * @apiresponse {Object[]}\n */","meta":{"filename":"import.js","lineno":37,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/routes/api","code":{},"shortpath":"routes/api/import.js"},"description":"<p>Searches the bulk log database</p>","tags":[{"originalTitle":"link","title":"link","text":"module:api/import","value":"module:api/import"}],"kind":"function","name":"searchBulkImport","route":"GET /api/import/log","queryParams":[{"originalTitle":"apiquery","title":"apiquery","text":"{(String|undefined)} name - Bulk Log Name","value":{"type":{"names":["String","undefined"]},"description":"Bulk Log Name","name":"name"}},{"originalTitle":"apiquery","title":"apiquery","text":"{(String|undefined)} type - importType. Current values: \"account\", \"schedule\"","value":{"type":{"names":["String","undefined"]},"description":"importType. Current values: \"account\", \"schedule\"","name":"type"}},{"originalTitle":"apiquery","title":"apiquery","text":"{(String|undefined)} from - ISO Strng Low end.  inclusive","value":{"type":{"names":["String","undefined"]},"description":"ISO Strng Low end.  inclusive","name":"from"}},{"originalTitle":"apiquery","title":"apiquery","text":"{(String|undefined)} to - ISO Strng High end. inclusive","value":{"type":{"names":["String","undefined"]},"description":"ISO Strng High end. inclusive","name":"to"}}],"response":{"type":{"names":["Array.<Object>"]}},"longname":"module:api/import~searchBulkImport","scope":"inner","memberof":"module:api/import","___id":"T000002R002138","___s":true,"attribs":"<span class=\"type-signature\">(inner) </span>","id":"~searchBulkImport","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"module-api_import.html\">api/import</a>~"]}
 </pre>
 -->
 </div>
