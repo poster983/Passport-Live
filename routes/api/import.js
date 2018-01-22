@@ -120,7 +120,7 @@ router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
  * Undos a bulk import for accounts.  This will delete records and cannot be undone.
  * @link module:api/import
  * @function rollback
- * @api delete /api/import/accounts/:bulkID/rollback
+ * @api DELETE /api/import/accounts/:bulkID/rollback
  * @apiquery {Boolean} [ignoreVerified=true] - Will leave accounts that have been verified untouched
  * @apiparam {String} bulkID - The id of the bulk import log.
  * @apiresponse {Object} - The transaction statement
