@@ -66,7 +66,7 @@ var queueActivateEmail = new Queue(QueuecxnOptions, {
 queueActivateEmail.jobOptions = {
   priority: 'normal',
   timeout: 300000,
-  retryMax: 3, // Four attempts, first then three retries
+  retryMax: 5, // Six attempts, first then three retries
   retryDelay: 600000 // Time in milliseconds to delay retries
 }
 //reset Password
