@@ -35,6 +35,20 @@ exports.typeCheck = typeCheck*/
 exports.typeCheck = require("./customTypeCheck.js");
 exports.rateLimit = require("./rateLimit.js");
 //console.log(exports.typeCheck)
+
+/**
+* Takes an Object and returns a URL Query string
+* @link module:js/utils
+* @param {Object} params
+* @returns {String}
+*/
+exports.urlQuery = (params) => {
+    return query = Object.keys(params)
+        .filter(function(e) { return ((params[e] !== undefined) && params[e] !== null); }) //removes 
+        .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+        .join("&");
+};
+
 /**
 * Middleware wrapper for {@link module:js/utils.checkPermission}
 * @link module:js/utils

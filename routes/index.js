@@ -34,17 +34,21 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 }
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
+    let query = 
     if(req.user) {
         var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
-        if(permittedDash.length > 1) {
+        if(permittedDash.length > 1 && !req.query.continue) {
             res.render('multiDashRoute',{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
         } else {
-            res.redirect(permittedDash[0]);
+            delete req.query.continue;
+            res.redirect(req.query.continue?req.query.continue:permittedDash[0] + "?" + utils.urlQuery(req.query));
         }
         
     } else {
         console.log("not Logged In");
-        res.redirect('auth/login');
+        //forward query params
+        
+        res.redirect('auth/login?'+query);
     }
   
 });

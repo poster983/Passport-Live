@@ -98,11 +98,11 @@ router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req
             if(err) {return next(err);}
             securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.RESET_PASSWORD, decode.key).then((payload) => {
                 if(payload && payload.params && payload.params.accountID) {
-                    console.log(req.body)
+                    //console.log(req.body)
                     var password = req.body.password;
                     if(password == req.body.passwordVer) {
                         accountJS.updatePassword(payload.params.accountID, password).then((trans) => {
-                            console.log(trans)
+                            //console.log(trans)
                             if(trans && trans.replaced > 1) {
                                 return next(new Error("An impossible error has just occurred. Please perform a reality check."))
                             } else if(trans && trans.replaced < 1) {

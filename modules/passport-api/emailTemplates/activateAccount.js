@@ -3,7 +3,7 @@ var config = require("config");
 
 module.exports = function(name, activateLinkKey) {
   var bURL = config.get("server.domain");
-  var activateLink = bURL + "/account/activate?key=" + activateLinkKey;
+  var activateLink = bURL + "/account/activate?utm_source=activataion_email&utm_medium=emailkey=" + activateLinkKey;
   return mjml2html(`
 <mjml>
 <mj-head>
@@ -17,12 +17,12 @@ module.exports = function(name, activateLinkKey) {
   <mj-container background-color="#E0E0E0">
     <mj-navbar background-color="#F44336">
         <mj-column width="20%">
-          <mj-image width="300px" href="` + bURL + `" src="` + bURL + `/images/logo/48x48.png"></mj-image>
+          <mj-image width="300px" href="` + bURL + `?utm_source=activataion_email&utm_medium=email" src="` + bURL + `/images/logo/48x48.png"></mj-image>
         </mj-column>
         <mj-column width="80%">
           <mj-inline-links base-url="" hamburger="hamburger" ico-color="#ffffff">
-            <mj-link href="` + bURL + `/auth/login" color="#ffffff">Login</mj-link>
-            <mj-link href="https://getpassport.live" color="#ffffff">Project Page</mj-link>
+            <mj-link href="` + bURL + `/auth/login?utm_source=activataion_email&utm_medium=email" color="#ffffff">Login</mj-link>
+            <mj-link href="https://getpassport.live?utm_source=activataion_email&utm_medium=email" color="#ffffff">Project Page</mj-link>
             <mj-link href="https://github.com/poster983/Passport-Live" color="#ffffff">Github Page</mj-link>
           </mj-inline-links>
         </mj-column>
@@ -98,7 +98,7 @@ module.exports = function(name, activateLinkKey) {
           <br>
           <a href="` + activateLink + `">` + activateLink + `</a>
           <br>
-          If you forget your password, or close password creation page, you can recover your account by going <a href="` + bURL + `/auth/login#resetPassword">here</a>.
+          If you forget your password, or close password creation page, you can recover your account by going <a href="` + bURL + `/auth/login?utm_source=activataion_email&utm_medium=email#resetPassword">here</a>.
         </mj-text>
       </mj-section>
       <mj-spacer height="12px"  />
