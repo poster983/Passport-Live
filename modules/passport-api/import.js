@@ -255,11 +255,11 @@ accounts.json = (accounts, importName) => {
             return reject(err);
         }
         //declare 
-        let loopPromice = [];
-        let errors = [];
-        let imported = 0;
-        let initialized = 0;
-        let defaults = {
+        var loopPromice = [];
+        var errors = [];
+        var imported = 0;
+        var initialized = 0;
+        var defaults = {
             schoolID: null,
             isVerified: false,
             password: null,
@@ -272,7 +272,6 @@ accounts.json = (accounts, importName) => {
                     loopPromice.push(new Promise((lRes, lRej) => {
                         //set default values
                         let account = Object.assign(defaults, accounts[x]);
-                        
                         //Import each account
                         accountAPI.createAccount({
                             userGroup: account.userGroup, 
@@ -288,14 +287,16 @@ accounts.json = (accounts, importName) => {
                             skipEmail: true,
                             allowNullPassword: true,
                             generatePassword: false
-                        }).then(function(transSummery) {
+                        }).then((transSummery) => {
                             //success 
                             if(transSummery.transaction.inserted > 0) {
                                 imported += transSummery.transaction.inserted;
                                 if(account.password) {initialized++;}
                             }
-                            console.log(account, transSummery);
-                            lRes({account: account, error: null, transaction: transSummery.transaction});
+                            //console.log(accountR,Object.assign(defaults, accountR), accounts[x], account, transSummery);
+                            let resp = {account: account, error: null, transaction: transSummery.transaction, rand: Math.random()};
+                            console.log(resp)
+                            return lRes(resp);
                         }).catch((err) => {
                             if(err.status == 500) {
                                 return lRej(err); 
@@ -310,6 +311,7 @@ accounts.json = (accounts, importName) => {
 
                 // wrap up transaction 
                 Promise.all(loopPromice).then((sumArray) => {
+                    //console.log(sumArray)
                     let finalLog = [];
                     let bulkID = jResp.generated_keys[0];
                     if(imported == 0) {
