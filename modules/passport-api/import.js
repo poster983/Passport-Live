@@ -271,7 +271,8 @@ accounts.json = (accounts, importName) => {
                 for(let x = 0; x < accounts.length; x++) {
                     loopPromice.push(new Promise((lRes, lRej) => {
                         //set default values
-                        let account = Object.assign(defaults, accounts[x]);
+                        var account = Object.assign(defaults, accounts[x]);
+                        let rand = Math.random() + " " + x;
                         //Import each account
                         accountAPI.createAccount({
                             userGroup: account.userGroup, 
@@ -294,7 +295,7 @@ accounts.json = (accounts, importName) => {
                                 if(account.password) {initialized++;}
                             }
                             //console.log(accountR,Object.assign(defaults, accountR), accounts[x], account, transSummery);
-                            let resp = {account: account, error: null, transaction: transSummery.transaction, rand: Math.random()};
+                            let resp = {account: account, error: null, transaction: transSummery.transaction, rand: rand};
                             console.log(resp)
                             return lRes(resp);
                         }).catch((err) => {
