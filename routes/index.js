@@ -48,7 +48,7 @@ router.get('/', function(req, res, next) {
         console.log("not Logged In");
         //forward query params
         
-        res.redirect('auth/login?'+query);
+        res.redirect('auth/login?'+ utils.urlQuery(req.query));
     }
   
 });
