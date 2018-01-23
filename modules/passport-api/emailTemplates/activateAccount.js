@@ -97,6 +97,8 @@ module.exports = function(name, activateLinkKey) {
           Paste this into your browser's omnibox: 
           <br>
           <a href="` + activateLink + `">` + activateLink + `</a>
+          <br>
+          If you forget your password, or close password creation page, you can recover your account by going <a href="` + bURL + `/auth/login#resetPassword">here</a>.
         </mj-text>
       </mj-section>
       <mj-spacer height="12px"  />
