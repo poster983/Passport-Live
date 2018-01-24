@@ -22,6 +22,7 @@ var config = require('config');
 var utils = require("../modules/passport-utils/index.js")
 var accountJS = require('../modules/passport-api/accounts.js');
 var securityJS = require('../modules/passport-api/security.js');
+var url = require('url');
 /*var r = require('rethinkdb');
 var db = require('../modules/db/index.js');
 var typeCheck = require("type-check").typeCheck;*/
@@ -35,14 +36,21 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
     if(req.user) {
-        var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
-        if(permittedDash.length > 1 && !req.query.continue) {
-            res.render('multiDashRoute',{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
+        if(req.session.returnTo) {
+            var url_parts = url.parse(req.session.returnTo, true);
+            console.log(url_parts)
+            var query = Object.assign(url_parts.query, req.query);
+            res.redirect(url_parts.pathname + "?" + utils.urlQuery(query));
+            delete req.session.returnTo;
         } else {
-            delete req.query.continue;
-            res.redirect(req.query.continue?req.query.continue:permittedDash[0] + "?" + utils.urlQuery(req.query));
+            var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
+            if(permittedDash.length > 1 && !req.query.continue) {
+                res.render('multiDashRoute',{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
+            } else {
+                
+                res.redirect(permittedDash[0] + "?" + utils.urlQuery(req.query));
+            }
         }
-        
     } else {
         console.log("not Logged In");
         //forward query params
