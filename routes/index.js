@@ -34,7 +34,6 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 }
 //this page will route each user to the correct page after login 
 router.get('/', function(req, res, next) {
-    let query = 
     if(req.user) {
         var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
         if(permittedDash.length > 1 && !req.query.continue) {
