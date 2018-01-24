@@ -3,7 +3,7 @@ var config = require("config");
 
 module.exports = function(name, activateLinkKey) {
   var bURL = config.get("server.domain");
-  var activateLink = bURL + "/account/resetPassword?key=" + activateLinkKey;
+  var activateLink = bURL + "/account/resetPassword?utm_source=password_reset_email&utm_medium=emailkey=" + activateLinkKey;
   return mjml2html(`
 <mjml>
 <mj-head>
@@ -17,11 +17,11 @@ module.exports = function(name, activateLinkKey) {
   <mj-container background-color="#E0E0E0">
     <mj-navbar background-color="#F44336">
         <mj-column width="20%">
-          <mj-image width="300px" href="` + bURL + `" src="` + bURL + `/images/logo/48x48.png"></mj-image>
+          <mj-image width="300px" href="` + bURL + `?utm_source=password_reset_email&utm_medium=email" src="` + bURL + `/images/logo/48x48.png"></mj-image>
         </mj-column>
         <mj-column width="80%">
           <mj-inline-links base-url="" hamburger="hamburger" ico-color="#ffffff">
-            <mj-link href="` + bURL + `/auth/login" color="#ffffff">Login</mj-link>
+            <mj-link href="` + bURL + `/auth/login?utm_source=password_reset_email&utm_medium=email" color="#ffffff">Login</mj-link>
             <mj-link href="https://getpassport.live" color="#ffffff">Project Page</mj-link>
             <mj-link href="https://github.com/poster983/Passport-Live" color="#ffffff">Github Page</mj-link>
           </mj-inline-links>
