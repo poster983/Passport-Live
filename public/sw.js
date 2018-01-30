@@ -17,60 +17,60 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var CACHE_NAME = 'passport-cache-v4';
+var CACHE_NAME = "passport-cache-v4";
 var urlsToCache = [
-  '/',
-  '/stylesheets/passport.css',
-  '/stylesheets/materialize.css',
-  '/stylesheets/animate.css',
-  '/js/materialize.js',
-  '/js/init.js',
-  '/js/passport.js'
-  //'/images/',
-  //'/fonts/'
+    "/",
+    "/stylesheets/passport.css",
+    "/stylesheets/materialize.css",
+    "/stylesheets/animate.css",
+    "/js/materialize.js",
+    "/js/init.js",
+    "/js/passport.js"
+    //'/images/',
+    //'/fonts/'
 ];
-self.addEventListener('install', function(event) {
-  // Perform install steps
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+self.addEventListener("install", function(event) {
+    // Perform install steps
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(function(cache) {
+                console.log("Opened cache");
+                return cache.addAll(urlsToCache);
+            })
+    );
 });
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    fetch(event.request).catch(function() {
-      return caches.match(event.request);
-    }),
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.match(event.request).then(function (response) {
-        return response || fetch(event.request).then(function(response) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-  );
-});
-
-
-
-self.addEventListener('activate', function(event) {
-
-  var cacheWhitelist = ['pages-cache-v1', 'blog-posts-cache-v1'];
-
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
+self.addEventListener("fetch", function(event) {
+    event.respondWith(
+        fetch(event.request).catch(function() {
+            return caches.match(event.request);
+        }),
+        caches.open(CACHE_NAME).then(function(cache) {
+            return cache.match(event.request).then(function (response) {
+                return response || fetch(event.request).then(function(response) {
+                    cache.put(event.request, response.clone());
+                    return response;
+                });
+            });
         })
-      );
-    })
-  );
+    );
+});
+
+
+
+self.addEventListener("activate", function(event) {
+
+    var cacheWhitelist = ["pages-cache-v1", "blog-posts-cache-v1"];
+
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
 });
