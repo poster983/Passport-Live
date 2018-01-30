@@ -18,11 +18,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var r = require('rethinkdb');
-var bcrypt = require('bcrypt-nodejs');
-var config = require('config');
+var r = require("rethinkdb");
+var bcrypt = require("bcrypt-nodejs");
+var config = require("config");
 var utils = require("../modules/passport-utils/index.js");
 
 /*
@@ -30,53 +30,53 @@ var httpv = require('http').Server(router);
 var io = require('socket.io')(httpv);
 */
 //var r = require('../modules/db/index.js')();
-var passport = require('passport')
+var passport = require("passport");
 //  , LocalStrategy = require('passport-local').Strategy;
-var api = require('../modules/passport-api/index.js');
-var accountJS = require('../modules/passport-api/accounts.js');
-var securityJS = require('../modules/passport-api/security.js');
+var api = require("../modules/passport-api/index.js");
+var accountJS = require("../modules/passport-api/accounts.js");
+var securityJS = require("../modules/passport-api/security.js");
 
 let customHead = null;
 if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
     customHead = config.get("webInterface.customHeadCode");
 }
 
-  // Rethink db connection
+// Rethink db connection
 var connection = null;
-        r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
-            if (err) throw err;
-            connection = conn;
-        });
+r.connect( {host: config.get("rethinkdb.host"), port: config.get("rethinkdb.port"), db: config.get("rethinkdb.database"), password: config.get("rethinkdb.password")}, function(err, conn) {
+    if (err) throw err;
+    connection = conn;
+});
 
 
 /** 
   Google Login
 **/
 
-router.get('/google/', utils.rateLimit.publicApiBruteforce.prevent, function googleOAuth2(req, res, next) {
+router.get("/google/", utils.rateLimit.publicApiBruteforce.prevent, function googleOAuth2(req, res, next) {
     //req.session.permissionKey = req.query.pk;
     if(req.query.dscm) {
-      req.session.googleDSCM = true;
+        req.session.googleDSCM = true;
     } else {
-      req.session.googleDSCM = false;
+        req.session.googleDSCM = false;
     }
 
     
     next();
 }, function(req, res, next) {
-  var prom = null;
-  if(req.query.failGoogle) {
-    prom = "select_account"
-  }
-  passport.authenticate('google', { scope: 
+    var prom = null;
+    if(req.query.failGoogle) {
+        prom = "select_account";
+    }
+    passport.authenticate("google", { scope: 
     [ "profile", "email" ],
     prompt: prom}
-  )(req, res, function(err) {
-    if(err) {
-      return next(err);
-    }
-    return next();
-  })
+    )(req, res, function(err) {
+        if(err) {
+            return next(err);
+        }
+        return next();
+    });
 });
 
 /*
@@ -89,87 +89,76 @@ router.get('/google/dscm', function (req, res, next) {
 ));*/
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
-router.get('/login', utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
-  var msg = null;
-  if(req.query.msgHead || req.query.msg) {
-    msg = {
-      head: req.query.msgHead,
-      body: req.query.msg
+router.get("/login", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
+    var msg = null;
+    if(req.query.msgHead || req.query.msg) {
+        msg = {
+            head: req.query.msgHead,
+            body: req.query.msg
+        };
     }
-  }
 
-  var notif = req.query.notif;
-  var googleQuery = "";
+    var notif = req.query.notif;
+    var googleQuery = "";
   
-  if(req.query.failGoogle) {
-    googleQuery += "&failGoogle=true";
-  }
-  
-  //check user agent and browser support 
-  utils.getBrowserSupport(req.headers['user-agent']).then((sB) => {
-    console.log(sB);
-    if(sB.blocked) {
-      res.render('auth/blockedBrowser', { 
-        doc_Title: 'Blocked Browser', 
-        browserSupport: {
-          head: "Your browser is incompatible with Passport",
-          message: "Please upgrade to an actual browser instead of using an overcooked potato. <br> Thank You For Your Understanding <br> <a href=\"https://poster983.github.io/Passport-Live/tutorial-Web%20App%20System%20Requirements.html\">See System Requirements</a>"
-        }
-      });
-    } else {
-      
-      if(sB.untested) {
-        var templateBs = {};
-        templateBs.head = "Your browser is untested!"
-        templateBs.message = "You may experience broken features or layout bugs."
-        templateBs.browser = sB.ua.browser;
-      } else if(sB.outdated) {
-        var templateBs = {};
-        templateBs.head = "Your browser is outdated!"
-        templateBs.message = "Your browser is older than the minimum supported version. <br> You may experience broken features or layout bugs.  <br>  We highly encourage updating your browser."
-        templateBs.browser = sB.ua.browser;
-      }
-      res.render('auth/login', { doc_Title: 'Login -- Passport', customHead: customHead, browserSupport: templateBs, message: msg, notification: notif, googleQuery: googleQuery});
+    if(req.query.failGoogle) {
+        googleQuery += "&failGoogle=true";
     }
-  }).catch((err) => {
-    console.log(err)
-    notif = "Unable to detect browser. Proceed with caution";
-    res.render('auth/login', { doc_Title: 'Login -- Passport', message: msg, customHead: customHead, notification: notif, googleQuery: googleQuery});
-  });
+  
+    //check user agent and browser support 
+    utils.getBrowserSupport(req.headers["user-agent"]).then((sB) => {
+        console.log(sB);
+        if(sB.untested) {
+            var templateBs = {};
+            templateBs.head = "Your browser is untested!";
+            templateBs.message = "You may experience broken features or layout bugs.";
+            templateBs.browser = sB.ua.browser;
+        } else if(sB.outdated) {
+            var templateBs = {};
+            templateBs.head = "Your browser is outdated!";
+            templateBs.message = "Your browser is older than the minimum supported version. <br> You may experience broken features or layout bugs.  <br>  We highly encourage updating your browser.";
+            templateBs.browser = sB.ua.browser;
+        }
+        res.render("auth/login", { doc_Title: "Login -- Passport", customHead: customHead, browserSupport: templateBs, message: msg, notification: notif, googleQuery: googleQuery});
+    }).catch((err) => {
+        console.log(err);
+        notif = "Unable to detect browser. Proceed with caution";
+        res.render("auth/login", { doc_Title: "Login -- Passport", message: msg, customHead: customHead, notification: notif, googleQuery: googleQuery});
+    });
 });
 
 
 
 
 //et signup
-router.get('/signup/', utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
-  var msg = null;
-  let customHead = null;
-  if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
-      customHead = config.get("webInterface.customHeadCode");
-  }
-  res.render('auth/signup', { doc_Title: 'Signup -- Passport', customHead: customHead, message: msg});
+router.get("/signup/", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
+    var msg = null;
+    let customHead = null;
+    if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+        customHead = config.get("webInterface.customHeadCode");
+    }
+    res.render("auth/signup", { doc_Title: "Signup -- Passport", customHead: customHead, message: msg});
 });
 
 
 
 
-router.get('/logout', utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next){
-  //req.logout();
+router.get("/logout", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next){
+    //req.logout();
 
-  if(!config.get('misc.storeSessionToDisc')) {
-    req.session = null;
-    req.logout();
-    res.redirect('/auth/login');
-  } else {
-    req.session.destroy(function (err) {
-      if(err) {
-        return next(err)
-      }
-      res.redirect('/auth/login'); 
-    });
-  }
-  //res.redirect('/auth/login');
+    if(!config.get("misc.storeSessionToDisc")) {
+        req.session = null;
+        req.logout();
+        res.redirect("/auth/login");
+    } else {
+        req.session.destroy(function (err) {
+            if(err) {
+                return next(err);
+            }
+            res.redirect("/auth/login"); 
+        });
+    }
+    //res.redirect('/auth/login');
 });
 
 
