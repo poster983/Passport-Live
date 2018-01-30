@@ -22,16 +22,16 @@ email: hi@josephhassell.com
 * @module authRESTAPI
 */
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var passport = require('passport');
-var api = require('../../modules/passport-api/auth.js');
-var utils = require('../../modules/passport-utils/index.js');
+var passport = require("passport");
+var api = require("../../modules/passport-api/auth.js");
+var utils = require("../../modules/passport-utils/index.js");
 
-var cors = require('cors');
+var cors = require("cors");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors())
 
 
 //serializeUser becaule the default passport.serializeUser function wont be called without session
@@ -65,11 +65,12 @@ function serializeUser(req, res, done) {
     * @todo Test application/json
     * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
     */
-router.post('/login', utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.loginBruteforce.getMiddleware({
+    //utils.rateLimit.publicApiBruteforce.prevent,
+router.post("/login", utils.rateLimit.loginBruteforce.getMiddleware({
     key: function(req, res, next) {
         next(req.body.email);
     }
-}), passport.authenticate('local-login', {
+}), passport.authenticate("local-login", {
   session: false
 }), function handleAuthLogin(req, res, next) {
     req.brute.reset();
@@ -102,12 +103,12 @@ router.post('/login', utils.rateLimit.publicApiBruteforce.prevent, utils.rateLim
     * @todo Test application/json
     * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth
     */
-
-router.post('/login/dscm', utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.loginBruteforce.getMiddleware({
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.post("/login/dscm", utils.rateLimit.loginBruteforce.getMiddleware({
     key: function(req, res, next) {
         next(req.body.email);
     }
-}), passport.authenticate('local-login', {
+}), passport.authenticate("local-login", {
   session: true
 }), function loginDSCM(req, res, next) {
     req.brute.reset();
@@ -116,9 +117,9 @@ router.post('/login/dscm', utils.rateLimit.publicApiBruteforce.prevent, utils.ra
             return next(err);
         }
         
-        res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
-        res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
-        res.cookie('ACCOUNT-ID', req.user[0].id, {maxAge: 24 * 60 * 60 * 1000});
+        res.cookie("JWT", "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+        res.cookie("XSRF-TOKEN", jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+        res.cookie("ACCOUNT-ID", req.user[0].id, {maxAge: 24 * 60 * 60 * 1000});
         res.status(200).json({
             userID: req.user[0].id
         });
@@ -129,9 +130,9 @@ router.post('/login/dscm', utils.rateLimit.publicApiBruteforce.prevent, utils.ra
 
 
 
-
-router.get("/google/callback", utils.rateLimit.publicApiBruteforce.prevent, passport.authenticate( 'google', { 
-        failureRedirect: '/auth/login?failGoogle=true'
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/google/callback",  passport.authenticate( "google", { 
+        failureRedirect: "/auth/login?failGoogle=true"
 }), function(req, res, next) {
     console.log(req.user, "USER RETURNED")
     if(req.session.googleDSCM) {
@@ -139,9 +140,9 @@ router.get("/google/callback", utils.rateLimit.publicApiBruteforce.prevent, pass
             if(err) {
                 return next(err);
             }
-            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
-            res.cookie('XSRF-TOKEN', jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
-            res.cookie('ACCOUNT-ID', req.user.id, {maxAge: 24 * 60 * 60 * 1000});
+            res.cookie("JWT", "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+            res.cookie("XSRF-TOKEN", jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+            res.cookie("ACCOUNT-ID", req.user.id, {maxAge: 24 * 60 * 60 * 1000});
             res.redirect("/?userId=" + req.user.id);
         });
     } else {

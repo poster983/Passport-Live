@@ -38,7 +38,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 
 
 router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardNav, function(req, res, next) {
-    var user = {}
+    var user = {};
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
@@ -48,11 +48,11 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardN
     elements.schedules.student = utils.checkPermission(req.user.userGroup, ["student"]);
     elements.schedules.teacher = utils.checkPermission(req.user.userGroup, ["teacher"]);
 
-    console.log(elements)
+    console.log(elements);
     
     //set links in sidenav
     if(req.query.referral) {
-        req.sidenav.links = ["<li><a class=\"waves-effect\" href=\"/" + req.query.referral + "\"><i class=\"material-icons\">home</i>Home</a></li>"]
+        req.sidenav.links = ["<li><a class=\"waves-effect\" href=\"/" + req.query.referral + "\"><i class=\"material-icons\">home</i>Home</a></li>"];
     } else {
         req.sidenav.dashboards.show = true;
         req.sidenav.dashboards.showPicker = true;
@@ -63,7 +63,8 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardN
 
 
 //Reset Password 
-router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/resetPassword", (req, res, next) => {
     var permissionKey = req.query.key;
     var notif = req.query.notif;
     if(typeof permissionKey === "string") {
@@ -85,13 +86,14 @@ router.get("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, 
             } else {
                 res.redirect("/auth/login?notif=" + encodeURIComponent("\"key\" invalid")); 
             }
-        }).catch((err)=>{return next(err);})
+        }).catch((err)=>{return next(err);});
     } else {
         res.redirect("/auth/login?notif=" + encodeURIComponent("Query \"key\" invalid.")); 
     }
-})
+});
 //RaTE LIMIT RATE LIMIT!!
-router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req, res, next) => {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.patch("/resetPassword", (req, res, next) => {
     //console.log(req.signedCookies.JWT);
     if(req.header("authorization")) {
         jwt.verify(req.header("authorization").substring(4), config.get("secrets.api-secret-key"), (err, decode) => {
@@ -104,9 +106,9 @@ router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req
                         accountJS.updatePassword(payload.params.accountID, password).then((trans) => {
                             //console.log(trans)
                             if(trans && trans.replaced > 1) {
-                                return next(new Error("An impossible error has just occurred. Please perform a reality check."))
+                                return next(new Error("An impossible error has just occurred. Please perform a reality check."));
                             } else if(trans && trans.replaced < 1) {
-                                var err = new Error("Nothing Changed")
+                                var err = new Error("Nothing Changed");
                                 err.status = 400;
                                 return next(err);
                             } else {
@@ -114,9 +116,9 @@ router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req
                                     //res.redirect('/auth/login?notif=' + encodeURIComponent("Account Password Reset.")); 
                                     res.sendStatus(204);
                                     //Should send notification email.
-                                }).catch((err) => {return next(err)})
+                                }).catch((err) => {return next(err);});
                             }
-                        }).catch((err) => {return next(err)})
+                        }).catch((err) => {return next(err);});
 
                         
                     } else {
@@ -130,8 +132,8 @@ router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req
                     err.status = 400;
                     return next(err);
                 }
-            })
-        })
+            });
+        });
     } else {
         var err = new Error("Invalid JWT");
         err.status = 401;
@@ -146,62 +148,63 @@ router.patch("/resetPassword", utils.rateLimit.publicApiBruteforce.prevent, (req
 //RaTE LIMIT RATE LIMIT!!
 //Account Activation
 //localhost:3000/account/activate
-router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
-  var permissionKey = req.query.key; //Activation Key (permission key)
-  if(typeof permissionKey === "string") {
-    securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/activate", function(req, res, next) {
+    var permissionKey = req.query.key; //Activation Key (permission key)
+    if(typeof permissionKey === "string") {
+        securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
         //console.log(payload)
-        if(!payload) {
-            var err = new Error("Invalid Key");
-            err.status = 400;
-            return next(err);
-        }
-        
-        if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
-            var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
-            err.status = 500;
-            return next(err);
-        }
-        
-        accountJS.setVerification(payload.params.accountID, true).then((resp) => {
-            if(resp && resp.replaced == 1) {
-                //Success
-                //Main Task done. Edit Timeout field
-                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((trans) => {
-                    //Check For Password Field.
-                    db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
-                        if(hasPass) {
-                            //send to login page
-                            res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is now active")); 
-                        } else {
-                            //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
-                            securityJS.newKey.resetPassword(payload.params.accountID).then((key) => {
-                                res.redirect("/account/resetPassword?key=" + encodeURIComponent(key) + "&notif=" + encodeURIComponent("Your account is now active. Please create a password.")); 
-                            }).catch((err)=>{return next(err)});
-                        }
-                    }).catch((err)=>{return next(err)})
-                }).catch((err) => {return next(err)})
-                
-                //res.send(resp)
-            } else if(resp && resp.replaced > 1) {
-                var err = new Error("An impossible error has just occurred. Please perform a reality check.");
-                err.status = 500;
+            if(!payload) {
+                var err = new Error("Invalid Key");
+                err.status = 400;
                 return next(err);
-            } else if(resp && resp.unchanged > 0) {
-                //console.log(resp)
-                securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
-                res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is already verified")); 
-            } else {
-                var err = new Error("User Not Found");
+            }
+        
+            if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
+                var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
                 err.status = 500;
                 return next(err);
             }
-        }).catch((err)=>{return next(err)})
-    }).catch((err)=>{return next(err)});
-  } else {
-    res.redirect("/auth/login"); 
-  }
-})
+        
+            accountJS.setVerification(payload.params.accountID, true).then((resp) => {
+                if(resp && resp.replaced == 1) {
+                //Success
+                //Main Task done. Edit Timeout field
+                    securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((trans) => {
+                    //Check For Password Field.
+                        db.dash().table("accounts").get(payload.params.accountID).hasFields("password").run().then((hasPass) => {
+                            if(hasPass) {
+                            //send to login page
+                                res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is now active")); 
+                            } else {
+                            //MAKE PASSWORK RESET KEY AND SEND TO PASSWORD RESET PAGE!
+                                securityJS.newKey.resetPassword(payload.params.accountID).then((key) => {
+                                    res.redirect("/account/resetPassword?key=" + encodeURIComponent(key) + "&notif=" + encodeURIComponent("Your account is now active. Please create a password.")); 
+                                }).catch((err)=>{return next(err);});
+                            }
+                        }).catch((err)=>{return next(err);});
+                    }).catch((err) => {return next(err);});
+                
+                //res.send(resp)
+                } else if(resp && resp.replaced > 1) {
+                    var err = new Error("An impossible error has just occurred. Please perform a reality check.");
+                    err.status = 500;
+                    return next(err);
+                } else if(resp && resp.unchanged > 0) {
+                //console.log(resp)
+                    securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
+                    res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is already verified")); 
+                } else {
+                    var err = new Error("User Not Found");
+                    err.status = 500;
+                    return next(err);
+                }
+            }).catch((err)=>{return next(err);});
+        }).catch((err)=>{return next(err);});
+    } else {
+        res.redirect("/auth/login"); 
+    }
+});
 
 //RATE LIMIT RATE LIMIT RATE LIMIT
 /*
@@ -216,7 +219,12 @@ router.get("/activate", utils.rateLimit.publicApiBruteforce.prevent, function(re
     * @apiresponse {json} Sends Status code of 202, or the error.
     */
 
-router.post("/sendResetPasswordEmail", utils.rateLimit.publicApiBruteforce.prevent, utils.rateLimit.emailPasswordResetBruteforce.prevent, function sendResetPasswordEmail(req, res, next) {
+    //utils.rateLimit.publicApiBruteforce.prevent,
+router.post("/sendResetPasswordEmail", utils.rateLimit.emailPasswordResetBruteforce.getMiddleware({
+    key: function(req, res, next) {
+        next(req.body.email);
+    }
+}), function sendResetPasswordEmail(req, res, next) {
     if(!typeCheck("{email: String, ...}", req.body)) {
         var err = new Error("body.email expected a string"); err.status = 400; return next(err);
     }
@@ -233,8 +241,8 @@ router.post("/sendResetPasswordEmail", utils.rateLimit.publicApiBruteforce.preve
             accountID: user[0].id
         }).then((cur) => {
             return res.sendStatus(202);
-        }).catch((err)=>{return next(err)});
-    }) 
+        }).catch((err)=>{return next(err);});
+    }); 
     
 });
 

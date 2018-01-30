@@ -55,7 +55,7 @@ exports.publicApiBruteforce = new ExpressBrute(db.brute(), {
     refreshTimeoutOnRequest: false,
     minWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
     maxWait: 25*60*60*1000, // 1 day 1 hour (should never reach this wait time) 
-    lifetime: 5*60, // 10 min (seconds not milliseconds) 
+    lifetime: 5*60, // 5 min (seconds not milliseconds) 
     failCallback: failCallback,
     handleStoreError: handleStoreError
 });
@@ -68,7 +68,7 @@ exports.publicApiBruteforce = new ExpressBrute(db.brute(), {
     */
 exports.loginBruteforce = new ExpressBrute(db.brute(), {
     freeRetries: 5,
-    minWait: 1*60*1000, // 1 minute
+    minWait: 30*1000, // 30 seconds
     maxWait: 60*60*1000, // 1 hour, 
     refreshTimeoutOnRequest: false,
     attachResetToRequest: true,

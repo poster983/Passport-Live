@@ -52,8 +52,8 @@ r.connect( {host: config.get("rethinkdb.host"), port: config.get("rethinkdb.port
 /** 
   Google Login
 **/
-
-router.get("/google/", utils.rateLimit.publicApiBruteforce.prevent, function googleOAuth2(req, res, next) {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/google/", function googleOAuth2(req, res, next) {
     //req.session.permissionKey = req.query.pk;
     if(req.query.dscm) {
         req.session.googleDSCM = true;
@@ -89,7 +89,8 @@ router.get('/google/dscm', function (req, res, next) {
 ));*/
 
 //'https://www.googleapis.com/auth/plus.profile.emails.read'
-router.get("/login", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/login", function(req, res, next) {
     var msg = null;
     if(req.query.msgHead || req.query.msg) {
         msg = {
@@ -131,7 +132,8 @@ router.get("/login", utils.rateLimit.publicApiBruteforce.prevent, function(req, 
 
 
 //et signup
-router.get("/signup/", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next) {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/signup/", function(req, res, next) {
     var msg = null;
     let customHead = null;
     if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
@@ -142,8 +144,8 @@ router.get("/signup/", utils.rateLimit.publicApiBruteforce.prevent, function(req
 
 
 
-
-router.get("/logout", utils.rateLimit.publicApiBruteforce.prevent, function(req, res, next){
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/logout", function(req, res, next){
     //req.logout();
 
     if(!config.get("misc.storeSessionToDisc")) {
