@@ -108,7 +108,8 @@ router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
         return next(err);
     }
     importJS.accounts.sendActivation(req.params.bulkID).then((trans) => {
-        return res.json(trans);
+        delete trans.cursor;
+        return res.json(trans).status(202);
     }).catch((err) => {
         return next(err);
     });

@@ -47,43 +47,7 @@ email: hi@josephhassell.com
   <!--Navbar-->
   <nav id="navBar">
     <div class="nav-wrapper">
-      <!--SideNav-->
-      <ul id="slide-out" class="side-nav">
-        <li>
-          <div class="userView">
-            <div class="background">
-              <img alt="Side-Nav Background" src="/images/stunav.jpg">
-            </div>
-            <a href="#!user">
-              <img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img">
-            </a>
-            <a href="#!name">
-              <span class="white-text name">{{user.name.first}} {{user.name.last}}</span>
-            </a>
-            <a href="#!email">
-              <span class="white-text email">{{user.email}}</span>
-            </a>
-          </div>
-        </li>
-        <li>
-          <a class="waves-effect active" href="#!">
-            <i class="material-icons">home</i>Home</a>
-        </li>
-        <li>
-          <a class="waves-effect" href="/account?referral=student">
-            <i class="material-icons">account_circle</i>Your Account</a>
-        </li>
-        <li>
-          <div class="divider"></div>
-        </li>
-        <!--<li><a class="subheader">Subheader</a></li>-->
-        <li>
-          <a class="waves-effect" href="/auth/logout">Logout
-            <i class="material-icons right">lock_outline</i>
-          </a>
-        </li>
-
-      </ul>
+      {{>sidenav}}
       <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
         <i class="material-icons">menu</i>
       </a>
@@ -300,17 +264,7 @@ email: hi@josephhassell.com
                 </div>
 
 
-                <!--Advanced-->
-                <div>
-                  <input type="checkbox" id="sao" />
-                  <label for="sao">Show Advanced Options</label>
-                </div>
                 <div class="divider"></div>
-                <div id="passrequestAdvanced" style="display: none;">
-                  <h5 class="center white-text">Advanced Options</h5>
-                  <div class="divider"></div>
-                  <p class="center white-text">Nothing Here Yet.</p>
-                </div>
                 <div class="section">
                   <a class="waves-effect waves-light btn-large red disabled" id="submitPass">Submit Pass
                     <span id="subPassAdv">
@@ -1089,22 +1043,6 @@ email: hi@josephhassell.com
     }
 
     //reset all fields 
-
-
-    $("#sao").change(function () {
-      if (this.checked) {
-        $('#passrequestAdvanced').show();
-        $('#passrequestAdvanced').animateCss('bounceIn');
-        $('#subPassAdv').html(" (Using Advanced Options) <i class='material-icons right'>error_outline</i>");
-      } else {
-        $('#passrequestAdvanced').animateCss('bounceOut');
-        $('#passrequestAdvanced').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-          function (e) {
-            $('#passrequestAdvanced').hide();
-            $('#subPassAdv').html("<i class='material-icons right'>send</i>");
-          });
-      }
-    });
 
 
     ////MY PASSES CARD////

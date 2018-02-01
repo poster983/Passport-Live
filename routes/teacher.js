@@ -21,10 +21,7 @@ email: hi@josephhassell.com
 var express = require("express");
 var config = require("config");
 var router = express.Router();
-var passport = require("passport")
-    , LocalStrategy = require("passport-local").Strategy;
 var checkAuth = require("connect-ensure-login");
-var ssarv = require("ssarv");
 var utils = require("../modules/passport-utils/index.js");
 
 let customHead = null;
@@ -32,7 +29,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
     customHead = config.get("webInterface.customHeadCode");
 }
 
-router.get("/", checkAuth.ensureLoggedIn("/auth/login"), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["teacher"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {};
     user.name = req.user.name;
     user.email = req.user.email;
@@ -45,14 +42,5 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), ssarv(["teacher", "coun
     res.render("teacher/index", { doc_Title: "Passport-Teacher", user, customHead: customHead, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
-//Teacher Account Page
-/*router.get('/account', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
-    var user = {}
-    user.name = req.user.name;
-    user.email = req.user.email;
-    user.id = req.user.id;
-
-    res.render('teacher/account', { doc_Title: 'Your Account Passport-Teacher', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
-});*/
 
 module.exports = router;

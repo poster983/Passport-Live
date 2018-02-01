@@ -229,79 +229,79 @@ exports.createAccount = function(user, options) {
             //All code to be run after hashing is complete
             function afterHash(passwordImport) {
                 try {
-                  // Store hash in your password DB.
-                  r.table("accounts")("email").contains(user.email).run(db.conn(), function(err, con){
-                    if(err) {
-                        console.error(err);
-                        return reject(err);
-                    }
-                    //Checks to see if there is already an email in the DB            
-                    if(con){
-                      //THe email has been taken
-                      var err = new Error("Email Taken");
-                      err.status = 409;
-                      return reject(err);
-                    } else {
-                        //insert new account
-                        function ver() {
-                            if(user.isVerified) {
-                                return r.now();
-                            } else {
-                                return null;
-                            }
+                    // Store hash in your password DB.
+                    r.table("accounts")("email").contains(user.email).run(db.conn(), function(err, con){
+                        if(err) {
+                            console.error(err);
+                            return reject(err);
                         }
-                        promice = r.table("accounts").insert({
-                          name: {
-                            first: user.name.first,
-                            last: user.name.last,
-                            salutation: user.name.salutation
-                          },
-                          email: user.email,
-                          password: passwordImport,
-                          userGroup: user.userGroup, // should be same as a usergroup in config/default.json
-                          groupFields: user.groupFields,
-                          schoolID: user.schoolID,
-                          graduationYear: user.graduationYear,
-                          isArchived: false,
-                          isVerified: user.isVerified,
-                          properties: {
-                            createdOn: r.now(),
-                            verifiedOn: ver()
-                          },
-                          integrations: false,
-                          flags: (user.flags || {})
-                        }).run(db.conn());
-                        promice.then(function(results) {
-                            if(results.inserted == 1) {
-                                var resp = {transaction: results};
-                                if(options && options.generatePassword) {
-                                    resp.password = user.password; 
-                                }
-                                //check email stuff
-                                if(options && options.skipEmail) {
-                                    return resolve(resp);
+                        //Checks to see if there is already an email in the DB            
+                        if(con){
+                            //THe email has been taken
+                            var err = new Error("Email Taken");
+                            err.status = 409;
+                            return reject(err);
+                        } else {
+                        //insert new account
+                            function ver() {
+                                if(user.isVerified) {
+                                    return r.now();
                                 } else {
-                                    emailJS.sendActivationEmail({
-                                        to: user.email,
-                                        name: user.name,
-                                        accountID: results.generated_keys[0]
-                                    }).then((result)=> {
-                                        return resolve(resp);
-                                    }).catch((err)=> {
-                                        return reject(err);
-                                    });
+                                    return null;
                                 }
-                            } else {
-                                var err = new Error("Failed to store user in the database");
-                                err.status = 500;
-                                return reject(err, results);
                             }
+                            promice = r.table("accounts").insert({
+                                name: {
+                                    first: user.name.first,
+                                    last: user.name.last,
+                                    salutation: user.name.salutation
+                                },
+                                email: user.email,
+                                password: passwordImport,
+                                userGroup: user.userGroup, // should be same as a usergroup in config/default.json
+                                groupFields: user.groupFields,
+                                schoolID: user.schoolID,
+                                graduationYear: user.graduationYear,
+                                isArchived: false,
+                                isVerified: user.isVerified,
+                                properties: {
+                                    createdOn: r.now(),
+                                    verifiedOn: ver()
+                                },
+                                integrations: false,
+                                flags: (user.flags || {})
+                            }).run(db.conn());
+                            promice.then(function(results) {
+                                if(results.inserted == 1) {
+                                    var resp = {transaction: results};
+                                    if(options && options.generatePassword) {
+                                        resp.password = user.password; 
+                                    }
+                                    //check email stuff
+                                    if(options && options.skipEmail) {
+                                        return resolve(resp);
+                                    } else {
+                                        emailJS.sendActivationEmail({
+                                            to: user.email,
+                                            name: user.name,
+                                            accountID: results.generated_keys[0]
+                                        }).then((result)=> {
+                                            return resolve(resp);
+                                        }).catch((err)=> {
+                                            return reject(err);
+                                        });
+                                    }
+                                } else {
+                                    var err = new Error("Failed to store user in the database");
+                                    err.status = 500;
+                                    return reject(err, results);
+                                }
                             
-                      }).catch(function(err) {
-                        return reject(err);
-                      });
-                    }
-                  });
+                            }).catch(function(err) {
+                                return reject(err);
+                            });
+                        }
+                    });
                 } catch(e) {
                     
                     return reject(e);
@@ -378,9 +378,9 @@ exports.get = (query) => {
             delete query.name;
             dbquery = dbquery.filter(function(doc){
                 return r_.or(doc("name")("first").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
-                            doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
-                            doc("name")("salutation").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,""))
-                        );
+                    doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
+                    doc("name")("salutation").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,""))
+                );
             });
 
         }
@@ -416,29 +416,29 @@ exports.get({
     * @param {function} done - Callback
     */
 exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) { 
-     r.table("accounts")
-     .filter(function(doc){
+    r.table("accounts")
+        .filter(function(doc){
             return doc("userGroup").match(userGroup).and(
-                    doc("name")("first").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
-                        doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
-                            doc("name")("salutation").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,""))
-                        )
+                doc("name")("first").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
+                    doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+name.replace(/\s/g,"")).or(
+                        doc("name")("salutation").add(doc("name")("last")).match("(?i)"+name.replace(/\s/g,""))
                     )
-                );
+                )
+            );
         }).run(dbConn, function(err, document) {
 
-         if(err) {
-            //console.log(err)
-            return done(err, null);
-        }
-
-        document.toArray(function(err, arr) {
             if(err) {
-                return done(err);
+            //console.log(err)
+                return done(err, null);
             }
-            return done(null, arr);            
+
+            document.toArray(function(err, arr) {
+                if(err) {
+                    return done(err);
+                }
+                return done(null, arr);            
+            });
         });
-    });
 };
     
 /** 
@@ -452,9 +452,9 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
     * @param {function} done - Callback
     */
 exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) { 
-     r.table("accounts").filter({
+    r.table("accounts").filter({
         userGroup: userGroup
-     }).run(dbConn, function(err, document) {
+    }).run(dbConn, function(err, document) {
         if(err) {
             return done(err);
         }
@@ -464,7 +464,7 @@ exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) {
             }
             return done(null, arr);
         });
-     });
+    });
 };
 
 /** 
@@ -477,9 +477,9 @@ exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) {
     * @param {function} done - Callback
     */
 exports.getAccountByEmail = function(email, done) { 
-     r.table("accounts").filter({
+    r.table("accounts").filter({
         email: email
-     }).run(db.conn(), function(err, document) {
+    }).run(db.conn(), function(err, document) {
         if(err) {
             return done(err);
         }
@@ -489,7 +489,7 @@ exports.getAccountByEmail = function(email, done) {
             }
             return done(null, arr);
         });
-     });
+    });
 };
 
 /** 
@@ -507,13 +507,13 @@ exports.getUserByID = function(id, done) {
         err.status = 400;
         return done(err);
     }
-     r.table("accounts").get(id).run(db.conn(), function(err, document) {
+    r.table("accounts").get(id).run(db.conn(), function(err, document) {
         if(err) {
             return done(err);
         }
         return done(null, document);
        
-     });
+    });
 };
 
 /** 
@@ -652,8 +652,8 @@ exports.getSpecificPeriods = function(userID, periodArray, done) {
     var promises = [];
     if(periodArray.length <= 0) {
         var err = new Error("No Periods Specified");
-            err.status = 400;
-            return done(err);
+        err.status = 400;
+        return done(err);
     }
     exports.getUserByID(userID, function(err, userData) {
         if(err) {
@@ -746,26 +746,26 @@ exports.updatePassword = function(id, newPassword) {
         utils.checkPasswordPolicy(newPassword).then((result) => {
             if(result.valid) {
                 bcrypt.hash(newPassword, null, null, function(err, hash) {
-                  if(err) {
+                    if(err) {
                     //console.log(err)
-                    return reject(err);
-                  }
-                  if(hash) {
-                      r.table("accounts").get(id).update({password: hash}).run(db.conn()).then(function(trans) {
-                        return resolve(trans);
-                      }).catch(function(err) {
                         return reject(err);
-                      });
-                  } else {
-                    var err = new Error("Unknown Hashing Error");
+                    }
+                    if(hash) {
+                        r.table("accounts").get(id).update({password: hash}).run(db.conn()).then(function(trans) {
+                            return resolve(trans);
+                        }).catch(function(err) {
+                            return reject(err);
+                        });
+                    } else {
+                        var err = new Error("Unknown Hashing Error");
                         err.status = 500;
                         return reject(err);
-                  }
+                    }
                 });
             } else {
                 var err = new Error(result.humanReadableRule + "  Failed at Regex: " + result.failedAt);
-                    err.status = 400;
-                    return reject(err);
+                err.status = 400;
+                return reject(err);
             }
         }).catch((err) => {return reject(err);});
         

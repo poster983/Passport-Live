@@ -29,10 +29,10 @@ var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
 var passport = require("passport");
 var config = require("config");
-var ssarv = require("ssarv")
+var ssarv = require("ssarv");
 
 var miscApi = require("../../modules/passport-api/index.js");
-var securityJS = require("../../modules/passport-api/security.js")
+var securityJS = require("../../modules/passport-api/security.js");
 
 var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passApi = require("../../modules/passport-api/passes.js");
@@ -43,7 +43,7 @@ var moment = require("moment");
 
 
 router.use(cors());
-router.options('*', cors())
+router.options('*', cors());
 
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
@@ -79,18 +79,16 @@ function serializeUser(req, res, done) {
     *        "first": "Teacher",
     *        "last": "McTeacher Face"
     *      },
-    *    "groupFields": {},
     *    "permissionKey": HJhd38
     * }
     */
-    router.post("/new/:userGroup/", utils.rateLimit.publicApiBruteforce.prevent, function handleNewAccount(req, res, next) {
+router.post("/new/:userGroup/", utils.rateLimit.publicApiBruteforce.prevent, function handleNewAccount(req, res, next) {
     //Get Params
     
     var email=req.body.email;
     var password=req.body.password;
     var passwordVerification=req.body.passwordVerification;
-    var name = req.body.name 
-    var groupFields = req.body.groupFields
+    var name = req.body.name; 
     var permissionKey = req.body.permissionKey;
     var userGroup = req.params.userGroup;
     var schoolID = req.body.schoolID;
@@ -102,8 +100,8 @@ function serializeUser(req, res, done) {
             if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
                 if(!permissionKey) {
                     var err = new Error("Permission Key Required");
-                        err.status = 403;
-                        reject(err);
+                    err.status = 403;
+                    reject(err);
                 }
                 securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.NEW_ACCOUNT, permissionKey).then((data) => {
                     //CHeck  if usergroup is present
@@ -127,21 +125,21 @@ function serializeUser(req, res, done) {
             err.status = 404;
             reject(err);
         }
-    })
+    });
 
     promise.then(function(result) {
         if(password != passwordVerification) {
             res.sendStatus(422);
         } else {
             api.createAccount({userGroup: userGroup, name: name, email: email, password: password, schoolID: schoolID, graduationYear: graduationYear}).then(function(resp) {
-                res.status(201).send(resp)
+                res.status(201).send(resp);
             }).catch((err, trans) => {
-                return next(err)
+                return next(err);
             });
         }
     }, function(err) {
         next(err);
-    })
+    });
 });
 
 /**
@@ -183,11 +181,11 @@ router.get("/", passport.authenticate('jwt', { session: false}), function search
     delete req.query.name_first;
     delete req.query.name_last;
     api.get(req.query).then((users) => {
-        return res.json(users)
+        return res.json(users);
     }).catch((err) => {
         return next(err);
-    })
-})
+    });
+});
 
 /**
     * GETs accounts by id
@@ -206,10 +204,10 @@ router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function
     var id = req.params.id;
     api.getUserByID(id, function(err, data) {
         if(err) {
-            return next(err) 
+            return next(err); 
         }
         res.json(utils.cleanUser(data));
-    })
+    });
 });
 
 /**
@@ -229,7 +227,7 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
     var email = req.params.email;
     api.getAccountByEmail(email, function(err, data) {
         if(err) {
-            return next(err) 
+            return next(err); 
         }
         var resp = [];
         if(data.length <=0) {
@@ -242,7 +240,7 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
             }
         }
         
-    })
+    });
 });
 
 
@@ -266,7 +264,7 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
         if(err) {
             next(err);
         }
-        console.log(acc)
+        console.log(acc);
         var ret = [];
         for (var i = 0; i < acc.length; i++) {
             /*var safeUser = {
@@ -306,7 +304,7 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
         if(err) {
             return next(err);
         } else if(acc == null) {
-            return res.json([]) 
+            return res.json([]); 
         }
         
         var ret = [];
@@ -314,7 +312,7 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
             return res.json([]);
         }
         for (var i = 0; i < acc.length; i++) {
-            ret.push(utils.cleanUser(acc[i]))
+            ret.push(utils.cleanUser(acc[i]));
             if(i>= acc.length -1) {
                 return res.json(ret);
             }
@@ -343,7 +341,7 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
         if(err) {
             return next(err);
         } else if(acc == null) {
-            return res.json([]) 
+            return res.json([]); 
         }
         
         var ret = [];
@@ -351,7 +349,7 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
             return res.json([]);
         }
         for (var i = 0; i < acc.length; i++) {
-            ret.push(utils.cleanUser(acc[i]))
+            ret.push(utils.cleanUser(acc[i]));
             if(i>= acc.length -1) {
                 return res.json(ret);
             }
@@ -374,26 +372,26 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
 router.get("/hasClasses/", passport.authenticate('jwt', { session: false}), function getAccountsWithClasses(req, res, next) {
     var uG = config.get('userGroups');
     var valKeys = [];
-        var i = 0;
-        for (var key in uG) {
+    var i = 0;
+    for (var key in uG) {
 
             
-            console.log(i)
-            if (uG.hasOwnProperty(key) && config.has('userGroups.' + key + '.hasClasses') && config.get('userGroups.' + key + '.hasClasses') == true) {
+        console.log(i);
+        if (uG.hasOwnProperty(key) && config.has('userGroups.' + key + '.hasClasses') && config.get('userGroups.' + key + '.hasClasses') == true) {
                
-               valKeys.push(key);
-            } 
+            valKeys.push(key);
+        } 
             
-            if(i >= Object.keys(uG).length-1) {
-                recurrConcatHasClass(valKeys, [], function(err, finalArr) {
-                    if(err) {
-                        return next(err);
-                    }
-                    return res.json(finalArr)
-                })                
-            }
-            i++;
+        if(i >= Object.keys(uG).length-1) {
+            recurrConcatHasClass(valKeys, [], function(err, finalArr) {
+                if(err) {
+                    return next(err);
+                }
+                return res.json(finalArr);
+            });                
         }
+        i++;
+    }
 });
 
 function recurrConcatHasClass(keys, finalArr, done) {
@@ -465,62 +463,16 @@ function recurrConcatHasClass(keys, finalArr, done) {
 router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     var updateDoc = req.body;
 
-     api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
+    api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
         if(err) {
             return next(err);
         }
         return res.send(data);
-    })
+    });
 });
 
 
 
-
-/* GETs All account schedule types for an account
-    * If you dont give an ID, the user in the JWT will be assumed.
-    * @function getAllSchedules
-    * @deprecated
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/schedule/{:id}
-    * @apiparam {string} id - A user's ID.
-    * @apiresponse {json} Returns the schedule
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-*/
-
-/*router.get(['/schedule', '/schedule/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
-    if(!req.params.id) {
-        req.params.id = req.user.id;
-    }
-    var prom = [];
-
-    prom.push(new Promise(function(resolve, reject) {
-        api.getStudentSchedule(req.params.id, function(err, data) {
-            if(err && err.status != 404) {
-                return reject(err);
-            }
-            
-            return resolve(data)
-        })
-    }))
-
-    prom.push(new Promise(function(resolve, reject) {
-        api.getTeacherSchedule(req.params.id, function(err, data) {
-            if(err && err.status != 404) {
-                return reject(err);
-            }
-            
-            return resolve(data)
-        })
-    }))
-
-    Promise.all(prom).then(function(arr) {
-        res.json({studentType: arr[0], teacherType: arr[1]});
-    }).catch(function(err) {
-        return next(err)
-    });
-});*/
 
 /** GETs Current Period Location regardless of dashboard
     * @function getCurrentLocation
@@ -540,19 +492,19 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
-        return next(err)
+        return next(err);
     }
     scheduleApi.getActivePeriodsAtDateTime(req.params.dateTime, function(err, currentSchedules) {
         if(err) {
             return next(err);
         }
         if(currentSchedules.length <=0 ) {
-            return res.json({})
+            return res.json({});
         }
         var forPeriods = currentSchedules.map(function(x) {
-            return x.period
-        })
-        console.log(forPeriods)
+            return x.period;
+        });
+        console.log(forPeriods);
         //get user's location 
         promises.push(getPeriodsInScheduleThenReformat(req.params.id, forPeriods, "schedule"));
 
@@ -564,20 +516,20 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                 }
                 var passPromise = [];
                 if(passes.length <= 0) {
-                    return doneResolve({pass: null})
+                    return doneResolve({pass: null});
                 }
-                console.log(passes.length)
+                console.log(passes.length);
                 for(var x = 0; x < passes.length; x++) {
                     if(!passes[x].toPerson || !passes[x].toPerson.schedules) {
                         passPromise.push(new Promise(function(resolve, reject) {
-                            return resolve({pass: null})
+                            return resolve({pass: null});
                         }));
                         
                     } else {
                         if(!passes[x].toPerson.schedules.teacher && !passes[x].toPerson.schedules.student) {
                         //console.log(passes[x].toPerson)
                             passPromise.push(new Promise(function(resolve, reject) {
-                                return resolve({pass: null})
+                                return resolve({pass: null});
                             }));
                         } else {
                             passPromise.push(getPeriodsInScheduleThenReformat(passes[x].toPerson.id, forPeriods, "pass", {passId: passes[x].id, toPerson: passes[x].toPerson}));
@@ -598,7 +550,7 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
                             }
                             for(var i = 0; i < data.length; i++) {
                                 if(data[i].pass && data[i].pass.student) {
-                                   studentPassArr= studentPassArr.concat(data[i].pass.student)
+                                    studentPassArr= studentPassArr.concat(data[i].pass.student);
                                 }
 
                                 if(data[i].pass && data[i].pass.teacher) {
@@ -607,13 +559,13 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
 
                                 if(i >= data.length -1 ) {
 
-                                    console.log(finalPassData, "tru")
-                                    return doneResolve({pass: {student: studentPassArr, teacher: teacherPassArr}})
+                                    console.log(finalPassData, "tru");
+                                    return doneResolve({pass: {student: studentPassArr, teacher: teacherPassArr}});
                                 }
                             }
                             
                         }).catch(function(err) {
-                            return doneReject(err)
+                            return doneReject(err);
                         });
                     }
                 }
@@ -626,25 +578,25 @@ router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', 
 
         Promise.all(promises).then(function(data) {
 
-            return res.json(Object.assign({}, data[0], data[1]))
+            return res.json(Object.assign({}, data[0], data[1]));
         }).catch(function(err) {
-            return next(err)
+            return next(err);
         });
-    })
+    });
 });
 
 function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, extraData) {
     return new Promise(function(doneResolve, doneReject) {
         var promises = [];
-         api.getSpecificPeriods(userID, forPeriods, function(err, periodData) {
+        api.getSpecificPeriods(userID, forPeriods, function(err, periodData) {
             if(err) {
-                return doneReject(err)
+                return doneReject(err);
             }
             //return res.json(periodData)
             if(!periodData) {
                 var err = new Error("getSpecificPeriods did not return anything ");
                 err.status = 500;
-                return doneReject(err)
+                return doneReject(err);
             }
             //Get student.schedule return data
             var scheduleLocationReturn = {};
@@ -662,14 +614,14 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
                             //check if they have a teacher or not
                             if(pS[x].periodData.teacher) {
                                 //check if the teacer has a schedule set
-                                tS.push(Object.assign({},{period: pS[x].period}, pS[x].periodData, extraData))
+                                tS.push(Object.assign({},{period: pS[x].period}, pS[x].periodData, extraData));
                             } else {
-                                tS.push(Object.assign({},{period: pS[x].period, teacher: null}, extraData))
+                                tS.push(Object.assign({},{period: pS[x].period, teacher: null}, extraData));
                             }
                         }
                         //end
                         if(x >= pS.length - 1) {
-                            scheduleLocationReturn[scheduleKeyName].student = tS
+                            scheduleLocationReturn[scheduleKeyName].student = tS;
                             return resolve();
                         }
                     }
@@ -689,7 +641,7 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
                     }
                     for(var x = 0; x < pT.length; x++) {
                         if(pT[x].periodData) {
-                            tT.push(Object.assign({},{period: pT[x].period}, pT[x].periodData, extraData))
+                            tT.push(Object.assign({},{period: pT[x].period}, pT[x].periodData, extraData));
                         }
                         if(x >= pT.length-1) {
                             scheduleLocationReturn[scheduleKeyName].teacher = tT;
@@ -703,9 +655,9 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
             }));
 
             Promise.all(promises).then(function(data) {
-                return doneResolve(scheduleLocationReturn)
+                return doneResolve(scheduleLocationReturn);
             }).catch(function(err) {
-                return doneReject(err)
+                return doneReject(err);
             });
         });
 
@@ -752,15 +704,15 @@ router.patch("/password/", passport.authenticate('jwt', { session: false}), func
                 return res.send(trans);
             }).catch(function(err) {
                 return next(err);
-            })
+            });
         } else {
-            var err = new Error("Passwords Do Not Match")
+            var err = new Error("Passwords Do Not Match");
             err.status = 400;
             return next(err);
         }
         
     } else {
-        var err = new Error("Body Malformed")
+        var err = new Error("Body Malformed");
         err.status = 400;
         return next(err);
     }
@@ -772,18 +724,18 @@ module.exports = router;
  * A name of a userGroup defined in the configs
  * @typedef {string} userGroup
  */
- /**
+/**
  * The request object 
  * @typedef {object} request
  */
 
-  /**
+/**
  * The response object sent to the requester 
  * @typedef {object} response
  */
 
 
- /**
+/**
  * @callback nextCallback
  * @param {object} err - Any errors that may arrise should be passed through here
  */
