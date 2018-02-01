@@ -72,11 +72,11 @@ email: hi@josephhassell.com
 */
 // START [IMPORTS]
 
-let utils = require("../passport-utils/index.js")
+let utils = require("../passport-utils/index.js");
 let accountJS = require("./accounts.js");
-let db = require('../../modules/db/index.js');
+let db = require("../../modules/db/index.js");
 let r = db.dash();
-let config = require('config');
+let config = require("config");
 let typeCheck = require("type-check").typeCheck;
 
 
@@ -181,7 +181,7 @@ exports.get = (params) => {
         }
         return query.run().then(resolve).catch(reject);
     });
-}
+};
 
 /**
 * Gets a student schedule by userID
@@ -194,7 +194,7 @@ exports.getStudentSchedule = function(userID) {
         if(!userID) {
             var err = new TypeError("User ID Expected a string");
             err.status = 400;
-            return reject(err)
+            return reject(err);
         }
         //Get user from DB 
 
@@ -202,90 +202,90 @@ exports.getStudentSchedule = function(userID) {
             if(studentUser.length &lt; 1) {
                 var err = new Error("User not found");
                 err.status = 404;
-                return reject(err)
+                return reject(err);
             }
             studentUser = studentUser[0];
             //check for student schedule
             if(!studentUser.schedules || !studentUser.schedules.student) {
                 var err = new Error("Account has no student schedule linked");
                 err.status = 404;
-                return reject(err)
+                return reject(err);
             }
             //MERGE 
             return r.table("userSchedules").get(studentUser.schedules.student)
             
-            .do(function(schedule) {
+                .do(function(schedule) {
                 //overwrite the schedule object with merged data
-                return schedule.merge(r.object("schedule", 
+                    return schedule.merge(r.object("schedule", 
                     //loops for each key
-                    schedule("schedule").keys().map(function(key) {
+                        schedule("schedule").keys().map(function(key) {
                         //by putting everything in an aray, we can then call .coerceTo('object') to get everything back to an object.
-                        return [key, schedule("schedule")(key).do(function(period) {
+                            return [key, schedule("schedule")(key).do(function(period) {
                             //GET USER ACCOUNT BY teacherID key
                             //If teacherID is not a string, we will return teacherID: null.
                             //if it is a string we get the account and do some manipulation to get the teacher schedule id aswell as wrap it in a "teacher" key
-                            return r.branch(
+                                return r.branch(
                                 //IF
-                                period("teacherID").typeOf().eq("STRING"),
-                                //THEN
-                                r.table("accounts").get(period("teacherID"))
-                                .pluck({
-                                    "schedules": {
-                                        "teacher": true
-                                    }, 
-                                    "name": true, 
-                                    "email": true,
-                                    "id": true
-                                })
-                                .do(function(teacher) {
-                                    //put teacher stuff in teacher object
-                                    return r.object("teacher", teacher)
-                                })
-                                //merge teacher schedule 
-                                .do(function(teacher) {
+                                    period("teacherID").typeOf().eq("STRING"),
+                                    //THEN
+                                    r.table("accounts").get(period("teacherID"))
+                                        .pluck({
+                                            "schedules": {
+                                                "teacher": true
+                                            }, 
+                                            "name": true, 
+                                            "email": true,
+                                            "id": true
+                                        })
+                                        .do(function(teacher) {
+                                            //put teacher stuff in teacher object
+                                            return r.object("teacher", teacher);
+                                        })
+                                    //merge teacher schedule 
+                                        .do(function(teacher) {
                                     
-                                    return teacher.merge(
-                                        r.branch(
-                                            //IF
-                                            teacher.hasFields({teacher: {schedules: {teacher: true}}})
-                                            ,
-                                            //then
-                                            {teacher: r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
-                                                .do(function(tSchedule) {
-                                                    return r.branch(
-                                                        //IF teacher has set period
-                                                        tSchedule.hasFields({schedule: [key]})
-                                                        ,//THEN
-                                                        {period: tSchedule("schedule")(key)}
-                                                        ,//ELSE
-                                                        {}
-                                                    )
-                                                })
-                                            }
-                                            ,
-                                            //else
-                                            {}
-                                        )
-                                    )
-                                })
-                                //.merge(schedule("schedule")(key))
-                                ,
-                                //else
-                                {teacherID: null}
-                            )
+                                            return teacher.merge(
+                                                r.branch(
+                                                    //IF
+                                                    teacher.hasFields({teacher: {schedules: {teacher: true}}})
+                                                    ,
+                                                    //then
+                                                    {teacher: r.table("userSchedules").get(teacher("teacher")("schedules")("teacher"))
+                                                        .do(function(tSchedule) {
+                                                            return r.branch(
+                                                                //IF teacher has set period
+                                                                tSchedule.hasFields({schedule: [key]})
+                                                                ,//THEN
+                                                                {period: tSchedule("schedule")(key)}
+                                                                ,//ELSE
+                                                                {}
+                                                            );
+                                                        })
+                                                    }
+                                                    ,
+                                                    //else
+                                                    {}
+                                                )
+                                            );
+                                        })
+                                    //.merge(schedule("schedule")(key))
+                                    ,
+                                    //else
+                                    {teacherID: null}
+                                );
                             
-                        })]
-                    }).coerceTo('object')
+                            })];
+                        }).coerceTo("object")
                 
-                ))
+                    ));
                 
-            })
+                })
 
-            .run().then(resolve).catch(reject)
+                .run().then(resolve).catch(reject);
 
-        }).catch((err) => {return reject(err);})
-    })
-}
+        }).catch((err) => {return reject(err);});
+    });
+};
 
 
 /** 
@@ -301,34 +301,34 @@ exports.getTeacherSchedule = function(userID, query) {
         if(!userID) {
             var err = new Error("User ID Not Present");
             err.status = 400;
-            return reject(err)
+            return reject(err);
         }
 
         function userScheduleQuery(account) {
-            let tQu = r.table('userSchedules').get(account("schedules")("teacher"))
+            let tQu = r.table("userSchedules").get(account("schedules")("teacher"));
             if (query &amp;&amp; typeCheck("[String]", query.periods)) {
                 tQu = tQu.pluck({
                     schedule: query.periods
-                })
+                });
             }
 
             return tQu;
         }
 
-        r.table('accounts').get(userID)
-        .do((account) => {
-            return r.branch(
-                account.hasFields({schedules: {teacher: true}})
-                ,
-                userScheduleQuery(account)
-                ,
-                null
-            )
-        }).run().then((res) => {
-            return resolve(res)
-        }).catch((err) => {return reject(err);})
-    })
-}
+        r.table("accounts").get(userID)
+            .do((account) => {
+                return r.branch(
+                    account.hasFields({schedules: {teacher: true}})
+                    ,
+                    userScheduleQuery(account)
+                    ,
+                    null
+                );
+            }).run().then((res) => {
+                return resolve(res);
+            }).catch((err) => {return reject(err);});
+    });
+};
 
 
 
@@ -336,16 +336,16 @@ function verifyStudentSchedule(schedule, done) {
     var givenPeriods = Object.keys(schedule);
     for(var x = 0; x &lt; givenPeriods.length; x++) {
         //make "" null 
-        console.log(schedule[givenPeriods[x]].teacherID)
+        console.log(schedule[givenPeriods[x]].teacherID);
         let verType = "{teacherID: String|Null}";
         if(!typeCheck(verType, schedule[givenPeriods[x]])) {
-            var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
-            return done(err)
+            var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}");
+            return done(err);
         }
-        console.log(schedule[givenPeriods[x]], "vsc")
-        if(schedule[givenPeriods[x]].teacherID == '') {
-            console.log("isDumb")
-            schedule[givenPeriods[x]].teacherID = null
+        console.log(schedule[givenPeriods[x]], "vsc");
+        if(schedule[givenPeriods[x]].teacherID == "") {
+            console.log("isDumb");
+            schedule[givenPeriods[x]].teacherID = null;
         }
         if(schedule[givenPeriods[x]] == "true") {
             schedule[givenPeriods[x]] = true;
@@ -354,7 +354,7 @@ function verifyStudentSchedule(schedule, done) {
         }
 
         if(x >= givenPeriods.length-1 ) {
-            return done(null, schedule)
+            return done(null, schedule);
         }
     }
 }
@@ -365,43 +365,43 @@ function verifyTeacherSchedule(schedule) {
         for(var x = 0; x &lt; givenPeriods.length; x++) {
             let verType = "{className: Maybe String, isTeaching: Boolean, room: Maybe String, passLimit: Maybe Number}";
             if(!typeCheck(verType, schedule[givenPeriods[x]])) {
-                var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}")
-                return reject(err)
+                var err = new TypeError("Schedule expected an array of objects with structure: " + "{*: " + verType + "}");
+                return reject(err);
             }
             return resolve(schedule);
         }
-    })
+    });
 }
 function verifyUserSchedule(dashboard, schedule_UIN, done) {
     var schedule = schedule_UIN;
     var promise = new Promise(function(resolve, reject) {
         switch(dashboard) {
-            case "student": 
-                verifyStudentSchedule(schedule, function(err, nSch) {
-                    if(err) {
-                        return reject(err);
-                    }
-                    schedule = nSch
-                    resolve();
-                })
-                break;
-            case "teacher":
-                return verifyTeacherSchedule(schedule).then(resolve).catch(reject);
-                break;
-            default: 
-                var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
-                err.status = 400;
-                return reject(err);
+        case "student": 
+            verifyStudentSchedule(schedule, function(err, nSch) {
+                if(err) {
+                    return reject(err);
+                }
+                schedule = nSch;
+                resolve();
+            });
+            break;
+        case "teacher":
+            return verifyTeacherSchedule(schedule).then(resolve).catch(reject);
+            break;
+        default: 
+            var err = new Error("Unknown dashboard: \"" + dashboard + "\"");
+            err.status = 400;
+            return reject(err);
         }
     });
     promise.then(function(result) {
-        console.log(schedule)
+        console.log(schedule);
         //check if there are extra periods
-        var requiredPeriods = config.get('schedule.periods');
+        var requiredPeriods = config.get("schedule.periods");
         var givenPeriods = Object.keys(schedule);
         for(var x = 0; x &lt; givenPeriods.length; x++) {
             if(!requiredPeriods.includes(givenPeriods[x])) {
-                var err = new Error("Unknown Period: \"" + givenPeriods[x] + "\"")
+                var err = new Error("Unknown Period: \"" + givenPeriods[x] + "\"");
                 err.status = 400;
                 return done(err);
             }
@@ -411,10 +411,10 @@ function verifyUserSchedule(dashboard, schedule_UIN, done) {
         var toDB = {
             "dashboard": dashboard,
             "schedule": schedule
-        }
-        return done(null, toDB)
+        };
+        return done(null, toDB);
     }, function(err) {
-        return done(err)
+        return done(err);
     });
 }
 
@@ -429,9 +429,9 @@ function verifyUserSchedule(dashboard, schedule_UIN, done) {
 exports.update = function(userID, dashboard, schedule) {
     return new Promise((resolve, reject) => {
     
-         verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
+        verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
             if(err) {
-                return reject(err)
+                return reject(err);
             }
             r.table("accounts").get(userID).run().then((user) => {
                 if(!user) {
@@ -442,20 +442,20 @@ exports.update = function(userID, dashboard, schedule) {
                 if(user.schedules &amp;&amp; user.schedules[dashboard]) {
                     r.table("userSchedules").get(user.schedules[dashboard]).update(dbSafe).run(function(err, data) {
                         if(err) {
-                            return reject(err)
+                            return reject(err);
                         }
-                        return resolve(data)
+                        return resolve(data);
                     });
                 } else {
                     var err = new Error("User schedule not found");
                     err.status = 404;
                     return reject(err);
                 }
-            }).catch((err) => {return reject(err);})
+            }).catch((err) => {return reject(err);});
             
-        })
-     });
-}
+        });
+    });
+};
 
 
 /** 
@@ -478,10 +478,10 @@ exports.replace = (userID, dashboard, schedule) => {
             err.status = 400;
             return reject(err);
         }
-        console.log(schedule)
+        console.log(schedule);
         verifyUserSchedule(dashboard, schedule, function(err, dbSafe) {
             if(err) {
-                return reject(err)
+                return reject(err);
             }
             r.table("accounts").get(userID).run().then((user) => {
                 if(!user) {
@@ -493,20 +493,20 @@ exports.replace = (userID, dashboard, schedule) => {
                     dbSafe.id = user.schedules[dashboard];
                     r.table("userSchedules").get(user.schedules[dashboard]).replace(dbSafe).run(function(err, data) {
                         if(err) {
-                            return reject(err)
+                            return reject(err);
                         }
-                        return resolve(data)
+                        return resolve(data);
                     });
                 } else {
                     var err = new Error("User schedule not found");
                     err.status = 404;
                     return reject(err);
                 }
-            }).catch((err) => {return reject(err);})
+            }).catch((err) => {return reject(err);});
             
-        })
-    })
-}
+        });
+    });
+};
 
 /** 
     * Creates a new user schedule 
@@ -524,32 +524,32 @@ exports.new = function(userID, dashboard, schedule_UIN) {
             }
             //dbSafe.userId = userID;
             //chesk for existing 
-            r.table('accounts').get(userID).hasFields({schedules: {[dashboard]: true}}).run(function(err, doc) {
+            r.table("accounts").get(userID).hasFields({schedules: {[dashboard]: true}}).run(function(err, doc) {
                 if(err) {
                     return reject(err);
                 }
                 else if(doc == true) {
-                    var err = new Error("Schedule is Present")
+                    var err = new Error("Schedule is Present");
                     err.status = 409;
                     return reject(err);
                 } else {
-                    r.table('userSchedules').insert(dbSafe).run(function(err, trans) {
+                    r.table("userSchedules").insert(dbSafe).run(function(err, trans) {
                         if(err) {
                             return reject(err);
                         }
                         
-                        r.table('accounts').get(userID).update({schedules: {[dashboard]: trans.generated_keys[0]}}).run(function(err, data) {
+                        r.table("accounts").get(userID).update({schedules: {[dashboard]: trans.generated_keys[0]}}).run(function(err, data) {
                             if(err) {
                                 return reject(err);
                             }
-                            return resolve(trans)
-                        })
-                    })
+                            return resolve(trans);
+                        });
+                    });
                 }
-            })
-        })
+            });
+        });
     });
-}
+};
 
 
 //END [CODE]</code></pre>
@@ -565,7 +565,7 @@ exports.new = function(userID, dashboard, schedule_UIN) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jan 31 2018 01:53:32 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 01 2018 02:19:15 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
