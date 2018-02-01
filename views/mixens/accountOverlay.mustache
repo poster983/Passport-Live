@@ -5,14 +5,13 @@
     <div class="row">
       <div class="col s12 m12 l8 push-l2">
         <div class="card small">
-          <div class="card-image">
+          <div class="card-image card-avatar-bg">
             <img src="/api/media/background/{{user.id}}.svg">
           </div>
-          <div class="card-content">
-            <div class="card-avatar">
+          <div class="card-avatar">
               <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="userCardBundleAvatar" class="card-avatar circle responsive-img">
             </div>
-            <br>
+          <div class="card-content">
             <span class="card-title black-text center">Salutation. FirstName LastName <i class="material-icons" title="User has verified their email">verified_user</i><i class="material-icons" title="User is archived">archive</i></span>
           </div>
         </div>
@@ -303,29 +302,27 @@
         }.bind(this))
       }
       topCard() {
-        var top = $("<div/>").addClass("col s12 m12 l8 push-l2");
+        var top = $("<div/>").addClass("col s12");
 
         var image = $("<div/>")
-                      .addClass("card-image")
+                      .addClass("card-image card-avatar-bg")
                       .append(
                         $("<img/>")
                           .attr("src", "/api/media/background/" + _user.get(this).id + ".svg")
                       )
         
+        var avat = $("<div/>")
+          .addClass("card-avatar")
+          .append(
+            $("<img/>")
+              .addClass("card-avatar circle responsive-img")
+              .attr("alt", "Avatar")
+              .attr("src", "/api/media/avatar/" + _user.get(this).id + "/100.svg")
+          )
+
         var cont = $("<div/>")
                       .addClass("card-content")
-                      .append(
-                        $("<div/>")
-                          .addClass("card-avatar")
-                          .append(
-                            $("<img/>")
-                              .addClass("card-avatar circle responsive-img")
-                              .attr("alt", "Avatar")
-                              .attr("src", "/api/media/avatar/" + _user.get(this).id + "/100.svg")
-                          )
-                      ).append(
-                        $("<br/>")
-                      )
+                      
         var nameThing = $("<span/>")
                         .addClass("card-title black-text center")
                         .html(_user.get(this).name.salutation + " " + _user.get(this).name.first + " " + _user.get(this).name.last)
@@ -344,12 +341,13 @@
 
         return top.append($("<div/>").addClass("card small")
                   .append(image)
+                  .append(avat)
                   .append(cont.append(nameThing))
                 )
       }
 
       universalInfoCard() {
-        var top = $("<div/>").addClass("col s12 m12 l4 push-l2");
+        var top = $("<div/>").addClass("col s12 m6");
         var id = $("<span/>")
                         .attr("title", "Account ID") 
                         .prepend($("<i/>").addClass("material-icons").html("assignment_ind"))
@@ -389,7 +387,7 @@
                 </tr>
                 */
       currentLocationCard() {
-        var top = $("<div/>").addClass("col s12 m12 l4 push-l2");
+        var top = $("<div/>").addClass("col s12 m6");
 
         var tHead = $("<thead/>").append($("<tr/>")
                       .append($("<th/>").append($("<i/>").addClass("material-icons").html("insert_photo")))
@@ -412,7 +410,7 @@
       }
 
       scheduleCard() {
-        var top = $("<div/>").addClass("col s12 m12 l8 push-l2");
+        var top = $("<div/>").addClass("col s12");
 
         var cont = $("<div/>").addClass("card-content").append($("<span/>").addClass("card-title").html("Schedules"));
 

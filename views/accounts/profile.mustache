@@ -21,8 +21,8 @@ email: hi@josephhassell.com
 
 <body class="grey darken-4">
 <main>
-    <nav id="navBar">
-        <div class="nav-wrapper nav-noshadow" data-stellar-ratio="5">
+    <nav id="navBar" class="nav-noshadow">
+        <div class="nav-wrapper" data-stellar-ratio="5">
           {{>sidenav}}
           <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
           <a href="#" class="brand-logo center">Passport</a>
@@ -31,23 +31,22 @@ email: hi@josephhassell.com
     </nav>
 
     <!--Top paralax-->
-    <div class="bigHead red" data-stellar-ratio="0.5">
-        <h3 class="white-text">Your Passport Account</h3>
+    <div class="bigHead red" data-stellar-ratio="0.4">
+        <h3 class="white-text">Your account</h3>
     </div>
     <div class="userCardBundle">
     <!--Main Info-->
      <div class="row">
-        <div class="col s12 m12 l6 push-l3">
+        <div class="col s12">
           <div class="card small z-depth-5">
-            <div class="card-image">
+            <div class="card-image card-avatar-bg">
               <img id="user-bg" src="/api/media/background/{{user.id}}.svg">
               
             </div>
-            <div id="avatar-cont" class="card-content">
-              <div class="card-avatar">
+            <div class="card-avatar">
                 <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img z-depth-3 hoverable">
               </div>
-              <br>
+            <div id="avatar-cont" class="card-content">
               <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
             </div>
           </div>
@@ -65,17 +64,18 @@ email: hi@josephhassell.com
       </div>
       <!--Schedules-->
       <div class="row" >
-        <div class="col s12 m12 l6 push-l3">
-          <div class="card cyan accent-4">
+        <div class="col s12">
+          <div class="card">
 
             <div class="card-content">
               <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
               <span class="card-title">Schedules</span>
             </div>
             <div class="card-tabs">
-              <ul class="tabs tabs-fixed-width tabs-transparent ">
-                {{#elements.schedules.student}}<li class="tab"><a href="#studentSchedule">Student Schedule</a></li>{{/elements.schedules.student}}
-                {{#elements.schedules.teacher}}<li class="tab"><a href="#teacherSchedule">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+              <ul class="tabs tabs-fixed-width">
+                {{#elements.schedules.student}}<li class="tab"><a href="#studentSchedule" class="cyan-text accent-4 waves-effect waves-dark">Student Schedule</a></li>{{/elements.schedules.student}}
+                {{#elements.schedules.teacher}}<li class="tab"><a href="#teacherSchedule" class="cyan-text accent-4 waves-effect waves-dark">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+                <li class="indicator cyan accent-4"></li>
               </ul>
             </div>
             <div class="card-content grey lighten-4">
@@ -94,7 +94,7 @@ email: hi@josephhassell.com
 
       <!--Settings-->
       <div class="row">
-        <div class="col s12 m12 l3 push-l3">
+        <div class="col s12 m6 push-6">
           <div class="card">
              
             <div class="card-content" id="settingsCard">

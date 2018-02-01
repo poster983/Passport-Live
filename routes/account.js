@@ -58,7 +58,7 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardN
         req.sidenav.dashboards.showPicker = true;
     }
 
-    res.render("accounts/profile", { doc_Title: "Your Account Passport-Student", user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    res.render("accounts/profile", { doc_Title: "Your Passport Account", user, customHead: customHead, sidenav: req.sidenav, elements, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 
