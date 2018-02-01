@@ -136,6 +136,7 @@ exports.searchBulkLogs = (queries) => {
  * @memberof js/import
  * @property {Object} accounts
  * @property {function} accounts.rollback - Deletes all accounts linked to a given import job
+ * @property {function} accounts.sendActivation - Sends athe activation email to all unverified users.
  */
 var accounts = {};
 /**

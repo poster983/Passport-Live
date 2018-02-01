@@ -434,9 +434,53 @@ exports.limitTally = (userID, period, date) => {
 
     });
 };
+
+
 /*
-exports.tally("b17c14ad-4799-4644-85e0-bd029475a17b", "a", "2018-01-08T06:00:00+00:00").then((res) => {
-    console.log(res)
-}).catch((err) => {
-    console.error(err)
-})*/
+ * Functions for manupulating the state of passes
+ * @name state
+ * @inner
+ * @private
+ * @memberof js/passes
+ * @property {Object} state
+ * @property {function} state.pending - Deletes all accounts linked to a given import job
+ */
+let state = {};
+
+/**
+* Sets the pass state back to an origin state. Either Pending or Waitlisted
+* @param {String} passID
+* @returns {Promise} Transaction Statement
+* @throws {(TypeError|ReQL)}
+*/
+state.pending = (passID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+
+        //get pass data 
+        r_.table("passes").get(passID).run()
+        .then((passData) => {
+            //Get limit data for toPerson
+            return exports.limitTally(passData.toPerson, passData.period, passData.date).then((limit) => {
+                //check if limit is reached.  
+                if(typeof limit.passLimit !== "number" || limit.tally < limit.passLimit) {
+                    return pending
+                } else {
+                    return waitlisted
+                }
+            })
+        })
+        .then((state) => {
+            r_.table("passes").get(passID).update({})
+        })
+        .catch((err) => {
+            return reject(err);
+        })
+    });
+}
+
