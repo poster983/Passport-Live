@@ -45,7 +45,7 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermiss
         "<li><a href=\"/administrator/import\" class=\"waves-effect\"><i class=\"material-icons\">backup</i>Import</a></li>"
     ];
 
-    res.render("administrator/index", { doc_Title: "Passport-Administrator", customHead: customHead, user: user, cards: cards, sidenav: req.sidenav});
+    res.render("administrator/index", { doc_Title: "Passport-Administrator", customHead: customHead, user: user, cards: cards, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 router.get("/import", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
@@ -59,7 +59,7 @@ router.get("/import", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewareP
         "<li><a class=\"waves-effect\" href=\"/account?referral=administrator\"><i class=\"material-icons\">account_circle</i>My Account</a></li>",
         "<li><a href=\"/administrator/import\" class=\"waves-effect active\"><i class=\"material-icons\">backup</i>Import</a></li>"
     ];
-    res.render("administrator/import", { doc_Title: "Import -- Passport-Administrator", customHead: customHead, user: user, sidenav: req.sidenav});
+    res.render("administrator/import", { doc_Title: "Import -- Passport-Administrator", customHead: customHead, user: user, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
 
