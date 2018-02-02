@@ -31,8 +31,34 @@ var typeCheck = require("type-check").typeCheck;
 
 var accountScheduleJS = require("./accountSchedule.js");
 
+
 /**
- * Creates a new account
+ENUM TYPES
+**/
+/**
+ * Pass state values.
+ * @readonly
+ * @enum {String}
+ */
+exports.passStates = {
+    /** One of the default states */
+    PENDING: "pending", 
+    /** One of the default states Used when the toPerson's period limit is full*/
+    WAITLISTED: "waitlisted", 
+    /** The pass has been seen by toPerson or migrator, and migrator has permission to come/is coming */
+    ACCEPTED: "accepted",
+    /** The migrator does not have permission / will not go see to go see toPerson. */
+    DENIED: "denied",
+    /** The pass has been previously accepted, but now is canceled */
+    CANCELED: "canceled"
+};
+exports.passStates = Object.freeze(exports.passStates);
+
+
+
+
+/**
+ * Creates a new pass
  * @link module:js/passes
  * @param {Object} pass
  * @param {string} pass.toPerson - Id of the account recieving the migrating person
@@ -105,7 +131,6 @@ exports.newPass = function (pass, options) {
         preChecks.push(new Promise((limResolve, limReject) => {
             if (options.checkLimit !== false) {
                 exports.limitTally(pass.toPerson, pass.period, pass.date).then((limit) => {
-                    console.log(limit)
                     if(typeof limit.passLimit !== "number" || limit.tally < limit.passLimit) {
                         return limResolve("pending");
                     } else {
@@ -169,7 +194,6 @@ exports.newPass = function (pass, options) {
                     },
                     migration: {
                         excusedTime: null,
-                        inLimbo: false,
                         arrivedTime: null
                     }
                 },
@@ -436,24 +460,56 @@ exports.limitTally = (userID, period, date) => {
 };
 
 
-/*
- * Functions for manupulating the state of passes
- * @name state
- * @inner
- * @private
- * @memberof js/passes
- * @property {Object} state
- * @property {function} state.pending - Deletes all accounts linked to a given import job
- */
-let state = {};
+/**
+     * Functions for manupulating the state of passes
+     * @name state
+     * @inner
+     * @private
+     * @memberof module:js/passes
+     * @property {Object} state
+     */
+var state = {};
 
 /**
 * Sets the pass state back to an origin state. Either Pending or Waitlisted
+* @function
 * @param {String} passID
+* @param {String} state
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @memberof module:js/passes
 * @returns {Promise} Transaction Statement
 * @throws {(TypeError|ReQL)}
 */
-state.pending = (passID) => {
+state.set = (passID, state, setByID) => {
+    if(!setByID) {setByID = null;}
+
+    return r_.table("passes").get(passID).update((pass) => {
+        return {
+            status: {
+                confirmation: {
+                    setByUser: setByID,
+                    state: state,
+                    previousState: r_.branch(
+                        pass("status")("confirmation")("state").ne(state),
+                        pass("status")("confirmation")("state"),
+                        pass("status")("confirmation")("previousState")
+                    )
+                }
+            }
+        };
+    }).run();
+};
+
+/**
+* Sets the pass state back to an origin state. Either Pending or Waitlisted
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+state.pending = (passID, setByID) => {
     return new Promise((resolve, reject) => {
         //Type check 
         if(!typeCheck("String", passID)) {
@@ -463,24 +519,43 @@ state.pending = (passID) => {
         }
 
         //get pass data 
-        r_.table("passes").get(passID).run()
-        .then((passData) => {
-            //Get limit data for toPerson
-            return exports.limitTally(passData.toPerson, passData.period, passData.date).then((limit) => {
+        return r_.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                //Get limit data for toPerson
+                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+            })
+            .then((limit) => {
                 //check if limit is reached.  
                 if(typeof limit.passLimit !== "number" || limit.tally < limit.passLimit) {
-                    return pending
+                    return exports.passStates.PENDING;
                 } else {
-                    return waitlisted
+                    return exports.passStates.WAITLISTED;
                 }
             })
-        })
-        .then((state) => {
-            r_.table("passes").get(passID).update({})
-        })
-        .catch((err) => {
-            return reject(err);
-        })
+            .then((newState) => {
+                //update state
+                return state.set(passID, newState, setByID).then((transaction) => {
+                    //ready return 
+                    return {state: newState, transaction: transaction};
+                });
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
     });
-}
+};
 
+state.pending("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.log(err);
+})
+
+exports.state = state;
