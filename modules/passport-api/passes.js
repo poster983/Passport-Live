@@ -501,7 +501,7 @@ state.set = (passID, state, setByID) => {
 };
 
 /**
-* Sets the pass state back to an origin state. Either Pending or Waitlisted
+* Sets the pass state back to a neutral state. Either Pending or Waitlisted
 * @function
 * @memberof module:js/passes
 * @param {String} passID
@@ -509,7 +509,7 @@ state.set = (passID, state, setByID) => {
 * @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
 * @throws {(TypeError|ReQL)}
 */
-state.pending = (passID, setByID) => {
+state.neutral = (passID, setByID) => {
     return new Promise((resolve, reject) => {
         //Type check 
         if(!typeCheck("String", passID)) {
@@ -517,6 +517,7 @@ state.pending = (passID, setByID) => {
             err.status = 400;
             return reject(err);
         }
+        
 
         //get pass data 
         return r_.table("passes").get(passID).run()
@@ -527,6 +528,16 @@ state.pending = (passID, setByID) => {
                     err.status = 404;
                     throw err;
                 }
+
+                //check setByID / user permissions
+                if(typeCheck("String", setByID)) {
+
+                    //is the user involved in the pass?
+                    /*if(setByID == passData.toPerson || setByID == passData.migrator || ) {
+
+                    }*/
+                }
+
                 //Get limit data for toPerson
                 return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
             })
@@ -552,10 +563,90 @@ state.pending = (passID, setByID) => {
     });
 };
 
-state.pending("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
+/*state.neutral("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
     console.log(res)
 }).catch((err) => {
     console.log(err);
-})
+})*/
+
+/**
+* Sets the pass state to accepted.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+
+state.accepted = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        //Set pass state to accepted
+        return state.set(passID, exports.passStates.ACCEPTED, setByID).then((transaction) => {
+            //Check if pass was found
+            if(transaction.replaced < 1) {
+                let err = new Error("Pass not found");
+                err.status = 404;
+                throw err;
+            }
+            //ready return 
+            return {state: exports.passStates.ACCEPTED, transaction: transaction};
+        })
+        .then(resolve)
+        .catch((err) => {
+            return reject(err);
+        })
+    });
+};
+
+/**
+* Sets the pass state to canceled or denied.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+
+state.canceled = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+
+        return r_.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                //Get limit data for toPerson
+                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+            })
+
+        //Set pass state to accepted
+        return state.set(passID, exports.passStates.ACCEPTED, setByID).then((transaction) => {
+            //ready return 
+            return {state: exports.passStates.ACCEPTED, transaction: transaction};
+        })
+        .then(resolve)
+        .catch((err) => {
+            return reject(err);
+        })
+    });
+};
+
 
 exports.state = state;
