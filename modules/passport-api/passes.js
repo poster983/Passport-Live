@@ -648,5 +648,18 @@ state.canceled = (passID, setByID) => {
     });
 };
 
+/**
+* Sets the state back to the previous state or to a neutral state depending on who the user is. 
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.  If undefined, the function will always set the previous state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+state.undo = (passID, setByID) => {
+    //return new 
+}
+
 
 exports.state = state;
