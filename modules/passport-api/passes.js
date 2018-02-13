@@ -190,7 +190,8 @@ exports.newPass = function (pass, options) {
                         state: state,
                         setByUser: null,
                         msg: null,
-                        previousState: null
+                        previousState: null,
+                        previousSetByUser: null
                     },
                     migration: {
                         excusedTime: null,
@@ -493,7 +494,12 @@ state.set = (passID, state, setByID) => {
                         pass("status")("confirmation")("state").ne(state),
                         pass("status")("confirmation")("state"),
                         pass("status")("confirmation")("previousState")
-                    )
+                    ),
+                    /*previousSetByUser: r_.branch(
+                        pass("status")("confirmation")("setByUser").ne(state),
+                        pass("status")("confirmation")("state"),
+                        pass("status")("confirmation")("previousState")
+                    )*/
                 }
             }
         };
@@ -530,13 +536,15 @@ state.neutral = (passID, setByID) => {
                 }
 
                 //check setByID / user permissions
-                if(typeCheck("String", setByID)) {
+                /*if(typeCheck("String", setByID)) {
 
                     //is the user involved in the pass?
-                    /*if(setByID == passData.toPerson || setByID == passData.migrator || ) {
-
-                    }*/
-                }
+                    if(setByID !== passData.toPerson && setByID !== passData.migrator) {
+                        let err = new Error("Forbidden");
+                        err.status = 403;
+                        throw err;
+                    }
+                }*/
 
                 //Get limit data for toPerson
                 return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
@@ -632,19 +640,28 @@ state.canceled = (passID, setByID) => {
                     err.status = 404;
                     throw err;
                 }
-                //Get limit data for toPerson
-                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+                return passData;
             })
-
-        //Set pass state to accepted
-        return state.set(passID, exports.passStates.ACCEPTED, setByID).then((transaction) => {
-            //ready return 
-            return {state: exports.passStates.ACCEPTED, transaction: transaction};
-        })
-        .then(resolve)
-        .catch((err) => {
-            return reject(err);
-        })
+            .then((passData) => {
+                //check states to determine new state 
+                let stateData = passData.status.confirmation;
+                if(stateData.state === exports.passStates.PENDING || stateData.state === exports.passStates.WAITLISTED) {
+                    return exports.passStates.DENIED;
+                } else {
+                    return exports.passStates.CANCELED;
+                }
+            })
+            .then((newState) => {
+                //Set new state
+                return state.set(passID, newState, setByID).then((transaction) => {
+                    //Prepare return value 
+                    return {state: newState, transaction: transaction};
+                })
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            })
     });
 };
 
@@ -658,7 +675,26 @@ state.canceled = (passID, setByID) => {
 * @throws {(TypeError|ReQL)}
 */
 state.undo = (passID, setByID) => {
-    //return new 
+    return new Promise((resolve, reject) => {
+        r_.table("passes").get("passID").run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                return passData;
+            })
+            .then((passData) => {
+                //determine new state
+                if(setByID === passData.migrator) {
+                    //is migrator, set to
+
+                   
+                } 
+            })
+    })
 }
 
 
