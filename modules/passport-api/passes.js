@@ -571,6 +571,19 @@ state.neutral = (passID, setByID) => {
     });
 };
 
+/**
+* Determines if the given state is a neutral state (Pending or Waitlisted).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isNeutral = (state) => {
+    if(state === exports.passStates.PENDING || state === exports.passStates.WAITLISTED) {
+        return true;
+    }
+    return false;
+}
 /*state.neutral("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
     console.log(res)
 }).catch((err) => {
@@ -612,6 +625,20 @@ state.accepted = (passID, setByID) => {
         })
     });
 };
+
+/**
+* Determines if the given state is an accepted state (Accepted).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isAccepted = (state) => {
+    if(state === exports.passStates.ACCEPTED) {
+        return true;
+    }
+    return false;
+}
 
 /**
 * Sets the pass state to canceled or denied.
@@ -666,17 +693,31 @@ state.canceled = (passID, setByID) => {
 };
 
 /**
-* Sets the state back to the previous state or to a neutral state depending on who the user is. 
+* Determines if the given state is a canceled state (Canceled).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isCanceled = (state) => {
+    if(state === exports.passStates.CANCELED || state === exports.passStates.DENIED) {
+        return true;
+    }
+    return false;
+}
+
+/**
+* Sets the state back to the previous state
 * @function
 * @memberof module:js/passes
 * @param {String} passID
-* @param {?String} [setByID=null] - Account ID that set this state.  If undefined, the function will always set the previous state.
-* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @param {?String} [setByID=null] - Account ID that set this state.  
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).  No transaction will be returned if nothing changes.
 * @throws {(TypeError|ReQL)}
 */
 state.undo = (passID, setByID) => {
     return new Promise((resolve, reject) => {
-        r_.table("passes").get("passID").run()
+        return r_.table("passes").get("passID").run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {
@@ -688,14 +729,33 @@ state.undo = (passID, setByID) => {
             })
             .then((passData) => {
                 //determine new state
-                if(setByID === passData.migrator) {
-                    //is migrator, set to
-
-                   
-                } 
+                let stateData = passData.status.confirmation;
+                if(!!stateData.previousState) {
+                    //determine what state change function to call.
+                    if(state.isNeutral(stateData.previousState)) {
+                        return state.neutral(passID, setByID);
+                    } else if(state.isAccepted(stateData.previousState)) {
+                        return state.accepted(passID, setByID);
+                    } else if(state.isCanceled(stateData.previousState)) {
+                        return state.canceled(passID, setByID);
+                    } else {
+                        let err = new Error("Pass state invalid");
+                        err.status = 500;
+                        throw err;
+                    }
+                } else {
+                    //there was no previous state, don't change anyything
+                    return {state: passData.status.confirmation.state};
+                }
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
             })
     })
 }
+
+
 
 
 exports.state = state;

@@ -259,7 +259,8 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
     * Sets Pass Status
     * Can be set by toPerson and Migrator
     * REQUIRES JWT Authorization in headers.
-    * @function updatePassState
+    * @function updatePassStateDEC
+    * @decrepitated
     * @async
     * @param {request} req
     * @param {response} res
@@ -270,7 +271,7 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
     * @apiresponse {json} Returns rethink db action summery
     * @todo Make this code not look like I wrote it at 3 in the morning 
     */
-router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
+router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassStateDEC(req, res, next) {
     var userId = req.user.id;
     var passId = req.params.passId;
     var state = req.params.state;
@@ -343,6 +344,22 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     });
     
 });
+
+/**
+    * Sets Pass Status
+    * Can be set by toPerson and Migrator
+    * REQUIRES JWT Authorization in headers.
+    * @function updatePassState
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {String} passID - The id of the Pass
+    * @api PATCH /api/passes/:passID/state
+    * @apiresponse {Object} Object with the new state (key: state) and a RethinkDB transaction statement (key: transaction)
+    */
+router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
+    
+})
 
 
 
