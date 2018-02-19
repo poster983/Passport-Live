@@ -58,7 +58,7 @@
     "jdenticon": "^1.6.0",
     "jquery": "^3.2.1",
     "jquery.stellar": "^0.6.2",
-    "jsonwebtoken": "^7.4.1",
+    "jsonwebtoken": "^8.0.0",
     "loader-message": "latest",
     "mjml": "^3.3.5",
     "moment": "^2.18.1",
@@ -86,7 +86,7 @@
     "ua-parser-js": "^0.7.14",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "underscore": "^1.8.3",
-    "validator": "^8.0.0",
+    "validator": "^9.4.1",
     "webpack": "^3.8.1",
     "xlsx": "^0.11.17"
   },
