@@ -351,6 +351,8 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     * REQUIRES JWT Authorization in headers.
     * @function updatePassState
     * @param {request} req
+    * @param {Object} req.body - Body of the request
+    * @param {String} req.body.type - can be "neutral", "accepted", or "canceled"
     * @param {response} res
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
@@ -361,6 +363,9 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
     
 })
 
+/*{
+    type: "neutral"
+}*/
 
 
 module.exports = router;

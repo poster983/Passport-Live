@@ -744,7 +744,7 @@ state.undo = (passID, setByID) => {
                         throw err;
                     }
                 } else {
-                    //there was no previous state, don't change anyything
+                    //there was no previous state, don't change anything
                     return {state: passData.status.confirmation.state};
                 }
             })
@@ -756,6 +756,16 @@ state.undo = (passID, setByID) => {
 }
 
 
+state.canChangeTo = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+
+    })
+}
+ 
+ /*
+ Pending:
+    requestor can change to type canceled or type neutral.  when they undo, they 
+    non requestor can change to type accepted type canceled or type neutral
 
 
 exports.state = state;
