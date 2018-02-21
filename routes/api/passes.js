@@ -30,7 +30,7 @@ var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
 var config = require("config");
 var moment = require("moment");
-
+let url = require('url');
 
 router.use(cors());
 router.options('*', cors());
@@ -346,21 +346,77 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 });
 
 /**
-    * Sets Pass Status
+    * Sets Pass Status 
     * Can be set by toPerson and Migrator
     * REQUIRES JWT Authorization in headers.
     * @function updatePassState
     * @param {request} req
     * @param {Object} req.body - Body of the request
-    * @param {String} req.body.type - can be "neutral", "accepted", or "canceled"
+    * @param {String} req.body.type - can be "neutral", "accepted", or "canceled" 
     * @param {response} res
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
     * @api PATCH /api/passes/:passID/state
-    * @apiresponse {Object} Object with the new state (key: state) and a RethinkDB transaction statement (key: transaction)
+    * @apiresponse {Object} Object with the new state (key: state) and a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
     */
 router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
-    
+    //check given state type 
+    let bodyType = "{type: String}";
+    if(!typeCheck(bodyType, req.body)) {
+        let err = new TypeError("Body structure not valid.  Expected: " bodyType);
+        err.status = 400;
+        return next(err);
+    }
+    if(req.body.type !== "neutral" || req.body.type !== "accepted" || req.body.type !== "canceled") {
+        let err = new Error("type must be either \"neutral\", \"accepted\", or \"canceled\"");
+        err.status = 400;
+        return next(err);
+    }
+    //check change permissions 
+    api.state.allowedChanges(req.params.passID, req.user.id)
+        .then((permissions) => {
+            //common error 
+            let err = new Error("Forbidden");
+                err.status = 403;
+            //neutral type
+            if(req.body.type === "neutral" ) {
+                if(permissions.neutral) {
+                    //allowed to change
+                    return api.state.neutral(req.params.passID, req.user.id)
+                } else {
+                    //not allowed
+                    throw err;
+                }
+            }
+            if(req.body.type === "accepted" ) {
+                if(permissions.accepted) {
+                    //allowed to change
+                    return api.state.accepted(req.params.passID, req.user.id)
+                } else {
+                    //not allowed
+                    throw err;
+                }
+            }
+            if(req.body.type === "canceled" ) {
+                if(permissions.canceled) {
+                    //allowed to change
+                    return api.state.canceled(req.params.passID, req.user.id)
+                } else {
+                    //not allowed
+                    throw err;
+                }
+            }
+        })
+
+        .then((final) => {
+            //get new allowed changes
+            api.state.allowedChanges(req.params.passID, req.user.id)
+                .then((allowedChanges) => {
+                    //return new object
+                    return res.json(Object.assign(final, {allowedChanges: allowedChanges}));
+                });
+        })
+        .catch((err) => {return next(err);})
 })
 
 /*{
