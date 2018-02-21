@@ -30,7 +30,6 @@ var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
 var config = require("config");
 var moment = require("moment");
-let url = require('url');
 
 router.use(cors());
 router.options('*', cors());
@@ -357,13 +356,13 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
     * @api PATCH /api/passes/:passID/state
-    * @apiresponse {Object} Object with the new state (key: state) and a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
+    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
     */
 router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
     //check given state type 
     let bodyType = "{type: String}";
     if(!typeCheck(bodyType, req.body)) {
-        let err = new TypeError("Body structure not valid.  Expected: " bodyType);
+        let err = new TypeError("Body structure not valid.  Expected: " + bodyType);
         err.status = 400;
         return next(err);
     }
@@ -387,8 +386,7 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
                     //not allowed
                     throw err;
                 }
-            }
-            if(req.body.type === "accepted" ) {
+            } else if(req.body.type === "accepted" ) {
                 if(permissions.accepted) {
                     //allowed to change
                     return api.state.accepted(req.params.passID, req.user.id)
@@ -396,8 +394,7 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
                     //not allowed
                     throw err;
                 }
-            }
-            if(req.body.type === "canceled" ) {
+            } else if(req.body.type === "canceled" ) {
                 if(permissions.canceled) {
                     //allowed to change
                     return api.state.canceled(req.params.passID, req.user.id)
@@ -405,6 +402,10 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
                     //not allowed
                     throw err;
                 }
+            } else {
+                let impErr = new Error("type must be either \"neutral\", \"accepted\", or \"canceled\"");
+                impErr.status = 400;
+                throw impErr;
             }
         })
 
@@ -419,9 +420,45 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
         .catch((err) => {return next(err);})
 })
 
-/*{
-    type: "neutral"
-}*/
+/**
+    * Undos a pass state to the previous state 
+    * Can be set by toPerson and Migrator
+    * REQUIRES JWT Authorization in headers.
+    * @function undoPassState
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @apiparam {String} passID - The id of the Pass
+    * @api PATCH /api/passes/:passID/state/undo
+    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
+    */
+router.patch("/:passID/state/undo", passport.authenticate('jwt', { session: false}), function undoPassState(req, res, next) {
+    api.state.allowedChanges(req.params.passID, req.user.id)
+        .then((permissions) => {
+            //check undo actions 
+            if(permissions.undo === "UNDO") {
+                //undo the pass 
+                return api.state.undo(req.params.passID, req.user.id)
+            } else if(permissions.undo === "NEUTRAL") {
+                //set the pass state to a neutral state  
+                return api.state.neutral(req.params.passID, req.user.id)
+            } else {
+                //pass locked cannot change
+                let err = new Error("Forbidden");
+                err.status = 403;
+                throw err;
+            }
+        })
 
+        .then((final) => {
+            //get new allowed changes
+            api.state.allowedChanges(req.params.passID, req.user.id)
+                .then((allowedChanges) => {
+                    //return new object
+                    return res.json(Object.assign(final, {allowedChanges: allowedChanges}));
+                });
+        })
+        .catch((err) => {return next(err);})
+});
 
 module.exports = router;
