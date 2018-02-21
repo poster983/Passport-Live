@@ -279,7 +279,7 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
-
+    <passport-pass-state-buttons person="Joseph"></passport-pass-state-buttons>
     <!-- MyPasses-->
     <div class="section">
       <div class="row">
@@ -320,14 +320,15 @@ email: hi@josephhassell.com
       document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
   </script>
+  <script type="text/javascript" src=/js/polyfill/webcomponents-lite.js></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
   <!-- Compiled and minified JavaScript -->
   <script src="/js/materialize.js"></script>
+  <script type="text/javascript" src=/js/webpack/student.js></script>
   <script src="/js/passport.js"></script>
   <script src="/moment/min/moment-with-locales.min.js"></script>
   <script src="/sw.js"></script>
-  <!--<script src="js/PICS.js"></script>-->
   <script>
     /*Vars*/
     var idOfUser = "{{user.id}}";
