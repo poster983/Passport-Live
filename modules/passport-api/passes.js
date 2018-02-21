@@ -228,17 +228,17 @@ exports.newPass = function (pass, options) {
 exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, done) {
     console.log(periods);
     if (!id || typeof id != "string") {
-        var err = new Error("Invalid ID");
+        let err = new Error("Invalid ID");
         err.status = 400;
         return done(err);
     }
     if (!byColl || typeof byColl != "string" || (byColl != "fromPerson" && byColl != "toPerson" && byColl != "migrator" && byColl != "requester")) {
-        var err = new Error("By Column Is Invalid");
+        let err = new Error("By Column Is Invalid");
         err.status = 400;
         return done(err);
     }
     if (!moment(fromDate, "Y-MM-DD", true).isValid()) {
-        var err = new Error("fromDate Not Valid");
+        let err = new Error("fromDate Not Valid");
         err.status = 400;
         return done(err);
     } else {
@@ -535,17 +535,6 @@ state.neutral = (passID, setByID) => {
                     throw err;
                 }
 
-                //check setByID / user permissions
-                /*if(typeCheck("String", setByID)) {
-
-                    //is the user involved in the pass?
-                    if(setByID !== passData.toPerson && setByID !== passData.migrator) {
-                        let err = new Error("Forbidden");
-                        err.status = 403;
-                        throw err;
-                    }
-                }*/
-
                 //Get limit data for toPerson
                 return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
             })
@@ -583,7 +572,7 @@ state.isNeutral = (state) => {
         return true;
     }
     return false;
-}
+};
 /*state.neutral("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
     console.log(res)
 }).catch((err) => {
@@ -619,10 +608,10 @@ state.accepted = (passID, setByID) => {
             //ready return 
             return {state: exports.passStates.ACCEPTED, transaction: transaction};
         })
-        .then(resolve)
-        .catch((err) => {
-            return reject(err);
-        })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
     });
 };
 
@@ -638,7 +627,7 @@ state.isAccepted = (state) => {
         return true;
     }
     return false;
-}
+};
 
 /**
 * Sets the pass state to canceled or denied.
@@ -683,12 +672,12 @@ state.canceled = (passID, setByID) => {
                 return state.set(passID, newState, setByID).then((transaction) => {
                     //Prepare return value 
                     return {state: newState, transaction: transaction};
-                })
+                });
             })
             .then(resolve)
             .catch((err) => {
                 return reject(err);
-            })
+            });
     });
 };
 
@@ -704,7 +693,7 @@ state.isCanceled = (state) => {
         return true;
     }
     return false;
-}
+};
 
 /**
 * Sets the state back to the previous state
@@ -730,7 +719,7 @@ state.undo = (passID, setByID) => {
             .then((passData) => {
                 //determine new state
                 let stateData = passData.status.confirmation;
-                if(!!stateData.previousState) {
+                if(stateData.previousState) {
                     //determine what state change function to call.
                     if(state.isNeutral(stateData.previousState)) {
                         return state.neutral(passID, setByID);
@@ -751,21 +740,125 @@ state.undo = (passID, setByID) => {
             .then(resolve)
             .catch((err) => {
                 return reject(err);
-            })
-    })
-}
+            });
+    });
+};
 
-
-state.canChangeTo = (passID, setByID) => {
+/**
+ * Calculates the allowed state changes for a particular pass's state
+ * @function
+ * @memberof module:js/passes
+ * @param {String} passID 
+ * @param {String} forUserID 
+ * @returns {Promise} - See Example
+ * @throws {(TypeError|ReQL)}
+ * @example 
+ * <caption>Return Object</caption>
+ * {
+ *  neutral: (Boolean),
+ *  accepted: (Boolean),
+ *  canceled: (Boolean),
+ *  undo: (Boolean|"UNDO"|"NEUTRAL")
+ * }
+ */
+state.allowedChanges = (passID, forUserID) => {
     return new Promise((resolve, reject) => {
+        return r_.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                return passData;
+            })
+            .then((passData) => {
+                //calculate permissions
+                let permissions = {
+                    neutral: false,
+                    accepted: false,
+                    canceled: false,
+                    undo: false
+                };
+                let stateData = passData.status.confirmation;
+                //check if forUserID is NOT an id in the toPerson or migrator slots  
+                if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
+                    return permissions;
+                }
+                //check if pass is locked, and if forUserID is not the serByUser
+                if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
+                    return permissions;
+                }
 
-    })
-}
+                //change permissions object for neutral type state
+                if(state.isNeutral(stateData.state)) {
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else if(state.isAccepted(stateData.state)) {
+                    //for accepted type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.canceled = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else if(state.isCanceled(stateData.state)) {
+                    //for Canceled type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.neutral = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else {
+                    let err = new Error("Pass state not valid");
+                    err.status = 500;
+                    throw err;
+                }
+            })
+            .then(resolve)
+            .catch(reject);
+    });
+};
  
- /*
- Pending:
-    requestor can change to type canceled or type neutral.  when they undo, they 
-    non requestor can change to type accepted type canceled or type neutral
+/*
+    Neutral:
+        requester can change to type canceled or type neutral.  when they undo, they go to a neutral state
+        non requester can change to type accepted type canceled or type neutral
+
+    Accepted:
+        requester can change to type canceled.  when they undo, it goes to state neutral
+        not requester can change to type canceled.  When they undo, it goes to previous state
+    
+    Canceled: LOCKS PASS TO SETBYUSER 
+        requester can undo and set type to neutral.  When they undo, it goes to state neutral
+        no requester can change type to accepted or neutral. When they undo, it goes to previous state
+    
+*/
 
 
 exports.state = state;
