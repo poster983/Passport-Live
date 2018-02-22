@@ -21,9 +21,8 @@ email: hi@josephhassell.com
  * @module js/passes
  */
 
-var r = require("rethinkdb");
 var db = require("../db/index.js");
-var r_ = db.dash();
+var r = db.dash();
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 var validator = require("validator");
@@ -153,7 +152,7 @@ exports.newPass = function (pass, options) {
                     requester: pass.requester,
                     period: pass.period,
                     date: r.ISO8601(pass.date)
-                }).run(db.conn(), function (err, cur) {
+                }).run(function (err, cur) {
                     if (err) {
                         return dupeReject(err);
                     }
@@ -201,7 +200,7 @@ exports.newPass = function (pass, options) {
                     email: [],
                     web: []
                 }
-            }).run(db.conn(), function (err, trans) {
+            }).run(function (err, trans) {
                 if (err) {
                     return reject(err);
                 }
@@ -214,7 +213,7 @@ exports.newPass = function (pass, options) {
 };
 
 /**
- * Gets passes with flexable id search
+ * Gets passes
  * @link module:js/passes
  * @param {string} id - Id of the account
  * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
@@ -224,67 +223,159 @@ exports.newPass = function (pass, options) {
  * @param {function} done - callback
  * @returns {done} Error, or a transaction statement 
  */
-exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, done) {
-    console.log(periods);
-    if (!id || typeof id != "string") {
-        let err = new Error("Invalid ID");
-        err.status = 400;
-        return done(err);
-    }
-    if (!byColl || typeof byColl != "string" || (byColl != "fromPerson" && byColl != "toPerson" && byColl != "migrator" && byColl != "requester")) {
-        let err = new Error("By Column Is Invalid");
-        err.status = 400;
-        return done(err);
-    }
-    if (!moment(fromDate, "Y-MM-DD", true).isValid()) {
-        let err = new Error("fromDate Not Valid");
-        err.status = 400;
-        return done(err);
-    } else {
+exports.get = function (id, byColl, fromDate, toDate, periods) {
+    return new Promise((resolve, reject) => {
+        console.log(periods);
+        if (!id || typeof id != "string") {
+            let err = new Error("Invalid ID");
+            err.status = 400;
+            return done(err);
+        }
+        if (!byColl || typeof byColl != "string" || (byColl != "fromPerson" && byColl != "toPerson" && byColl != "migrator" && byColl != "requester")) {
+            let err = new Error("By Column Is Invalid");
+            err.status = 400;
+            return done(err);
+        }
+        if (!moment(fromDate, "Y-MM-DD", true).isValid()) {
+            let err = new Error("fromDate Not Valid");
+            err.status = 400;
+            return done(err);
+        } else {
 
-        fromDate = moment(fromDate).toISOString();
-    }
+            fromDate = moment(fromDate).toISOString();
+        }
 
-    if (!moment(toDate, "Y-MM-DD", true).isValid()) {
-        toDate = null;
-    } else {
+        if (!moment(toDate, "Y-MM-DD", true).isValid()) {
+            toDate = null;
+        } else {
 
-        toDate = moment(toDate).toISOString();
+            toDate = moment(toDate).toISOString();
 
-    }
-
-
-    if (periods != null && !Array.isArray(periods)) {
-        var err = new Error("Expected periods to be either undefined, null or an array.  Got: " + typeof periods);
-        err.status = 400;
-        return done(err);
-    }
+        }
 
 
+        if (periods != null && !Array.isArray(periods)) {
+            var err = new Error("Expected periods to be either undefined, null or an array.  Got: " + typeof periods);
+            err.status = 400;
+            return done(err);
+        }
 
-    r.table("passes")
 
-        .filter(function (person) {
-            return person(byColl).eq(id);
-        })
-        .filter(function (day) {
-            if (!toDate) {
-                return day("date").date().gt(r.ISO8601(fromDate).date()).or(
-                    day("date").date().eq(r.ISO8601(fromDate).date()));
-            } else {
-                return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date());
-            }
-        })
-        .filter(function (period) {
-            if (!periods) {
-                return true;
-            } else {
-                console.log(period("period"));
-                return r.expr(periods).contains(period("period"));
-            }
-        })
 
-        //get pass permissions
+        r.table("passes")
+
+            .filter(function (person) {
+                return person(byColl).eq(id);
+            })
+            .filter(function (day) {
+                if (!toDate) {
+                    return day("date").date().gt(r.ISO8601(fromDate).date()).or(
+                        day("date").date().eq(r.ISO8601(fromDate).date()));
+                } else {
+                    return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date());
+                }
+            })
+            .filter(function (period) {
+                if (!periods) {
+                    return true;
+                } else {
+                    console.log(period("period"));
+                    return r.expr(periods).contains(period("period"));
+                }
+            })
+
+            
+
+            //join optional fromPerson value
+            .outerJoin(r.table("accounts"), function (passRow, accountRow) {
+                return passRow("fromPerson").eq(accountRow("id"));
+            })
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            .map(r.row.merge(function (ro) {
+                return {
+
+                    "fromPerson": ro("right").pluck("id", "name", "email", "schedules").default(null)
+
+                };
+            }))
+            .without("right")
+            //_______
+            //merge toPerson
+
+            .eqJoin("toPerson", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            .map(r.row.merge(function (ro) {
+                return {
+                    "toPerson": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
+            //___________
+            //merge Requester
+
+            .eqJoin("requester", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            //merge correct values
+            .map(r.row.merge(function (ro) {
+
+                return {
+                    "requester": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
+
+            //___________
+            //migrator Requester
+
+            .eqJoin("migrator", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            //merge correct values
+            .map(r.row.merge(function (ro) {
+                return {
+                    "migrator": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
+
+            
+
+            .run()
+            .then((data) => {
+
+            })
+
+            .catch((err))
+
+            /*, function (err, dataCur) {
+                if (err) {
+                    return done(err);
+                }
+                dataCur.toArray(function (err, data) {
+                    if (err) {
+                        return done(err);
+                    }
+                    return done(null, data);
+                });
+            });*/
+    });
+};
+
+/*//get pass permissions
         .merge(function(pass) {
             return {
                 status: {
@@ -293,91 +384,7 @@ exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, don
                     }
                 }
             }
-        })
-
-        //join optional fromPerson value
-        .outerJoin(r.table("accounts"), function (passRow, accountRow) {
-            return passRow("fromPerson").eq(accountRow("id"));
-        })
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        .map(r.row.merge(function (ro) {
-            return {
-
-                "fromPerson": ro("right").pluck("id", "name", "email", "schedules").default(null)
-
-            };
-        }))
-        .without("right")
-        //_______
-        //merge toPerson
-
-        .eqJoin("toPerson", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        .map(r.row.merge(function (ro) {
-            return {
-                "toPerson": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
-        //___________
-        //merge Requester
-
-        .eqJoin("requester", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        //merge correct values
-        .map(r.row.merge(function (ro) {
-
-            return {
-                "requester": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
-
-        //___________
-        //migrator Requester
-
-        .eqJoin("migrator", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        //merge correct values
-        .map(r.row.merge(function (ro) {
-            return {
-                "migrator": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
-
-        
-
-        .run(db.conn(), function (err, dataCur) {
-            if (err) {
-                return done(err);
-            }
-            dataCur.toArray(function (err, data) {
-                if (err) {
-                    return done(err);
-                }
-                return done(null, data);
-            });
-        });
-
-};
-
-
+        })*/
 
 /**
  * Gets pass by Primary key
@@ -393,7 +400,7 @@ exports.getPass = function (passId, done) {
         return done(err);
     }
 
-    r.table("passes").get(passId).run(db.conn(), function (err, pass) {
+    r.table("passes").get(passId).run(function (err, pass) {
         if (err) {
             return done(err);
         }
@@ -424,7 +431,7 @@ exports.updatePass = function (passId, doc, done) {
     }
 
 
-    r.table("passes").get(passId).update(doc).run(db.conn(), function (err, trans) {
+    r.table("passes").get(passId).update(doc).run(function (err, trans) {
         if (err) {
             return done(err);
         }
@@ -451,8 +458,8 @@ exports.limitTally = (userID, period, date) => {
                 outOf = tSchedule.schedule[period].passLimit;
             }
             //get tally count
-            r_.table("passes").filter(function (doc) {
-                return doc("date").date().eq(r_.ISO8601(date).date())
+            r.table("passes").filter(function (doc) {
+                return doc("date").date().eq(r.ISO8601(date).date())
                     .and(doc("toPerson").eq(userID))
                     .and(doc("period").eq(period));
             }).count()
@@ -497,18 +504,18 @@ var state = {};
 state.set = (passID, state, setByID) => {
     if(!setByID) {setByID = null;}
 
-    return r_.table("passes").get(passID).update((pass) => {
+    return r.table("passes").get(passID).update((pass) => {
         return {
             status: {
                 confirmation: {
                     setByUser: setByID,
                     state: state,
-                    previousState: r_.branch(
+                    previousState: r.branch(
                         pass("status")("confirmation")("state").ne(state),
                         pass("status")("confirmation")("state"),
                         pass("status")("confirmation")("previousState")
                     ),
-                    /*previousSetByUser: r_.branch(
+                    /*previousSetByUser: r.branch(
                         pass("status")("confirmation")("setByUser").ne(state),
                         pass("status")("confirmation")("state"),
                         pass("status")("confirmation")("previousState")
@@ -539,7 +546,7 @@ state.neutral = (passID, setByID) => {
         
 
         //get pass data 
-        return r_.table("passes").get(passID).run()
+        return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {
@@ -661,7 +668,7 @@ state.canceled = (passID, setByID) => {
             return reject(err);
         }
 
-        return r_.table("passes").get(passID).run()
+        return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {
@@ -725,7 +732,7 @@ state.undo = (passID, setByID) => {
             err.status = 400;
             return reject(err);
         }
-        return r_.table("passes").get(passID).run()
+        return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {
@@ -782,7 +789,7 @@ state.undo = (passID, setByID) => {
  */
 state.allowedChanges = (passID, forUserID) => {
     return new Promise((resolve, reject) => {
-        return r_.table("passes").get(passID).run()
+        return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {
