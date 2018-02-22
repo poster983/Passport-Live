@@ -283,6 +283,18 @@ exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, don
                 return r.expr(periods).contains(period("period"));
             }
         })
+
+        //get pass permissions
+        .merge(function(pass) {
+            return {
+                status: {
+                    confirmation: {
+                        allowedChanges: getStateChangePermissions(pass.coerceTo('object').data, id)
+                    }
+                }
+            }
+        })
+
         //join optional fromPerson value
         .outerJoin(r.table("accounts"), function (passRow, accountRow) {
             return passRow("fromPerson").eq(accountRow("id"));
@@ -348,6 +360,8 @@ exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, don
             };
         }))
         .without("right")
+
+        
 
         .run(db.conn(), function (err, dataCur) {
             if (err) {
@@ -795,6 +809,7 @@ function getStateChangePermissions(passData, forUserID) {
         canceled: false,
         undo: false
     };
+    console.log(passData)
     let stateData = passData.status.confirmation;
     //check if forUserID is NOT an id in the toPerson or migrator slots  
     if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
