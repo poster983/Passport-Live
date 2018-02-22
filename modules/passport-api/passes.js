@@ -780,76 +780,80 @@ state.allowedChanges = (passID, forUserID) => {
             })
             .then((passData) => {
                 //calculate permissions
-                let permissions = {
-                    neutral: false,
-                    accepted: false,
-                    canceled: false,
-                    undo: false
-                };
-                let stateData = passData.status.confirmation;
-                //check if forUserID is NOT an id in the toPerson or migrator slots  
-                if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
-                    return permissions;
-                }
-                //check if pass is locked, and if forUserID is not the serByUser
-                if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
-                    return permissions;
-                }
-
-                //change permissions object for neutral type state
-                if(state.isNeutral(stateData.state)) {
-                    if(forUserID !== passData.requester) {
-                        //if user is the receiver
-                        permissions.neutral = true;
-                        permissions.canceled = true;
-                        permissions.accepted = true;
-                        permissions.undo = "UNDO";
-                    } else {
-                        //If user is requester
-                        permissions.neutral = true;
-                        permissions.canceled = true;
-                        permissions.undo = "NEUTRAL";
-                    }  
-                    return permissions;
-                } else if(state.isAccepted(stateData.state)) {
-                    //for accepted type
-                    if(forUserID !== passData.requester) {
-                        //if user is the receiver
-                        permissions.neutral = true;
-                        permissions.canceled = true;
-                        permissions.accepted = true;
-                        permissions.undo = "UNDO";
-                    } else {
-                        //If user is requester
-                        permissions.canceled = true;
-                        permissions.undo = "NEUTRAL";
-                    }  
-                    return permissions;
-                } else if(state.isCanceled(stateData.state)) {
-                    //for Canceled type
-                    if(forUserID !== passData.requester) {
-                        //if user is the receiver
-                        permissions.neutral = true;
-                        permissions.canceled = true;
-                        permissions.accepted = true;
-                        permissions.undo = "UNDO";
-                    } else {
-                        //If user is requester
-                        permissions.neutral = true;
-                        permissions.undo = "NEUTRAL";
-                    }  
-                    return permissions;
-                } else {
-                    let err = new Error("Pass state not valid");
-                    err.status = 500;
-                    throw err;
-                }
+                return getStateChangePermissions(passData, forUserID);
             })
             .then(resolve)
             .catch(reject);
     });
 };
- 
+
+//this is a private function for state.allowedChanges and flexableGetPasses 
+function getStateChangePermissions(passData, forUserID) {
+    let permissions = {
+        neutral: false,
+        accepted: false,
+        canceled: false,
+        undo: false
+    };
+    let stateData = passData.status.confirmation;
+    //check if forUserID is NOT an id in the toPerson or migrator slots  
+    if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
+        return permissions;
+    }
+    //check if pass is locked, and if forUserID is not the serByUser
+    if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
+        return permissions;
+    }
+
+    //change permissions object for neutral type state
+    if(state.isNeutral(stateData.state)) {
+        if(forUserID !== passData.requester) {
+            //if user is the receiver
+            permissions.neutral = true;
+            permissions.canceled = true;
+            permissions.accepted = true;
+            permissions.undo = "UNDO";
+        } else {
+            //If user is requester
+            permissions.neutral = true;
+            permissions.canceled = true;
+            permissions.undo = "NEUTRAL";
+        }  
+        return permissions;
+    } else if(state.isAccepted(stateData.state)) {
+        //for accepted type
+        if(forUserID !== passData.requester) {
+            //if user is the receiver
+            permissions.neutral = true;
+            permissions.canceled = true;
+            permissions.accepted = true;
+            permissions.undo = "UNDO";
+        } else {
+            //If user is requester
+            permissions.canceled = true;
+            permissions.undo = "NEUTRAL";
+        }  
+        return permissions;
+    } else if(state.isCanceled(stateData.state)) {
+        //for Canceled type
+        if(forUserID !== passData.requester) {
+            //if user is the receiver
+            permissions.neutral = true;
+            permissions.canceled = true;
+            permissions.accepted = true;
+            permissions.undo = "UNDO";
+        } else {
+            //If user is requester
+            permissions.neutral = true;
+            permissions.undo = "NEUTRAL";
+        }  
+        return permissions;
+    } else {
+        let err = new Error("Pass state not valid");
+        err.status = 500;
+        throw err;
+    }
+}
 /*
     Neutral:
         requester can change to type canceled or type neutral.  when they undo, they go to a neutral state
