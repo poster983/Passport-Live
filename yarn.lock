@@ -47,6 +47,21 @@
     "@polymer/iron-meta" "^3.0.0-pre.7"
     "@polymer/polymer" "^3.0.0-pre.7"
 
+"@polymer/iron-icons@^3.0.0-pre.8":
+  version "3.0.0-pre.8"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-icons/-/iron-icons-3.0.0-pre.8.tgz#6adf32c7294acb4d159c770c0a471819b38ae145"
+  dependencies:
+    "@polymer/iron-icon" "^3.0.0-pre.7"
+    "@polymer/iron-iconset-svg" "^3.0.0-pre.7"
+    "@polymer/polymer" "^3.0.0-pre.7"
+
+"@polymer/iron-iconset-svg@^3.0.0-pre.7":
+  version "3.0.0-pre.8"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-iconset-svg/-/iron-iconset-svg-3.0.0-pre.8.tgz#06c8f650517e7346f96b7200a2a4c3bef38255e0"
+  dependencies:
+    "@polymer/iron-meta" "^3.0.0-pre.7"
+    "@polymer/polymer" "^3.0.0-pre.7"
+
 "@polymer/iron-meta@^3.0.0-pre.7":
   version "3.0.0-pre.8"
   resolved "https://registry.yarnpkg.com/@polymer/iron-meta/-/iron-meta-3.0.0-pre.8.tgz#820585d219f7a76c940be6cc3cf851e9df66db38"
@@ -86,7 +101,7 @@
     "@polymer/iron-a11y-keys-behavior" "^3.0.0-pre.7"
     "@polymer/polymer" "^3.0.0-pre.7"
 
-"@polymer/paper-styles@^3.0.0-pre.7":
+"@polymer/paper-styles@^3.0.0-pre.7", "@polymer/paper-styles@^3.0.0-pre.8":
   version "3.0.0-pre.8"
   resolved "https://registry.yarnpkg.com/@polymer/paper-styles/-/paper-styles-3.0.0-pre.8.tgz#3f5ee7b025a8af914928c7c86add23ff05ae4f4d"
   dependencies:

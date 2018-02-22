@@ -18,13 +18,14 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 /** 
-* @module passRESTApi
+* @module api/passes
 */
 
 var express = require("express");
 var router = express.Router();
 var r = require("../../modules/db/index.js");
-var cors = require('cors');
+var r_ = r.dash();
+var cors = require("cors");
 var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
@@ -32,7 +33,7 @@ var config = require("config");
 var moment = require("moment");
 
 router.use(cors());
-router.options('*', cors());
+router.options("*", cors());
 
 
 
@@ -59,7 +60,7 @@ router.options('*', cors());
     *
     * @apiresponse {json} Returns rethink db action summery
     */
-router.post("/me", passport.authenticate('jwt', { session: false}), function newPassForMe(req, res, next) {
+router.post("/me", passport.authenticate("jwt", { session: false}), function newPassForMe(req, res, next) {
     var fromPerson = req.body.fromPerson;
     var toPerson = req.body.toPerson;
     var migrator = req.user.id;
@@ -83,7 +84,7 @@ router.post("/me", passport.authenticate('jwt', { session: false}), function new
     * @api GET /api/passes/me/by/:idCol/from/:fromDay/
     * @apiresponse {json} Returns rethink db action summery
     */
-router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromDay(req, res, next) {
+router.get("/me/by/:idCol/from/:fromDay", passport.authenticate("jwt", { session: false}), function getPassForMeFromDay(req, res, next) {
     //res.sendStatus(501);
     var fromDay = req.params.fromDay;
     var idCol = req.params.idCol;
@@ -110,7 +111,7 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate('jwt', { session
     * @api GET /api/passes/me/by/:idCol/from/:fromDay/to/:toDay
     * @apiresponse {json} Returns rethink db action summery
     */
-router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt', { session: false}), function getPassForMeFromToDay(req, res, next) {
+router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate("jwt", { session: false}), function getPassForMeFromToDay(req, res, next) {
     var fromDay = req.params.fromDay;
     var toDay = req.params.toDay;
     var idCol = req.params.idCol;
@@ -137,7 +138,7 @@ router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate('jwt',
     * @api PATCH /api/passes/status/:passId/isMigrating/:state
     * @apiresponse {json} Returns rethink db action summery
     */
-router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', { session: false}), function updateMigrationStatus(req, res, next) {
+router.patch("/status/:passId/isMigrating/:state", passport.authenticate("jwt", { session: false}), function updateMigrationStatus(req, res, next) {
     var userId = req.user.id;
     var passId = req.params.passId;
     var state = req.params.state;
@@ -203,7 +204,7 @@ router.patch("/status/:passId/isMigrating/:state", passport.authenticate('jwt', 
     * @apiresponse {json} Returns rethink db action summery
     */
 
-router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', { session: false}), function updateArrivedStatus(req, res, next) {
+router.patch("/status/:passId/hasArrived/:state", passport.authenticate("jwt", { session: false}), function updateArrivedStatus(req, res, next) {
     var userId = req.user.id;
     var passId = req.params.passId;
     var state = req.params.state;
@@ -270,7 +271,7 @@ router.patch("/status/:passId/hasArrived/:state", passport.authenticate('jwt', {
     * @apiresponse {json} Returns rethink db action summery
     * @todo Make this code not look like I wrote it at 3 in the morning 
     */
-router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { session: false}), function updatePassStateDEC(req, res, next) {
+router.patch("/status/:passId/state/:state", passport.authenticate("jwt", { session: false}), function updatePassStateDEC(req, res, next) {
     var userId = req.user.id;
     var passId = req.params.passId;
     var state = req.params.state;
@@ -345,7 +346,48 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
 });
 
 /**
-    * Sets Pass Status 
+* gets the pass state 
+* REQUIRES JWT Authorization in headers.
+* @function getPassState
+* @param {request} req
+* @param {response} res
+* @param {nextCallback} next
+* @apiparam {String} passID - The id of the Pass
+* @apiquery {String} userID - run the query as this user.
+* @api GET /api/passes/:passID/state
+* @apiresponse {Object} Object with the state object (key: state) and the allowed changes (key: allowedChanges)
+*/
+router.get("/:passID/state", passport.authenticate("jwt", { session: false}), function getPassState(req, res, next) {
+    if(!req.params.passID) {
+        let err = new TypeError("passID expected a string");
+        err.status = 400;
+        return next(err);
+    }
+    // determine what user to run as 
+    r_.table("passes").get(req.params.passID).run()
+        .then((passData) => {
+            //check if pass exists
+            if(!passData) {
+                let err = new Error("Pass not found");
+                err.status = 404;
+                throw err;
+            }
+            return passData.status.confirmation.state;
+        })
+        .then((final) => {
+            //get allowed changes 
+            api.state.allowedChanges(req.params.passID, typeof req.query.userID === "string"?req.query.userID:req.user.id)
+                .then((allowedChanges) => {
+                    //send object to user
+                    return res.json({state: final, allowedChanges: allowedChanges});
+                });
+        })
+        .catch((err) => {
+            return next(err);
+        });
+});
+/**
+    * Sets Pass State by state type 
     * Can be set by toPerson and Migrator
     * REQUIRES JWT Authorization in headers.
     * @function updatePassState
@@ -358,7 +400,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate('jwt', { sess
     * @api PATCH /api/passes/:passID/state
     * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
     */
-router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), function updatePassState(req, res, next) {
+router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), function updatePassState(req, res, next) {
     //check given state type 
     let bodyType = "{type: String}";
     if(!typeCheck(bodyType, req.body)) {
@@ -376,7 +418,7 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
         .then((permissions) => {
             //common error 
             let err = new Error("Forbidden");
-                err.status = 403;
+            err.status = 403;
             //neutral type
             if(req.body.type === "neutral" ) {
                 if(permissions.neutral) {
@@ -432,7 +474,7 @@ router.patch("/:passID/state", passport.authenticate('jwt', { session: false}), 
     * @api PATCH /api/passes/:passID/state/undo
     * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
     */
-router.patch("/:passID/state/undo", passport.authenticate('jwt', { session: false}), function undoPassState(req, res, next) {
+router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: false}), function undoPassState(req, res, next) {
     api.state.allowedChanges(req.params.passID, req.user.id)
         .then((permissions) => {
             //check undo actions 

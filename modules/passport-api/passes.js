@@ -190,8 +190,7 @@ exports.newPass = function (pass, options) {
                         state: state,
                         setByUser: null,
                         msg: null,
-                        previousState: null,
-                        previousSetByUser: null
+                        previousState: null
                     },
                     migration: {
                         excusedTime: null,
@@ -706,7 +705,13 @@ state.isCanceled = (state) => {
 */
 state.undo = (passID, setByID) => {
     return new Promise((resolve, reject) => {
-        return r_.table("passes").get("passID").run()
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        return r_.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
                 if(!passData) {

@@ -23,12 +23,25 @@ let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass-state-buttons.template.html");
 
 /** Components **/
-require("@polymer/paper-fab/paper-fab.js")
+require("@polymer/paper-fab/paper-fab.js");
+require("@polymer/iron-icons/iron-icons.js");
+require("../styles/default-theme.js");
+require("@polymer/paper-styles/color.js");
+//require("@polymer/paper-styles/paper-styles.js"); //FOR ALL STYLES 
 
-module.exports = class PassportPassStateButtons extends polymer.Element {
+/**
+ * Polymer Element that holds pass state manupulation buttons.  
+ * @class 
+ * @property {String} passId - Id of the pass in the DB
+ * @property {String} stateType - can be "neutral", "canceled", or "accepted"
+ * @property {String} rawState - the actual state of the pass in the database.  This string should be presented to the user.
+ * @example
+ * <passport-pass-state-buttons></passport-pass-state-buttons>
+ */
+class PassportPassStateButtons extends polymer.Element {
 
-	//<template>
-	static get template() {
+    //<template>
+    static get template() {
         return view;
     }
     constructor() {
@@ -37,11 +50,23 @@ module.exports = class PassportPassStateButtons extends polymer.Element {
     }
     static get properties() {
         return {
-            person: {
+            passId: {
                 type: String,
+                notify: true,
+                readOnly: true
+            },
+            stateType: {
+                type: String,
+                reflectToAttribute: true,
+                notify: true
+            },
+            rawState: {
+                type: String,
+                reflectToAttribute: true,
+                notify: false
             },
         };
     }
 }
-
+module.exports = PassportPassStateButtons;
 customElements.define("passport-pass-state-buttons", module.exports);

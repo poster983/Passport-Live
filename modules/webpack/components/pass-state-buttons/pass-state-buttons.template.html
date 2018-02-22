@@ -1,1 +1,17 @@
-<paper-fab mini icon="reply"></paper-fab>
+<style is="custom-style">
+    paper-fab {
+        display: inline-block;
+        margin: 2px;
+        --paper-fab-keyboard-focus-background: var(--dark-primary-color)
+    }
+    .cancel {
+        --paper-fab-background: var(--paper-red-500);
+    }
+    .accept {
+        --paper-fab-background: var(--paper-green-500);
+    }
+
+    /* Span Styles */
+</style>
+<paper-fab id="check" mini disabled icon="icons:check"></paper-fab>
+<paper-fab id="block" mini disabled icon="icons:block"></paper-fab>

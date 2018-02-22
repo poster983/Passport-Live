@@ -1,7 +1,7 @@
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
     entry: {
@@ -11,19 +11,19 @@ module.exports = {
         student: "./modules/webpack/entrypoints/student/index.js"
     },
     output: {
-        path: path.resolve(__dirname, 'public', "js", "webpack"), //__dirname + "/public/js/webpack"
+        path: path.resolve(__dirname, "public", "js", "webpack"), //__dirname + "/public/js/webpack"
         filename: "[name].js"
     },
     module: {
         rules: [
-          {
-            test: /\.(html)$/,
-            use: {
-              loader: 'html-loader'
+            {
+                test: /\.(html)$/,
+                use: {
+                    loader: "html-loader"
+                }
             }
-          }
         ]
-      },
+    },
     plugins: [
         /*new UglifyJsPlugin({
             parallel: 4,
@@ -35,10 +35,10 @@ module.exports = {
         }),*/
         new webpack.IgnorePlugin(/vertx/),
         new CopyWebpackPlugin([
-          {
-              from: "./node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js",
-              to: path.resolve(__dirname, 'public', "js", "polyfill") //"polyfill/webcomponents-lite.js"
-          }
+            {
+                from: "./node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js",
+                to: path.resolve(__dirname, "public", "js", "polyfill") //"polyfill/webcomponents-lite.js"
+            }
         ])
     ]
 

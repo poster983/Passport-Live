@@ -33,7 +33,9 @@
     "url": "https://github.com/poster983/Passport-Live/issues"
   },
   "dependencies": {
+    "@polymer/iron-icons": "^3.0.0-pre.8",
     "@polymer/paper-fab": "^3.0.0-pre.8",
+    "@polymer/paper-styles": "^3.0.0-pre.8",
     "@polymer/polymer": "^3.0.0-pre.9",
     "animejs": "^2.2.0",
     "bcrypt-nodejs": "0.0.3",
