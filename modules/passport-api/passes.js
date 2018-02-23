@@ -227,93 +227,95 @@ exports.newPass = function (pass, options) {
 /**
  * Gets passes
  * @link module:js/passes
- * @param {Object} [filter] - Object with fields to filter by
+ * @param {Object} [filter] - Object with fields to filter by.  You can also include fields of the pass that are not documented 
  * @param {String} [filter.id] - ID of the pass itself (will still return an array)
  * @param {String} [filter.fromPerson] - User ID of the person that the migrator is leaving from
  * @param {String} [filter.toPerson] - User ID of the person that the migrator is going to
  * @param {String} [filter.migrator] - User ID of the person that is actually moving
  * @param {String} [filter.requester] - User ID of the person that requested the pass
- * @param {String} [filter.period] - A period constant
- * @param {(Date|String|Object)} [filter.date] - If a string, it must be in ISO format.
- * @param {(Date|String)} [filter.date.from] - Lower limit for the date
- * @param {(Date|String)} [filter.date.to] - Upper limit for the date
+ * @param {(String|String[])} [filter.period] - An array r string of period constants.
+ * @param {Object} [filter.date]
+ * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string
+ * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string
  * 
- * @param {Object} [options]
- * @param {Boolean} include
+ * @param {Object} [options] - Unused
  * 
- * @param {string} id - Id of the account
- * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
- * @param {date} fromDate - low range date to search for.  
- * @param {date} toDate - High range date to search for.  set null for none
- * @param {array} periods - Only return passes with these periods.  set null for none
- * @param {function} done - callback
- * @returns {done} Error, or a transaction statement 
+ * @returns {Promise} - Array of passes
+ * @throws {(TypeError|Error|ReQL)}
  */
 exports.get = function (filter, options) {
     return new Promise((resolve, reject) => {
-        console.log(periods);
-        if (!id || typeof id != "string") {
-            let err = new Error("Invalid ID");
+        //check filter type
+        let filterType = `
+        {
+            Maybe id: String,
+            Maybe fromPerson: String,
+            Maybe toPerson: String,
+            Maybe migrator: String,
+            Maybe requester: String,
+            Maybe period: period|[period],
+            Maybe date: {
+                Maybe from: ISODate|Date,
+                Maybe to: ISODate|Date
+            }, ...
+        }
+        `
+        //Top level type check.
+        if(!typeCheck(filterType, filter, utils.typeCheck)) {
+            let err = new TypeError("\"filter\" expected an object with structure: " + filterType)
             err.status = 400;
-            return done(err);
-        }
-        if (!byColl || typeof byColl != "string" || (byColl != "fromPerson" && byColl != "toPerson" && byColl != "migrator" && byColl != "requester")) {
-            let err = new Error("By Column Is Invalid");
-            err.status = 400;
-            return done(err);
-        }
-        if (!moment(fromDate, "Y-MM-DD", true).isValid()) {
-            let err = new Error("fromDate Not Valid");
-            err.status = 400;
-            return done(err);
-        } else {
-
-            fromDate = moment(fromDate).toISOString();
-        }
-
-        if (!moment(toDate, "Y-MM-DD", true).isValid()) {
-            toDate = null;
-        } else {
-
-            toDate = moment(toDate).toISOString();
-
+            return reject(err);
         }
 
 
-        if (periods != null && !Array.isArray(periods)) {
-            var err = new Error("Expected periods to be either undefined, null or an array.  Got: " + typeof periods);
-            err.status = 400;
-            return done(err);
+        // Prepare dates
+        if(queries.date && typeCheck("Date", queries.date.from)) {
+            queries.date.from = moment(queries.date.from).toISOString();
+        }
+        if(queries.date && typeCheck("Date", queries.date.to)) {
+            queries.date.to = moment(queries.date.to).toISOString();
         }
 
+        //Start query
+        let query = r.table("passes");
 
+        //Filter Primary Keys 
+        if(filter.id) {
+            query = query.getAll(filter.id);
+            delete filter.id;
+        }
 
-        return r.table("passes")
-
-            .filter(function (person) {
-                return person(byColl).eq(id);
-            })
-            .filter(function (day) {
-                if (!toDate) {
-                    return day("date").date().gt(r.ISO8601(fromDate).date()).or(
-                        day("date").date().eq(r.ISO8601(fromDate).date()));
+        //filter date
+        if(filter.date && (filter.date.from || filter.date.to)) {
+            query = query.filter((date) => {
+                if(filter.date && filter.date.from && filter.date.to) {
+                    return date("date").during(r_.ISO8601(filter.date.from), r_.ISO8601(filter.date.to), {leftBound: "closed", rightBound: "closed"});
+                } else if(filter.date && filter.date.from) {
+                    return date("date").ge(r_.ISO8601(filter.date.from));
+                } else if(filter.date && filter.date.to) {
+                    return date("date").le(r_.ISO8601(filter.date.to));
                 } else {
-                    return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date());
-                }
-            })
-            .filter(function (period) {
-                if (!periods) {
                     return true;
-                } else {
-                    console.log(period("period"));
-                    return r.expr(periods).contains(period("period"));
                 }
             })
+            delete filter.date;
+        }
 
-            
+        //filter if periods is an array
+        if(typeCheck("[period]", filter.period, utils.typeCheck)) {
+            query = query.filter(function(period) {
+                return r.expr(filter.period).contains(period("period")); 
+            });
+            delete filter.period;
+        }
 
-            //join optional fromPerson value
-            .outerJoin(r.table("accounts"), function (passRow, accountRow) {
+
+        //filter everything else
+        query = query.filter(filter)            
+
+        //Account Joins: 
+        //join optional fromPerson value
+        query = query.outerJoin(r.table("accounts"), function (passRow, accountRow) {
                 return passRow("fromPerson").eq(accountRow("id"));
             })
             .map(r.row.merge(function (ro) {
@@ -382,10 +384,10 @@ exports.get = function (filter, options) {
 
             .run()
             .then((data) => {
-                
+                return resolve(data);
             })
             .catch(reject);
-
+        return query;
             /*, function (err, dataCur) {
                 if (err) {
                     return done(err);

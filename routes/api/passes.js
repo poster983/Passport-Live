@@ -36,6 +36,43 @@ router.use(cors());
 router.options("*", cors());
 
 
+/**
+* Gets all passes from passport or filters them. 
+* JWT Required 
+* @function getPasses
+* @link module:api/passes
+* @api GET /api/passes/
+* @apiquery {String} [id] - ID of the pass itself (will still return an array)
+* @apiquery {String} [fromPerson] - User ID of the person that the migrator is leaving from
+* @apiquery {String} [toPerson] - User ID of the person that the migrator is going to
+* @apiquery {String} [migrator] - User ID of the person that is actually moving
+* @apiquery {String} [requester] - User ID of the person that requested the pass
+* @apiquery {(String|String[])} [period] - An array r string of period constants. (Feed array like "?period=a,b,c")
+* @apiquery {ISOString} [date_from] - Lower limit for the date. inclusive
+* @apiquery {ISOString} [date_to] - Upper limit for the date. inclusive
+* @apiresponse {Object[]} Array of pass objects
+*/
+router.get("/", passport.authenticate("jwt", { session: false}), function getPasses(req, res, next) {
+    console.log(req.query)
+    api.get({
+        id: req.query.id,
+        fromPerson: req.query.fromPerson,
+        toPerson: req.query.toPerson,
+        migrator: req.query.migrator,
+        requester: req.query.requester,
+        period: req.query.period,
+        date: {
+            from: req.query.date_from,
+            to: req.query.date_to
+        }  
+    })
+    .then((passes) => {
+        return res.json(passes);
+    })
+    .catch((err) => {
+        return next(err);
+    })
+})
 
 /**
     * Creates a new Pass from/for currently logged in account.
@@ -59,6 +96,7 @@ router.options("*", cors());
     * }
     *
     * @apiresponse {json} Returns rethink db action summery
+    * @todo rewrite to support toPerson to be requestor
     */
 router.post("/me", passport.authenticate("jwt", { session: false}), function newPassForMe(req, res, next) {
     var fromPerson = req.body.fromPerson;
@@ -75,7 +113,7 @@ router.post("/me", passport.authenticate("jwt", { session: false}), function new
     * Gets all Passes from a day from/for currently logged in account.
     * REQUIRES JWT Authorization in headers.
     * @function getPassForMeFromDay
-    * @async
+    * @decrepitated
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
@@ -101,7 +139,7 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate("jwt", { session
     * Gets all Passes from a day to a day from/for currently logged in account.
     * REQUIRES JWT Authorization in headers.
     * @function getPassForMeFromToDay
-    * @async
+    * @decrepitated
     * @param {request} req
     * @param {response} res
     * @param {nextCallback} next
