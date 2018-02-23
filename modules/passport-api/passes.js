@@ -65,7 +65,7 @@ exports.passStates = Object.freeze(exports.passStates);
  * @param {string} pass.migrator - Id of the account moving between people
  * @param {string} pass.requester - Id of the account who requested the pass
  * @param {string} pass.period - must be a valid period set in the configs
- * @param {(date|ISOString)} pass.date
+ * @param {(Date|ISOString)} pass.date
  * @param {Object} [options]
  * @param {boolean} [options.checkLimit=true] - Checks if toPerson is full. If so, the pass will be set as "waitlisted"
  * @param {boolean} [options.checkDupe=true] - Sheck if there is an identical pass in the system already.
@@ -212,7 +212,7 @@ exports.newPass = function (pass, options) {
     });
 };
 
-/**
+/*
  * Gets passes
  * @link module:js/passes
  * @param {string} id - Id of the account
@@ -223,7 +223,33 @@ exports.newPass = function (pass, options) {
  * @param {function} done - callback
  * @returns {done} Error, or a transaction statement 
  */
-exports.get = function (id, byColl, fromDate, toDate, periods) {
+
+/**
+ * Gets passes
+ * @link module:js/passes
+ * @param {Object} [filter] - Object with fields to filter by
+ * @param {String} [filter.id] - ID of the pass itself (will still return an array)
+ * @param {String} [filter.fromPerson] - User ID of the person that the migrator is leaving from
+ * @param {String} [filter.toPerson] - User ID of the person that the migrator is going to
+ * @param {String} [filter.migrator] - User ID of the person that is actually moving
+ * @param {String} [filter.requester] - User ID of the person that requested the pass
+ * @param {String} [filter.period] - A period constant
+ * @param {(Date|String|Object)} [filter.date] - If a string, it must be in ISO format.
+ * @param {(Date|String)} [filter.date.from] - Lower limit for the date
+ * @param {(Date|String)} [filter.date.to] - Upper limit for the date
+ * 
+ * @param {Object} [options]
+ * @param {Boolean} include
+ * 
+ * @param {string} id - Id of the account
+ * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
+ * @param {date} fromDate - low range date to search for.  
+ * @param {date} toDate - High range date to search for.  set null for none
+ * @param {array} periods - Only return passes with these periods.  set null for none
+ * @param {function} done - callback
+ * @returns {done} Error, or a transaction statement 
+ */
+exports.get = function (filter, options) {
     return new Promise((resolve, reject) => {
         console.log(periods);
         if (!id || typeof id != "string") {
@@ -262,7 +288,7 @@ exports.get = function (id, byColl, fromDate, toDate, periods) {
 
 
 
-        r.table("passes")
+        return r.table("passes")
 
             .filter(function (person) {
                 return person(byColl).eq(id);
@@ -356,10 +382,9 @@ exports.get = function (id, byColl, fromDate, toDate, periods) {
 
             .run()
             .then((data) => {
-
+                
             })
-
-            .catch((err))
+            .catch(reject);
 
             /*, function (err, dataCur) {
                 if (err) {
@@ -375,16 +400,6 @@ exports.get = function (id, byColl, fromDate, toDate, periods) {
     });
 };
 
-/*//get pass permissions
-        .merge(function(pass) {
-            return {
-                status: {
-                    confirmation: {
-                        allowedChanges: getStateChangePermissions(pass.coerceTo('object').data, id)
-                    }
-                }
-            }
-        })*/
 
 /**
  * Gets pass by Primary key
@@ -801,81 +816,76 @@ state.allowedChanges = (passID, forUserID) => {
             })
             .then((passData) => {
                 //calculate permissions
-                return getStateChangePermissions(passData, forUserID);
+                let permissions = {
+                    neutral: false,
+                    accepted: false,
+                    canceled: false,
+                    undo: false
+                };
+                let stateData = passData.status.confirmation;
+                //check if forUserID is NOT an id in the toPerson or migrator slots  
+                if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
+                    return permissions;
+                }
+                //check if pass is locked, and if forUserID is not the serByUser
+                if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
+                    return permissions;
+                }
+            
+                //change permissions object for neutral type state
+                if(state.isNeutral(stateData.state)) {
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else if(state.isAccepted(stateData.state)) {
+                    //for accepted type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.canceled = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else if(state.isCanceled(stateData.state)) {
+                    //for Canceled type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        permissions.undo = "UNDO";
+                    } else {
+                        //If user is requester
+                        permissions.neutral = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                    return permissions;
+                } else {
+                    let err = new Error("Pass state not valid");
+                    err.status = 500;
+                    throw err;
+                }
             })
             .then(resolve)
             .catch(reject);
     });
 };
 
-//this is a private function for state.allowedChanges and flexableGetPasses 
-function getStateChangePermissions(passData, forUserID) {
-    let permissions = {
-        neutral: false,
-        accepted: false,
-        canceled: false,
-        undo: false
-    };
-    console.log(passData)
-    let stateData = passData.status.confirmation;
-    //check if forUserID is NOT an id in the toPerson or migrator slots  
-    if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
-        return permissions;
-    }
-    //check if pass is locked, and if forUserID is not the serByUser
-    if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
-        return permissions;
-    }
-
-    //change permissions object for neutral type state
-    if(state.isNeutral(stateData.state)) {
-        if(forUserID !== passData.requester) {
-            //if user is the receiver
-            permissions.neutral = true;
-            permissions.canceled = true;
-            permissions.accepted = true;
-            permissions.undo = "UNDO";
-        } else {
-            //If user is requester
-            permissions.neutral = true;
-            permissions.canceled = true;
-            permissions.undo = "NEUTRAL";
-        }  
-        return permissions;
-    } else if(state.isAccepted(stateData.state)) {
-        //for accepted type
-        if(forUserID !== passData.requester) {
-            //if user is the receiver
-            permissions.neutral = true;
-            permissions.canceled = true;
-            permissions.accepted = true;
-            permissions.undo = "UNDO";
-        } else {
-            //If user is requester
-            permissions.canceled = true;
-            permissions.undo = "NEUTRAL";
-        }  
-        return permissions;
-    } else if(state.isCanceled(stateData.state)) {
-        //for Canceled type
-        if(forUserID !== passData.requester) {
-            //if user is the receiver
-            permissions.neutral = true;
-            permissions.canceled = true;
-            permissions.accepted = true;
-            permissions.undo = "UNDO";
-        } else {
-            //If user is requester
-            permissions.neutral = true;
-            permissions.undo = "NEUTRAL";
-        }  
-        return permissions;
-    } else {
-        let err = new Error("Pass state not valid");
-        err.status = 500;
-        throw err;
-    }
-}
 /*
     Neutral:
         requester can change to type canceled or type neutral.  when they undo, they go to a neutral state

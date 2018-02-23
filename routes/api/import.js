@@ -41,8 +41,8 @@ router.options("*", cors());
  * @api GET /api/import/log
  * @apiquery {(String|undefined)} name - Bulk Log Name
  * @apiquery {(String|undefined)} type - importType. Current values: "account", "schedule" 
- * @apiquery {(String|undefined)} from - ISO Strng Low end.  inclusive
- * @apiquery {(String|undefined)} to - ISO Strng High end. inclusive
+ * @apiquery {(String|undefined)} from - ISO String Low end.  inclusive
+ * @apiquery {(String|undefined)} to - ISO String High end. inclusive
  * @apiresponse {Object[]}
  */
 router.get("/log", passport.authenticate("jwt", {
