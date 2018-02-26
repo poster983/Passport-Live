@@ -37,9 +37,10 @@ require("@polymer/paper-styles/color.js");
  * @class 
  * @property {String} passId - Id of the pass in the DB
  * @property {Object} allowedChanges - Object of allowed state changes
- * @property {String} rawState - the actual state of the pass in the database.  This string should be presented to the user.
+ * @property {String} state - the actual state of the pass in the database.  This string should be presented to the user.
+ * @property {Boolean} disabled - Grays out the buttons
  * @example
- * <passport-pass-state-buttons></passport-pass-state-buttons>
+ * <passport-pass-state-buttons pass-id="sad5-fd4s-d45f6s-56sdf4-56sdf"></passport-pass-state-buttons>
  */
 class PassportPassStateButtons extends polymer.Element {
 
@@ -50,10 +51,9 @@ class PassportPassStateButtons extends polymer.Element {
     constructor() {
         super();
     }
-    ready() {
+    /*ready() {
         super.ready();
-        console.log(this.passId)
-    }
+    }*/
     static get properties() {
         return {
             passId: {
@@ -61,7 +61,7 @@ class PassportPassStateButtons extends polymer.Element {
                 notify: true,
                 observer: "_passIDChanged"
             },
-            rawState: {
+            state: {
                 type: String,
                 reflectToAttribute: true,
                 notify: false
@@ -69,21 +69,55 @@ class PassportPassStateButtons extends polymer.Element {
             allowedChanges: {
                 type: Object,
                 reflectToAttribute: true,
-                notify: false
+                notify: true,
+                observer: "_updateButtons"
             },
+            disabled: {
+                type: Boolean,
+                notify: true,
+                observer: "_observeAllDisabled"
+            },
+            status: {
+                type: Object,
+                reflectToAttribute: true,
+                notify: false
+            }
         };
     }
 
     _passIDChanged() {
         this.updateState();
     }
+    //observer: "_updateButtons"
 
+    _updateButtons(newVal, oldVal) {
+        let leftButton = this.shadowRoot.querySelector("#check");
+        let rightButton = this.shadowRoot.querySelector("#block");
+        console.log(leftButton)
+        if(this.allowedChanges.accepted) {
+            //enable accepted 
+            leftButton.disabled = false;
+        } else {leftButton.disabled = true;}
+        if(this.allowedChanges.canceled) {
+            //enable cancel
+            rightButton.disabled = false;
+        } else {rightButton.disabled = true;}
+    }
+
+    /** Syncs the pass state on the server with the client */
     updateState() {
         passAPI.getState(this.passId)
             .then((data) => {
-                this.rawState = data.state;
+                if(data.status.migration.arrivedTime) {
+                    this.state = "arrived";
+                } else if(data.status.migration.excusedTime) {
+                    this.state = "enroute";
+                } else {
+                    this.state = data.status.confirmation.state;
+                }
+
                 this.allowedChanges = data.allowedChanges;
-                console.log(data)
+                this.status = data.status;
             })
             .catch((err) => {
                 this._error(err);
@@ -92,7 +126,7 @@ class PassportPassStateButtons extends polymer.Element {
     _error(error) {
         console.error(error);
         //event 
-        this.dispatchEvent(new CustomEvent("error", {error: error}));
+        this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }
     _test(e) {
         console.log(this.passId);

@@ -233,13 +233,16 @@ exports.newPass = function (pass, options) {
  * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string
  * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string
  * 
- * @param {Object} [options] - Unused
+ * @param {Object} [options] -- unused
  * 
  * @returns {Promise} - Array of passes
  * @throws {(TypeError|Error|ReQL)}
  */
 exports.get = function (filter, options) {
     return new Promise((resolve, reject) => {
+        if(!filter) {
+            filter = {};
+        }
         //check filter type
         let filterType = `
         {
@@ -261,6 +264,21 @@ exports.get = function (filter, options) {
             err.status = 400;
             return reject(err);
         }
+
+        //type check options 
+        /*if(!options) {
+            options = {};
+        }
+        let optionsType = `
+        {
+            includeAllowedChanges: Maybe Boolean
+        }
+        `
+        if(!typeCheck(optionsType, options, utils.typeCheck)) {
+            let err = new TypeError("\"options\" expected an object with structure: " + optionsType);
+            err.status = 400;
+            return reject(err);
+        }*/
 
 
         // Prepare dates
@@ -383,17 +401,6 @@ exports.get = function (filter, options) {
             })
             .catch(reject);
         return query;
-        /*, function (err, dataCur) {
-                if (err) {
-                    return done(err);
-                }
-                dataCur.toArray(function (err, data) {
-                    if (err) {
-                        return done(err);
-                    }
-                    return done(null, data);
-                });
-            });*/
     });
 };
 
@@ -828,7 +835,7 @@ state.allowedChanges = (passID, forUserID) => {
                 if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
                     return permissions;
                 }
-            
+
                 //change permissions object for neutral type state
                 if(state.isNeutral(stateData.state)) {
                     if(forUserID !== passData.requester) {

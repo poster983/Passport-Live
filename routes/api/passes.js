@@ -415,7 +415,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate("jwt", { sess
 });
 
 /**
-* gets the pass state 
+* gets the pass state object
 * REQUIRES JWT Authorization in headers.
 * @function getPassState
 * @param {request} req
@@ -424,7 +424,7 @@ router.patch("/status/:passId/state/:state", passport.authenticate("jwt", { sess
 * @apiparam {String} passID - The id of the Pass
 * @apiquery {String} userID - run the query as this user.
 * @api GET /api/passes/:passID/state
-* @apiresponse {Object} Object with the state object (key: state) and the allowed changes (key: allowedChanges)
+* @apiresponse {Object} Object with the state object (key: status) and the allowed changes (key: allowedChanges)
 */
 router.get("/:passID/state", passport.authenticate("jwt", { session: false}), function getPassState(req, res, next) {
     if(!req.params.passID) {
@@ -441,14 +441,14 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
                 err.status = 404;
                 throw err;
             }
-            return passData.status.confirmation.state;
+            return passData.status;
         })
         .then((final) => {
             //get allowed changes 
             api.state.allowedChanges(req.params.passID, typeof req.query.userID === "string"?req.query.userID:req.user.id)
                 .then((allowedChanges) => {
                     //send object to user
-                    return res.json({state: final, allowedChanges: allowedChanges});
+                    return res.json({status: final, allowedChanges: allowedChanges});
                 });
         })
         .catch((err) => {

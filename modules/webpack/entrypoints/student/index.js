@@ -33,6 +33,6 @@ window.onload = function() {
     //check for errors TEST
     $("passport-pass-state-buttons").on("error", (e) => {
         console.log(e);
-        utils.throwError(e.error);
+        utils.throwError(e.originalEvent.detail.error);
     });
 };
