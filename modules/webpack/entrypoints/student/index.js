@@ -26,4 +26,13 @@ document.createElement = Document.prototype.createElement;
 require("../../components/pass-state-buttons/pass-state-buttons.js");
 
 /** require modules **/
+var utils = require("../../utils/index.js");
 
+
+window.onload = function() {
+    //check for errors TEST
+    $("passport-pass-state-buttons").on("error", (e) => {
+        console.log(e);
+        utils.throwError(e.error);
+    });
+};

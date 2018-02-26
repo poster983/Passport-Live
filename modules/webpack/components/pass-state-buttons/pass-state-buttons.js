@@ -22,6 +22,8 @@ email: hi@josephhassell.com
 let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass-state-buttons.template.html");
 
+let passAPI = require("../../api/passes.js");
+
 /** Components **/
 require("@polymer/paper-fab/paper-fab.js");
 require("@polymer/iron-icons/iron-icons.js");
@@ -31,9 +33,10 @@ require("@polymer/paper-styles/color.js");
 
 /**
  * Polymer Element that holds pass state manupulation buttons.  
+ * Errors trigger the "error" event
  * @class 
  * @property {String} passId - Id of the pass in the DB
- * @property {String} stateType - can be "neutral", "canceled", or "accepted"
+ * @property {Object} allowedChanges - Object of allowed state changes
  * @property {String} rawState - the actual state of the pass in the database.  This string should be presented to the user.
  * @example
  * <passport-pass-state-buttons></passport-pass-state-buttons>
@@ -46,26 +49,54 @@ class PassportPassStateButtons extends polymer.Element {
     }
     constructor() {
         super();
-      
+    }
+    ready() {
+        super.ready();
+        console.log(this.passId)
     }
     static get properties() {
         return {
             passId: {
                 type: String,
                 notify: true,
-                readOnly: true
-            },
-            stateType: {
-                type: String,
-                reflectToAttribute: true,
-                notify: true
+                observer: "_passIDChanged"
             },
             rawState: {
                 type: String,
                 reflectToAttribute: true,
                 notify: false
             },
+            allowedChanges: {
+                type: Object,
+                reflectToAttribute: true,
+                notify: false
+            },
         };
+    }
+
+    _passIDChanged() {
+        this.updateState();
+    }
+
+    updateState() {
+        passAPI.getState(this.passId)
+            .then((data) => {
+                this.rawState = data.state;
+                this.allowedChanges = data.allowedChanges;
+                console.log(data)
+            })
+            .catch((err) => {
+                this._error(err);
+            });
+    }
+    _error(error) {
+        console.error(error);
+        //event 
+        this.dispatchEvent(new CustomEvent("error", {error: error}));
+    }
+    _test(e) {
+        console.log(this.passId);
+
     }
 }
 module.exports = PassportPassStateButtons;

@@ -20,20 +20,27 @@ email: hi@josephhassell.com
 
 */
 /**
-* Browser Security Functions.
-* @module webpack/api/security
+* Browser pass Functions.
+* @module webpack/api/passes
 */
 
-let utils = require("../utils/index.js");
+var utils = require("../utils/index.js");
 
 /**
-* Creates a new permission key for creating accounts
-* @param {Object} body 
-* @param {String[]} body.userGroups - What accounts can be created with this perm key
-* @param {Object} [body.timeout] - whatever timeout comes first will be applyed.
-* @param {Number} [body.timeout.tally] - The number of uses allowed
-* @param {String} [body.timeout.time] - ISO date/time
-*/
-exports.newAccount = (body) => {
-    return utils.fetch("POST", "/api/security/key/NEW_ACCOUNT", {body: body, auth: true});
-};  
+ * Gets passes and filters them.
+ * @param {Object} filter - SEE: {@link module:js/passes.get} filter param
+ * @returns {Object[]}
+ * @todo NOT implemented
+ */
+exports.get = (filter) => {
+    //NOT implemented
+};
+
+/**
+ * Gets a pass's state AND the change rules.
+ * @param {String} passID
+ * @returns {Object}
+ */
+exports.getState = (passID) => {
+    return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true});
+};

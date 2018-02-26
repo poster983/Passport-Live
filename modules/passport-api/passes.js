@@ -152,22 +152,17 @@ exports.newPass = function (pass, options) {
                     requester: pass.requester,
                     period: pass.period,
                     date: r.ISO8601(pass.date)
-                }).run(function (err, cur) {
+                }).run(function (err, data) {
                     if (err) {
                         return dupeReject(err);
                     }
-                    cur.toArray(function (err, data) {
-                        if (err) {
-                            return dupeReject(err);
-                        }
-                        if (data.length > 0) {
-                            var err = new Error("Duplicate pass found");
-                            err.status = 409;
-                            dupeReject(err);
-                        } else {
-                            dupeResolve();
-                        }
-                    });
+                    if (data.length > 0) {
+                        let err = new Error("Duplicate pass found");
+                        err.status = 409;
+                        dupeReject(err);
+                    } else {
+                        dupeResolve();
+                    }
                 });
             } else {
                 dupeResolve();
@@ -248,32 +243,32 @@ exports.get = function (filter, options) {
         //check filter type
         let filterType = `
         {
-            Maybe id: String,
-            Maybe fromPerson: String,
-            Maybe toPerson: String,
-            Maybe migrator: String,
-            Maybe requester: String,
-            Maybe period: period|[period],
-            Maybe date: {
-                Maybe from: ISODate|Date,
-                Maybe to: ISODate|Date
+            id: Maybe String,
+            fromPerson: Maybe String,
+            toPerson: Maybe String,
+            migrator: Maybe String,
+            requester: Maybe String,
+            period: Maybe period|[period],
+            date: Maybe {
+                from: Maybe ISODate|Date,
+                to: Maybe ISODate|Date
             }, ...
         }
-        `
+        `;
         //Top level type check.
         if(!typeCheck(filterType, filter, utils.typeCheck)) {
-            let err = new TypeError("\"filter\" expected an object with structure: " + filterType)
+            let err = new TypeError("\"filter\" expected an object with structure: " + filterType);
             err.status = 400;
             return reject(err);
         }
 
 
         // Prepare dates
-        if(queries.date && typeCheck("Date", queries.date.from)) {
-            queries.date.from = moment(queries.date.from).toISOString();
+        if(filter.date && typeCheck("Date", filter.date.from)) {
+            filter.date.from = moment(filter.date.from).toISOString();
         }
-        if(queries.date && typeCheck("Date", queries.date.to)) {
-            queries.date.to = moment(queries.date.to).toISOString();
+        if(filter.date && typeCheck("Date", filter.date.to)) {
+            filter.date.to = moment(filter.date.to).toISOString();
         }
 
         //Start query
@@ -289,15 +284,15 @@ exports.get = function (filter, options) {
         if(filter.date && (filter.date.from || filter.date.to)) {
             query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
-                    return date("date").during(r_.ISO8601(filter.date.from), r_.ISO8601(filter.date.to), {leftBound: "closed", rightBound: "closed"});
+                    return date("date").during(r.ISO8601(filter.date.from), r.ISO8601(filter.date.to), {leftBound: "closed", rightBound: "closed"});
                 } else if(filter.date && filter.date.from) {
-                    return date("date").ge(r_.ISO8601(filter.date.from));
+                    return date("date").ge(r.ISO8601(filter.date.from));
                 } else if(filter.date && filter.date.to) {
-                    return date("date").le(r_.ISO8601(filter.date.to));
+                    return date("date").le(r.ISO8601(filter.date.to));
                 } else {
                     return true;
                 }
-            })
+            });
             delete filter.date;
         }
 
@@ -311,13 +306,13 @@ exports.get = function (filter, options) {
 
 
         //filter everything else
-        query = query.filter(filter)            
+        query = query.filter(filter);            
 
         //Account Joins: 
         //join optional fromPerson value
         query = query.outerJoin(r.table("accounts"), function (passRow, accountRow) {
-                return passRow("fromPerson").eq(accountRow("id"));
-            })
+            return passRow("fromPerson").eq(accountRow("id"));
+        })
             .map(r.row.merge(function (ro) {
                 return ro("left");
             }))
@@ -388,7 +383,7 @@ exports.get = function (filter, options) {
             })
             .catch(reject);
         return query;
-            /*, function (err, dataCur) {
+        /*, function (err, dataCur) {
                 if (err) {
                     return done(err);
                 }

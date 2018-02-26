@@ -47,7 +47,7 @@ router.options("*", cors());
 * @apiquery {String} [toPerson] - User ID of the person that the migrator is going to
 * @apiquery {String} [migrator] - User ID of the person that is actually moving
 * @apiquery {String} [requester] - User ID of the person that requested the pass
-* @apiquery {(String|String[])} [period] - An array r string of period constants. (Feed array like "?period=a,b,c")
+* @apiquery {(String|String[])} [period] - An array string of period constants. (Feed array like "?period=a&period=b&period=c")
 * @apiquery {ISOString} [date_from] - Lower limit for the date. inclusive
 * @apiquery {ISOString} [date_to] - Upper limit for the date. inclusive
 * @apiresponse {Object[]} Array of pass objects
@@ -66,12 +66,12 @@ router.get("/", passport.authenticate("jwt", { session: false}), function getPas
             to: req.query.date_to
         }  
     })
-    .then((passes) => {
-        return res.json(passes);
-    })
-    .catch((err) => {
-        return next(err);
-    })
+        .then((passes) => {
+            return res.json(passes);
+        })
+        .catch((err) => {
+            return next(err);
+        })
 })
 
 /**
@@ -126,13 +126,28 @@ router.get("/me/by/:idCol/from/:fromDay", passport.authenticate("jwt", { session
     //res.sendStatus(501);
     var fromDay = req.params.fromDay;
     var idCol = req.params.idCol;
-
-    api.flexableGetPasses(req.user.id, idCol, fromDay, null, null, function(err, data) {
+    if(idCol !== "fromPerson" && idCol !== "toPerson" && idCol !== "migrator" && idCol !== "requester") {
+        let err = new TypeError("idCol must be one of: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"");
+        err.status = 400;
+        return next(err);
+    }
+    api.get({
+        [idCol]: req.user.id,
+        date: {
+            from: moment(fromDay).toISOString()
+        }
+    })
+        .then((data) => {
+            return res.json(data);
+        }).catch((err) => {
+            return next(err);
+        });
+    /*api.flexableGetPasses(req.user.id, idCol, fromDay, null, null, function(err, data) {
         if(err) {
             return next(err);
         }
         res.send(data);
-    });
+    });*/
 });
 
 /**
@@ -153,13 +168,29 @@ router.get("/me/by/:idCol/from/:fromDay/to/:toDay", passport.authenticate("jwt",
     var fromDay = req.params.fromDay;
     var toDay = req.params.toDay;
     var idCol = req.params.idCol;
-
-    api.flexableGetPasses(req.user.id, idCol, fromDay, toDay, null, function(err, data) {
+    if(idCol !== "fromPerson" && idCol !== "toPerson" && idCol !== "migrator" && idCol !== "requester") {
+        let err = new TypeError("idCol must be one of: \"fromPerson\", \"toPerson\", \"migrator\", \"requester\"");
+        err.status = 400;
+        return next(err);
+    }
+    api.get({
+        [idCol]: req.user.id,
+        date: {
+            from: moment(fromDay).toISOString(),
+            to: moment(toDay).toISOString()
+        }
+    })
+        .then((data) => {
+            return res.json(data);
+        }).catch((err) => {
+            return next(err);
+        });
+    /*api.flexableGetPasses(req.user.id, idCol, fromDay, toDay, null, function(err, data) {
         if(err) {
             return next(err);
         }
         res.send(data);
-    });
+    });*/
 });
 
 /**
