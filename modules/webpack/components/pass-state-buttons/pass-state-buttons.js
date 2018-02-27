@@ -96,6 +96,10 @@ class PassportPassStateButtons extends polymer.Element {
                 type: String,
                 reflectToAttribute: false,
                 notify: false
+            },
+            _errorRetry: {
+                type: Boolean,
+                value: true
             }
         };
     }
@@ -112,10 +116,10 @@ class PassportPassStateButtons extends polymer.Element {
     _updateButtons() {
         let acceptedButton = this.shadowRoot.querySelector("#check");
         let canceledButton = this.shadowRoot.querySelector("#block");
-        console.log(acceptedButton)
+        //console.log(acceptedButton)
         if(this.allowedChanges.accepted) {
             //enable accepted 
-            _makeAccepted("#check");
+            this._makeAccepted("#check");
             this._leftButtonAction = "accepted";
         } else {acceptedButton.disabled = true;}
         if(this.allowedChanges.canceled) {
@@ -156,14 +160,44 @@ class PassportPassStateButtons extends polymer.Element {
         button.class = "cancel";
     }
 
-    _stateButtonClicked(e) {
-        console.log(e)
-        console.log(this._leftButtonAction)
+    _leftButtonClicked(e) {
+        console.log(this._leftButtonAction);   
+        this.setState(this._leftButtonAction)
+    }
+    _rightButtonClicked(e) {
         console.log(this._rightButtonAction);
+        this.setState(this._rightButtonAction);
+    }
+
+    setState(newStateType) {
+        //Start loader 
+        this.disabled = true;
+        let fetch = null;
+        if(newStateType === "undo") {
+            fetch = passAPI.undoState(this.passId);
+        } else {
+            fetch = passAPI.setState(this.passId, newStateType);
+        }
+        fetch.then((res) => {
+            //console.log(res)
+            //End loader
+            
+            this.state = res.state;
+            this.stateType = res.type;
+            this.allowedChanges = res.allowedChanges;
+            this.disabled = false;
+            
+        })
+        .catch((err) => {
+            //end loader, show error
+            this._error(err);
+        })
+        return fetch;
     }
 
     /** Syncs the pass state on the server with the client */
     updateState() {
+        this.disabled = true;
         passAPI.getState(this.passId)
             .then((data) => {
                 if(data.status.migration.arrivedTime) {
@@ -177,6 +211,8 @@ class PassportPassStateButtons extends polymer.Element {
                 this.stateType = data.type;
                 this.status = data.status;
                 this.allowedChanges = data.allowedChanges;
+                this.disabled = false;
+                this._errorRetry = true;
             })
             .catch((err) => {
                 this._error(err);
@@ -184,19 +220,16 @@ class PassportPassStateButtons extends polymer.Element {
     }
     _error(error) {
         console.error(error);
+        this.shadowRoot.querySelector("paper-fab").icon = "icon:error-outline";
+
+        //try regetting the state
+        if(this._errorRetry) {
+            this._errorRetry = false;
+            this.updateState();
+
+        }
         //event 
         this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
-    }
-    _test(e) {
-        console.log(this.passId);
-
-    }
-
-    _leftClicked(e) {
-
-    }
-    _rightClicked(e) {
-
     }
 }
 module.exports = PassportPassStateButtons;

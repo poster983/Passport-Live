@@ -31,6 +31,7 @@ var api = require("../../modules/passport-api/passes.js");
 var passport = require("passport");
 var config = require("config");
 var moment = require("moment");
+var typeCheck = require("type-check").typeCheck;
 
 router.use(cors());
 router.options("*", cors());
@@ -467,7 +468,7 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
     * @api PATCH /api/passes/:passID/state
-    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
+    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges), and the state type (key: type)
     */
 router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), function updatePassState(req, res, next) {
     //check given state type 
@@ -477,7 +478,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
         err.status = 400;
         return next(err);
     }
-    if(req.body.type !== "neutral" || req.body.type !== "accepted" || req.body.type !== "canceled") {
+    if(req.body.type !== "neutral" && req.body.type !== "accepted" && req.body.type !== "canceled") {
         let err = new Error("type must be either \"neutral\", \"accepted\", or \"canceled\"");
         err.status = 400;
         return next(err);
@@ -525,7 +526,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
             api.state.allowedChanges(req.params.passID, req.user.id)
                 .then((allowedChanges) => {
                     //return new object
-                    return res.json(Object.assign(final, {allowedChanges: allowedChanges}));
+                    return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));
                 });
         })
         .catch((err) => {return next(err);})
@@ -541,7 +542,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
     * @api PATCH /api/passes/:passID/state/undo
-    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges)
+    * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges), and the state type (key: type)
     */
 router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: false}), function undoPassState(req, res, next) {
     api.state.allowedChanges(req.params.passID, req.user.id)
@@ -566,7 +567,7 @@ router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: fals
             api.state.allowedChanges(req.params.passID, req.user.id)
                 .then((allowedChanges) => {
                     //return new object
-                    return res.json(Object.assign(final, {allowedChanges: allowedChanges}));
+                    return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));
                 });
         })
         .catch((err) => {return next(err);})

@@ -715,7 +715,7 @@ state.canceled = (passID, setByID) => {
             .then((passData) => {
                 //check states to determine new state 
                 let stateData = passData.status.confirmation;
-                if(stateData.state === exports.passStates.PENDING || stateData.state === exports.passStates.WAITLISTED) {
+                if(setByID && state.neutral(stateData.state) && setByID !== passData.requester) {
                     return exports.passStates.DENIED;
                 } else {
                     return exports.passStates.CANCELED;

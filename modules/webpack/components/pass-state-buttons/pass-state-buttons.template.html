@@ -2,7 +2,8 @@
     paper-fab {
         display: inline-block;
         margin: 2px;
-        --paper-fab-keyboard-focus-background: var(--dark-primary-color)
+        --paper-fab-keyboard-focus-background: var(--dark-primary-color);
+        transition: all 0.2s;
     }
     .cancel {
         --paper-fab-background: var(--paper-red-500);
@@ -17,5 +18,5 @@
     /* Span Styles */
 </style>
 
-<paper-fab id="check" class="accept" mini disabled="[[disabled]]" on-click="_stateButtonClicked" icon="icons:check"></paper-fab>
-<paper-fab id="block" class="cancel" mini disabled="[[disabled]]" on-click="_stateButtonClicked" icon="icons:block"></paper-fab>
+<paper-fab id="check" class="accept" mini disabled="[[disabled]]" on-click="_leftButtonClicked" icon="icons:check"></paper-fab>
+<paper-fab id="block" class="cancel" mini disabled="[[disabled]]" on-click="_rightButtonClicked" icon="icons:block"></paper-fab>

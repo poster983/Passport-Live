@@ -44,3 +44,25 @@ exports.get = (filter) => {
 exports.getState = (passID) => {
     return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true});
 };
+
+
+/**
+ * Sets a pass's state by a state type.
+ * @param {String} passID
+ * @param {String} stateType
+ * @returns {Object}
+ */
+exports.setState = (passID, stateType) => {
+    return utils.fetch("PATCH", "/api/passes/" + passID + "/state", {body: {
+        type: stateType
+    }, auth: true});
+}
+
+/**
+ * Sets a pass's state by a state type.
+ * @param {String} passID
+ * @returns {Object}
+ */
+exports.undoState = (passID) => {
+    return utils.fetch("PATCH", "/api/passes/" + passID + "/state/undo", {auth: true});
+}
