@@ -79,7 +79,7 @@ class PassportPassStateButtons extends polymer.Element {
             },
             status: {
                 type: Object,
-                reflectToAttribute: true,
+                reflectToAttribute: false,
                 notify: false
             }
         };
@@ -89,8 +89,12 @@ class PassportPassStateButtons extends polymer.Element {
         this.updateState();
     }
     //observer: "_updateButtons"
-
-    _updateButtons(newVal, oldVal) {
+    _observeAllDisabled(newVal, oldVal) {
+        if(newVal === false) {
+            this._updateButtons();
+        }
+    }
+    _updateButtons() {
         let leftButton = this.shadowRoot.querySelector("#check");
         let rightButton = this.shadowRoot.querySelector("#block");
         console.log(leftButton)
@@ -130,6 +134,13 @@ class PassportPassStateButtons extends polymer.Element {
     }
     _test(e) {
         console.log(this.passId);
+
+    }
+
+    _leftClicked(e) {
+
+    }
+    _rightClicked(e) {
 
     }
 }
