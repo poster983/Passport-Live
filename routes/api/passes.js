@@ -448,7 +448,7 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
             api.state.allowedChanges(req.params.passID, typeof req.query.userID === "string"?req.query.userID:req.user.id)
                 .then((allowedChanges) => {
                     //send object to user
-                    return res.json({status: final, allowedChanges: allowedChanges});
+                    return res.json({status: final, type: api.state.type(final.confirmation.state), allowedChanges: allowedChanges});
                 });
         })
         .catch((err) => {

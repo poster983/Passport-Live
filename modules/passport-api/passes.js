@@ -53,6 +53,21 @@ exports.passStates = {
 };
 exports.passStates = Object.freeze(exports.passStates);
 
+/**
+ * Pass types.
+ * @readonly
+ * @enum {String}
+ */
+exports.stateTypes = {
+    /** Can be either pending or waitlisted */
+    NEUTRAL: "neutral", 
+    /** The pass has been seen by toPerson or migrator, and migrator has permission to come/is coming */
+    ACCEPTED: "accepted",
+    /** The pass has been previously accepted, but now is canceled */
+    CANCELED: "canceled"
+};
+exports.stateTypes = Object.freeze(exports.stateTypes);
+
 
 
 
@@ -889,6 +904,19 @@ state.allowedChanges = (passID, forUserID) => {
             .catch(reject);
     });
 };
+
+
+state.type = (rawState) => {
+    if(state.isNeutral(rawState)) {
+        return exports.stateTypes.NEUTRAL;
+    } else if(state.isAccepted(rawState)) {
+        return exports.stateTypes.ACCEPTED;
+    } else if (state.isCanceled(rawState)) {
+        return exports.stateTypes.CANCELED;
+    } else {
+        throw new Error("Not a valid state");
+    }
+}
 
 /*
     Neutral:

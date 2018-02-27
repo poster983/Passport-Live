@@ -66,6 +66,11 @@ class PassportPassStateButtons extends polymer.Element {
                 reflectToAttribute: true,
                 notify: false
             },
+            stateType: {
+                type: String,
+                reflectToAttribute: true,
+                notify: false
+            },
             allowedChanges: {
                 type: Object,
                 reflectToAttribute: true,
@@ -79,6 +84,16 @@ class PassportPassStateButtons extends polymer.Element {
             },
             status: {
                 type: Object,
+                reflectToAttribute: false,
+                notify: false
+            },
+            _leftButtonAction: {
+                type: String,
+                reflectToAttribute: false,
+                notify: false
+            },
+            _rightButtonAction: {
+                type: String,
                 reflectToAttribute: false,
                 notify: false
             }
@@ -95,17 +110,56 @@ class PassportPassStateButtons extends polymer.Element {
         }
     }
     _updateButtons() {
-        let leftButton = this.shadowRoot.querySelector("#check");
-        let rightButton = this.shadowRoot.querySelector("#block");
-        console.log(leftButton)
+        let acceptedButton = this.shadowRoot.querySelector("#check");
+        let canceledButton = this.shadowRoot.querySelector("#block");
+        console.log(acceptedButton)
         if(this.allowedChanges.accepted) {
             //enable accepted 
-            leftButton.disabled = false;
-        } else {leftButton.disabled = true;}
+            _makeAccepted("#check");
+            this._leftButtonAction = "accepted";
+        } else {acceptedButton.disabled = true;}
         if(this.allowedChanges.canceled) {
             //enable cancel
-            rightButton.disabled = false;
-        } else {rightButton.disabled = true;}
+            this._makeCanceled("#block");
+            this._rightButtonAction = "canceled";
+        } else {canceledButton.disabled = true;}
+        //find a spot for an undo button.  Dont show if state is equal to what the undo action does
+        if(this.allowedChanges.undo && (this.allowedChanges.undo.toLowerCase() !== this.stateType.toLowerCase())) {
+            //set undo button 
+            if(this.allowedChanges.accepted && !this.allowedChanges.canceled) {
+                // make the canceled button an undo  button 
+                this._makeUndo("#block");
+                this._rightButtonAction = "undo";
+            } else if((!this.allowedChanges.accepted && this.allowedChanges.canceled) || (!this.allowedChanges.accepted && !this.allowedChanges.canceled)) {
+                // make the accepted button an undo  button 
+                this._makeUndo("#check");
+                this._leftButtonAction = "undo";
+            }
+        }
+    }
+    _makeUndo(selector) {
+        let button = this.shadowRoot.querySelector(selector);
+        button.disabled = false;
+        button.icon = "icons:undo";
+        button.class = "undo";
+    }
+    _makeAccepted(selector) {
+        let button = this.shadowRoot.querySelector(selector);
+        button.disabled = false;
+        button.icon = "icons:check";
+        button.class = "accept";
+    }
+    _makeCanceled(selector) {
+        let button = this.shadowRoot.querySelector(selector);
+        button.disabled = false;
+        button.icon = "icons:block";
+        button.class = "cancel";
+    }
+
+    _stateButtonClicked(e) {
+        console.log(e)
+        console.log(this._leftButtonAction)
+        console.log(this._rightButtonAction);
     }
 
     /** Syncs the pass state on the server with the client */
@@ -119,9 +173,10 @@ class PassportPassStateButtons extends polymer.Element {
                 } else {
                     this.state = data.status.confirmation.state;
                 }
-
-                this.allowedChanges = data.allowedChanges;
+                console.log(data)
+                this.stateType = data.type;
                 this.status = data.status;
+                this.allowedChanges = data.allowedChanges;
             })
             .catch((err) => {
                 this._error(err);
