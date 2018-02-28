@@ -806,7 +806,7 @@ state.undo = (passID, setByID) => {
 };
 
 /**
- * Calculates the allowed state changes for a particular pass's state
+ * Calculates the allowed state changes for a particular pass's state.  Also includes the Pseudo migration states: arrived and enroute
  * @function
  * @memberof module:js/passes
  * @param {String} passID 
@@ -819,7 +819,9 @@ state.undo = (passID, setByID) => {
  *  neutral: (Boolean),
  *  accepted: (Boolean),
  *  canceled: (Boolean),
- *  undo: (Boolean|"UNDO"|"NEUTRAL")
+ *  undo: (Boolean|"UNDO"|"NEUTRAL"),
+ *  arrived: (Boolean),
+ *  enroute: (Boolean)
  * }
  */
 state.allowedChanges = (passID, forUserID) => {
@@ -840,16 +842,29 @@ state.allowedChanges = (passID, forUserID) => {
                     neutral: false,
                     accepted: false,
                     canceled: false,
+                    arrived: false,
+                    enroute: false,
                     undo: false
                 };
                 let stateData = passData.status.confirmation;
-                //check if forUserID is NOT an id in the toPerson or migrator slots  
-                if(forUserID !== passData.migrator && forUserID !== passData.toPerson) {
+                //check if forUserID is NOT an id in the toPerson or fromPerson or migrator slots  
+                if(forUserID !== passData.migrator && forUserID !== passData.toPerson && forUserID !== passData.fromPerson) {
                     return permissions;
                 }
                 //check if pass is locked, and if forUserID is not the serByUser
                 if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
                     return permissions;
+                }
+
+                //check of the forUserID is the from person and give them enroute perms
+                if(forUserID === passData.fromPerson) {
+                    permissions.enroute = true;
+                    return permissions;
+                }
+
+                if(forUserID !== passData.requester) {
+                    permissions.arrived = true;
+                    //DO NOT RETURN YET
                 }
 
                 //change permissions object for neutral type state
@@ -859,7 +874,8 @@ state.allowedChanges = (passID, forUserID) => {
                         //permissions.neutral = true;
                         permissions.canceled = true;
                         permissions.accepted = true;
-                        permissions.undo = "UNDO";
+                        //permissions.undo = "UNDO";
+                        permissions.undo = "NEUTRAL";
                     } else {
                         //If user is requester
                         //permissions.neutral = true;
@@ -874,11 +890,12 @@ state.allowedChanges = (passID, forUserID) => {
                         permissions.neutral = true;
                         permissions.canceled = true;
                         //permissions.accepted = true;
-                        permissions.undo = "UNDO";
+                        //permissions.undo = "UNDO"
+                        permissions.undo = "NEUTRAL";
                     } else {
                         //If user is requester
                         permissions.canceled = true;
-                        permissions.undo = "NEUTRAL";
+                        //permissions.undo = "NEUTRAL";
                     }  
                     return permissions;
                 } else if(state.isCanceled(stateData.state)) {
@@ -888,7 +905,8 @@ state.allowedChanges = (passID, forUserID) => {
                         permissions.neutral = true;
                         //permissions.canceled = true;
                         permissions.accepted = true;
-                        permissions.undo = "UNDO";
+                        //permissions.undo = "UNDO";
+                        permissions.undo = "NEUTRAL";
                     } else {
                         //If user is requester
                         permissions.neutral = true;

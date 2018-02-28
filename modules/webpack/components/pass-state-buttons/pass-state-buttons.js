@@ -39,6 +39,7 @@ require("@polymer/paper-styles/color.js");
  * @property {Object} allowedChanges - Object of allowed state changes
  * @property {String} state - the actual state of the pass in the database.  This string should be presented to the user.
  * @property {Boolean} disabled - Grays out the buttons
+ * @property {Boolean} showArrived - will show the check in button
  * @example
  * <passport-pass-state-buttons pass-id="sad5-fd4s-d45f6s-56sdf4-56sdf"></passport-pass-state-buttons>
  */
@@ -101,10 +102,10 @@ class PassportPassStateButtons extends polymer.Element {
                 type: Boolean,
                 value: true
             },
-            _showArrived: {
+            showArrived: {
                 type: Boolean,
                 reflectToAttribute: false,
-                notify: false
+                notify: true
             }
         };
     }
@@ -187,7 +188,6 @@ class PassportPassStateButtons extends polymer.Element {
         fetch.then((res) => {
             //console.log(res)
             
-            
             this.state = res.state;
             this.stateType = res.type;
             this.allowedChanges = res.allowedChanges;
@@ -207,6 +207,7 @@ class PassportPassStateButtons extends polymer.Element {
         this.disabled = true;
         passAPI.getState(this.passId)
             .then((data) => {
+                //check if the pseudo states are active
                 if(data.status.migration.arrivedTime) {
                     this.state = "arrived";
                 } else if(data.status.migration.excusedTime) {
