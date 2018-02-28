@@ -89,17 +89,22 @@ class PassportPassStateButtons extends polymer.Element {
             },
             _leftButtonAction: {
                 type: String,
-                reflectToAttribute: false,
+                reflectToAttribute: true,
                 notify: false
             },
             _rightButtonAction: {
                 type: String,
-                reflectToAttribute: false,
+                reflectToAttribute: true,
                 notify: false
             },
             _errorRetry: {
                 type: Boolean,
                 value: true
+            },
+            _showArrived: {
+                type: Boolean,
+                reflectToAttribute: false,
+                notify: false
             }
         };
     }
@@ -116,6 +121,7 @@ class PassportPassStateButtons extends polymer.Element {
     _updateButtons() {
         let acceptedButton = this.shadowRoot.querySelector("#check");
         let canceledButton = this.shadowRoot.querySelector("#block");
+        //check if pass state is enroute or arrived
         //console.log(acceptedButton)
         if(this.allowedChanges.accepted) {
             //enable accepted 
@@ -145,19 +151,19 @@ class PassportPassStateButtons extends polymer.Element {
         let button = this.shadowRoot.querySelector(selector);
         button.disabled = false;
         button.icon = "icons:undo";
-        button.class = "undo";
+        button.className = "undo";
     }
     _makeAccepted(selector) {
         let button = this.shadowRoot.querySelector(selector);
         button.disabled = false;
         button.icon = "icons:check";
-        button.class = "accept";
+        button.className = "accept";
     }
     _makeCanceled(selector) {
         let button = this.shadowRoot.querySelector(selector);
         button.disabled = false;
         button.icon = "icons:block";
-        button.class = "cancel";
+        button.className = "cancel";
     }
 
     _leftButtonClicked(e) {
@@ -180,11 +186,12 @@ class PassportPassStateButtons extends polymer.Element {
         }
         fetch.then((res) => {
             //console.log(res)
-            //End loader
+            
             
             this.state = res.state;
             this.stateType = res.type;
             this.allowedChanges = res.allowedChanges;
+            //End loader
             this.disabled = false;
             
         })

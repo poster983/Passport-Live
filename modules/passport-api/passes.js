@@ -583,6 +583,7 @@ state.neutral = (passID, setByID) => {
         return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
+                console.log(passData)
                 if(!passData) {
                     let err = new Error("Pass not found");
                     err.status = 404;
@@ -855,13 +856,13 @@ state.allowedChanges = (passID, forUserID) => {
                 if(state.isNeutral(stateData.state)) {
                     if(forUserID !== passData.requester) {
                         //if user is the receiver
-                        permissions.neutral = true;
+                        //permissions.neutral = true;
                         permissions.canceled = true;
                         permissions.accepted = true;
                         permissions.undo = "UNDO";
                     } else {
                         //If user is requester
-                        permissions.neutral = true;
+                        //permissions.neutral = true;
                         permissions.canceled = true;
                         permissions.undo = "NEUTRAL";
                     }  
@@ -872,7 +873,7 @@ state.allowedChanges = (passID, forUserID) => {
                         //if user is the receiver
                         permissions.neutral = true;
                         permissions.canceled = true;
-                        permissions.accepted = true;
+                        //permissions.accepted = true;
                         permissions.undo = "UNDO";
                     } else {
                         //If user is requester
@@ -885,7 +886,7 @@ state.allowedChanges = (passID, forUserID) => {
                     if(forUserID !== passData.requester) {
                         //if user is the receiver
                         permissions.neutral = true;
-                        permissions.canceled = true;
+                        //permissions.canceled = true;
                         permissions.accepted = true;
                         permissions.undo = "UNDO";
                     } else {

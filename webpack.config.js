@@ -8,7 +8,8 @@ module.exports = {
         administratorImport: "./modules/webpack/entrypoints/administrator/import.js",
         administrator: "./modules/webpack/entrypoints/administrator/index.js",
         profile: "./modules/webpack/entrypoints/accounts/profile.js",
-        student: "./modules/webpack/entrypoints/student/index.js"
+        student: "./modules/webpack/entrypoints/student/index.js",
+        teacher: "./modules/webpack/entrypoints/teacher/index.js"
     },
     output: {
         path: path.resolve(__dirname, "public", "js", "webpack"), //__dirname + "/public/js/webpack"
