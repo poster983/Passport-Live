@@ -23,6 +23,8 @@
     "test-gitlab": "export NODE_ENV=gitlab && nyc mocha",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect",
     "build": "webpack --progress --colors"
   },
   "repository": {
@@ -35,7 +37,7 @@
   "dependencies": {
     "animejs": "^2.2.0",
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "~1.17.2",
+    "body-parser": "~1.18.2",
     "brute-rethinkdb": "^2.0.1",
     "compression": "^1.7.0",
     "config": "latest",
@@ -45,9 +47,9 @@
     "cookie-session": "^2.0.0-beta.2",
     "cors": "^2.8.3",
     "debug": "~2.6.0",
+    "express": "~4.16.0",
     "deep-key": "^0.9.9",
     "excel-as-json": "^2.0.1",
-    "express": "~4.15.3",
     "express-brute": "^1.0.1",
     "express-session": "latest",
     "flat": "^4.0.0",
@@ -62,7 +64,7 @@
     "loader-message": "latest",
     "mjml": "^3.3.5",
     "moment": "^2.18.1",
-    "morgan": "~1.8.2",
+    "morgan": "~1.9.0",
     "ms": "^2.0.0",
     "mustache-express": "1.2.4",
     "node-sass-middleware": "0.9.8",
@@ -86,6 +88,7 @@
     "ua-parser-js": "^0.7.14",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "underscore": "^1.8.3",
+    "snyk": "^1.42.3",
     "validator": "^9.4.1",
     "webpack": "^3.8.1",
     "xlsx": "^0.12.2"

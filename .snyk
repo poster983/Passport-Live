@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.0
+version: v1.7.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -30,3 +30,8 @@ patch:
         patched: '2017-05-22T15:10:02.825Z'
     - chateau > jade > with > uglify-js:
         patched: '2017-05-22T15:10:02.825Z'
+  'npm:debug:20170905':
+    - cookie-session > debug:
+        patched: '2017-10-02T23:19:10.111Z'
+    - loader-message > mocha > debug:
+        patched: '2017-10-02T23:19:10.111Z'
