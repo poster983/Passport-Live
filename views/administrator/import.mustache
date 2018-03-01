@@ -1,0 +1,218 @@
+{{>head}}
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+
+<body class="grey darken-4">
+  <nav class="nav-extended">
+    <div class="nav-wrapper">
+      {{>sidenav}}
+      <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
+        <i class="material-icons">menu</i>
+      </a>
+      <a href="#" class="brand-logo center">Passport</a>
+      <span class="nav-right">{{passportVersion}}</span>
+    </div>
+    <div class="nav-content">
+      <ul class="tabs tabs-fixed-width tabs-transparent">
+        <li class="tab">
+          <a href="#accountImport">Account Import</a>
+        </li>
+        <li class="tab">
+          <a href="#scheduleImport">Schedule Import</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!--FAB-->
+  <div class="fixed-action-btn toolbar">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Import Log">error</i>
+    </a>
+    <ul>
+      <li class="waves-effect waves-light tooltipped" data-position="top" data-delay="50" data-tooltip="Account import log"><a class="modal-trigger" href="#accountImport-log-model"><i class="material-icons">face</i></a></li>
+      <li class="waves-effect waves-light tooltipped" data-position="top" data-delay="50" data-tooltip="Schedule import log"><a href="#!"><i class="material-icons">access_time</i></a></li>
+    </ul>
+  </div>
+  <!-- Error Models -->
+  <div id="accountImport-log-model" class="modal bottom-sheet">
+    <div class="modal-content">
+      <h4>Account import log</h4>
+      <div id="accountImport-log"></div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="accountImport" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title">Account Import</span>
+              <div class=" input-field col s12">
+                <input id="accountImport-name" type="text" class="validate">
+                <label for="accountImport-name">Import Name</label>
+              </div>
+
+            </div>
+            <div class="card-tabs">
+              <ul class="tabs tabs-fixed-width" id="accountImport-excel-tabs">
+                <li class="tab">
+                  <a href="#accountImport-excel" id="accountImport-excel-tab">Excel</a>
+                </li>
+                <li class="tab">
+                  <a href="#accountImport-json">JSON</a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-content grey lighten-4 black-text">
+              <div id="accountImport-excel">
+                <p>Please see the <a href="http://poster983.github.io/Passport-Live/global.html#accountImport">documentation</a> for an explanation of the JSON structure.
+                <p>WARNING: Large excel files may crash your browser. Please be patient when using this tool.</p>
+                <!--Start Excel Import -->
+                <div class="file-field input-field col s12 m6">
+                  <div class="btn" id="accountImport-excel-filebutton">
+                    <span>File</span>
+                    <input type="file" name="accountImport-excel" accept=".xlsx">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate black-text" placeholder="Select Excel File" type="text">
+                  </div>
+                </div>
+                <div class="input-field col s12 m6">
+                  <select id="accountImport-excel-sheet">
+                    <option value="" disabled selected>Choose your option</option>
+                  </select>
+                  <label>Sheet Name</label>
+                </div>
+
+                <!--End excel-->
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+              </div>
+              <div id="accountImport-json">
+              <p>Please see the <a href="http://poster983.github.io/Passport-Live/global.html#accountImport">documentation</a> for an explanation of the JSON structure.
+                <a id="account-json-expand" class="btn-floating waves-effect right"><i class="material-icons">expand_more</i></a>
+                <!--START JSON-->
+                <div class="input-field col s12">
+                  <textarea id="account-json-textbox" class="materialize-textarea validate textarea-less"></textarea>
+                  <label for="account-json-textbox">Raw JSON</label>
+                </div>
+                
+                <div id="accountImport-json-error"></div>
+                <div id="accountImport-json-res"></div>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <!--END JSON-->
+              </div>
+            </div>
+            <div class="card-action black-text">
+              <a id="accountImport-submit" class="waves-effect btn-large btn-flat black-text">Import Accounts</a>
+              <a id="accountImport-verifyJSONData" class="waves-effect btn-large btn-flat black-text">Verify Data Structure</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="scheduleImport" class="col s12">
+      <div class="row">
+        <div class="col s12">
+          <div class="card grey darken-3">
+            <div class="card-content white-text">
+              <span class="card-title">Schedule Import</span>
+              <p>This feature is currently unavailable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section id="importJobs">
+      <div class="row">
+        <div class="col s12">
+          <div class="card grey darken-3">
+            <div class="card-content white-text">
+              <a id="expandSearch" class="right waves-effect waves-circle waves-light btn-floating grey darken-2">
+                <i class="material-icons">expand_less</i>
+              </a>
+              <span class="card-title">All Import Jobs</span>
+              <!--SEARCH -->
+              <div id="expandSearchDiv" class="row">
+                <div class="col s12">
+                  <div class="card-panel black-text">
+                    <span class="">I am a very simple card. I am good at containing small bits of information. I am convenient because I
+                      require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div id="bulkLogTable">
+
+              </div>
+              <table class="white-text">
+                <thead>
+                  <tr>
+                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Total Imported</th>
+                    <th>Total Tried</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                    <td>Eclair</td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    if ('addEventListener' in window) {
+      window.addEventListener('load', function () {
+        document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+      });
+      document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+    }
+  </script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="/js/materialize.js"></script>
+  <script src="/js/passport.js"></script>
+  <script src="/js/webpack/administratorImport.js"></script>
+
+</body>
+
+</html>

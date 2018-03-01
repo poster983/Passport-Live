@@ -18,20 +18,49 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
-var config = require('config');
+var express = require("express");
+var config = require("config");
 var router = express.Router();
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-var checkAuth = require('connect-ensure-login');
-var ssarv = require('ssarv');
+var checkAuth = require("connect-ensure-login");
+var utils = require("../modules/passport-utils/index.js");
 
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["dev", "administrator", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
-    var user = {}
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
+
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+    var user = {};
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
-    res.render('administrator/index', { doc_Title: 'Passport-Administrator', user: user});
+
+    let cards = {};
+    /** Cards **/
+    cards.userGroups = Object.keys(config.get("userGroups"));
+    //sidebar
+    req.sidenav.links = [
+        "<li><a class=\"waves-effect active\" href=\"/administrator\"><i class=\"material-icons\">home</i>Home</a></li>",
+        "<li><a class=\"waves-effect\" href=\"/account?referral=administrator\"><i class=\"material-icons\">account_circle</i>My Account</a></li>",
+        "<li><a href=\"/administrator/import\" class=\"waves-effect\"><i class=\"material-icons\">backup</i>Import</a></li>"
+    ];
+
+    res.render("administrator/index", { doc_Title: "Passport-Administrator", customHead: customHead, user: user, cards: cards, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
+
+router.get("/import", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+    var user = {};
+    user.name = req.user.name;
+    user.email = req.user.email;
+    user.id = req.user.id;
+
+    req.sidenav.links = [
+        "<li><a class=\"waves-effect\" href=\"/administrator\"><i class=\"material-icons\">home</i>Home</a></li>",
+        "<li><a class=\"waves-effect\" href=\"/account?referral=administrator\"><i class=\"material-icons\">account_circle</i>My Account</a></li>",
+        "<li><a href=\"/administrator/import\" class=\"waves-effect active\"><i class=\"material-icons\">backup</i>Import</a></li>"
+    ];
+    res.render("administrator/import", { doc_Title: "Import -- Passport-Administrator", customHead: customHead, user: user, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+});
+
 
 module.exports = router;

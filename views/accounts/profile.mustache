@@ -1,0 +1,146 @@
+{{>head}}
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+
+<body class="grey darken-4">
+<main>
+    <nav id="navBar" class="nav-noshadow">
+        <div class="nav-wrapper" data-stellar-ratio="5">
+          {{>sidenav}}
+          <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
+          <a href="#" class="brand-logo center">Passport</a>
+          <span class="nav-right">{{passportVersion}}</span>
+        </div>
+    </nav>
+
+    <!--Top paralax-->
+    <div class="bigHead red" data-stellar-ratio="0.4">
+        <h3 class="white-text">Your account</h3>
+    </div>
+    <div class="userCardBundle">
+    <!--Main Info-->
+     <div class="row">
+        <div class="col s12">
+          <div class="card small z-depth-5">
+            <div class="card-image card-avatar-bg">
+              <img id="user-bg" src="/api/media/background/{{user.id}}.svg">
+              
+            </div>
+            <div class="card-avatar">
+                <img src="/api/media/avatar/{{user.id}}/100.svg" alt="Avatar" id="avatar" class="card-avatar circle responsive-img z-depth-3 hoverable">
+              </div>
+            <div id="avatar-cont" class="card-content">
+              <span class="card-title black-text center">{{user.name.first}} {{user.name.last}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Multi Schedule Edit Question-->
+      <div id="multiScheduleEditorModal" class="modal">
+        <div class="modal-content">
+          <h4>What type would you like to edit?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#editStudentSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Student</a>
+          <a href="#editTeacherSchedule" class="modal-action modal-close waves-effect waves-green btn-flat">Teacher</a>
+        </div>
+      </div>
+      <!--Schedules-->
+      <div class="row" >
+        <div class="col s12">
+          <div class="card">
+
+            <div class="card-content">
+              <a href="#editSchedule" id="openScheduleEditor" class="right waves-effect black-text"><i class="material-icons md-48 md-light">edit</i></a>
+              <span class="card-title">Schedules</span>
+            </div>
+            <div class="card-tabs">
+              <ul class="tabs tabs-fixed-width">
+                {{#elements.schedules.student}}<li class="tab"><a href="#studentSchedule" class="cyan-text accent-4 waves-effect waves-dark">Student Schedule</a></li>{{/elements.schedules.student}}
+                {{#elements.schedules.teacher}}<li class="tab"><a href="#teacherSchedule" class="cyan-text accent-4 waves-effect waves-dark">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+                <li class="indicator cyan accent-4"></li>
+              </ul>
+            </div>
+            <div class="card-content grey lighten-4">
+              {{#elements.schedules.student}}
+              <div id="studentSchedule">
+              </div>
+              {{/elements.schedules.student}}
+              {{#elements.schedules.teacher}}
+              <div id="teacherSchedule">
+              </div>
+              {{/elements.schedules.teacher}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Settings-->
+      <div class="row">
+        <div class="col s12 m6 push-6">
+          <div class="card">
+             
+            <div class="card-content" id="settingsCard">
+
+             <span class="card-title">Settings</span>
+               <div class="switch" id="settings-emailReminders">
+               Email Reminders:
+                <label>
+                  <input disabled type="checkbox">
+                  <span class="lever"></span>
+                </label>
+              </div>
+            </div>
+            <div class="card-action">
+              <a class="waves-effect waves-light btn disabled" id="saveSettings" ><i class="material-icons left">cloud</i>Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+
+     <!-- Scripts -->
+    <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+    <script>
+        if ('addEventListener' in window) {
+            window.addEventListener('load', function () {
+                document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+            });
+            document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+        }
+    </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="/js/materialize.js"></script>
+    <script src="/js/passport.js"></script>
+    <script src="/js/webpack/profile.js"></script>
+    <script src="/jquery.stellar/jquery.stellar.js"></script>
+    <!--MIXINS-->
+    <div id="mustacheMixens">
+      <div class="mustacheMixen page" id="scheduleEditor"> 
+        {{>accounts/editScheduleMixen}}
+      </div>
+    </div>
+
+</body>
+
+</html>

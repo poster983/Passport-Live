@@ -20,33 +20,49 @@ email: hi@josephhassell.com
 -->
     <body>
     <div class="login-background">
+    <!-- Loader Bar -->
+      <div class="progress" id="loader" style="position: absolute; display:none;">
+        <div class="indeterminate"></div>
+      </div>
         <div class="login-col">
           <div class="login-container">
             
             <img src="/images/logo/512x512.png" class="login-logo animate login-transitions" id="logo">
 
             <div id="login-inputs" class="white-text login-inputs animate login-transitions"> 
-              <div class="input-field col s5">
-               <input id="email" type="email" class="validate">
-               <label for="email">Email</label>
+              <div class="input-field col s1" id="back-button" style="display: none;">
+                <a href="#" class="waves-effect waves-circle waves-light"><i class="material-icons white-text ">arrow_back</i></a>
               </div>
-              <div class="input-field col s5">
-               <input id="password" type="password" class="validate">
-               <label for="password">Password</label>
+               <div class="input-field col s5" id="email-div">
+                <input id="email" type="email" class="validate">
+                <label for="email">Email</label>
+              </div>
+              <div class="input-field col s5" style="display: none;" id="password-div">
+                <input id="password" type="password" class="validate">
+                <label for="password">Password</label>
               </div>
               <div class="col s5" style="display: none;" id="login-btn-container">
                 <a class="waves-effect waves-light btn" onclick="login();"><i class="material-icons left">lock_open</i>Login With Passport</a>
               </div>
               <div id="alt-login-options">
               <div class="col s5">
-                <a href="/auth/google?dscm=true{{googleQuery}}"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
+                <a href="/auth/google?dscm=true{{googleQuery}}" onclick="window.location.hash =='#processing'"><button class="google-auth google-dark waves-effect waves-light"><span class="google-icon"></span><span class="google-text">Signin with Google</span></button></a>
                 
               </div>
                 <div class="col s5" id="new-account">
                   <br>
                   New? <a href="/auth/signup/">Create an account!</a>
                 </div>
-                
+              </div>
+              <div class="col s5" id="forgot-password">
+                Lost your Password? <a href="#resetPassword"> Reset It!</a>
+              </div>
+              <div class="col s5" style="display: none;" id="reset-password-submit">
+                <a class="waves-effect waves-light btn" onclick="sendPasswordResetEmail()"><i class="material-icons left">send</i>Send Reset Email</a>
+              </div>
+              <div class="col s5" id="message" style="display: none;">
+                <h5>No messages right now</h5>
+                <p>See the console (F12) for full error logs.</p>
               </div>
             </div>
             
@@ -55,37 +71,28 @@ email: hi@josephhassell.com
         </div>
       
    
-        
-        <div class="outdated-browser" id="outdated-browser" style="display: none;">
-             <h6></h6>
-             <p>Passport only officially supports the Chrome, Firefox, and Vivaldi browsers. <br> However, Passport has been tested on Opera and Safari with success. <br> Unfortunately a few features may be missing like push notifications and full Android App support with Chrome Mobile. <br> Microsoft Edge is partially unsupported.  Support may be added in a later update.<br> <br> <a class="waves-effect waves-green btn-flat center" href="http://outdatedbrowser.com/en">Need a browser?</a></p>
-             <p class="outdated-browser-last"><a href="#" class="outdated-browser-btnCloseUpdateBrowser" title="Close" onclick="document.getElementById('outdated-browser').style.display = 'none'">&times;</a></p>
+        {{#browserSupport}}
+        <div class="unsupported-browser-tab" id="unsupported-browser" onclick="unsupportedBrowserSwitch()">
+             <h6>{{browserSupport.head}}</h6>
+             {{{browserSupport.message}}}
+             <br> 
+             Your Browser: <strong>{{browserSupport.browser.name}} v.{{browserSupport.browser.major}}</strong>
+             <br> <br> <a class="waves-effect waves-green btn-flat center" href="https://poster983.github.io/Passport-Live/tutorial-Web%20App%20System%20Requirements.html">See System Requirements</a></p>
+             <p class="unsupported-browser-tab-last"><a href="#" class="unsupported-browser-tab-btnCloseUpdateBrowser" title="Close" >&times;</a></p>
         </div>
+        {{/browserSupport}}
     </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="/js/materialize.js"></script>
-	<script src="/js/passport.js"></script>
-    <script src="/ua-parser-js/dist/ua-parser.min.js"></script>
+	  <script src="/js/passport.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            var parser = new UAParser().getResult();
-            console.log(parser.browser)
-            if(parser.browser.name == "Chrome" || parser.browser.name == "Vivaldi" || parser.browser.name == "Firefox"  ) {
-                $("#outdated-browser").hide();
-            } else if (parser.browser.name == "Edge") {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is partially unsupported!")
-            } else if (parser.browser.name == "Opera" || parser.browser.name == "Safari") {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is unofficially supported!")
-            } else {
-                $("#outdated-browser").show();
-                $("#outdated-browser").find("h6").prepend("Your browser is unsupported!")
-            }
-        })
-    </script>
-    <script type="text/javascript">
-
+        function unsupportedBrowserSwitch() {
+          document.getElementById('unsupported-browser').className = 'unsupported-browser-tab open'; 
+          document.getElementById('unsupported-browser').onclick = unsupportedBrowserClose;
+        }
+        function unsupportedBrowserClose() {
+          document.getElementById('unsupported-browser').style.display = 'none';
+        }
         $("#email").on( "input", function(){checkFormFill();})
         $("#password").on( "input", function(){checkFormFill();})
 
@@ -93,38 +100,55 @@ email: hi@josephhassell.com
           if($("#email").val() == "" && $("#password").val() == "") {
             $("#login-btn-container").slideUp(500);
             $("#alt-login-options").slideDown(500);
+            $("#password-div").slideUp(500);
           } else {
             $("#login-btn-container").slideDown(500);
             $("#alt-login-options").slideUp(500);
+            $("#password-div").slideDown(500);
           }
+        }
+        function showMessage(title, message) {
+          $("#message > h5").html(title);
+          $("#message > p").html(message);
+          window.location.hash = "#message";
         }
 
         $(document).ready(function() {
           if(getUrlParameter("failGoogle")) {
             Materialize.toast($("<span>Google Authentication Failed.</span>").append("<br/> <span>If you don't have a Passport account, you must create one.</span> "), 6000)
           }
+          {{#message}}
+            showMessage("{{message.head}}", `{{message.body}}`);
+            
+          {{/message}}
+          {{#notification}}
+            Materialize.toast($("<span>" + decodeURIComponent("{{notification}}") + "</span>"), 10000);
+          {{/notification}}
+          checkWindowHash();
         });
+
 
         function login() {
             var email = $("#email").val();
             var password = $("#password").val();
             if(email == "" || password == "") {
-                Materialize.toast('Please Enter Your PassportID', 6000)
+                Materialize.toast('Please enter your PassportID', 6000)
             } else {
-                isFormLoading(true);
+                window.location.hash = "#processing"
                 $.ajax({
                     type: "post",
                     url: "/api/auth/login/dscm/",
                     data: {email: email, password: password},
                     success: function(data) {
+
                         window.location.href = "/"
                     },
                     error: function(jqXHR) {
                         if(jqXHR.status == 401) {
                             Materialize.toast('Email or Password is incorrect', 6000)
-                            isFormLoading(false);
+                            window.location.hash = "#"
                         } else {
-                            isFormLoading(false);
+                            window.location.hash = "#"
                             errorHand(jqXHR)
                         }
                         
@@ -132,9 +156,32 @@ email: hi@josephhassell.com
               });
             }
         }
+        function sendPasswordResetEmail() {
+          var email = $("#email").val();
+          if(email == "") {
+            Materialize.toast('Please enter your email', 6000)
+          } else {
+            window.location.hash = "#processing"
+            $.ajax({
+                type: "post",
+                url: "/account/sendResetPasswordEmail",
+                data: {email: email},
+                success: function(data) {
+                  showMessage("Email sent", "Allow up to 10 minutes for the email to arrive. <br> Please remember to check your spam.");
+                },
+                error: function(jqXHR) {
+                  showMessage("Error sending email", decodeURIComponent(jqXHR.getResponseHeader("errormessage")) + "<br> Please refresh the page and try again. <br> Error log dumped in console.");
+                  console.error(jqXHR);
+                }                      
+              });
+          }
+        }
+
         function isFormLoading(bool) {
             console.log(bool)
             if(bool) {
+                $("$reset-password-submit > a").addClass("disabled");
+                $("$reset-password-submit > a").addClass("disabled");
                 $("#logo").removeClass("animate").addClass("load");
                 $("#login-inputs").removeClass("animate").addClass("load");
             } else {
@@ -142,13 +189,92 @@ email: hi@josephhassell.com
                 $("#login-inputs").removeClass("load").addClass("animate");
             }
         }
-        //handle submit
-        $('body').keypress(function (e) {
-          if (e.which == 13) {
-            login();
-            return false;   
-          }
+        
+
+
+        $(window).on('hashchange', function() {
+          checkWindowHash()
         });
+
+        function checkWindowHash() {
+          console.log(window.location.hash)
+          
+          //reset pages
+          /*$("#logo").removeClass("animate");
+          $("#login-inputs").removeClass("animate");*/
+          
+          //reset event listeners 
+          $("#email").off();
+          $("#password").off();
+          $("body").off();
+          
+          //show and init pages 
+          if(window.location.hash == "#resetPassword") {
+            //handle submit
+            $('body').on("keypress", function (e) {
+              if (e.which == 13) {
+                sendPasswordResetEmail();
+                return false;   
+              }
+            });
+
+            $("#back-button > a").attr("href", "#");
+            $("#password-div").slideUp(500);
+            $("#login-btn-container").slideUp(500);
+            $("#alt-login-options").slideUp(500);
+            $("#forgot-password").slideUp(500);
+            $("#reset-password-submit").slideDown(500);
+            $("#loader").slideUp(500)
+            $("#back-button").show(500);          
+            $("#message").slideUp(500);
+            $("#email-div").slideDown(500);
+          } else if (window.location.hash == "#message"){
+            //Shows if there is a major response from the server after an action.  Like a failed password reset email
+            //back Button 
+            $("#back-button > a").attr("href", "#");
+            $("#back-button").show(500);  
+            //containers 
+            $("#logo").removeClass("load").addClass("animate");
+            $("#login-inputs").removeClass("load").addClass("animate");
+            //elements
+            $("#password-div").slideUp(500);
+            $("#login-btn-container").slideUp(500);
+            $("#alt-login-options").slideUp(500);
+            $("#forgot-password").slideUp(500);
+            $("#reset-password-submit").slideUp(500)
+            $("#email-div").slideUp(500);
+            $("#loader").slideUp(500);
+            //shown elements
+            $("#message").slideDown(500);
+          } else if(window.location.hash == "#processing") {
+            $("#loader").slideDown(500);
+            //containers 
+            $("#logo").removeClass("animate").addClass("load");
+            $("#login-inputs").removeClass("animate").addClass("load");
+          } else {
+            //handle submit
+            $('body').on("keypress", function (e) {
+              if (e.which == 13) {
+                login();
+                return false;   
+              }
+            });
+            $("#email").on( "keyup", function(){checkFormFill();})
+            $("#password").on( "keyup", function(){checkFormFill();})
+            
+            $("#logo").removeClass("load").addClass("animate");
+            $("#login-inputs").removeClass("load").addClass("animate");
+            
+            $("#password-div").slideUp(500);
+            $("#forgot-password").slideDown(500);
+            $("#reset-password-submit").slideUp(500);
+            $("#email-div").slideDown(500);
+            $("#back-button").hide(500);
+            $("#loader").slideUp(500)
+            $("#message").slideUp(500);
+            checkFormFill();
+          }
+        }
     </script>
     </body>
 

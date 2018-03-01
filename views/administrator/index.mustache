@@ -21,271 +21,327 @@ email: hi@josephhassell.com
 
 <body class="grey darken-4">
 
-    {{>mixens/accountOverlay}}
-    
-    <nav>
-      <div class="nav-wrapper">
-       
-        <a href="#!" class="right brand-logo">Administrators</a>
-         <ul id="slide-out" class="side-nav">
-          <li><div class="user-view">
-            <div class="background">
-              <img src="/images/stunav.jpg">
-            </div>
-             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-            <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-            <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-          </div></li>
-          <li><a href="#" class="waves-effect active"><i class="material-icons">home</i>Home</a></li>
-          <li><div class="divider"></div></li>
-          <li><a class="waves-effect" href="/auth/logout"><i class="material-icons">lock</i>Logout</a></li>
-        </ul>
-        <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-      </div>
-    </nav>
-    <nav>
-      <div class="nav-wrapper">
-        <form>
-          <div class="input-field">
-            <input id="searchAccounts" type="search" required>
-            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-            <i class="material-icons">close</i>
-          </div>
-        </form>
-      </div>
-    </nav>
+  {{>mixens/accountOverlay}}
 
-    <!-- Side Nav-->
-   
+  <nav>
+    <div class="nav-wrapper">
+      {{>sidenav}}
 
-     <div class="fixed-action-btn">
-      <a  class="btn-floating btn-large waves-effect waves-light">
-        <i class="large material-icons">mode_edit</i>
+      <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
+        <i class="material-icons">menu</i>
       </a>
-      <ul>
-        <li><a onclick="se.openPage();" class="btn-floating red tooltipped" data-position="left" data-delay="50" data-tooltip="New Schedule"><i class="material-icons">add</i></a></li>
-        <li><a onclick="openPage('recurringEditor'); re.setup();" class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Set Repeating Schedule"><i class="material-icons">today</i></a></li>
-      </ul>
+      <a href="#" class="brand-logo center">Passport</a>
+      <span class="nav-right">{{passportVersion}}</span>
     </div>
-
-    <div id="mainCards" class="container">
-      <div id="cal"> 
-        <div class="row">
-          <div class="col s12">
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">Schedules</span>
-                <input id="ScheduleDate" type="date" class="datepicker">
-                <label for="ScheduleDate">View Date</label>
-                <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#">Edit Current Schedule</a>
-                <a href="#">Temporarily Change To A New Schedule</a>
-              </div>
-            </div>
-          </div>
+  </nav>
+  <nav>
+    <div class="nav-wrapper">
+      <form>
+        <div class="input-field">
+          <input id="searchAccounts" type="search" required>
+          <label class="label-icon" for="search">
+            <i class="material-icons">search</i>
+          </label>
+          <i class="material-icons">close</i>
         </div>
-      </div>
+      </form>
     </div>
-    <div id="searchCards" class="container" style="display: none;">
+  </nav>
+
+  <!-- Side Nav-->
+
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large waves-effect waves-light" onclick="$('#tempIDForButton').tapTarget('open');">
+      <i class="large material-icons">mode_edit</i>
+    </a>
+    <ul>
+      <li>
+        <a onclick="se.openPage();" class="btn-floating red tooltipped" data-position="left" data-delay="50" data-tooltip="New Schedule">
+          <i class="material-icons">add</i>
+        </a>
+      </li>
+      <li>
+        <a onclick="openPage('recurringEditor'); re.setup();" class="btn-floating blue tooltipped" data-position="left" data-delay="50"
+          data-tooltip="Set Repeating Schedule">
+          <i class="material-icons">today</i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+
+  <div id="mainCards" class="container">
+    <div id="cal">
       <div class="row">
         <div class="col s12">
-          <div class="card grey darken-3">
+          <div class="card">
             <div class="card-content">
-              <span class="card-title white-text">Account Search</span>
-              <div id="accountSearchReturn">
-                <ul class="collection">
-                  <li class="collection-item avatar">
-                    <img src="/api/media/avatar/febffe69-0185-46ac-a005-09c1c6de154f/50.svg" alt="avatar" class="passport-avatar circle">
-                    <span class="title">Mr. Joseph Hassell</span>
-                    <p>Email: <strong>josephh2018@gmail.com</strong></p>
-                    <p title="User Group">Account Type: <strong>Student</strong></p>
-                    <a class="secondary-content btn-floating waves-effect waves-circle waves-light"><i class="material-icons">account_circle</i></a>
-                    
-                  </li>
-                </ul>
-              </div>
+              <span class="card-title">Schedules</span>
+              <input id="ScheduleDate" type="date" class="datepicker">
+              <label for="ScheduleDate">View Date</label>
+              <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require
+                little markup to use effectively.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">Edit Current Schedule</a>
+              <a href="#">Temporarily Change To A New Schedule</a>
             </div>
           </div>
         </div>
       </div>
-            
+    </div>
+    <div id="accountPermKey">
+
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title">Signup Link</span>
+              <!-- userGroup selector -->
+              <div id="accountPermKey-form">
+                <div class="input-field col s12">
+                  <select multiple id="accountPermKey-userGroups">
+                    <option value="" disabled selected>Choose your option</option>
+                    {{#cards.userGroups}}
+                    <option value="{{.}}">{{.}}</option>
+                    {{/cards.userGroups}}
+                  </select>
+                  <label>Usergroups</label>
+                </div>
+                <!-- Date/Time -->
+                <p>Timeout</p>
+                <div class="input-field col s12 m6">
+                  <input type="text" class="datepicker" id="accountPermKey-date" name="accountPermKey-date">
+                  <label for="accountPermKey-date">Date</label>
+                </div>
+                <div class="input-field col s12 m6">
+                  <input type="text" class="timepicker" id="accountPermKey-time" , name="accountPermKey-time">
+                  <label for="accountPermKey-time">Time</label>
+                </div>
+                <p>Uses</p>
+                <div class="input-field col s12">
+                  <input id="accountPermKey-tally" type="number">
+                  <label for="accountPermKey-tally">Max uses</label>
+                </div>
+                <p>&nbsp;</p>
+              </div>
+              <div id="accountPermKey-response"></div>
+            </div>
+            <div class="card-action">
+              <a id="accountPermKey-submit" class="waves-effect waves-green btn-large btn-flat">Create link</a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div id="searchCards" class="container" style="display: none;">
+    <div class="row">
+      <div class="col s12">
+        <div class="card grey darken-3">
+          <div class="card-content">
+            <span class="card-title white-text">Account Search</span>
+            <div id="accountSearchReturn">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+  </div>
 
 
-    <div id="mustacheMixens">
-      <div class="mustacheMixen page" id="scheduleEditor"> 
-        {{>administrator/mixinScheduler}}
-      </div>
-      <div class="mustacheMixen page" id="recurringEditor"> 
-        {{>administrator/mixinRecurring}}
-      </div>
+
+  <div id="mustacheMixens">
+    <div class="mustacheMixen page" id="scheduleEditor">
+      {{>administrator/mixinScheduler}}
     </div>
-    <!-- Scripts -->
-        <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
-        <script>
-            if ('addEventListener' in window) {
-                window.addEventListener('load', function () {
-                    document.body.className = document.body.className.replace(/\bis-loading\b/, '');
-                });
-                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+    <div class="mustacheMixen page" id="recurringEditor">
+      {{>administrator/mixinRecurring}}
+    </div>
+  </div>
+  <!-- Scripts -->
+  <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+  <script>
+    if ('addEventListener' in window) {
+      window.addEventListener('load', function () {
+        document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+      });
+      document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+    }
+  </script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="/js/materialize.js"></script>
+  <script src="/js/passport.js"></script>
+  <script src="/js/webpack/administrator.js"></script>
+  <script src="/moment/min/moment-with-locales.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      /*$('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+      });
+      $('.timepicker').pickatime({
+        default: 'now', // Set default time
+        fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+        twelvehour: true, // Use AM/PM or 24-hour format
+        donetext: 'OK', // text for done-button
+        cleartext: 'Clear', // text for clear-button
+        canceltext: 'Cancel', // Text for cancel-button
+        autoclose: false, // automatic close timepicker
+        ampmclickable: true, // make AM PM clickable
+        aftershow: function(){} //Function for after opening timepicker  
+      });*/
+
+    });
+
+    /*$(window).on("popstate", function (event, state) {
+       console.log(event);
+       console.log(state);
+    });*/
+    //change for mixen
+
+    let SearchUserCard = (function () {
+      let _query = new WeakMap();
+      let _generatedULID = new WeakMap();
+      let _inputID = new WeakMap();
+      let _enableAccountOverlay = new WeakMap();
+      class SearchUserCard {
+        constructor(inputID, cardContainerID, enableAccountOverlay) {
+          this._queryDone;
+          _enableAccountOverlay.set(this, enableAccountOverlay)
+          if (cardContainerID) {
+            _generatedULID.set(this, uuidv4());
+            $("#" + cardContainerID).empty().append($("<ul/>").addClass("collection").attr("id", _generatedULID.get(
+              this)))
+            if (inputID) {
+              _inputID.set(this, inputID);
+              document.getElementById(inputID).addEventListener("keyup", function () {
+                this.keyDownEvent()
+              }.bind(this));
             }
-        </script>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-        <!-- Compiled and minified JavaScript -->
-        <script src="/js/materialize.js"></script>
-        <script src="/js/passport.js"></script>
-        <script src="/moment/min/moment-with-locales.min.js"></script>
-        <script>
-          $(document).ready(function(){
-            $(".button-collapse").sideNav();
-            $('.datepicker').pickadate({
-              selectMonths: true, // Creates a dropdown to control month
-              selectYears: 15 // Creates a dropdown of 15 years to control year
+          }
+        }
+        get rawQuery() {
+          return _query.get(this);
+        }
+        get generatedULID() {
+          return _generatedULID.get(this);
+        }
+        keyDownEvent() {
+          $("#" + _generatedULID.get(this)).empty();
+          this.query(document.getElementById(_inputID.get(this)).value).toCard().then(function (cardList) {
+            for (var x = 0; x < cardList.length; x++) {
+              $("#" + _generatedULID.get(this)).append(cardList[x])
+              $('.tooltipped').tooltip({
+                delay: 50
+              });
+            }
+          }.bind(this))
+        }
+        destroyListner() {
+          document.getElementById(_inputID.get(this)).removeEventListener("keyup");
+        }
+        _ajaxQuery(name) {
+          return new Promise(function (resolve, reject) {
+            $.ajax({
+              type: "get",
+              url: "/api/account/name/" + name,
+              dataType: "json",
+              beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+              },
+              success: function (data) {
+                resolve(data)
+              }.bind(this),
+              error: function (jqXHR) {
+                reject(jqXHR)
+              }
             });
-            $('.timepicker').pickatime({
-              default: 'now', // Set default time
-              fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-              twelvehour: true, // Use AM/PM or 24-hour format
-              donetext: 'OK', // text for done-button
-              cleartext: 'Clear', // text for clear-button
-              canceltext: 'Cancel', // Text for cancel-button
-              autoclose: false, // automatic close timepicker
-              ampmclickable: true, // make AM PM clickable
-              aftershow: function(){} //Function for after opening timepicker  
-            });
-            $('select').material_select();
-          });
+          }.bind(this));
+        }
+        query(name) {
+          this._queryDone = new Promise(function (resolve, reject) {
+            if (name.length > 0) {
+              this._ajaxQuery(name).then(function (data) {
+                _query.set(this, data);
+                resolve(data);
+              }.bind(this)).catch(function (err) {
+                reject(err)
+              })
+            }
+          }.bind(this));
+          return this;
+        }
+        toCard() {
+          return new Promise(function (resolve, reject) {
+            this._queryDone.then(function (userArray) {
+              var listElm = [];
+              for (var x = 0; x < userArray.length; x++) {
+                var button = $("<a/>").addClass(
+                    "secondary-content btn-floating waves-effect waves-circle waves-light tooltipped")
+                  .attr("data-position", "right")
+                  .attr("data-delay", "50")
+                  .attr("data-tooltip", "Account Cards")
+                  .attr("onclick", "new AccountOverlay(\"" + userArray[x].id +
+                    "\", function(err) {if(err) {errorHand(err);}}).generateOverlay(\"overlay" +
+                    userArray[x].id + "\", true, false);")
 
-          /*$(window).on("popstate", function (event, state) {
-             console.log(event);
-             console.log(state);
-          });*/
-          //change for mixen
+                  .append($("<i/>").addClass("material-icons").html("account_circle"))
 
-          let SearchUserCard = (function() {
-            let _query = new WeakMap();
-            let _generatedULID = new WeakMap();
-            let _inputID = new WeakMap();
-            let _enableAccountOverlay = new WeakMap();
-            class SearchUserCard {
-              constructor(inputID, cardContainerID, enableAccountOverlay) {
-                this._queryDone;
-                _enableAccountOverlay.set(this, enableAccountOverlay)
-                if(cardContainerID) {
-                  _generatedULID.set(this, uuidv4());
-                  $("#" + cardContainerID).empty().append($("<ul/>").addClass("collection").attr("id", _generatedULID.get(this)))
-                  if(inputID) {
-                    _inputID.set(this, inputID);
-                    document.getElementById(inputID).addEventListener("keyup", function() {
-                      this.keyDownEvent()
-                    }.bind(this));
-                  }
+                var li = $("<li/>").addClass("collection-item avatar").append(
+                  $("<img/>").attr("src", "/api/media/avatar/" + userArray[x].id + "/50.svg").attr(
+                    "alt", "User Avatar").addClass("passport-avatar circle")
+                ).append(
+                  $("<span/>").addClass("title").html(userArray[x].name.salutation + " " + userArray[x]
+                    .name.first + " " + userArray[x].name.last)
+                ).append(
+                  $("<p/>").prepend("Email: ").append($("<strong/>").html(userArray[x].email))
+                ).append(
+                  $("<p/>").attr("title", "User Group").prepend("Account Type: ").append($("<strong/>")
+                    .html(userArray[x].userGroup))
+                ).append(button)
+                listElm.push(li);
+                if (x >= userArray.length - 1) {
+                  resolve(listElm)
                 }
               }
-              get rawQuery() {
-                return _query.get(this); 
-              }
-              get generatedULID() {
-                return _generatedULID.get(this);
-              }
-              keyDownEvent() {
-                $("#" + _generatedULID.get(this)).empty();
-                this.query(document.getElementById(_inputID.get(this)).value).toCard().then(function(cardList) {
-                  for(var x = 0; x < cardList.length; x++) {
-                    $("#" + _generatedULID.get(this)).append(cardList[x])
-                    $('.tooltipped').tooltip({delay: 50});
-                  }
-                }.bind(this))
-              }
-              destroyListner() {
-                document.getElementById(_inputID.get(this)).removeEventListener("keyup");
-              }
-              _ajaxQuery(name) {
-                return new Promise(function(resolve, reject) {
-                  $.ajax({
-                    type: "get",
-                    url: "/api/account/name/" + name,
-                    dataType: "json",
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {resolve(data)}.bind(this),
-                    error: function(jqXHR) {reject(jqXHR)}                      
-                  });
-                }.bind(this));
-              }
-              query(name) {
-                this._queryDone = new Promise(function(resolve, reject) {
-                  if(name.length > 0) {
-                    this._ajaxQuery(name).then(function(data) {
-                      _query.set(this, data); 
-                      resolve(data);
-                    }.bind(this)).catch(function(err) {
-                      reject(err)
-                    })
-                  }
-                }.bind(this));
-                return this;
-              }
-              toCard() {
-                return new Promise(function(resolve, reject) {
-                  this._queryDone.then(function(userArray) {
-                    var listElm = [];
-                    for(var x = 0; x < userArray.length; x++) {
-                      var button = $("<a/>").addClass("secondary-content btn-floating waves-effect waves-circle waves-light tooltipped")
-                                .attr("data-position", "right")
-                                .attr("data-delay", "50")
-                                .attr("data-tooltip", "Account Cards")
-                                .attr("onclick", "new AccountOverlay(\"" + userArray[x].id + "\", function(err) {if(err) {errorHand(err);}}).generateOverlay(\"overlay" + userArray[x].id + "\", true, false);")
-                                
-                                .append($("<i/>").addClass("material-icons").html("account_circle"))
 
-                      var li = $("<li/>").addClass("collection-item avatar").append(
-                              $("<img/>").attr("src", "/api/media/avatar/" + userArray[x].id + "/50.svg").attr("alt", "User Avatar").addClass("passport-avatar circle")
-                      ).append(
-                              $("<span/>").addClass("title").html(userArray[x].name.salutation + " " + userArray[x].name.first + " " + userArray[x].name.last)
-                      ).append(
-                              $("<p/>").prepend("Email: ").append($("<strong/>").html(userArray[x].email))
-                      ).append(
-                              $("<p/>").attr("title", "User Group").prepend("Account Type: ").append($("<strong/>").html(userArray[x].userGroup))
-                      ).append(button)
-                      listElm.push(li);
-                      if(x >= userArray.length -1) {
-                        resolve(listElm)
-                      }
-                    }
-                    
-                  }.bind(this));
-                }.bind(this))
-                //return _query.get(this);
-              }
+            }.bind(this));
+          }.bind(this))
+          //return _query.get(this);
+        }
 
-              /*.click(function() {
-                                  console.log(userArray[x])
-                                  new AccountOverlay("overlay"+userArray[x].id, function(err) {errorHand(err);}).generateOverlay("overlay" + userArray[x].id, true, false);
-                                })*/
+        /*.click(function() {
+                            console.log(userArray[x])
+                            new AccountOverlay("overlay"+userArray[x].id, function(err) {errorHand(err);}).generateOverlay("overlay" + userArray[x].id, true, false);
+                          })*/
 
-            };
-            return SearchUserCard;
-          }());
-          
-          var SearchUser = new SearchUserCard("searchAccounts", "accountSearchReturn");
-          document.getElementById("searchAccounts").addEventListener("keyup", function() {
-            if($("#searchAccounts").val().length <=0 ) {
-              $("#searchCards").hide()
-              $("#mainCards").show()
-            } else {
-              $("#mainCards").hide()
-              $("#searchCards").show()
-            }
-          });
-          
-          /*new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
-            if(err) {errorHand(err);}
-          }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);*/
-        </script>
+      };
+      return SearchUserCard;
+    }());
+
+    var SearchUser = new SearchUserCard("searchAccounts", "accountSearchReturn");
+    document.getElementById("searchAccounts").addEventListener("keyup", function () {
+      if ($("#searchAccounts").val().length <= 0) {
+        $("#searchCards").hide()
+        $("#mainCards").show()
+      } else {
+        $("#mainCards").hide()
+        $("#searchCards").show()
+      }
+    });
+
+    /*new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
+      if(err) {errorHand(err);}
+    }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);*/
+  </script>
 </body>
+
 </html>

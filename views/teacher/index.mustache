@@ -18,125 +18,143 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 -->
+
 <body class="grey darken-4">
- <!--Loading Screen-->
-        <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
+  <!--Loading Screen-->
+  <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
 
 
-            <div class="vCenter">
+    <div class="vCenter">
 
-              {{>mixens/logoLoader}}
+      {{>mixens/logoLoader}}
 
-            </div>
+    </div>
 
-<!--342x470-->
-        </section>
+    <!--342x470-->
+  </section>
   <!-- Nav Bar-->
   <nav class="nav-extended">
     <div class="nav-wrapper">
-      
-      <ul id="slide-out" class="side-nav">
-       <li><div class="userView">
-         <div class="background">
-           <img alt="Side-Nav Background" src="/images/stunav.jpg">
-         </div>
-         <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-         <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-         <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-       </div></li>
-       <li><a class="waves-effect active" href="#!">Home</a></li>
-       <li><a class="waves-effect" href="/teacher/account">Your Account</a></li>
-       <li><div class="divider"></div></li>
-       <!--<li><a class="subheader">Subheader</a></li>-->
-       <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
-
-     </ul>
-     <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-     <a href="#" class="brand-logo center">Passport</a>
-     <span class="nav-right">{{passportVersion}}</span>
-  </div>
+      {{>sidenav}}
+      <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
+        <i class="material-icons">menu</i>
+      </a>
+      <a href="#" class="brand-logo center">Passport</a>
+      <span class="nav-right">{{passportVersion}}</span>
+    </div>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab"><a class="active" href="#studentsArriving">Students Arriving</a></li>
-        <li class="tab"><a href="#studentsLeaving">Students Leaving</a></li>
-        <li class="tab"><a href="#requestAStudent">Request a Student</a></li>
-        <li class="tab disabled"><a href="#blackout">Set a Blackout</a></li>
+        <li class="tab">
+          <a class="active" href="#studentsArriving">Students Arriving</a>
+        </li>
+        <li class="tab">
+          <a href="#studentsLeaving">Students Leaving</a>
+        </li>
+        <li class="tab">
+          <a href="#requestAStudent">Request a Student</a>
+        </li>
+        <li class="tab disabled">
+          <a href="#blackout">Set a Blackout</a>
+        </li>
       </ul>
     </div>
   </nav>
-  
-    <nav>
+
+  <nav>
 
     <div class="nav-wrapper theme-second">
 
       <form method="get" action="">
         <div class="input-field">
-          <input  id="t-Search" name="teacherName" type="search" placeholder="Search by Email" value="{{user.email}}">
-          <label class="label-icon" for="t-Search"><i class="material-icons">search</i></label>
+          <input id="t-Search" name="teacherName" type="search" placeholder="Search by Email" value="{{user.email}}">
+          <label class="label-icon" for="t-Search">
+            <i class="material-icons">search</i>
+          </label>
           <i class="material-icons">close</i>
 
 
-          <button class="btn waves-effect waves-light" style="position: absolute; left: -9999px"  type="submit" name="search">Search
-              <i class="material-icons right">search</i>
+          <button class="btn waves-effect waves-light" style="position: absolute; left: -9999px" type="submit" name="search">Search
+            <i class="material-icons right">search</i>
           </button>
         </div>
       </form>
     </div>
   </nav>
-   
 
 
 
 
-    <!--FEEDBACK FAB-->
+
+  <!--FEEDBACK FAB-->
 
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large tooltipped" data-position="left" data-delay="50" data-tooltip="Feedback">
-            <i class="large material-icons">assignment</i>
+  <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large tooltipped" data-position="left" data-delay="50" data-tooltip="Feedback">
+      <i class="large material-icons">assignment</i>
+    </a>
+    <ul>
+      <li>
+        <a class="btn-floating red modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Bug Report"
+          href="#bugmodal">
+          <i class="material-icons">report_problem</i>
         </a>
-        <ul>
-            <li><a class="btn-floating red modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Bug Report" href="#bugmodal"><i class="material-icons">report_problem</i></a></li>
-            <li><a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Leave A Review" href="#reviewmodal"><i class="material-icons">thumbs_up_down</i></a></li>
-            <li><a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.github.io/Passport-Live/"><i class="material-icons">live_help</i></a></li>
-            <li><a class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Github" href="https://github.com/poster983/Passport-Live/"><i class="material-icons">code</i></a></li>
-        </ul>
-    </div>
+      </li>
+      <li>
+        <a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Leave A Review"
+          href="#reviewmodal">
+          <i class="material-icons">thumbs_up_down</i>
+        </a>
+      </li>
+      <li>
+        <a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.github.io/Passport-Live/">
+          <i class="material-icons">live_help</i>
+        </a>
+      </li>
+      <li>
+        <a class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Github" href="https://github.com/poster983/Passport-Live/">
+          <i class="material-icons">code</i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
 
   <!-- Bug Modal -->
   <div id="bugmodal" class="modal bottom-sheet">
     <div class="modal-content">
-        <h4>Bug report</h4>
-        <div class="row">
-            <form class="col s12" method="post" action="">
-                <div class="row">
-                    <div class="input-field col s6"> <i class="material-icons prefix">account_circle</i>
-                        <input id="bugname" name="bugname" required type="text" class="validate">
-                        <label for="bugname">Name</label>
-                    </div>
-                    <div class="input-field col s6"> <i class="material-icons prefix">email</i>
-                        <input id="bugemail" name="bugemail" required type="email" class="validate">
-                        <label for="bugemail">Email</label>
-                    </div>
-                    <div class="input-field col s12"> <i class="material-icons prefix">comment</i>
-                        <textarea id="bugtext" name="bugtext" required class="materialize-textarea" length="255"></textarea>
-                        <label for="bugtext">Describe the bug or issue</label>
-                    </div>
-                    <h5 class="center">Bug Severity Slider</h5>
-                    <p class="center">1 being low priority and 5 being high priority</p>
-                        <p class="range-field">
-                            <input type="range" id="bugseverity" name="bugseverity" min="1" max="5" value="3" />
-                        </p>
-                </div>
-                <div class="modal-footer">
+      <h4>Bug report</h4>
+      <div class="row">
+        <form class="col s12" method="post" action="">
+          <div class="row">
+            <div class="input-field col s6">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="bugname" name="bugname" required type="text" class="validate">
+              <label for="bugname">Name</label>
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">email</i>
+              <input id="bugemail" name="bugemail" required type="email" class="validate">
+              <label for="bugemail">Email</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">comment</i>
+              <textarea id="bugtext" name="bugtext" required class="materialize-textarea" length="255"></textarea>
+              <label for="bugtext">Describe the bug or issue</label>
+            </div>
+            <h5 class="center">Bug Severity Slider</h5>
+            <p class="center">1 being low priority and 5 being high priority</p>
+            <p class="range-field">
+              <input type="range" id="bugseverity" name="bugseverity" min="1" max="5" value="3" />
+            </p>
+          </div>
+          <div class="modal-footer">
 
-                    <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitbug">Submit Bug Report
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitbug">Submit Bug Report
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
 
     </div>
 
@@ -144,39 +162,42 @@ email: hi@josephhassell.com
 
   <!-- Review Modal -->
   <div id="reviewmodal" class="modal bottom-sheet">
-  <div class="modal-content">
+    <div class="modal-content">
       <h4>Leave a review</h4>
       <div class="row">
-          <form class="col s12" method="post" action="">
-              <div class="row">
-                  <div class="input-field col s6"> <i class="material-icons prefix">account_circle</i>
-                      <input id="reviewname" name="reviewname" required type="text" class="validate">
-                      <label for="reviewname">Name</label>
-                  </div>
-                  <div class="input-field col s6"> <i class="material-icons prefix">email</i>
-                      <input id="reviewemail" name="reviewemail" required type="email" class="validate">
-                      <label for="reviewemail">Email</label>
-                  </div>
-                  <div class="input-field col s12"> <i class="material-icons prefix">comment</i>
-                      <textarea id="reviewtext" name="reviewtext" class="materialize-textarea" length="255"></textarea>
-                      <label for="reviewtext">Comment</label>
-                  </div>
-                  <h5 class="center">Rating Slider</h5>
+        <form class="col s12" method="post" action="">
+          <div class="row">
+            <div class="input-field col s6">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="reviewname" name="reviewname" required type="text" class="validate">
+              <label for="reviewname">Name</label>
+            </div>
+            <div class="input-field col s6">
+              <i class="material-icons prefix">email</i>
+              <input id="reviewemail" name="reviewemail" required type="email" class="validate">
+              <label for="reviewemail">Email</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">comment</i>
+              <textarea id="reviewtext" name="reviewtext" class="materialize-textarea" length="255"></textarea>
+              <label for="reviewtext">Comment</label>
+            </div>
+            <h5 class="center">Rating Slider</h5>
 
-                      <p class="range-field">
-                          <input type="range" id="rating" name="rating" min="1" max="10" value="5" />
-                      </p>
-              </div>
-              <div class="modal-footer">
+            <p class="range-field">
+              <input type="range" id="rating" name="rating" min="1" max="10" value="5" />
+            </p>
+          </div>
+          <div class="modal-footer">
 
-                  <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitreview">Submit Review
-                      <i class="material-icons right">send</i>
-                  </button>
-              </div>
-          </form>
+            <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitreview">Submit Review
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
       </div>
 
-  </div>
+    </div>
 
   </div>
 
@@ -186,8 +207,8 @@ email: hi@josephhassell.com
       <h4>Let's set up your account!</h4>
       <p>First, </p>
       <div class="input-field col s12">
-          <label for="timepicker">Time</label>
-          <input id="timepicker" class="timepicker" type="time">
+        <label for="timepicker">Time</label>
+        <input id="timepicker" class="timepicker" type="time">
       </div>
     </div>
     <div class="modal-footer">
@@ -203,39 +224,39 @@ email: hi@josephhassell.com
     <!--Tab-->
     <div id="studentsLeaving" class="col s12">
       <div class="section">
-              <div class="row">
-                <div class="col s12">
-                  <div id="MyPassesCard" class="card grey darken-3 hoverable">
-                    <div class="card-content ">
-                      <span class="card-title white-text">Students Leaving</span>
-                      <ul class="collection">
-                        <div id="studentsLeavingReturn">
-                        </div>
-                      </ul>
-                    </div>
+        <div class="row">
+          <div class="col s12">
+            <div id="MyPassesCard" class="card grey darken-3 hoverable">
+              <div class="card-content ">
+                <span class="card-title white-text">Students Leaving</span>
+                <ul class="collection">
+                  <div id="studentsLeavingReturn">
                   </div>
-                </div>
+                </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div id="studentsArriving" class="col s12">
-       <div class="section">
-              <div class="row">
-                <div class="col s12">
-                  <div id="MyPassesCard" class="card grey darken-3 hoverable">
-                    <div class="card-content ">
-                      <span class="card-title white-text">Students Arriving</span>
-                      <ul class="collection">
-                        <div id="studentsArrivingReturn">
-                        </div>
-                      </ul>
-                    </div>
+      <div class="section">
+        <div class="row">
+          <div class="col s12">
+            <div id="MyPassesCard" class="card grey darken-3 hoverable">
+              <div class="card-content ">
+                <span class="card-title white-text">Students Arriving</span>
+                <ul class="collection">
+                  <div id="studentsArrivingReturn">
                   </div>
-                </div>
+                </ul>
               </div>
             </div>
+          </div>
+        </div>
       </div>
-    
+    </div>
+
     <div id="requestAStudent" class="col s12">
       <div class="section">
         <div class="row">
@@ -244,7 +265,7 @@ email: hi@josephhassell.com
               <div class="card-content white-text">
                 <span class="card-title">Request A Student</span>
                 <div id="requestAStudentReturn">
-                  <p>Comeing later this calendar year.</p>
+                  <p>Coming later this calendar year.</p>
                 </div>
               </div>
             </div>
@@ -263,7 +284,8 @@ email: hi@josephhassell.com
             <div id="blackoutCard" class="card grey darken-3 hoverable">
               <div class="card-content white-text">
                 <span class="card-title">Set A Blackout</span>
-                <form action="" id="blackoutForm"><!--this won't work properly i think you should move it to the submitbutton. -->
+                <form action="" id="blackoutForm">
+                  <!--this won't work properly i think you should move it to the submitbutton. -->
                   <div class="input-field col s12">
                     <input type="text" class="datepicker" name="blackoutDate" id="blackoutDate">
                     <label for="blackoutDate">Date</label>
@@ -272,44 +294,46 @@ email: hi@josephhassell.com
                     <input type="text" id="blackoutPeriod">
                     <label for="blackoutPeriod"> Periods: (letter period separated by a comma (a,b,...,)</label>
                   </div>-->
-                   Periods:  
-                                <p> 
-                                  <input type="checkbox" id="a"/> 
-                                  <label for="a">A</label> 
-                                </p> 
-                                <p> 
-                                  <input type="checkbox" id="b"/> 
-                                  <label for="b">B</label> 
-                                </p> 
-                                <p> 
-                                  <input type="checkbox" id="c"/> 
-                                  <label for="c">C</label> 
-                                </p> 
-                                <p> 
-                                  <input type="checkbox" id="d"/> 
-                                  <label for="d">D</label> 
-                                </p> 
-                               <p> 
-                                  <input type="checkbox" id="e"/> 
-                                  <label for="e">E</label> 
-                                </p> 
-                               <p> 
-                                  <input type="checkbox" id="f"/> 
-                                  <label for="f">F</label> 
-                                </p> 
-                              <p> 
-                                  <input type="checkbox" id="g"/> 
-                                  <label for="g">G</label> 
-                                </p> 
-                              <p> 
-                                  <input type="checkbox" id="h"/> 
-                                  <label for="h">H</label> 
-                                </p> 
+                  Periods:
+                  <p>
+                    <input type="checkbox" id="a" />
+                    <label for="a">A</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="b" />
+                    <label for="b">B</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="c" />
+                    <label for="c">C</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="d" />
+                    <label for="d">D</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="e" />
+                    <label for="e">E</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="f" />
+                    <label for="f">F</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="g" />
+                    <label for="g">G</label>
+                  </p>
+                  <p>
+                    <input type="checkbox" id="h" />
+                    <label for="h">H</label>
+                  </p>
                   <div class="input-field col s12">
                     <input type="text" id="blackoutMessage">
                     <label for="blackoutMessage">Message</label>
                   </div>
-                    <a class="waves-effect waves-light btn" onclick="prepareSetBlackout()"><i class="material-icons right">block</i>Submit</a><!--Make an onclick attr that calles the setBlacout wrapper-->
+                  <a class="waves-effect waves-light btn" onclick="prepareSetBlackout()">
+                    <i class="material-icons right">block</i>Submit</a>
+                  <!--Make an onclick attr that calles the setBlacout wrapper-->
                 </form>
               </div>
             </div>
@@ -325,26 +349,26 @@ email: hi@josephhassell.com
       <p>A bunch of text</p>
     </div>
   </div>
-          
-  <footer class="page-footer grey darken-3">
-<div class="footer-copyright">
-  <div class="container">
-      <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
-      <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
-      <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
-  </div>
-</div>
-</footer>
 
-<!-- Scripts -->
-        <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+  <footer class="page-footer grey darken-3">
+    <div class="footer-copyright">
+      <div class="container">
+        <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
+        <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
+        <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
   <script>
-      if ('addEventListener' in window) {
-          window.addEventListener('load', function () {
-              document.body.className = document.body.className.replace(/\bis-loading\b/, '');
-          });
-          document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
-      }
+    if ('addEventListener' in window) {
+      window.addEventListener('load', function () {
+        document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+      });
+      document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+    }
   </script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
@@ -353,747 +377,819 @@ email: hi@josephhassell.com
   <script src="js/passport.js"></script>
   <script src="js/materialize.clockpicker.js"></script>
   <script src="/moment/min/moment-with-locales.min.js"></script>
-
-<script>
-var idOfUser = "{{user.id}}";
-$(document).ready(function(){
-   $('.unclosable').modal({
-    dismissible: false
-   });
-   $('.timepicker').pickatime({
-      autoclose: false,
-      twelvehour: true,
-      darktheme: true,
-      default: 'now',
-      vibrate: true,
+  <script>
+    var idOfUser = "{{user.id}}";
+    $(document).ready(function () {
+      $('.unclosable').modal({
+        dismissible: false
+      });
+      $('.timepicker').pickatime({
+        autoclose: false,
+        twelvehour: true,
+        darktheme: true,
+        default: 'now',
+        vibrate: true,
+      });
+      $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15, // Creates a dropdown of 15 years to control year,
+        today: 'Today',
+        clear: 'Clear',
+        formatSubmit: 'yyyy-mm-dd',
+        hiddenName: true,
+        close: 'Ok',
+        closeOnSelect: false // Close upon selecting a date,
+      });
+      $('.collapsible').collapsible();
+      $(".button-collapse").sideNav();
+      $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function (a1, a2, a3) {
+        $('#fullAjaxLoadingScreen').removeClass("loading");
+      });
     });
-  $('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15, // Creates a dropdown of 15 years to control year,
-    today: 'Today',
-    clear: 'Clear',
-    formatSubmit: 'yyyy-mm-dd',
-    hiddenName: true,
-    close: 'Ok',
-    closeOnSelect: false // Close upon selecting a date,
-  });
-       
-  $(".button-collapse").sideNav();
-  $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function(a1, a2, a3){
-    $('#fullAjaxLoadingScreen').removeClass("loading");
-  });
-});
 
-// Pass Avatar Button
-  //hover Effect 
-  
+    // Pass Avatar Button
+    //hover Effect 
 
-//Get Messages
-function getMessages(){
-  console.log("Remake message system");
-}
 
-function checkForUrlHash() {
-  if(window.location.hash == "#completeSignupStart") {
-    $('#completeSignup').modal('open');
-  }
-}
-
-////BLACKOUT CARD////
-
-function periodsEmpty() {
-  //https://stackoverflow.com/questions/14800954/how-to-check-if-all-checkboxes-are-unchecked
-  var textinputs = document.querySelectorAll('input[type=checkbox]'); 
-  var empty = [].filter.call( textinputs, function( el ) {
-  return !el.checked
-  });
-
-  if (textinputs.length == empty.length) {
-      return true;
-  }
-}
-
-function prepareSetBlackout() {
-  var newBlackoutDate = $("[name='blackoutDate']").val();
-  console.log(newBlackoutDate);
-
-  //<!-- is there a way to make this neater? -->
-  var newBlackoutPeriodsArray = [];
-    if($('#a').is(":checked")) {
-    newBlackoutPeriodsArray.push('a');
-    }if($('#b').is(":checked")) {
-    newBlackoutPeriodsArray.push('b');
-    }if($('#c').is(":checked")) {
-    newBlackoutPeriodsArray.push('c');
-    }if($('#d').is(":checked")) {
-    newBlackoutPeriodsArray.push('d');
-    }if($('#e').is(":checked")) {
-    newBlackoutPeriodsArray.push('e');
-    }if($('#f').is(":checked")) {
-    newBlackoutPeriodsArray.push('f');
-    }if($('#g').is(":checked")) {
-    newBlackoutPeriodsArray.push('g');
-    }if($('#h').is(":checked")) {
-    newBlackoutPeriodsArray.push('h');
+    //Get Messages
+    function getMessages() {
+      console.log("Remake message system");
     }
-    console.log(newBlackoutPeriodsArray, "arr");
 
-  var newBlackoutMessage = $("#blackoutMessage").val();
-  console.log(newBlackoutMessage);
-
-  //DO A CHECK HERE FOR CORRECT USER INPUT, THEN...
-  if (!$("#blackoutDate").val() == '' && !periodsEmpty()) {
-    setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function(err, res) {
-      if(err) {
-        materialResponse("cancel", "error");
-        return errorHand(err);
+    function checkForUrlHash() {
+      if (window.location.hash == "#completeSignupStart") {
+        $('#completeSignup').modal('open');
       }
-      if(res.inserted > 0) {
-        materialResponse("check", "success");
-      } else {
-        materialResponse("check", "warning");
-        return errorHand(new Error("Warning: Multiple Inserts"))
+    }
+
+    ////BLACKOUT CARD////
+
+    function periodsEmpty() {
+      //https://stackoverflow.com/questions/14800954/how-to-check-if-all-checkboxes-are-unchecked
+      var textinputs = document.querySelectorAll('input[type=checkbox]');
+      var empty = [].filter.call(textinputs, function (el) {
+        return !el.checked
+      });
+
+      if (textinputs.length == empty.length) {
+        return true;
       }
-    }) 
-  }
-}
+    }
 
-function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
-  
+    function prepareSetBlackout() {
+      var newBlackoutDate = $("[name='blackoutDate']").val();
+      console.log(newBlackoutDate);
 
-  var bodyData = {
-    "date": newBlackoutDate,
-    "periods": newBlackoutPeriodsArray, //removed ID BC it now just knows.  MAGIC!!! JK.  it pulls from the currently logged in user on the server
-    "message": newBlackoutMessage
-  }
-  $.ajax({
-        data: bodyData, 
+      //<!-- is there a way to make this neater? -->
+      var newBlackoutPeriodsArray = [];
+      if ($('#a').is(":checked")) {
+        newBlackoutPeriodsArray.push('a');
+      }
+      if ($('#b').is(":checked")) {
+        newBlackoutPeriodsArray.push('b');
+      }
+      if ($('#c').is(":checked")) {
+        newBlackoutPeriodsArray.push('c');
+      }
+      if ($('#d').is(":checked")) {
+        newBlackoutPeriodsArray.push('d');
+      }
+      if ($('#e').is(":checked")) {
+        newBlackoutPeriodsArray.push('e');
+      }
+      if ($('#f').is(":checked")) {
+        newBlackoutPeriodsArray.push('f');
+      }
+      if ($('#g').is(":checked")) {
+        newBlackoutPeriodsArray.push('g');
+      }
+      if ($('#h').is(":checked")) {
+        newBlackoutPeriodsArray.push('h');
+      }
+      console.log(newBlackoutPeriodsArray, "arr");
+
+      var newBlackoutMessage = $("#blackoutMessage").val();
+      console.log(newBlackoutMessage);
+
+      //DO A CHECK HERE FOR CORRECT USER INPUT, THEN...
+      if (!$("#blackoutDate").val() == '' && !periodsEmpty()) {
+        setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, function (err, res) {
+          if (err) {
+            materialResponse("cancel", "error");
+            return errorHand(err);
+          }
+          if (res.inserted > 0) {
+            materialResponse("check", "success");
+          } else {
+            materialResponse("check", "warning");
+            return errorHand(new Error("Warning: Multiple Inserts"))
+          }
+        })
+      }
+    }
+
+    function setBlackout(newBlackoutDate, newBlackoutPeriodsArray, newBlackoutMessage, done) { //You will want a wrapper function that checks if the required data is present, then calls this function. It then prosesses the callbac 
+
+
+      var bodyData = {
+        "date": newBlackoutDate,
+        "periods": newBlackoutPeriodsArray, //removed ID BC it now just knows.  MAGIC!!! JK.  it pulls from the currently logged in user on the server
+        "message": newBlackoutMessage
+      }
+      $.ajax({
+        data: bodyData,
         dataType: "json",
         type: "post",
         url: "/api/blackout",
-        beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},  // this line prepares the call for auth
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        }, // this line prepares the call for auth
         /*processData: false,
         contentType: "application/json",*/ //You don't need this
-        success: function(data) {done(null, data)}, //this runs when the api goes thru.  
-        error: function(jqXHR) {done(jqXHR)}// this calles if errored
+        success: function (data) {
+          done(null, data)
+        }, //this runs when the api goes thru.  
+        error: function (jqXHR) {
+          done(jqXHR)
+        } // this calles if errored
         /* In the wrapper function, if the callback errors, run "materialResponse("cancel", "error"); errorHand(err);"  
         if the callback succeed, run "materialResponse("check", "success");"
         */
-    });
-    //clears form after hitting submit
-    document.forms['blackoutForm'].reset() 
- }
-
-  ////MY Leaving CARD////
- 
- function getstudentsLeaving(done) {
-  $.ajax({
-      type: "get",
-      url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD") + "/to/" + moment().add(1, "days").format("Y-MM-DD"),
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
- }
-
- 
- function setLeaving() {
-  getstudentsLeaving(function(err, myPasses) {
-    if(err) {
-      return errorHand(err)
+      });
+      //clears form after hitting submit
+      document.forms['blackoutForm'].reset()
     }
-    console.log(myPasses)
-    $myPasses = $('#studentsLeavingReturn')
-    myPasses.sort(function(a, b) {
-        //return parseFloat(a.period) - parseFloat(b.period);
-        return a.period.localeCompare(b.period)
-    });
-    for(var i = 0; i < myPasses.length; i++) {
-      console.log(myPasses[i])
-      var checkNo = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                            .attr("data-position", "right")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Undo Checkout")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("undo")
-                              )
-                        )
 
-      var checkYes = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                            .attr("data-position", "left")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Checkout Migrator")
-                            
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("check")
-                              )
-                        )
-      var avatarEl = $("<img/>")
-                      .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
-                      .attr("alt", "Avatar")
+    ////MY Leaving CARD////
 
-      var titleEl = $("<span/>")
-                      .addClass("title")
-                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
+    function getstudentsLeaving(done) {
+      $.ajax({
+        type: "get",
+        url: "/api/passes/me/by/fromPerson/from/" + moment().format("Y-MM-DD") + "/to/" + moment().add(1, "days").format(
+          "Y-MM-DD"),
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
 
-      titleEl.prepend(
+
+    function setLeaving() {
+      getstudentsLeaving(function (err, myPasses) {
+        if (err) {
+          return errorHand(err)
+        }
+        console.log(myPasses)
+        $myPasses = $('#studentsLeavingReturn')
+        myPasses.sort(function (a, b) {
+          //return parseFloat(a.period) - parseFloat(b.period);
+          return a.period.localeCompare(b.period)
+        });
+        for (var i = 0; i < myPasses.length; i++) {
+          console.log(myPasses[i])
+          var checkNo = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light red tooltipped")
+              .attr("data-position", "right")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Undo Checkout")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("undo")
+              )
+            )
+
+          var checkYes = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light green tooltipped")
+              .attr("data-position", "left")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Checkout Migrator")
+
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("check")
+              )
+            )
+          var avatarEl = $("<img/>")
+            .addClass("passport-avatar circle")
+            .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
+            .attr("alt", "Avatar")
+
+          var titleEl = $("<span/>")
+            .addClass("title")
+            .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
+
+          titleEl.prepend(
             $("<i/>")
-              .addClass("material-icons")
-              .text("remove_red_eye")
-        )
+            .addClass("material-icons")
+            .text("remove_red_eye")
+          )
 
-      var dateEl = $("<p/>")
-                      .text("Date: ")
-                      .append(
-                        $("<strong/>")
-                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                      )
+          var dateEl = $("<p/>")
+            .text("Date: ")
+            .append(
+              $("<strong/>")
+              .text(moment(myPasses[i].date).format("dddd, LL"))
+            )
 
-      var periodEl = $("<p/>")
-                      .text("Period: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].period.toUpperCase())
-                      )
-      
-      var statusEl = $("<span/>")
-                      
-                      .addClass("new badge")
+          var periodEl = $("<p/>")
+            .text("Period: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].period.toUpperCase())
+            )
 
-      var leavingFromEl = $("<p/>")
-                      .text("Leaving From: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                      )
-      var goingToEl = $("<p/>")
-                      .text("Going To: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
-                      )
+          var statusEl = $("<span/>")
 
-      var requesterEl = $("<p/>")
-                      .text("Requester: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                      )
-                       
+            .addClass("new badge")
 
-      //set final holder
-      var li = $("<li/>")
-                  .addClass("collection-item avatar")
-                  .append(checkNo)
-                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                  .append(checkYes)
-                  .append(avatarEl)
-                  .append(titleEl)
-                  .append(dateEl)
-                  .append(periodEl)
-                  .append(statusEl)
-                  .append(leavingFromEl)
-                  .append(goingToEl)
-                  .append(requesterEl)
-                  .attr("data-passId-leaving", myPasses[i].id)
-                  
-      $myPasses.append(li)
-      //code to fire after element has been set 
-      $('.tooltipped').tooltip({delay: 50});
+          var leavingFromEl = $("<p/>")
+            .text("Leaving From: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+            )
+          var goingToEl = $("<p/>")
+            .text("Going To: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+            )
 
-      //check if migrator has been released 
-      if(myPasses[i].status.migration.arrivedTime) {
-        setLeavingButtonsAndState(myPasses[i].id, "arrived")
-      } else if(myPasses[i].status.migration.excusedTime){
-        setLeavingButtonsAndState(myPasses[i].id, "enroute")
-      } else {
-        setLeavingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state)
-      }
+          var requesterEl = $("<p/>")
+            .text("Requester: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+            )
+
+
+          //set final holder
+          var li = $("<li/>")
+            .addClass("collection-item avatar")
+            .append(checkNo)
+            .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+            .append(checkYes)
+            .append(avatarEl)
+            .append(titleEl)
+            .append(dateEl)
+            .append(periodEl)
+            .append(statusEl)
+            .append(leavingFromEl)
+            .append(goingToEl)
+            .append(requesterEl)
+            .attr("data-passId-leaving", myPasses[i].id)
+
+          $myPasses.append(li)
+          //code to fire after element has been set 
+          $('.tooltipped').tooltip({
+            delay: 50
+          });
+
+          //check if migrator has been released 
+          if (myPasses[i].status.migration.arrivedTime) {
+            setLeavingButtonsAndState(myPasses[i].id, "arrived")
+          } else if (myPasses[i].status.migration.excusedTime) {
+            setLeavingButtonsAndState(myPasses[i].id, "enroute")
+          } else {
+            setLeavingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state)
+          }
+
+        }
+      })
+    }
+    //Check Off migrator for students leaving 
+    function releaseMigratorActions(passLI, isMigrating, status) {
+      var passLI = $(passLI);
+      console.log(isMigrating)
+      setMigrationStatus(passLI.attr("data-passId-leaving"), isMigrating, function (err, trans) {
+        if (err) {
+          errorHand(err);
+          console.log("Error")
+          return materialResponse("cancel", "error");
+        }
+        if (trans && trans.replaced == 1) {
+          if (isMigrating == "true") {
+            Materialize.toast('Successfully Released Student', 4000)
+          } else {
+            Materialize.toast('Undone Release', 4000)
+          }
+          setLeavingButtonsAndState(passLI.attr("data-passId-leaving"), status);
+        } else {
+          return materialResponse("warning", "error");
+        }
+      })
+
 
     }
-  })
- }
- //Check Off migrator for students leaving 
- function releaseMigratorActions(passLI, isMigrating, status) {
-  var passLI = $(passLI);
-  console.log(isMigrating)
-  setMigrationStatus(passLI.attr("data-passId-leaving"), isMigrating, function(err, trans) {
-    if(err) {
-      errorHand(err);
-      console.log("Error")
-      return materialResponse("cancel", "error");
+
+    function setMigrationStatus(passId, status, done) {
+      $.ajax({
+        type: "patch",
+        url: "/api/passes/status/" + passId + "/isMigrating/" + status,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
     }
-    if(trans && trans.replaced == 1) {
-      if(isMigrating == "true") {
-        Materialize.toast('Successfully Released Student', 4000) 
-      } else {
-        Materialize.toast('Undone Release', 4000) 
+
+    function setLeavingButtonsAndState(passId, state, cantAccept) {
+      var releaseBtn = $("*[data-passId-leaving=" + passId + "]").find("a.green.btn-floating");
+      var undoBtn = $("*[data-passId-leaving=" + passId + "]").find("a.red.btn-floating");
+      var badge = $("*[data-passId-leaving=" + passId + "]").find("span.new.badge");
+      //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+      console.log(state)
+      switch (state) {
+        case "pending":
+          if (!cantAccept) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          releaseBtn.attr("data-tooltip", "Release Student");
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("data-tooltip", "Undo Release");
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge");
+
+          break;
+        case "accepted":
+          if (!cantAccept) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          releaseBtn.attr("data-tooltip", "Release Student");
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge green");
+
+          break;
+        case "denied":
+        case "canceled":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge red");
+
+          break;
+        case "enroute":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"false\", \"pending\");");
+          undoBtn.attr("data-tooltip", "Revert Release");
+          badge.removeClass().addClass("new badge light-blue accent-4");
+
+          break;
+        case "arrived":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge green accent-4");
+          break;
+
+        default:
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge black");
+
+          break;
       }
-      setLeavingButtonsAndState(passLI.attr("data-passId-leaving"), status);
-    } else {
-      return materialResponse("warning", "error");
+      badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
+      $('.tooltipped').tooltip({
+        delay: 50
+      });
     }
-  }) 
-
-  
- }
-
-function setMigrationStatus(passId, status, done) {
-  $.ajax({
-      type: "patch",
-      url: "/api/passes/status/" + passId + "/isMigrating/" + status,
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
-}
-
-function setLeavingButtonsAndState(passId, state, cantAccept) {
-  var releaseBtn = $("*[data-passId-leaving=" + passId + "]").find("a.green.btn-floating");
-  var undoBtn = $("*[data-passId-leaving=" + passId + "]").find("a.red.btn-floating");
-  var badge = $("*[data-passId-leaving=" + passId + "]").find("span.new.badge");
-//releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
-console.log(state)
-  switch(state){
-    case "pending": 
-      if(!cantAccept) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
-      } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
-      }
-      releaseBtn.attr("data-tooltip", "Release Student");
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("data-tooltip", "Undo Release");
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge");
-      
-      break;
-    case "accepted": 
-      if(!cantAccept) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\", \"enroute\");");
-      } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
-      }
-      releaseBtn.attr("data-tooltip", "Release Student");
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge green");
-      
-      break;
-    case "denied":
-    case "canceled":
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge red");
-      
-      break;
-    case "enroute": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"false\", \"pending\");");
-      undoBtn.attr("data-tooltip", "Revert Release");
-      badge.removeClass().addClass("new badge light-blue accent-4");
-
-      break;
-    case "arrived": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge green accent-4");
-      break;
-
-    default:
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge black");
-
-      break;
-  }
-  badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
-  $('.tooltipped').tooltip({delay: 50});
- }
 
 
-////MY Arriving CARD////
- 
- function getStudentsArriving(done) {
-  $.ajax({
-      type: "get",
-      url: "/api/passes/me/by/toPerson/from/" + moment().format("Y-MM-DD"),
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
- }
- 
- function setArriving() {
-  getStudentsArriving(function(err, myPasses) {
-    if(err) {
-      return errorHand(err)
+    ////MY Arriving CARD////
+
+    function getStudentsArriving(done) {
+      $.ajax({
+        type: "get",
+        url: "/api/passes/me/by/toPerson/from/" + moment().format("Y-MM-DD"),
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
     }
-    console.log(myPasses)
-    $myPasses = $('#studentsArrivingReturn')
-    myPasses.sort(function(a, b) {
-        //return parseFloat(a.period) - parseFloat(b.period);
-        return a.date.localeCompare(b.date)
-    });
-    for(var i = 0; i < myPasses.length; i++) {
-      console.log(myPasses)
-      var checkNo = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                            .attr("data-position", "right")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Cancel This Pass")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("not_interested")
-                              )
-                        )
 
-      var checkYes = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                            .attr("data-position", "top")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Confirm This Pass")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("check")
-                              )
-                        )
-      var checkIn = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light cyan tooltipped")
-                            .attr("data-position", "left")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Check Student In")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("edit")
-                              )
-                        )
+    function setArriving() {
+      getStudentsArriving(function (err, myPasses) {
+        if (err) {
+          return errorHand(err)
+        }
+        console.log(myPasses)
+        $myPasses = $('#studentsArrivingReturn')
+        myPasses.sort(function (a, b) {
+          //return parseFloat(a.period) - parseFloat(b.period);
+          return a.date.localeCompare(b.date)
+        });
+        for (var i = 0; i < myPasses.length; i++) {
+          console.log(myPasses)
+          var checkNo = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light red tooltipped")
+              .attr("data-position", "right")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Cancel This Pass")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("not_interested")
+              )
+            )
 
-      var avatarEl = $("<img/>")
-                      .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
-                      .attr("alt", "Avatar")
+          var checkYes = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light green tooltipped")
+              .attr("data-position", "top")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Confirm This Pass")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("check")
+              )
+            )
+          var checkIn = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light cyan tooltipped")
+              .attr("data-position", "left")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Check Student In")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("edit")
+              )
+            )
 
-      var titleEl = $("<span/>")
-                      .addClass("title")
-                      .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
+          var avatarEl = $("<img/>")
+            .addClass("passport-avatar circle")
+            .attr("src", "/api/media/avatar/" + myPasses[i].migrator.id + "/50.svg")
+            .attr("alt", "Avatar")
 
-      titleEl.prepend(
+          var titleEl = $("<span/>")
+            .addClass("title")
+            .text(myPasses[i].migrator.name.first + " " + myPasses[i].migrator.name.last)
+
+          titleEl.prepend(
             $("<i/>")
-              .addClass("material-icons")
-              .text("remove_red_eye")
-        )
+            .addClass("material-icons")
+            .text("remove_red_eye")
+          )
 
-      var dateEl = $("<p/>")
-                      .text("Date: ")
-                      .append(
-                        $("<strong/>")
-                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                      )
+          var dateEl = $("<p/>")
+            .text("Date: ")
+            .append(
+              $("<strong/>")
+              .text(moment(myPasses[i].date).format("dddd, LL"))
+            )
 
-      var periodEl = $("<p/>")
-                      .text("Period: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].period.toUpperCase())
-                      )
+          var periodEl = $("<p/>")
+            .text("Period: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].period.toUpperCase())
+            )
 
-      var statusEl = $("<span/>")
-                      //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
-                      .addClass("new badge")
-      
+          var statusEl = $("<span/>")
+            //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
+            .addClass("new badge")
 
-      if(myPasses[i].fromPerson) {
-        var leavingFromEl = $("<p/>")
-                      .text("Leaving From: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                      )
-      } else {
-        var leavingFromEl = $("<p/>")
-                      .text("Leaving From No One")
-      }
 
-      var requesterEl = $("<p/>")
-                      .text("Requester: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                      )
-                       
+          if (myPasses[i].fromPerson) {
+            var leavingFromEl = $("<p/>")
+              .text("Leaving From: ")
+              .append(
+                $("<strong/>")
+                .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+              )
+          } else {
+            var leavingFromEl = $("<p/>")
+              .text("Leaving From No One")
+          }
 
-      //set final holder
-      var li = $("<li/>")
-                  .addClass("collection-item avatar")
-                  .append(checkNo)
-                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                  .append(checkYes)
-                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                  .append(checkIn)
-                  .append(avatarEl)
-                  .append(titleEl)
-                  .append(dateEl)
-                  .append(periodEl)
-                  .append(statusEl)
-                  .append(leavingFromEl)
-                  .append(requesterEl)
-                  .attr("data-passId-arriving", myPasses[i].id)
-                  .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
-                  .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
-      $myPasses.append(li)
-      if(myPasses[i].status.migration.arrivedTime) {
-        setArrivingButtonsAndState(myPasses[i].id, "arrived");
-      } else if(myPasses[i].status.migration.excusedTime) {
-        setArrivingButtonsAndState(myPasses[i].id, "enroute");
-      } else {
-        if(myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state == "canceled") {
-            if(myPasses[i].status.confirmation.setByUser != idOfUser) {
-                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+          var requesterEl = $("<p/>")
+            .text("Requester: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+            )
+
+
+          //set final holder
+          var li = $("<li/>")
+            .addClass("collection-item avatar")
+            .append(checkNo)
+            .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+            .append(checkYes)
+            .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+            .append(checkIn)
+            .append(avatarEl)
+            .append(titleEl)
+            .append(dateEl)
+            .append(periodEl)
+            .append(statusEl)
+            .append(leavingFromEl)
+            .append(requesterEl)
+            .attr("data-passId-arriving", myPasses[i].id)
+            .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
+            .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
+          $myPasses.append(li)
+          if (myPasses[i].status.migration.arrivedTime) {
+            setArrivingButtonsAndState(myPasses[i].id, "arrived");
+          } else if (myPasses[i].status.migration.excusedTime) {
+            setArrivingButtonsAndState(myPasses[i].id, "enroute");
+          } else {
+            if (myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state ==
+              "canceled") {
+              if (myPasses[i].status.confirmation.setByUser != idOfUser) {
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, undefined);
+              } else {
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+              }
+            } else if (myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
+
+              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, undefined);
             } else {
               setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
             }
-        } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
-          
-          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
-        } else {
-          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+          }
+
+
+
         }
-      }
-      
-      
-
-    }
-  })
- }
-
-function arrivingButtonActions(passLI, action) {
-  passLI = $(passLI);
-  setPassStatus(passLI.attr("data-passId-arriving"), action, function(err, transaction) {
-    
-    if(err && err.status == 403) {
-      Materialize.toast('Action Forbidden', 4000);
-      console.log("Forbidden");
-      return materialResponse("cancel", "warning");
-    } else if(err) {
-      console.log("Error");
-      materialResponse("cancel", "error");
-      return errorHand(err);
+      })
     }
 
-    if(transaction && transaction.replaced == 1) {
-      Materialize.toast('Successfully Updated State', 4000) 
-      if(action == "denied" || action == "canceled") {
-        $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr("data-stateSetByCurrentUser", true);
-      }
-      setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+    function arrivingButtonActions(passLI, action) {
+      passLI = $(passLI);
+      setPassStatus(passLI.attr("data-passId-arriving"), action, function (err, transaction) {
 
-    } else {
-      return materialResponse("cancel", "warning");
+        if (err && err.status == 403) {
+          Materialize.toast('Action Forbidden', 4000);
+          console.log("Forbidden");
+          return materialResponse("cancel", "warning");
+        } else if (err) {
+          console.log("Error");
+          materialResponse("cancel", "error");
+          return errorHand(err);
+        }
+
+        if (transaction && transaction.replaced == 1) {
+          Materialize.toast('Successfully Updated State', 4000)
+          if (action == "denied" || action == "canceled") {
+            $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr(
+              "data-stateSetByCurrentUser", true);
+          }
+          setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+
+        } else {
+          return materialResponse("cancel", "warning");
+        }
+
+      })
     }
 
-  })
-}
-
-function setPassStatus(passId, status, done) {
-  $.ajax({
-      type: "patch",
-      url: "/api/passes/status/" + passId + "/state/" + status,
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
-}
-
-function setCheckIn(passId, isCheckedIn, done){
-  $.ajax({
-      type: "patch",
-      url: "/api/passes/status/" + passId + "/hasArrived/" + isCheckedIn,
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
-}
-
-function checkInButtons(passLI, isCheckedIn) {
-  passLI = $(passLI);
-  if(isCheckedIn) {
-    var isCheckedInStr = "true";
-    var action = "arrived";
-  } else {
-    var isCheckedInStr = "false";
-    var action = "accepted";
-  }
-  setCheckIn(passLI.attr("data-passId-arriving"), isCheckedInStr, function(err, transaction) {
-    if(err) {
-      errorHand(err);
+    function setPassStatus(passId, status, done) {
+      $.ajax({
+        type: "patch",
+        url: "/api/passes/status/" + passId + "/state/" + status,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
     }
-    if(transaction && transaction.replaced == 1) {
-      Materialize.toast('Successfully Updated Status', 4000) 
-      setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
-    } else {
-      console.log("Warning checking maybe failed")
-      materialResponse("cancel", "warning");
-    }
-  })
-}
 
- function setArrivingButtonsAndState(passId, state, cantAccept) {
-  var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
-  var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
-  var checkInBtn = $("*[data-passId-arriving=" + passId + "]").find("a.cyan.btn-floating");
-  var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
-  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
-  var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") == "true";
-//releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
-console.log(state)
-  switch(state){
-    case "pending": 
-      if(!cantAccept && !userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-        checkInBtn.attr("disabled", true);
-        checkInBtn.attr("onclick", false);
-        checkInBtn.attr("title", "Accept this pass first");
+    function setCheckIn(passId, isCheckedIn, done) {
+      $.ajax({
+        type: "patch",
+        url: "/api/passes/status/" + passId + "/hasArrived/" + isCheckedIn,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+
+    function checkInButtons(passLI, isCheckedIn) {
+      passLI = $(passLI);
+      if (isCheckedIn) {
+        var isCheckedInStr = "true";
+        var action = "arrived";
       } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
-        checkInBtn.attr("disabled", false);
-        checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
-        checkInBtn.attr("title", false);
-        checkInBtn.attr("data-tooltip", "Check Student In");
+        var isCheckedInStr = "false";
+        var action = "accepted";
       }
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Deny This Pass Request");
-      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
-      
-      badge.removeClass().addClass("new badge");
-      
-      break;
-    case "accepted": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Cancel This Pass");
-      undoBtn.find("i").html("not_interested");
-      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-      checkInBtn.attr("disabled", false);
-      checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
-      checkInBtn.attr("title", false);
-      checkInBtn.attr("data-tooltip", "Check Student In");
-      badge.removeClass().addClass("new badge green");
-      
-      break;
-    case "denied":
-    case "canceled":
-      if(stateSetByCurrentUser && !userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "ReAccept Pass");
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-      } else if(stateSetByCurrentUser && userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "Reopen Pass");
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
-      } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
+      setCheckIn(passLI.attr("data-passId-arriving"), isCheckedInStr, function (err, transaction) {
+        if (err) {
+          errorHand(err);
+        }
+        if (transaction && transaction.replaced == 1) {
+          Materialize.toast('Successfully Updated Status', 4000)
+          setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+        } else {
+          console.log("Warning checking maybe failed")
+          materialResponse("cancel", "warning");
+        }
+      })
+    }
+
+    function setArrivingButtonsAndState(passId, state, cantAccept) {
+      var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
+      var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
+      var checkInBtn = $("*[data-passId-arriving=" + passId + "]").find("a.cyan.btn-floating");
+      var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+      var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true"
+      var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") ==
+        "true";
+      //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+      console.log(state)
+      switch (state) {
+        case "pending":
+          if (!cantAccept && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+            checkInBtn.attr("disabled", true);
+            checkInBtn.attr("onclick", false);
+            checkInBtn.attr("title", "Accept this pass first");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+            checkInBtn.attr("disabled", false);
+            checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+            checkInBtn.attr("title", null);
+            checkInBtn.attr("data-tooltip", "Check Student In");
+          }
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Deny This Pass Request");
+          undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+
+          badge.removeClass().addClass("new badge");
+
+          break;
+        case "waitlisted":
+          if (!cantAccept && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+            checkInBtn.attr("disabled", true);
+            checkInBtn.attr("onclick", false);
+            checkInBtn.attr("title", "Accept this pass first");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+            checkInBtn.attr("disabled", false);
+            checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+            checkInBtn.attr("title", null);
+            checkInBtn.attr("data-tooltip", "Check Student In");
+          }
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Deny This Pass Request");
+          undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+
+          badge.removeClass().addClass("new badge orange");
+
+          break;
+        case "accepted":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Cancel This Pass");
+          undoBtn.find("i").html("not_interested");
+          undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+          checkInBtn.attr("disabled", false);
+          checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+          checkInBtn.attr("title", false);
+          checkInBtn.attr("data-tooltip", "Check Student In");
+          badge.removeClass().addClass("new badge green");
+
+          break;
+        case "denied":
+        case "canceled":
+          if (stateSetByCurrentUser && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("data-tooltip", "ReAccept Pass");
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+          } else if (stateSetByCurrentUser && userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("data-tooltip", "Reopen Pass");
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          checkInBtn.attr("disabled", true);
+          checkInBtn.attr("onclick", false);
+          checkInBtn.attr("title", "Please Reaccept the Pass");
+          checkInBtn.attr("data-tooltip", false);
+          badge.removeClass().addClass("new badge red");
+
+          break;
+        case "enroute":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          checkInBtn.attr("disabled", false);
+          checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
+          checkInBtn.attr("title", false);
+          checkInBtn.attr("data-tooltip", "Check Student In");
+          badge.removeClass().addClass("new badge light-blue accent-4");
+
+          break;
+        case "arrived":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Undo Check In");
+          undoBtn.find("i").html("undo");
+          undoBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), false)");
+          checkInBtn.attr("disabled", true);
+          checkInBtn.attr("onclick", false);
+          checkInBtn.attr("title", false);
+          checkInBtn.attr("data-tooltip", false);
+          badge.removeClass().addClass("new badge green accent-4");
+          break;
+
+        default:
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          checkInBtn.attr("disabled", true);
+          checkInBtn.attr("onclick", false);
+          checkInBtn.attr("title", false);
+          checkInBtn.attr("data-tooltip", false);
+          badge.removeClass().addClass("new badge black");
+
+          break;
       }
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      checkInBtn.attr("disabled", true);
-      checkInBtn.attr("onclick", false);
-      checkInBtn.attr("title", "Please Reaccept the Pass");
-      checkInBtn.attr("data-tooltip", false);
-      badge.removeClass().addClass("new badge red");
-      
-      break;
-    case "enroute": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      checkInBtn.attr("disabled", false);
-      checkInBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), true)");
-      checkInBtn.attr("title", false);
-      checkInBtn.attr("data-tooltip", "Check Student In");
-      badge.removeClass().addClass("new badge light-blue accent-4");
-
-      break;
-    case "arrived": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Undo Check In");
-      undoBtn.find("i").html("undo");
-      undoBtn.attr("onclick", "checkInButtons(this.closest(\'li\'), false)");
-      checkInBtn.attr("disabled", true);
-      checkInBtn.attr("onclick", false);
-      checkInBtn.attr("title", false);
-      checkInBtn.attr("data-tooltip", false);
-      badge.removeClass().addClass("new badge green accent-4");
-      break;
-
-    default:
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      checkInBtn.attr("disabled", true);
-      checkInBtn.attr("onclick", false);
-      checkInBtn.attr("title", false);
-      checkInBtn.attr("data-tooltip", false);
-      badge.removeClass().addClass("new badge black");
-
-      break;
-  }
-  badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
-  $('.tooltipped').tooltip({delay: 50});
- }
-
-
-</script>
+      badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
+      $('.tooltipped').tooltip({
+        delay: 50
+      });
+    }
+  </script>
 </body>
 
 </html>

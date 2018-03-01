@@ -27,7 +27,7 @@ email: hi@josephhassell.com
                 <div class="card-panel">
                     <div class="row">
                         <div class="input-field col s12">
-                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this);">
+                            <select id="accountType" class="validate invalid" onchange="setEmailRules(this); checkIfGraduates(this);">
                               <option value="" disabled selected>Choose your account type</option>
                             </select>
                             <label>Account Type</label>
@@ -49,12 +49,23 @@ email: hi@josephhassell.com
                             <label for="email">Email</label>
                         </div>
                         <div class="col s12 input-field">
+                            <input name="schoolID" type="text" class="tooltipped" data-tooltip="Leave this blank if you don't have one" data-position="bottom" id="schoolID">
+                            <label for="schoolID">School ID</label>
+                        </div>
+                        <div class="col s12 input-field">
                             <input name="password" type="password" class="validate" id="password">
                             <label for="password">Password</label>
                         </div>
                         <div class="col s12 input-field">
                             <input name="passwordVerification" type="password" class="validate" id="passwordVer">
                             <label for="passwordVer">Password (Again)</label>
+                        </div>
+                        <br>
+                        <div class="col s12 input-field" id="gradYearCon" style="display:none;">
+                            <select id="gradYear" class="validate">
+                                <option value="" disabled selected>Choose a Year</option>
+                            </select>
+                            <label>Graduation Year</label>
                         </div>
                     </div>
                     <button class="btn waves-effect waves-light red darken-4 pulse" onclick="signup();">Signup
@@ -74,6 +85,15 @@ email: hi@josephhassell.com
     <script type="text/javascript">
     var userGroupsData = null;
     $(document).ready(function() {
+         $('.datepicker').pickadate({
+            selectMonths: false,
+            selectYears: 5, 
+            today: null,
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+        
          $('input.autocomplete').autocomplete({
             data: {
               "Mr.": null,
@@ -139,13 +159,32 @@ email: hi@josephhassell.com
             }
         }
     }
+    var doesGraduate = null;
+    function checkIfGraduates(dis) {
+        $("#gradYear").empty().prepend($("<option value='' disabled selected>Choose a Year</option>"));
+        $('select').material_select();
+        doesGraduate = userGroupsData[$(dis).val()].graduates;
+        if(userGroupsData[$(dis).val()].graduates) {
+            var year = new Date().getFullYear();
+            for(var x = 0; x < 5; x++) {
+                $("#gradYear").append($("<option/>").val(year+x).html(year+x))
+            }
+            $('select').material_select();
+            $("#gradYearCon").slideDown();
+
+            console.log("Graduates")
+        } else {
+            $("#gradYearCon").slideUp();
+        }
+    }
 
     function setupPermKeys() {
         var pk = getUrlParameter("pk");
         if(pk) {
             $.ajax({
                 type: "get",
-                url: "/api/security/key/"+pk,
+                url: "/api/security/key/NEW_ACCOUNT",
+                data: {key: pk},
                 success: function(data) {
                     console.log(data)
                     if(data && data.permissions && data.permissions.userGroups) {
@@ -203,6 +242,9 @@ email: hi@josephhassell.com
             var email = $("#email").val();
             var passwordVerification = $("#passwordVer").val();
             var password = $("#password").val();
+            var gradYear = $("#gradYear").val();
+            var schoolID = $("#schoolID").val();
+            console.log(schoolID)
             var errored = false;
             console.log(accountType)
             if(!accountType) {
@@ -240,7 +282,20 @@ email: hi@josephhassell.com
                 Materialize.toast("Passwords must match", 4000)
                 errored = true;
             }
-            var sData = {email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
+            if(!gradYear) {
+                if(doesGraduate) {
+                    $("#gradYear").removeClass("valid").addClass("invalid");
+                    Materialize.toast("You must specify your graduation year.", 4000)
+                    errored = true;
+                } else {
+                    gradYear = null;
+                }
+                
+            }
+            if(!schoolID) {
+                schoolID = null;
+            }
+            var sData = {graduationYear: gradYear, schoolID: schoolID, email: email, password: password, passwordVerification: passwordVerification, name:{first: firstname, last: lastname, salutation: salutation}};
             var pk = getUrlParameter("pk");
             if(pk) {
                 sData.permissionKey = pk;
@@ -248,12 +303,12 @@ email: hi@josephhassell.com
             if(!errored) {
                 $.ajax({
                     type: "post",
-                    url: "/api/account/" + accountType,
+                    url: "/api/account/new/" + accountType,
                     data: sData,
                     success: function(data) {
 
                         materialResponse("check", "success", function() {
-                            window.location.href = "/"
+                            window.location.href = "/auth/login?msgHead="+encodeURIComponent("Account created")+"&msg="+encodeURIComponent("Your should recieve an activation email soon. Please remember to check your spam");
                         })
                     },
                     error: function(jqXHR) {

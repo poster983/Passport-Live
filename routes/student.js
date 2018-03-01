@@ -18,43 +18,36 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 */
 
-var express = require('express');
-var config = require('config');
+var express = require("express");
+var config = require("config");
 var router = express.Router();
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-var checkAuth = require('connect-ensure-login');
-var ssarv = require('ssarv');
+var checkAuth = require("connect-ensure-login");
+var utils = require("../modules/passport-utils/index.js");
+
+
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
 
 
 
 //
 /* GET Student page. */
-router.get('/', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
-
-	/*enabledPassGroups = config.get('passGroups.enabledPassGroups');
-	var passGroups = new Array();
-
-	for (var i = 0, len = enabledPassGroups.length; i < len; i++) {
-		
-		passGroups[i] = JSON.parse('{ "viewName":"' + config.get('passGroups.' + enabledPassGroups[i] + '.viewName') + '", "value": "' + config.get('passGroups.' + enabledPassGroups[i] + '.customGroupID') + '"}');
-		
-	}*/
-    var user = {}
-    user.name = req.user.name;
-    user.email = req.user.email;
-    user.id = req.user.id;
-    res.render('student/index', { doc_Title: 'Passport-Student', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
-});
-
-//Student Account Page
-router.get('/account', checkAuth.ensureLoggedIn('/auth/login'), ssarv(["student", "dev", "admin"], {locationOfRoles: "user.userGroup", failureRedirect: "/"}), function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["student"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;
     user.id = req.user.id;
 
-    res.render('student/account', { doc_Title: 'Your Account Passport-Student', user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    req.sidenav.links = [
+        "<li><a class=\"waves-effect active\" href=\"/student\"><i class=\"material-icons\">home</i>Home</a></li>",
+        "<li><a class=\"waves-effect\" href=\"/account?referral=student\"><i class=\"material-icons\">account_circle</i>My Account</a></li>",
+    ];
+
+    res.render("student/index", { doc_Title: "Passport-Student", customHead: customHead, sidenav: req.sidenav, user, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
+
+
 
 module.exports = router;

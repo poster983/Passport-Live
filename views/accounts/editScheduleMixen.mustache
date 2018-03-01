@@ -1,0 +1,111 @@
+<!--
+Passport-Live is a modern web app for schools that helps them manage passes.
+    Copyright (C) 2017  Joseph Hassell
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+email: hi@josephhassell.com
+-->
+
+<!--The NAv-->
+<nav>
+    <div class="nav-wrapper">
+      
+      <ul class="left">
+        <a href="#" class="no-hover left-allign" style="" id="mixenSEBack"><i class="material-icons">arrow_back</i></a>
+      </ul>
+      <ul class="right hide-on-small-only">
+        <a class="waves-effect waves-light mixenSESave" id="mixenSESave-nav"><i class="left material-icons">save</i>Save</a>
+      </ul>
+
+    </div>
+</nav>
+<div class="progress" id="loader" style="position: absolute; display:none;">
+  <div class="indeterminate"></div>
+</div>
+
+<!--THe FAB-->
+<div class="fixed-action-btn hide-on-med-and-up">
+  <a class="btn-floating btn-large red waves-effect waves-light pulse disabled mixenSESave" id="mixenSESave-fab">
+    <i class="large material-icons">save</i>
+  </a>
+</div>
+
+<!-- THe page -->
+<div class="container">
+
+  <div id="SETable"> 
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <a id="se-advancedOptionsCaret" data-position="left" data-tooltip="More Options" class="right waves-effect waves-circle waves-light btn-floating grey darken-2 tooltipped" ><i class="material-icons">expand_less</i></a>
+            <span class="card-title">Edit My Schedule</span>
+            <!--Advanced Options -->
+            <div id="se-advancedOptionsDIV" class="row">
+              <div class="col s12">
+                <div class="card-panel grey darken-4 white-text">
+                  <h5 class="">Advanced Options</h5>
+                  <!-- Recovery Switch -->
+                  {{#elements.schedules.student}}
+                  <div class="switch">
+                    Student Recovery Mode:
+                    <label>
+                      Off
+                      <input id="se-advancedOptions-studentRecovery" type="checkbox" value="true">
+                      <span class="lever"></span>
+                      On
+                    </label>
+                  </div>
+                  {{/elements.schedules.student}}
+                  {{#elements.schedules.teacher}}
+                  <div class="switch">
+                    Teacher Recovery Mode:
+                    <label>
+                      Off
+                      <input id="se-advancedOptions-teacherRecovery" type="checkbox" value="true">
+                      <span class="lever"></span>
+                      On
+                    </label>
+                  </div>
+                  {{/elements.schedules.teacher}}
+                </div>
+              </div>
+            </div>
+
+            
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              {{#elements.schedules.student}}<li class="tab"><a href="#editStudentType">Student Schedule</a></li>{{/elements.schedules.student}}
+              {{#elements.schedules.teacher}}<li class="tab"><a href="#editTeacherType">Teacher Schedule</a></li>{{/elements.schedules.teacher}}
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            {{#elements.schedules.student}}
+            <div id="editStudentType">
+              <div id="editStudentScheduleContainer"></div>
+            </div>
+            {{/elements.schedules.student}}
+            {{#elements.schedules.teacher}}
+            <div id="editTeacherType">
+              <div id="editTeacherScheduleContainer"></div>
+            </div>
+            {{/elements.schedules.teacher}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,55 +18,14 @@
 
 email: hi@josephhassell.com
 */
-var r = require('rethinkdb');
-var config = require("config")
-  var connection = null;
-var p = r.connect( {host: 'localhost', port: 28015, password: config.get("rethinkdb.password")}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
-});
-p.then(function(conn) {
-   r.dbCreate('passport').run(conn, function() {
-    //create accounts
-   	r.db('passport').tableCreate('accounts').run(conn, function(res) {
-      console.log(res); 
-    });
-    //create 
-    r.db('passport').tableCreate('permissionKeys').run(conn, function(res) {
-      console.log(res); 
-    });
-     r.db('passport').tableCreate('scheduleDefinitions').run(conn, function(res) {
-      console.log(res); 
-    });
-    r.db('passport').tableCreate('scheduleCalendar').run(conn, function(res) {
-      console.log(res); 
-    });
-    r.db('passport').tableCreate('userSchedules').run(conn, function(res) {
-      console.log(res); 
-      /*
-      r.db('passport').table("userSchedules").indexCreate("userId").run(conn, function(res) {
-        console.log("SECONDARY")
-        console.log(res); 
-      });*/
-    });
-    r.db('passport').tableCreate('scheduleRepeating').run(conn, function(res) {
-      console.log(res); 
-    });
-    r.db('passport').tableCreate('apiKeys').run(conn, function(res) {
-      console.log(res); 
-    });
-     r.db('passport').tableCreate('blackouts').run(conn, function(res) {
-      console.log(res); 
-    });
-    r.db('passport').tableCreate('passes').run(conn, function(res) {
-      console.log(res); 
-      process.exit();
-    });
 
+require("../modules/db/create.js")().then((res) => {
+  if(res) {
+    console.log(res)
+  } else {
+    console.log("Nothing Changed!")
+  }
+  
+  process.exit();
+}).catch((err) => {throw err; process.exit();})
 
-//secondary index
-   
-})
-}).error(function(error) {
-    console.err(error);
-});

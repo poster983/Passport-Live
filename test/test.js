@@ -6,10 +6,9 @@ var server = require('../bin/www');
 var base_url = "http://localhost:3000/"
 var r = require('rethinkdb');
 var config = require('config');
-var connection = null;
-function logger(msg) {
-	Console.log(msg);
-}
+var db = require("../modules/db/index.js")
+var createDB = require("../modules/db/create.js")
+
 var studentJWTToken = null;
 
 //Check if NOT using "tests" envirement variable.  Exits if true
@@ -17,7 +16,9 @@ if(config.util.getEnv('NODE_ENV') != "tests" && config.util.getEnv('NODE_ENV') !
 	console.error("MUST PASS \"NODE_ENV=tests\" WHEN RUNNING.  \n  You Passed: " + config.util.getEnv('NODE_ENV'));
 	process.exit(1);
 }
-
+process.on('exit', function() {
+	
+});
 
 /** 
 MAIN PROGRAM
@@ -27,25 +28,13 @@ describe("MAIN PASSPORT PROGRAM", function() {
 
 	//Setup and Test Database COnnection BEFORE 
 	
-	before(function(done){
-		var p = r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port')}, function(err, conn) {
-			if (err) throw err;
-    		connection = conn;
-    	});
-		p.then(function(conn) {
-		   r.dbCreate(config.get('rethinkdb.database')).run(connection, function() {
-			   	r.db(config.get('rethinkdb.database')).tableCreate('accounts').run(connection, function(err) {
-			   		if (err) throw err;
-			   		done();
-			   	});
-		   });
-		});
+	before(function(){
+		this.timeout(0);
+		return createDB()
 	});
 	//cleanup
 	after(function() {
-		r.dbDrop(config.get('rethinkdb.database')).run(connection, function(err){
-			if (err) throw err;
-		});
+		return db.dash().dbDrop(config.get('rethinkdb.database')).run();
 	});
 
 	// Test if server is running normaly
@@ -122,8 +111,8 @@ describe("MAIN PASSPORT PROGRAM", function() {
 		context("API Account Tests.  ", function() {
 			describe("Create Account ", function() {
 				context("userGroup is student", function() {
-					it("POST /api/account/student", function(done) {
-						request.post({url:base_url + 'api/account/student', form: {email:'example@gmail.com', password:'123456', passwordVerification:'123456', name: {first:'Testey', last:'McTestFace', salutation: 'Mx.'}, groupFields: {studentID:'12345'} }}, function(err, response, body){
+					it("POST /api/account/new/student", function(done) {
+						request.post({url:base_url + 'api/account/new/student', form: {email:'example@gmail.com', password:'123456', passwordVerification:'123456', name: {first:'Testey', last:'McTestFace', salutation: 'Mx.'}, groupFields: {studentID:'12345'}, graduationYear: 2017 }}, function(err, response, body){
 					
 							assert.equal(response.statusCode, 201);
 							done();

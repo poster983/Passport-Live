@@ -144,74 +144,7 @@ SECURITY
 **/
 //WILL NEED ACCOUNT PROTECTION 
 //ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}),
-router.post('/security/key/', passport.authenticate('jwt', { session: false}), ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}), handleCreatePermissionKey);
-/**
-    * Creates a new permission key.
-    * @function handleCreatePermissionKey
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/security/key/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
-    * @example
-    * <caption>Typical body when key is set to timeout at a date</caption>
-    * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    time: moment.js compatible time
-    *  }
-    * }
-    * @example
-    * <caption>Typical body when key is set to timeout on a certain number of clicks</caption>
-    * {
-    *  permissions: {
-    *    userGroups: ["teacher", "admin", "dev"]
-    *  },
-    *  parms: {},
-    *  timeout: {
-    *    tally: 5
-    *  }
-    * }
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Add JWT Auth
-    */
-function handleCreatePermissionKey(req, res, next) {
-    var permissions=req.body.permissions;
-    var parms=req.body.parms;
-    var timeout=req.body.timeout;
-    
-    api.createPermissionKey(connection, permissions, parms, timeout, function(err, key) {
-        if(err) {
-            return next(err)
-        }
-        res.status(201).send({
-            key: key
-        })
-    })
-}
 
-router.post('/security/apikey/', handleNewApiKey);
-/**
-    * Creates a new API key.
-    * @function handleNewApiKey
-    * @async
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/security/apikey/
-    * @apibody {application/json} 
-    * @apiresponse {json} Returns the new api key
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo Add JWT Auth ADMIN
-    */
-function handleNewApiKey(req, res, next) {
-    res.sendStatus(501);
-}
 
 /**
 schedule
@@ -241,7 +174,7 @@ router.get('/schedule/definition', passport.authenticate('jwt', { session: false
 })
 
 //get Schedule Definition
-router.get('/schedule/definition/:id', function(req, res, next) {
+router.get('/schedule/definition/:id', passport.authenticate('jwt', { session: false}), function(req, res, next) {
     var id=req.params.id;
 
     api.getScheduleDefinition(connection, id, function(err, data) {
@@ -253,7 +186,7 @@ router.get('/schedule/definition/:id', function(req, res, next) {
 })
 //schedule Single Schedule Definition
 
-router.post('/schedule/date', ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
+router.post('/schedule/date', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -285,7 +218,7 @@ router.get('/schedule/repeat/:id', function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.get('/schedule/for/:date', function(req, res, next) {
+router.get('/schedule/for/:date', passport.authenticate('jwt', { session: false}), function(req, res, next) {
     var date=req.params.date;
     api.getScheduleOfADate(connection, date, false, function(err, data) {
         if(err) {
@@ -311,7 +244,7 @@ SERVER
     * @apiresponse {object} Returns Array with all constants
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/schedule/', function getScheduleConstants(req, res, next) {
+router.get('/server/config/schedule/', utils.rateLimit.publicApiBruteforce.prevent, function getScheduleConstants(req, res, next) {
     try {
         res.json(config.get('schedule'));
     } catch (e) {
@@ -330,7 +263,7 @@ router.get('/server/config/schedule/', function getScheduleConstants(req, res, n
     * @apiresponse {json} All usergroup data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/userGroups/', function getUserGroups(req, res, next) {
+router.get('/server/config/userGroups/', utils.rateLimit.publicApiBruteforce.prevent, function getUserGroups(req, res, next) {
     try {
         res.json(config.get('userGroups'));
     } catch (e) {
@@ -338,7 +271,7 @@ router.get('/server/config/userGroups/', function getUserGroups(req, res, next) 
     }
 })
 
-router.get('/server/config/passGroup', getPassGroups);
+router.get('/server/config/passGroup', utils.rateLimit.publicApiBruteforce.prevent, getPassGroups);
 /**
     * GETs pass groups defined in the config
     * @function handleGetAccountsByName
@@ -420,14 +353,6 @@ router.get("/test/date/:dateTime", function(req, res, next) {
         return res.send(resp)
     })
 })*/
-router.get("/test/teacherSchedule/:id", function(req, res, next) {
-    accountApi.getTeacherSchedule(req.params.id, function(err, resp) {
-        if(err) {
-            return next(err)
-        }
-        return res.send(resp)
-    })
-})
 
 
 //default Responce

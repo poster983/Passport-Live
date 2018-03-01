@@ -17,32 +17,55 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var express = require('express');
-var config = require('config');
+var express = require("express");
+var config = require("config");
+var utils = require("../modules/passport-utils/index.js")
+var accountJS = require("../modules/passport-api/accounts.js");
+var securityJS = require("../modules/passport-api/security.js");
+var url = require("url");
+/*var r = require('rethinkdb');
+var db = require('../modules/db/index.js');
+var typeCheck = require("type-check").typeCheck;*/
 var router = express.Router();
 
-//this page will route each user to the correct page after login 
-router.get('/', function(req, res, next) {
-    
-    if(req.user) {
 
-        var permittedDash = config.get('userGroups.' + req.user.userGroup + '.permissions.dashboards');
-        if(permittedDash.length > 1) {
-            res.render('multiDashRoute',{doc_Title: "Passport", callbackURL: "/callback/multiDashRoute/", dashboards: permittedDash});
+let customHead = null;
+if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
+    customHead = config.get("webInterface.customHeadCode");
+}
+//this page will route each user to the correct page after login 
+router.get("/", function(req, res, next) {
+    if(req.user) {
+        if(req.session.returnTo) {
+            var url_parts = url.parse(req.session.returnTo, true);
+            var query = Object.assign(url_parts.query, req.query);
+            let str = Object.keys(query).length>0?"?" + utils.urlQuery(query):"";
+            res.redirect(url_parts.pathname + str);
+            delete req.session.returnTo;
         } else {
-            res.redirect(permittedDash[0]);
+            var permittedDash = config.get("userGroups." + req.user.userGroup + ".permissions.dashboards");
+            if(permittedDash.length > 1 && !req.query.continue) {
+                res.render("multiDashRoute",{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
+            } else {
+                let query = Object.keys(req.query).length>0?"?" + utils.urlQuery(req.query):"";
+                res.redirect(permittedDash[0] + query);
+            }
         }
-        
     } else {
         console.log("not Logged In");
-        res.redirect('auth/login');
+        //forward query params
+        let query = Object.keys(req.query).length>0?"?" + utils.urlQuery(req.query):"";
+        res.redirect("auth/login" + query);
     }
   
 });
 
+
+/*
 router.post('/callback/multiDashRoute/', function(req, res, next) {
 
-});
+});*/
+
 
 
 module.exports = router;

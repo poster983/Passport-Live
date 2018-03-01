@@ -25,19 +25,21 @@ var config = require("config");
 var moment = require("moment");
 
 /** 
-* @module passportSchedulesApi
+* @module js/schedules
 */
 
  /** 
     * Gets the Currint period for the date based off the time 
-    *  If time is omitted, the passport will assume UTC Midnight 
+    * If time is omitted, the passport will assume UTC Midnight 
+    * @link module:js/schedules
     * @function getActivePeriodsAtDateTime
-    * @async
     * @returns {callback} Array of Active Periods for the Date and Time 
     * @param {object} dateTime - An ISO Date with time and zone info 
     * @param {function} done - Callback
     */
 
+
+//TODO MAKE DATABASE STORE UTC TIME
 exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     if(moment(dateTime).isValid()) {
         var utcQuaryTime = moment(moment(dateTime).utc().format("HH:mm"), "HH:mm");
@@ -49,13 +51,12 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
         console.log(moment())
         console.log(moment(dateTime).utc())
         */
-        var startTime = "11:30"
-        var endTime = "13:30"
         //console.log(utcQuaryTime.isBetween(moment(startTime, "HH:mm"), moment(endTime, "HH:mm")));
         indexAPI.getScheduleOfADate(db.conn(), dateTimeUTC, true, function(err, schedules) {
             if(err) {
                 return done(err);
             }
+            //console.log(schedules)
             //return done(null, schedules);
             if(!schedules.id) {
                 var err = new Error("No Schedule Found")
@@ -75,6 +76,7 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
                 err.status = 500;
                 return done(err);
             }
+            //console.log(scheduleConsts)
             for(var x = 0; x < scheduleConsts.length; x++) {
                 if(utcQuaryTime.isBetween(moment(scheduleData[scheduleConsts[x]].start, "HH:mm"), moment(scheduleData[scheduleConsts[x]].end, "HH:mm"))) {
                     currentPeriods.push({period: scheduleConsts[x], start: scheduleData[scheduleConsts[x]].start, end: scheduleData[scheduleConsts[x]].end})
@@ -94,3 +96,4 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     
     //indexAPI.getScheduleOfADate(db.conn(), )
 }
+

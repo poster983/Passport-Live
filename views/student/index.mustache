@@ -20,9 +20,9 @@ email: hi@josephhassell.com
 -->
 
 <body class="grey darken-4">
-        <!-- RESPONCE ANIMATION -->
-      
-          <!--<div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
+  <!-- RESPONCE ANIMATION -->
+
+  <!--<div id="circleThingContainer" class=""><div id="circleThing" class=""></div></div>
             <span id="Xleft" class="Xleft XleftIn"></span>
             <span id="Xright"></span>
             <div id="checkmarkContainer" class="">
@@ -30,46 +30,32 @@ email: hi@josephhassell.com
               <span id="Cright" class=""></span>
             </div>-->
 
-        <!--Loading Screen-->
-        <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
-          {{>mixens/logoLoader}}
-          <!--342x470-->
-        </section>
-
-         
+  <!--Loading Screen-->
+  <section id="fullAjaxLoadingScreen" class="loadingScreen loading">
+    {{>mixens/logoLoader}}
+    <!--342x470-->
+  </section>
 
 
 
 
-      <!-- Normal Page -->
 
 
-    <!--Navbar-->
-    <nav id="navBar">
-        <div class="nav-wrapper">
-          <!--SideNav-->
-          <ul id="slide-out" class="side-nav">
-           <li><div class="userView">
-             <div class="background">
-               <img alt="Side-Nav Background" src="/images/stunav.jpg">
-             </div>
-             <a href="#!user"><img src="/api/media/avatar/{{user.id}}/100.svg" alt="" class="passport-avatar circle responsive-img"></a>
-             <a href="#!name"><span class="white-text name">{{user.name.first}} {{user.name.last}}</span></a>
-             <a href="#!email"><span class="white-text email">{{user.email}}</span></a>
-           </div></li>
-           <li><a class="waves-effect active" href="#!">Home</a></li>
-           <li><a class="waves-effect" href="/student/account">Your Account</a></li>
-           <li><div class="divider"></div></li>
-           <!--<li><a class="subheader">Subheader</a></li>-->
-           <li><a class="waves-effect" href="/auth/logout">Logout<i class="material-icons right">lock_outline</i></a></li>
+  <!-- Normal Page -->
 
-         </ul>
-          <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large"><i class="material-icons">menu</i></a>
-            <a href="#" class="brand-logo center">Passport</a>
-            <span class="nav-right">{{passportVersion}}</span>
-        </div>
-    </nav>
-<!--
+
+  <!--Navbar-->
+  <nav id="navBar">
+    <div class="nav-wrapper">
+      {{>sidenav}}
+      <a href="#" data-activates="slide-out" class="nav-sandwich button-collapse left-allign show-on-large">
+        <i class="material-icons">menu</i>
+      </a>
+      <a href="#" class="brand-logo center">Passport</a>
+      <span class="nav-right">{{passportVersion}}</span>
+    </div>
+  </nav>
+  <!--
     <div id="confirmOver" class="overlay-full">
       <div class="overlay-content">
       <div id="checkmarkAnimationfull">
@@ -80,20 +66,38 @@ email: hi@josephhassell.com
       <a href="javascript:void(0)" class="closebtn-overlay" onclick="closeFullOverlay('confirmOver', 0)">&times;</a>
     </div>
   </div>-->
-    <!--FEEDBACK FAB-->
+  <!--FEEDBACK FAB-->
 
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large tooltipped" data-position="left" data-delay="50" data-tooltip="Feedback">
-            <i class="large material-icons">assignment</i>
+  <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large tooltipped" data-position="left" data-delay="50" data-tooltip="Feedback">
+      <i class="large material-icons">assignment</i>
+    </a>
+    <ul>
+      <li>
+        <a class="btn-floating red modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Bug Report"
+          href="#bugmodal">
+          <i class="material-icons">report_problem</i>
         </a>
-        <ul>
-            <li><a class="btn-floating red modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Bug Report" href="#bugmodal"><i class="material-icons">report_problem</i></a></li>
-            <li><a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Leave A Review" href="#reviewmodaldis"><i class="material-icons">thumbs_up_down</i></a></li>
-            <li><a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.github.io/Passport-Live/"><i class="material-icons">live_help</i></a></li>
-            <li><a class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Github" href="https://github.com/poster983/Passport-Live/"><i class="material-icons">code</i></a></li>
-        </ul>
-    </div>
+      </li>
+      <li>
+        <a class="btn-floating yellow darken-1 modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Leave A Review"
+          href="#reviewmodaldis">
+          <i class="material-icons">thumbs_up_down</i>
+        </a>
+      </li>
+      <li>
+        <a class="btn-floating green tooltipped" data-position="left" data-delay="50" data-tooltip="Wiki" href="https://poster983.github.io/Passport-Live/">
+          <i class="material-icons">live_help</i>
+        </a>
+      </li>
+      <li>
+        <a class="btn-floating blue tooltipped" data-position="left" data-delay="50" data-tooltip="Github" href="https://github.com/poster983/Passport-Live/">
+          <i class="material-icons">code</i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
 
 
@@ -102,28 +106,29 @@ email: hi@josephhassell.com
   <!-- Bug Modal -->
   <div id="bugmodal" class="modal bottom-sheet">
     <div class="modal-content">
-        <h4>Bug report</h4>
-        <div class="row">
-            <form class="col s12" method="post" action="">
-                <div class="row">
-                    <div class="input-field col s12"> <i class="material-icons prefix">comment</i>
-                        <textarea id="bugtext" name="bugtext" required class="materialize-textarea"></textarea>
-                        <label for="bugtext">Describe the bug or issue</label>
-                    </div>
-                    <h5 class="center">Bug Severity Slider</h5>
-                    <p class="center">1 being low priority and 5 being high priority</p>
-                        <p class="range-field">
-                            <input type="range" id="bugseverity" name="bugseverity" min="1" max="5" value="3" />
-                        </p>
-                </div>
-                <div class="modal-footer">
+      <h4>Bug report</h4>
+      <div class="row">
+        <form class="col s12" method="post" action="">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">comment</i>
+              <textarea id="bugtext" name="bugtext" required class="materialize-textarea"></textarea>
+              <label for="bugtext">Describe the bug or issue</label>
+            </div>
+            <h5 class="center">Bug Severity Slider</h5>
+            <p class="center">1 being low priority and 5 being high priority</p>
+            <p class="range-field">
+              <input type="range" id="bugseverity" name="bugseverity" min="1" max="5" value="3" />
+            </p>
+          </div>
+          <div class="modal-footer">
 
-                    <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitbug">Submit Bug Report
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitbug">Submit Bug Report
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
 
     </div>
 
@@ -131,7 +136,7 @@ email: hi@josephhassell.com
 
 
 
-      <!--Review Modal disclaimer -->
+  <!--Review Modal disclaimer -->
   <div id="reviewmodaldis" class="modal">
     <div class="modal-content">
       <h4>Reminder</h4>
@@ -142,32 +147,33 @@ email: hi@josephhassell.com
     </div>
   </div>
 
-    <!-- Review Modal -->
+  <!-- Review Modal -->
   <div id="reviewmodal" class="modal bottom-sheet">
     <div class="modal-content">
-        <h4>Leave a review</h4>
-        <div class="row">
-            <form class="col s12" method="post" action="">
-                <div class="row">
+      <h4>Leave a review</h4>
+      <div class="row">
+        <form class="col s12" method="post" action="">
+          <div class="row">
 
-                    <div class="input-field col s12"> <i class="material-icons prefix">comment</i>
-                        <textarea id="reviewtext" name="reviewtext" class="materialize-textarea"></textarea>
-                        <label for="reviewtext">Comment</label>
-                    </div>
-                    <h5 class="center">Rating Slider</h5>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">comment</i>
+              <textarea id="reviewtext" name="reviewtext" class="materialize-textarea"></textarea>
+              <label for="reviewtext">Comment</label>
+            </div>
+            <h5 class="center">Rating Slider</h5>
 
-                        <p class="range-field">
-                            <input type="range" id="rating" name="rating" min="1" max="10" value="5" />
-                        </p>
-                </div>
-                <div class="modal-footer">
+            <p class="range-field">
+              <input type="range" id="rating" name="rating" min="1" max="10" value="5" />
+            </p>
+          </div>
+          <div class="modal-footer">
 
-                    <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitreview">Submit Review
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="submitreview">Submit Review
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
 
     </div>
 
@@ -175,11 +181,11 @@ email: hi@josephhassell.com
 
 
 
-    <!-- System Message-->
-        <div id="ajaxAllStudentMess"></div>
+  <!-- System Message-->
+  <div id="ajaxAllStudentMess"></div>
 
-        <!--login Message-->
-        <!--
+  <!--login Message-->
+  <!--
        <div class='row'>
             <div class='col s12'>
               <div class='card-panel teal'>
@@ -189,1120 +195,1201 @@ email: hi@josephhassell.com
             </div>
           </div>-->
 
-        <div class="container">
-          <div class="section">
-            <div class="row">
-              <div class="col s12">
-                <div id="behindCard"></div>
-                <div id="PassCard" class="card grey darken-3 hoverable">
-                  <div class="card-content white-text">
-                    <span class="card-title">Get A Pass</span>
+  <div class="container">
+    <div class="section">
+      <div class="row">
+        <div class="col s12">
+          <div id="behindCard"></div>
+          <div id="PassCard" class="card grey darken-3 hoverable">
+            <div class="card-content white-text">
+              <span class="card-title">Get A Pass</span>
 
-                      <div id="passForm">
-                          
-                          <div id="to" class="section">
-                            <h6>Going To:</h6>
+              <div id="passForm">
 
-                            <div id="groDiv" class="input-field col s12">
-                              <select id="passGroup" name="passGroup" required class="white-text validate" onchange="onPassGroupSelectChange(this)">
-                                <option value="" disabled selected>Choose A Group</option>
-                              </select>
-                              <label>Group</label>
-                            </div>
-                            <!-- Immagine this shows when "passGroup" finishes -->
-                            <!--Search-->
-                            <div id="searchDiv" class="input-field col s12" style="display: none;">
-                              <input type="text" id="autocomplete-account" class="autocomplete">
-                              <label for="autocomplete-account">Search People</label>
-                            </div>
-                            <!--Select People-->
-                            <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
-                              <select id="selectPeople" name="selectPeople" required class="white-text validate" onchange="onSelectPeopleChange(this)">
-                                <option value="" disabled selected>Choose A Person</option>
-                              </select>
-                              <label>Select a Person</label>
-                            </div>
-                            
-                          </div>
-                          <!--Pick a Date -->
-                          <div id="time" class="section">
-                            <div id="dayToCome" class="input-field col s12">
+                <div id="to" class="section">
+                  <h6>Going To:</h6>
 
-                              <input type="date" id="datepicker" name="dayToCome" class="datepicker" disabled onchange="onDateChange(this)">
-                              <label for="datepicker">Day To Come</label>
-                            </div>
-                          </div>
+                  <div id="groDiv" class="input-field col s12">
+                    <select id="passGroup" name="passGroup" required class="white-text validate" onchange="onPassGroupSelectChange(this)">
+                      <option value="" disabled selected>Choose A Group</option>
+                    </select>
+                    <label>Group</label>
+                  </div>
+                  <!-- Immagine this shows when "passGroup" finishes -->
+                  <!--Search-->
+                  <div id="searchDiv" class="input-field col s12" style="display: none;">
+                    <input type="text" id="autocomplete-account" class="autocomplete">
+                    <label for="autocomplete-account">Search People</label>
+                  </div>
+                  <!--Select People-->
+                  <div id="selectPeopleDiv" class="input-field col s12" style="display: none;">
+                    <select id="selectPeople" name="selectPeople" required class="white-text validate" onchange="onSelectPeopleChange(this)">
+                      <option value="" disabled selected>Choose A Person</option>
+                    </select>
+                    <label>Select a Person</label>
+                  </div>
 
-                           <!--Select Period-->
-                          <div id="selectPeriodDiv" class="input-field col s12" >
-                            
-                          </div>
+                </div>
+                <!--Pick a Date -->
+                <div id="time" class="section">
+                  <div id="dayToCome" class="input-field col s12">
 
-                          <!--SELECT TEACHER W/ PERIOD-->
-                          <div id="from" class="section">
-                            <!--<h6>Leaving From:</h6>-->
-
-                            <!--Select My Teachers-->
-                            <div id="selectMyTeachersDiv" class="input-field col s12">
-                              <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" disabled onchange="onSelectMyTeachersChange(this)">
-                                <option value="" disabled selected>Choose A Person</option>
-                              </select>
-                              <label>Leaving From</label>
-                            </div>
-                          </div>
-                          <div id="toPersonClass" class="section col s12" style="display: none;"> 
-                            <div class="card-panel">
-                              <span class="black-text">{Teacher Name} has {Class Name} druing {Period} period
-                              </span>
-                            </div>
-                          </div>
-
-                         
-                        <!--Advanced-->
-                      <div>
-                        <input type="checkbox" id="sao" />
-                        <label for="sao">Show Advanced Options</label>
-                      </div>
-                      <div class="divider"></div>
-                      <div id="passrequestAdvanced" style="display: none;">
-                        <h5 class="center white-text">Advanced Options</h5>
-                        <div class="divider"></div>
-                        <p class="center white-text">Nothing Here Yet.</p>
-                      </div>
-                      <div class="section">
-                        <a class="waves-effect waves-light btn-large red disabled" id="submitPass">Submit Pass<span id="subPassAdv"><i class='material-icons right'>send</i></span></a>
-                        <span id="debugSubmit"></span>
-                      </div>
-                    </div>
-                    </div>
+                    <input type="date" id="datepicker" name="dayToCome" class="datepicker" disabled onchange="onDateChange(this)">
+                    <label for="datepicker">Day To Come</label>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-            <!-- MyPasses-->
-            <div class="section">
-              <div class="row">
-                <div class="col s12">
-                  <div id="MyPassesCard" class="card grey darken-3 hoverable">
-                    <div class="card-content ">
-                      <span class="card-title white-text">My Passes</span>
-                      <ul class="collection">
-                        <div id="myPassesReturn">
-                         
-                        </div>
-                      </ul>
-                    </div>
+
+                <!--Select Period-->
+                <div id="selectPeriodDiv" class="input-field col s12">
+
+                </div>
+
+                <!--SELECT TEACHER W/ PERIOD-->
+                <div id="from" class="section">
+                  <!--<h6>Leaving From:</h6>-->
+
+                  <!--Select My Teachers-->
+                  <div id="selectMyTeachersDiv" class="input-field col s12">
+                    <select id="selectMyTeachers" name="selectMyTeachers" required class="white-text validate" disabled onchange="onSelectMyTeachersChange(this)">
+                      <option value="" disabled selected>Choose A Person</option>
+                    </select>
+                    <label>Leaving From</label>
                   </div>
+                </div>
+                <div id="toPersonClass" class="section col s12" style="display: none;">
+                  <div class="card-panel">
+                    <span class="black-text">{Teacher Name} has {Class Name} druing {Period} period
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="divider"></div>
+                <div class="section">
+                  <a class="waves-effect waves-light btn-large red disabled" id="submitPass">Submit Pass
+                    <span id="subPassAdv">
+                      <i class='material-icons right'>send</i>
+                    </span>
+                  </a>
+                  <span id="debugSubmit"></span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- MyPasses-->
+    <div class="section">
+      <div class="row">
+        <div class="col s12">
+          <div id="MyPassesCard" class="card grey darken-3 hoverable">
+            <div class="card-content ">
+              <span class="card-title white-text">My Passes</span>
+              <ul class="collection">
+                <div id="myPassesReturn">
 
-        <footer class="page-footer grey darken-3">
-          <div class="footer-copyright">
-            <div class="container">
-                <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
-                <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
-                <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
+                </div>
+              </ul>
             </div>
           </div>
-         </footer>
-
-        <!-- Scripts -->
-        <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
-        <script>
-            if ('addEventListener' in window) {
-                window.addEventListener('load', function () {
-                    document.body.className = document.body.className.replace(/\bis-loading\b/, '');
-                });
-                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
-            }
-        </script>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-        <!-- Compiled and minified JavaScript -->
-        <script src="/js/materialize.js"></script>
-        <script src="/js/passport.js"></script>
-        <script src="/moment/min/moment-with-locales.min.js"></script>
-        <script src="/sw.js"></script>
-        <!--<script src="js/PICS.js"></script>-->
-        <script>
-              
-              
-              /*Vars*/
-              var idOfUser = "{{user.id}}";
-              var currGroup = null;
-              var toPerson = null;
-              var dayToCome = null;
-              var onPeriod = null;
-              var fromPerson = null;
-
-              $(document).ready(function(){
-                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-                $('.modal').modal();
-                $(".button-collapse").sideNav();
-                $('.tooltipped').tooltip({delay: 50});
-                $('select').material_select();
-                
-                
-                $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function(a1, a2, a3){
-                  $('#fullAjaxLoadingScreen').removeClass("loading");
-                });
-                
-                initAutocompleteAccounts({"none": null});
-                $('#datepicker').pickadate();
-              });
-
-              function debugMode() {
-
-                if (getCookie("debugMode") == "") {
-                  document.cookie = "debugMode=1";
-                  toggleDebugModeDOMElements(true);
-                } else if (getCookie("debugMode") == 1){
-                  document.cookie = "debugMode=0";
-                  toggleDebugModeDOMElements(false);
-                } else if (getCookie("debugMode") == 0){
-                  document.cookie = "debugMode=1";
-                  toggleDebugModeDOMElements(true);
-                }
-              }
-              function checkDebugModeCookies() {
-                if (getCookie("debugMode") == 1){
-                  toggleDebugModeDOMElements(true);
-                }
-              }
-              function toggleDebugModeDOMElements(state) {
-                if (state) {
-                  $('#debugSubmit').html("<a class='waves-effect waves-light btn-large red' id='debugSubmitPass' onclick=\"submitPass(<?php echo $_SESSION['studentAccID'] ?>, 1);\">Debug Submit Pass<span id='subPassAdv'><i class='material-icons right'>send</i></span></a>");
-                } else {
-                  $('#debugSubmit').html("");
-                }
-              }
-
-              function carsonRau(){
-                $(document.body).css('background-image', 'url(/passport/image/cork-board.jpg)');
-                console.log("There You Go Carson");
-              }
-
-              /** Fill My Teachers **/
-              /*
-              function getMyTeachers() {
-                $.ajax({
-                  type: "get",
-                  url: "/api/account/schedule/student/id/" + idOfUser,
-                  dataType: "json",
-                  beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                  success: function(data) {
-                    if(data && data.schedule) {
-                      var keys = Object.keys(data.schedule);
-                      for(var i = 0; i < keys.length; i++) {
-                        $("#selectMyTeachers").append("<option value=\"" + data.schedule[keys].teacher  + "\" disabled selected>Choose A Person</option>")
-                      }
-                    } else {
-                      var err = new Error("data.schedule not defined" )
-                      errorHand(err)
-                    }
-                  },
-                  error: function(jqXHR) {
-                    errorHand(jqXHR)
-                  }                      
-                });
-              }*/
-
-             //STAGE 1//
-              /**Fill Pass Groups**/
-
-              function getPassGroups(done) {
-                $.ajax({
-                    type: "get",
-                    url: "/api/server/config/passGroup",
-                    dataType: "json",
-                    success: function(data) {
-                      return done(null, data);
-                    },
-                    error: function(jqXHR) {
-                      return done(jqXHR);
-                    }                      
-                  });
-              }
-              function setPassGroupSelect() {
-                getPassGroups(function(err, data) {
-                  if(err) {
-                    errorHand(err);
-                  }
-                  for(var it = 0; it < Object.keys(data).length; it++) {
-                    var key = Object.keys(data)[it];
-                    console.log(Object.keys(data)[it])
-                    $('#passGroup').append("<option value=\'" + key + "\' data-prefersearch=\'" + data[key].preferSearch + "\'>" + data[key].viewName + "</option>");
-                    if(it >= Object.keys(data).length-1) {
-                      //re init the select
-                      $('#passGroup').material_select();
-                      
-                    }
-                  }
-                })
-              }
-              function onPassGroupSelectChange(select) {
-                toPerson = null;
-                dayToCome = null;
-                onPeriod = null;
-                fromPerson = null;
-
-                readyTheSubmit()
-                console.log(select)
-                //delete all dchildern
-                 $('#selectPeople').empty();
-                 initAutocompleteAccounts({});
-                 $('#selectPeople').material_select();
-                currGroup = select.value;
-                if($(select).find(':selected').attr('data-prefersearch') == "true") {
-                  console.log("yes")
-                  $("#searchDiv").show();
-                  $("#selectPeopleDiv").hide();
-                } else {
-                  //trigger getting all usergroups in the passGroup for a select
-                  preparePeopleSelect(currGroup);
-                  
-                  $("#searchDiv").hide();
-                  $("#selectPeopleDiv").show();
-                }
-              }
-
-              //STAGE 2.A//
-              function preparePeopleSelect(userGroup) {
-                 $.ajax({
-                    type: "get",
-                    url: "/api/account/userGroup/"+userGroup,
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    //dataType: "json",
-                    success: function(data) {
-                      //set data
-                      console.log(data, "people Select")
-                      for(var i = 0; i < data.length; i++ ) {
-                        $('#selectPeople').append("<option value=\'" + data[i].id + "\'>" + data[i].name.first + " " + data[i].name.last + "</option>");
-                        console.log(data[i].id)
-                        if(i >= data.length-1) {
-                          //re init the select
-                          $('#selectPeople').material_select();
-                          
-                        }
-                      }
-                    },
-                    error: function(jqXHR) {
-                      errorHand(jqXHR)
-                    }                      
-                  });
-              }
-              //when the people select changes 
-              function onSelectPeopleChange(select) {
-                dayToCome = null;
-                onPeriod = null;
-                fromPerson = null;
-
-                readyTheSubmit()
-                //get full account data 
-                searchAccountsByID(select.value, function(err, data) {
-                  if(err) {
-                    errorHand(err);
-                  } else {
-                    toPerson = data;
-                    //check date settings set by teacher dash 
-                    var advance = 7;
-                    if(toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings && toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
-                      var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
-                    }
-                    
-                    var endDate = new Date();
-                    endDate.setDate(endDate.getDate() + advance)
-                    console.log(endDate.toString())
-                    setupDatePicker(endDate, [])
-                  }
-
-                })
-              }
-              function searchAccountsByID(id, done) {
-                    if(id == "") {
-                      return done(null, null);
-                    }
-                   $.ajax({
-                    type: "get",
-                    url: "/api/account/id/"+id,
-                    dataType: "json",
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {done(null, data)},
-                    error: function(jqXHR) {done(jqXHR)}                      
-                  });
-                }
-
-              //STAGE 2.B//
-                /**Autocomplete Accounts**/
-                var autocompleteLocker = false;
-                function initAutocompleteAccounts(data) {
-                  $('input.autocomplete').autocomplete({
-                    data: data,
-                    onAutocomplete: function(val) {
-                      console.log(val)
-                      dayToCome = null;
-                      onPeriod = null;
-                      fromPerson = null;
-
-                      readyTheSubmit()
-                      if(!autocompleteLocker) {
-                        autocompleteLocker = true;
-                        var person = val.substring(val.indexOf(" --- ") +5);
-                        searchAccountsByEmail(person, function(err, userArr) {
-                          if(err) {
-                            return errorHand(err);
-                          }
-                          if(userArr.length > 1 ) {
-                            err = new Error("Conflicting Emails");
-                            return errorHand(err);
-                          }
-                          if(userArr.length == 0 ) {
-                            err = new Error("No Data");
-                            return errorHand(err);
-                          }
-                          toPerson = userArr[0];
-                          autocompleteLocker = false;
-                          initDatePicker();
-                        })
-                      }
-                      console.log(val.substring(val.indexOf(" --- ")))
-                    },
-                    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-                  });
-                }
-                $("#autocomplete-account").keyup(function() {
-                  searchAccountsByName(currGroup, $("#autocomplete-account").val(), function(err, data) {
-                    if(err) {
-                      console.error(err);
-                    }
-                    else if(data) {
-                      var newDataAuto = {};
-                      //initAutocompleteAccounts({"joey": null});
-
-                      console.log(data)
-                      for(var x = 0; x < data.length; x++) {
-                        if(data[x].name.salutation) {
-                          newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-                        } else {
-                          newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
-                        }
-
-                      }
-                      console.log(newDataAuto)
-                      initAutocompleteAccounts(newDataAuto);
-                      //autocompleteAccounts.resultCache = newDataAuto;
-                      //autocompleteAccounts.setValue(newDataAuto);
-                    } 
-                  });
-                  console.log($("#autocomplete-account").val())
-                })
-             
-                function searchAccountsByName(userGroup, query, done) {
-                    if(!query|| userGroup == "") {
-                      return done(null, null);
-                    }
-                   $.ajax({
-                    type: "get",
-                    url: "/api/account/usergroup/"+userGroup+"/name/"+query,
-                    dataType: "json",
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {done(null, data)},
-                    error: function(jqXHR) {done(jqXHR)}                      
-                  });
-                }
-                function searchAccountsByEmail(email, done) {
-                  if(!email) {
-                    var err = new Error("No Email")
-                      return done(err, null);
-                    }
-                   $.ajax({
-                    type: "get",
-                    url: "/api/account/email/" + email,
-                    dataType: "json",
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {done(null, data)},
-                    error: function(jqXHR) {done(jqXHR)}                      
-                  });
-                }
-                //STAGE 3//
-                /* Date Things */
-                function initDatePicker() {
-
-                  var advance = 7;
-                  if(toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings && toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
-                    var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
-                  }
-                  
-                  var endDate = new Date();
-                  endDate.setDate(endDate.getDate() + advance)
-                  console.log(endDate.toString())
-                  setupDatePicker(endDate, [])
-                }
-                function setupDatePicker(max, disable) {
-                   
-                  $('#datepicker').attr("disabled", false);
-                  
-                  //reset date picker 
-                  $("#dayToCome").empty();
-                  $("#dayToCome").append("<input type=\"date\" id=\"datepicker\" name=\"dayToCome\" class=\"datepicker\" onchange=\"onDateChange(this)\">");
-                  $("#dayToCome").append("<label for=\"datepicker\">Day To Come</label>");
-                             
-
-                  $('#datepicker').pickadate({
-                    selectMonths: true, // Creates a dropdown to control month
-                    selectYears: 2, // Creates a dropdown of 15 years to control year
-                    min: new Date(),
-                    max: max,
-                    disable: disable,
-                    formatSubmit: 'yyyy-mm-dd',
-                    hiddenName: true
-                  });
-                }
-
-                function onDateChange(date) {
-                  //get hidden date vfalue
-                  dayToCome = $('[name=dayToCome]').val();
-                  //setupPeriods();
-                  $("#selectMyTeachers").attr("disabled", false)
-                  onPeriod = null;
-                  fromPerson = null;
-
-                  readyTheSubmit()
-                  setupMyTeachers();
-
-                }
-
-                /* Periods */
-                /*
-                function setupPeriods() {
-                  if(dayToCome == "") {
-                    return false;
-                  }
-                  $('#selectPeriodDiv').empty();
-                  $.ajax({
-                    type: "get",
-                    url: "/api/schedule/for/"+dayToCome,
-                    dataType: "json",
-                    success: function(data) {
-                      console.log(data);
-                      //multiple periods
-                      if(data.length > 0 ) {
-                        //most important schedule
-                        //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
-                        var mIS;
-                        for(var i = 0; i < data.length; i++) {
-                          if(i==0) {
-                            mIS = data[i];
-                          }
-                          if(data[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
-                            mIS = data[i]
-                          }
-                          console.log(mIS)
-                          //end
-                          if(i >= data.length-1 ) {
-                            console.log(mIS)
-
-                            var periods = Object.keys(mIS.scheduleDefinition.scheduleData);
-
-                            console.log(periods);
-                            for(var x = 0; x < periods.length; x++) {
-                                $('#selectPeriodDiv').append("<input name=\"period\" type=\"radio\" id=" + periods[x] +" /> ");
-                                $('#selectPeriodDiv').append("<label for="+ periods[x] +">" + periods[x].charAt(0).toUpperCase() +  periods[x].slice(1) + "</label> &nbsp &nbsp");
-                            }
-                          }
-                        }
-                      }
-
-                    },
-                    error: function(jqXHR) {errorHand(jqXHR)}                      
-                  });
-                } 
-                */
-                //STAGE 4//
-                //TEACHER-PERIODS//
-                function getDaySchedule(day, done) {
-                  $.ajax({
-                    type: "get",
-                    url: "/api/schedule/for/"+dayToCome,
-                    dataType: "json",
-                    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                    success: function(data) {
-                      done(null, data)
-                    },  
-                    error: function(jqXHR) {return done(jqXHR)}
-                  })
-                }
-
-                function getMySchedules(done) {
-                   $.ajax({
-                      type: "get",
-                      url: "/api/account/schedule/student/id/" + idOfUser,
-                      dataType: "json",
-                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                      success: function(data) {done(null, data)},
-                      error: function(jqXHR) {done(jqXHR)}                      
-                    });
-                 }
-
-                 function parseTodaysSchedule(day, done) {
-                    getDaySchedule(day, function(err, schedule) {
-                      if(err) {
-                        return done(err)
-                      }
-                      //multiple periods
-                        if(schedule.length > 0 ) {
-                          //most important schedule
-                          //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
-                          var mIS;
-                          for(var i = 0; i < schedule.length; i++) {
-                            if(i==0) {
-                              mIS = schedule[i];
-                            }
-                            if(schedule[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
-                              mIS = schedule[i]
-                            }
-                            //console.log(mIS)
-                            //end
-                            if(i >= schedule.length-1 ) {
-                              return done(null, mIS)
-                            }
-                          }
-                        } else {
-                          var err = new Error("No Schedule Defined Today");
-                          return done(err)
-                        }
-                    })
-                 }
-                /* //SORT SCHEDULES
-                 function sortScheduleDef(scheduleDef, done) {
-                  var sorted = [];
-                  //first find out the order of todays schedule and put the keys into an erray
-                  if(scheduleDef && scheduleDef.scheduleDefinition && scheduleDef.scheduleDefinition.scheduleData) {
-                    var schedule = scheduleDef.scheduleDefinition.scheduleData;
-                    var unsortedPeriods = Object.keys(scheduleDef.scheduleDefinition.scheduleData);
-                    for(var x = 0; x < unsortedPeriods.length; x++) {
-                      schedule[unsortedPeriods[x]].start
-                    }
-                  }
-
-                 }
-                */
-                 function orderMyScheduleByTodaysSchedule(mySchedule, scheduleDef, done) {
-                   //For now, we just turn mySchedule into an array 
-                   var mySortedSchedule = [];  //again not sorted rn
-                   var myScheduleKeys = Object.keys(mySchedule);
-                   //console.log(mySchedule)
-                   console.log(mySchedule, "my schedukel")
-                   for(var x = 0; x < myScheduleKeys.length; x++) {
-                    console.log(mySchedule[myScheduleKeys[x]], myScheduleKeys[x])
-                    if(mySchedule[myScheduleKeys[x]]) {
-                      console.log("athing")
-                      mySchedule[myScheduleKeys[x]].period = myScheduleKeys[x]
-                      mySortedSchedule.push(mySchedule[myScheduleKeys[x]]);
-                         console.log(mySortedSchedule)
-                        //check done
-                      if(x >= myScheduleKeys.length -1) {
-                        console.log("loop done")
-                        console.log(mySortedSchedule)
-                        return done(null, mySortedSchedule)
-                      }
-                    } else {
-                      console.log("else", myScheduleKeys[x])
-                      //check done
-                      if(x >= myScheduleKeys.length -1) {
-                        console.log("loop done")
-                        console.log(mySortedSchedule)
-                        return done(null, mySortedSchedule)
-                      }
-                    }
-                    
-                    console.log("loop")
-                    
-                   }
-                 }
-                
-                 function setMyTeachersSelect(myScheduleArray) {
-                  //Would Check for blackouts in here 
-
-                  //clear it 
-                  $('#selectMyTeachers').empty();
-
-                  //set default
-                   $("#selectMyTeachers").append("<option value=\"\" disabled selected>Choose a Person</option>");
-
-                  console.log(myScheduleArray);
-                  for(var i = 0; i < myScheduleArray.length; i++) {
-                    //bad code
-                    if(!myScheduleArray[i].className) {
-                      myScheduleArray[i].className = "";
-                    }
-                    if(myScheduleArray[i].teacher) {
-                      $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id + "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + " - " + myScheduleArray[i].className + "</option>")
-                    } else {
-                       $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() + " - " + myScheduleArray[i].className + "</option>");
-                    }
-                    if(i >= myScheduleArray.length-1) {
-                      $('#selectMyTeachers').material_select();
-                    }
-                  }
-                  
-                 }
-
-                function setupMyTeachers() {
-                  console.log("hi")
-                  if(dayToCome == "") {
-                    return false;
-                  }
-                  //first get the current period schedule 
-                  parseTodaysSchedule(dayToCome, function(err, schedule) {
-                    if(err) {
-                      return errorHand(err);
-                    }
-                    var validFromTeachers = {};
-                    //console.log(schedule);
-
-                    if(!schedule || !schedule.scheduleDefinition || !schedule.scheduleDefinition.scheduleData) {
-                      var err = new Error("Schedule not defined");
-                      return errorHand(err);
-                    }
-
-                    //get user's schedule 
-                    getMySchedules(function(err, userSchedule) {
-                      if(err) {
-
-                        return errorHand(err);
-                      }
-                     
-                      if(!userSchedule || !userSchedule.schedule) {
-                        var err = new Error("User Schedule not defined");
-                        return errorHand(err);
-                      }
-                      var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
-                      // add only the enabled periods to validFromTeachers
-
-                      for(var x = 0; x < dayScheduleKeys.length; x++ ) {
-                        //check if user has one of the periods for today
-                        if(userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
-
-                          validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
-                          //check if done
-                          if(x >= dayScheduleKeys.length - 1) {
-                            
-                            orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function(err, orderedArr) {
-                              if(err) {
-                                return errorHand(err)
-                              }
-                              
-                              setMyTeachersSelect(orderedArr);
-                            })
-                          }
-                        }
-                      }
-                    });
-                  });
-                  /*
-                  getMySchedules(function(err, data) {
-                    if(err) {
-                      return errorHand(err);
-                    }
-                    console.log(data)
-                    //check if valid
-                    if(data && data.schedule) {
-
-                    }
-                  })*/
-                }
-
-                function onSelectMyTeachersChange(select) {
-                  onPeriod = $(select).find(':selected').attr("data-period");
-                  console.log(onPeriod)
-                  fromPerson = $(select).find(':selected').attr("data-teacherId");
-                  if(!fromPerson) {
-                      fromPerson = "";
-                  }
-                  console.log(fromPerson)
-                  readyTheSubmit();
-                }
-
-                function getToPersonSchedule() {
-
-                }
-
-                
-                function readyTheSubmit() {
-                  if((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
-                    $("#submitPass").removeClass("disabled").attr("onclick", "submitPass()");
-                  } else {
-                    $("#submitPass").addClass("disabled").attr("onclick", "");
-                  }
-                }
-                
-                function submitPass() {
-                  if((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
-                    
-                    $.ajax({
-                      type: "post",
-                      url: "/api/passes/me/",
-                      data: {fromPerson: fromPerson, toPerson: toPerson.id, period: onPeriod, date: dayToCome},
-                      dataType: "json",
-                      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-                      success: function(data) {
-                        if(data.inserted > 0) {
-                          //confirm pass
-                          console.log(data)
-                          setMyPasses();
-                          materialResponse("check", "success");
-                        } else {
-                          var err = new Error("Unknown Error");
-                          console.log(data)
-                          materialResponse("cancel", "error");
-                          errorHand(err);
-                        }
-                      },  
-                      error: function(jqXHR) {
-                        materialResponse("cancel", "error");
-                        return errorHand(jqXHR) 
-                      }
-                    })
-                  } else {
-                    materialResponse("cancel", "warning");
-                    var err = new Error("Undefined Values")
-                    errorHand(err);
-                  }
-                }
-
-                //reset all fields 
+        </div>
+      </div>
+    </div>
+  </div>
 
 
-                 $("#sao").change(function() {
-                  if(this.checked) {
-                    $('#passrequestAdvanced').show();
-                      $('#passrequestAdvanced').animateCss('bounceIn');
-                      $('#subPassAdv').html(" (Using Advanced Options) <i class='material-icons right'>error_outline</i>");
-                  } else {
-                    $('#passrequestAdvanced').animateCss('bounceOut');
-                    $('#passrequestAdvanced').one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
-                  function(e) {
-                    $('#passrequestAdvanced').hide();
-                    $('#subPassAdv').html("<i class='material-icons right'>send</i>");
-                  });
-                  }
-              });
+  <footer class="page-footer grey darken-3">
+    <div class="footer-copyright">
+      <div class="container">
+        <a class="black-text left" href="https://www.josephhassell.com/">Copyright © 2016-{{currentYear}} Joseph Hassell</a> &nbsp &nbsp
+        <a class="black-text right" href="https://github.com/poster983/Passport-Live/blob/master/LICENSE">License </a> &nbsp &nbsp
+        <a class="black-text right" href="https://poster983.github.io/Passport-Live/">Project Page &nbsp; &nbsp;</a>&nbsp &nbsp
+      </div>
+    </div>
+  </footer>
 
-
-////MY PASSES CARD////
-
-function getMyUpcomeingPasses(done) {
-$.ajax({
-    type: "get",
-    url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
-    dataType: "json",
-    beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-    success: function(data) {done(null, data)},
-    error: function(jqXHR) {done(jqXHR)}                      
-  });
-}
-                 
-
-
-
-function setMyPasses() {
-  getMyUpcomeingPasses(function(err, myPasses) {
-    if(err) {
-      return errorHand(err)
+  <!-- Scripts -->
+  <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+  <script>
+    if ('addEventListener' in window) {
+      window.addEventListener('load', function () {
+        document.body.className = document.body.className.replace(/\bis-loading\b/, '');
+      });
+      document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
-    console.log(myPasses)
-    $myPasses = $('#myPassesReturn')
-    $myPasses.empty();
-    for(var i = 0; i < myPasses.length; i++) {
-      console.log(myPasses)
-      var checkNo = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light red tooltipped")
-                            .attr("data-position", "right")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Cancel This Pass")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("not_interested")
-                              )
-                        )
+  </script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-      var checkYes = $("<span/>")
-                      .addClass("right")
-                      .append(
-                          $("<a/>")
-                            .addClass("btn-floating waves-effect waves-light green tooltipped")
-                            .attr("data-position", "left")
-                            .attr("data-delay", "50")
-                            .attr("data-tooltip", "Confirm This Pass")
-                            .append(
-                                $("<i/>")
-                                  .addClass("material-icons")
-                                  .text("check")
-                              )
-                        )
+  <!-- Compiled and minified JavaScript -->
+  <script src="/js/materialize.js"></script>
+  <script src="/js/passport.js"></script>
+  <script src="/moment/min/moment-with-locales.min.js"></script>
+  <script src="/sw.js"></script>
+  <!--<script src="js/PICS.js"></script>-->
+  <script>
+    /*Vars*/
+    var idOfUser = "{{user.id}}";
+    var currGroup = null;
+    var toPerson = null;
+    var dayToCome = null;
+    var onPeriod = null;
+    var fromPerson = null;
 
-      var avatarEl = $("<img/>")
-                      .addClass("passport-avatar circle")
-                      .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
-                      .attr("alt", "Avatar")
+    $(document).ready(function () {
+      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+      $('.modal').modal();
+      $(".button-collapse").sideNav();
+      $('.tooltipped').tooltip({
+        delay: 50
+      });
+      $('select').material_select();
 
-      var titleEl = $("<span/>")
-                      .addClass("title")
-                      .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
 
-      titleEl.prepend(
-            $("<i/>")
-              .addClass("material-icons")
-              .text("remove_red_eye")
-        )
+      $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function (a1, a2, a3) {
+        $('#fullAjaxLoadingScreen').removeClass("loading");
+      });
 
-      var dateEl = $("<p/>")
-                      .text("Date: ")
-                      .append(
-                        $("<strong/>")
-                        .text(moment(myPasses[i].date).format("dddd, LL"))
-                      )
+      initAutocompleteAccounts({
+        "none": null
+      });
+      $('#datepicker').pickadate();
+    });
 
-      var periodEl = $("<p/>")
-                      .text("Period: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].period.toUpperCase())
-                      )
+    function debugMode() {
 
-      var statusEl = $("<span/>")
-                      //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
-                      .addClass("new badge")
-      
-      if(myPasses[i].fromPerson) {
-        var leavingFromEl = $("<p/>")
-                      .text("Leaving From: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-                      )
-      } else {
-        var leavingFromEl = $("<p/>")
-                      .text("Leaving From No One")
+      if (getCookie("debugMode") == "") {
+        document.cookie = "debugMode=1";
+        toggleDebugModeDOMElements(true);
+      } else if (getCookie("debugMode") == 1) {
+        document.cookie = "debugMode=0";
+        toggleDebugModeDOMElements(false);
+      } else if (getCookie("debugMode") == 0) {
+        document.cookie = "debugMode=1";
+        toggleDebugModeDOMElements(true);
       }
-      
+    }
 
-      var requesterEl = $("<p/>")
-                      .text("Requester: ")
-                      .append(
-                        $("<strong/>")
-                        .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-                      )
-                       
+    function checkDebugModeCookies() {
+      if (getCookie("debugMode") == 1) {
+        toggleDebugModeDOMElements(true);
+      }
+    }
 
-      //set final holder
-      var li = $("<li/>")
-                  .addClass("collection-item avatar")
-                  .append(checkNo)
-                  .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-                  .append(checkYes)
-                  .append(avatarEl)
-                  .append(titleEl)
-                  .append(dateEl)
-                  .append(periodEl)
-                  .append(statusEl)
-                  .append(leavingFromEl)
-                  .append(requesterEl)
-                  .attr("data-passId-arriving", myPasses[i].id)
-                  .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
-                  .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
-      $myPasses.append(li)
-      if(myPasses[i].status.migration.arrivedTime) {
-        setArrivingButtonsAndState(myPasses[i].id, "arrived");
-      } else if(myPasses[i].status.migration.excusedTime) {
-        setArrivingButtonsAndState(myPasses[i].id, "enroute");
+    function toggleDebugModeDOMElements(state) {
+      if (state) {
+        $('#debugSubmit').html(
+          "<a class='waves-effect waves-light btn-large red' id='debugSubmitPass' onclick=\"submitPass(<?php echo $_SESSION['studentAccID'] ?>, 1);\">Debug Submit Pass<span id='subPassAdv'><i class='material-icons right'>send</i></span></a>"
+        );
       } else {
-        if(myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state == "canceled") {
-            if(myPasses[i].status.confirmation.setByUser != idOfUser) {
+        $('#debugSubmit').html("");
+      }
+    }
+
+    function carsonRau() {
+      $(document.body).css('background-image', 'url(/passport/image/cork-board.jpg)');
+      console.log("There You Go Carson");
+    }
+
+    /** Fill My Teachers **/
+    /*
+    function getMyTeachers() {
+      $.ajax({
+        type: "get",
+        url: "/api/account/schedule/student/id/" + idOfUser,
+        dataType: "json",
+        beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
+        success: function(data) {
+          if(data && data.schedule) {
+            var keys = Object.keys(data.schedule);
+            for(var i = 0; i < keys.length; i++) {
+              $("#selectMyTeachers").append("<option value=\"" + data.schedule[keys].teacher  + "\" disabled selected>Choose A Person</option>")
+            }
+          } else {
+            var err = new Error("data.schedule not defined" )
+            errorHand(err)
+          }
+        },
+        error: function(jqXHR) {
+          errorHand(jqXHR)
+        }                      
+      });
+    }*/
+
+    //STAGE 1//
+    /**Fill Pass Groups**/
+
+    function getPassGroups(done) {
+      $.ajax({
+        type: "get",
+        url: "/api/server/config/passGroup",
+        dataType: "json",
+        success: function (data) {
+          return done(null, data);
+        },
+        error: function (jqXHR) {
+          return done(jqXHR);
+        }
+      });
+    }
+
+    function setPassGroupSelect() {
+      getPassGroups(function (err, data) {
+        if (err) {
+          errorHand(err);
+        }
+        for (var it = 0; it < Object.keys(data).length; it++) {
+          var key = Object.keys(data)[it];
+          console.log(Object.keys(data)[it])
+          $('#passGroup').append("<option value=\'" + key + "\' data-prefersearch=\'" + data[key].preferSearch +
+            "\'>" + data[key].viewName + "</option>");
+          if (it >= Object.keys(data).length - 1) {
+            //re init the select
+            $('#passGroup').material_select();
+
+          }
+        }
+      })
+    }
+
+    function onPassGroupSelectChange(select) {
+      toPerson = null;
+      dayToCome = null;
+      onPeriod = null;
+      fromPerson = null;
+
+      readyTheSubmit()
+      console.log(select)
+      //delete all dchildern
+      $('#selectPeople').empty();
+      initAutocompleteAccounts({});
+      $('#selectPeople').material_select();
+      currGroup = select.value;
+      if ($(select).find(':selected').attr('data-prefersearch') == "true") {
+        console.log("yes")
+        $("#searchDiv").show();
+        $("#selectPeopleDiv").hide();
+      } else {
+        //trigger getting all usergroups in the passGroup for a select
+        preparePeopleSelect(currGroup);
+
+        $("#searchDiv").hide();
+        $("#selectPeopleDiv").show();
+      }
+    }
+
+    //STAGE 2.A//
+    function preparePeopleSelect(userGroup) {
+      $.ajax({
+        type: "get",
+        url: "/api/account/userGroup/" + userGroup,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        //dataType: "json",
+        success: function (data) {
+          //set data
+          console.log(data, "people Select")
+          for (var i = 0; i < data.length; i++) {
+            $('#selectPeople').append("<option value=\'" + data[i].id + "\'>" + data[i].name.first + " " + data[i]
+              .name.last + "</option>");
+            console.log(data[i].id)
+            if (i >= data.length - 1) {
+              //re init the select
+              $('#selectPeople').material_select();
+
+            }
+          }
+        },
+        error: function (jqXHR) {
+          errorHand(jqXHR)
+        }
+      });
+    }
+    //when the people select changes 
+    function onSelectPeopleChange(select) {
+      dayToCome = null;
+      onPeriod = null;
+      fromPerson = null;
+
+      readyTheSubmit()
+      //get full account data 
+      searchAccountsByID(select.value, function (err, data) {
+        if (err) {
+          errorHand(err);
+        } else {
+          toPerson = data;
+          //check date settings set by teacher dash 
+          var advance = 7;
+          if (toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings &&
+            toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
+            var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+          }
+
+          var endDate = new Date();
+          endDate.setDate(endDate.getDate() + advance)
+          console.log(endDate.toString())
+          setupDatePicker(endDate, [])
+        }
+
+      })
+    }
+
+    function searchAccountsByID(id, done) {
+      if (id == "") {
+        return done(null, null);
+      }
+      $.ajax({
+        type: "get",
+        url: "/api/account/id/" + id,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+
+    //STAGE 2.B//
+    /**Autocomplete Accounts**/
+    var autocompleteLocker = false;
+
+    function initAutocompleteAccounts(data) {
+      $('input.autocomplete').autocomplete({
+        data: data,
+        onAutocomplete: function (val) {
+          console.log(val)
+          dayToCome = null;
+          onPeriod = null;
+          fromPerson = null;
+
+          readyTheSubmit()
+          if (!autocompleteLocker) {
+            autocompleteLocker = true;
+            var person = val.substring(val.indexOf(" --- ") + 5);
+            searchAccountsByEmail(person, function (err, userArr) {
+              if (err) {
+                return errorHand(err);
+              }
+              if (userArr.length > 1) {
+                err = new Error("Conflicting Emails");
+                return errorHand(err);
+              }
+              if (userArr.length == 0) {
+                err = new Error("No Data");
+                return errorHand(err);
+              }
+              toPerson = userArr[0];
+              autocompleteLocker = false;
+              initDatePicker();
+            })
+          }
+          console.log(val.substring(val.indexOf(" --- ")))
+        },
+        minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+      });
+    }
+    $("#autocomplete-account").keyup(function () {
+      searchAccountsByName(currGroup, $("#autocomplete-account").val(), function (err, data) {
+        if (err) {
+          console.error(err);
+        } else if (data) {
+          var newDataAuto = {};
+          //initAutocompleteAccounts({"joey": null});
+
+          console.log(data)
+          for (var x = 0; x < data.length; x++) {
+            if (data[x].name.salutation) {
+              newDataAuto[data[x].name.salutation + ' ' + data[x].name.first + ' ' + data[x].name.last +
+                ' --- ' + data[x].email] = null;
+            } else {
+              newDataAuto[data[x].name.first + ' ' + data[x].name.last + ' --- ' + data[x].email] = null;
+            }
+
+          }
+          console.log(newDataAuto)
+          initAutocompleteAccounts(newDataAuto);
+          //autocompleteAccounts.resultCache = newDataAuto;
+          //autocompleteAccounts.setValue(newDataAuto);
+        }
+      });
+      console.log($("#autocomplete-account").val())
+    })
+
+    function searchAccountsByName(userGroup, query, done) {
+      if (!query || userGroup == "") {
+        return done(null, null);
+      }
+      $.ajax({
+        type: "get",
+        url: "/api/account/usergroup/" + userGroup + "/name/" + query,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+
+    function searchAccountsByEmail(email, done) {
+      if (!email) {
+        var err = new Error("No Email")
+        return done(err, null);
+      }
+      $.ajax({
+        type: "get",
+        url: "/api/account/email/" + email,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+    //STAGE 3//
+    /* Date Things */
+    function initDatePicker() {
+
+      var advance = 7;
+      if (toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings &&
+        toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
+        var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
+      }
+
+      var endDate = new Date();
+      endDate.setDate(endDate.getDate() + advance)
+      console.log(endDate.toString())
+      setupDatePicker(endDate, [])
+    }
+
+    function setupDatePicker(max, disable) {
+
+      $('#datepicker').attr("disabled", false);
+
+      //reset date picker 
+      $("#dayToCome").empty();
+      $("#dayToCome").append(
+        "<input type=\"date\" id=\"datepicker\" name=\"dayToCome\" class=\"datepicker\" onchange=\"onDateChange(this)\">"
+      );
+      $("#dayToCome").append("<label for=\"datepicker\">Day To Come</label>");
+
+
+      $('#datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 2, // Creates a dropdown of 15 years to control year
+        min: new Date(),
+        max: max,
+        disable: disable,
+        formatSubmit: 'yyyy-mm-dd',
+        hiddenName: true
+      });
+    }
+
+    function onDateChange(date) {
+      //get hidden date vfalue
+      dayToCome = $('[name=dayToCome]').val();
+      //setupPeriods();
+      $("#selectMyTeachers").attr("disabled", false)
+      onPeriod = null;
+      fromPerson = null;
+
+      readyTheSubmit()
+      setupMyTeachers();
+
+    }
+
+    /* Periods */
+    /*
+    function setupPeriods() {
+      if(dayToCome == "") {
+        return false;
+      }
+      $('#selectPeriodDiv').empty();
+      $.ajax({
+        type: "get",
+        url: "/api/schedule/for/"+dayToCome,
+        dataType: "json",
+        success: function(data) {
+          console.log(data);
+          //multiple periods
+          if(data.length > 0 ) {
+            //most important schedule
+            //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+            var mIS;
+            for(var i = 0; i < data.length; i++) {
+              if(i==0) {
+                mIS = data[i];
+              }
+              if(data[i].repeatingRule.importance >= mIS.repeatingRule.importance ) {
+                mIS = data[i]
+              }
+              console.log(mIS)
+              //end
+              if(i >= data.length-1 ) {
+                console.log(mIS)
+
+                var periods = Object.keys(mIS.scheduleDefinition.scheduleData);
+
+                console.log(periods);
+                for(var x = 0; x < periods.length; x++) {
+                    $('#selectPeriodDiv').append("<input name=\"period\" type=\"radio\" id=" + periods[x] +" /> ");
+                    $('#selectPeriodDiv').append("<label for="+ periods[x] +">" + periods[x].charAt(0).toUpperCase() +  periods[x].slice(1) + "</label> &nbsp &nbsp");
+                }
+              }
+            }
+          }
+
+        },
+        error: function(jqXHR) {errorHand(jqXHR)}                      
+      });
+    } 
+    */
+    //STAGE 4//
+    //TEACHER-PERIODS//
+    function getDaySchedule(day, done) {
+      $.ajax({
+        type: "get",
+        url: "/api/schedule/for/" + dayToCome,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          return done(jqXHR)
+        }
+      })
+    }
+
+    function getMySchedules(done) {
+      $.ajax({
+        type: "get",
+        url: "/api/account/schedule/student/id/" + idOfUser,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+
+    function parseTodaysSchedule(day, done) {
+      getDaySchedule(day, function (err, schedule) {
+        if (err) {
+          return done(err)
+        }
+        //multiple periods
+        if (schedule.length > 0) {
+          //most important schedule
+          //var mIS = {repeatingRule: {importance: Number.MIN_VALUE}};
+          var mIS;
+          for (var i = 0; i < schedule.length; i++) {
+            if (i == 0) {
+              mIS = schedule[i];
+            }
+            if (schedule[i].repeatingRule.importance >= mIS.repeatingRule.importance) {
+              mIS = schedule[i]
+            }
+            //console.log(mIS)
+            //end
+            if (i >= schedule.length - 1) {
+              return done(null, mIS)
+            }
+          }
+        } else {
+          var err = new Error("No Schedule Defined Today");
+          return done(err)
+        }
+      })
+    }
+    /* //SORT SCHEDULES
+     function sortScheduleDef(scheduleDef, done) {
+      var sorted = [];
+      //first find out the order of todays schedule and put the keys into an erray
+      if(scheduleDef && scheduleDef.scheduleDefinition && scheduleDef.scheduleDefinition.scheduleData) {
+        var schedule = scheduleDef.scheduleDefinition.scheduleData;
+        var unsortedPeriods = Object.keys(scheduleDef.scheduleDefinition.scheduleData);
+        for(var x = 0; x < unsortedPeriods.length; x++) {
+          schedule[unsortedPeriods[x]].start
+        }
+      }
+
+     }
+    */
+    function orderMyScheduleByTodaysSchedule(mySchedule, scheduleDef, done) {
+      //For now, we just turn mySchedule into an array 
+      var mySortedSchedule = []; //again not sorted rn
+      var myScheduleKeys = Object.keys(mySchedule);
+      //console.log(mySchedule)
+      console.log(mySchedule, "my schedukel")
+      for (var x = 0; x < myScheduleKeys.length; x++) {
+        console.log(mySchedule[myScheduleKeys[x]], myScheduleKeys[x])
+        if (mySchedule[myScheduleKeys[x]]) {
+          console.log("athing")
+          mySchedule[myScheduleKeys[x]].period = myScheduleKeys[x]
+          mySortedSchedule.push(mySchedule[myScheduleKeys[x]]);
+          console.log(mySortedSchedule)
+          //check done
+          if (x >= myScheduleKeys.length - 1) {
+            console.log("loop done")
+            console.log(mySortedSchedule)
+            return done(null, mySortedSchedule)
+          }
+        } else {
+          console.log("else", myScheduleKeys[x])
+          //check done
+          if (x >= myScheduleKeys.length - 1) {
+            console.log("loop done")
+            console.log(mySortedSchedule)
+            return done(null, mySortedSchedule)
+          }
+        }
+
+        console.log("loop")
+
+      }
+    }
+
+    function setMyTeachersSelect(myScheduleArray) {
+      //Would Check for blackouts in here 
+
+      //clear it 
+      $('#selectMyTeachers').empty();
+
+      //set default
+      $("#selectMyTeachers").append("<option value=\"\" disabled selected>Choose a Person</option>");
+
+      console.log(myScheduleArray);
+      for (let i = 0; i < myScheduleArray.length; i++) {
+        //bad code
+        let className = ""
+        if (myScheduleArray[i].teacher && myScheduleArray[i].teacher.period && myScheduleArray[i].teacher.period.className) {
+          className = " - " + myScheduleArray[i].teacher.period.className;
+        }
+        if (myScheduleArray[i].teacher) {
+          $("#selectMyTeachers").append("<option data-teacherId=\"" + myScheduleArray[i].teacher.id +
+            "\" data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[i].period.toUpperCase() +
+            " -- " + myScheduleArray[i].teacher.name.first + " " + myScheduleArray[i].teacher.name.last + className +
+            "</option>")
+        } else {
+          $("#selectMyTeachers").append("<option data-period=\"" + myScheduleArray[i].period + "\">" + myScheduleArray[
+            i].period.toUpperCase() + className + "</option>");
+        }
+        if (i >= myScheduleArray.length - 1) {
+          $('#selectMyTeachers').material_select();
+        }
+      }
+
+    }
+
+    function setupMyTeachers() {
+      console.log("hi")
+      if (dayToCome == "") {
+        return false;
+      }
+      //first get the current period schedule 
+      parseTodaysSchedule(dayToCome, function (err, schedule) {
+        if (err) {
+          return errorHand(err);
+        }
+        var validFromTeachers = {};
+        //console.log(schedule);
+
+        if (!schedule || !schedule.scheduleDefinition || !schedule.scheduleDefinition.scheduleData) {
+          var err = new Error("Schedule not defined");
+          return errorHand(err);
+        }
+
+        //get user's schedule 
+        getMySchedules(function (err, userSchedule) {
+          if (err) {
+
+            return errorHand(err);
+          }
+
+          if (!userSchedule || !userSchedule.schedule) {
+            var err = new Error("User Schedule not defined");
+            return errorHand(err);
+          }
+          var dayScheduleKeys = Object.keys(schedule.scheduleDefinition.scheduleData);
+          // add only the enabled periods to validFromTeachers
+          console.log(dayScheduleKeys)
+          for (var x = 0; x < dayScheduleKeys.length; x++) {
+            console.log(userSchedule.schedule)
+            //check if user has one of the periods for today
+            if (userSchedule.schedule.hasOwnProperty(dayScheduleKeys[x])) {
+
+              validFromTeachers[dayScheduleKeys[x]] = userSchedule.schedule[dayScheduleKeys[x]];
+              console.log(x)
+              //check if done
+
+            }
+            if (x >= dayScheduleKeys.length - 1) {
+
+              orderMyScheduleByTodaysSchedule(validFromTeachers, schedule, function (err, orderedArr) {
+                if (err) {
+                  return errorHand(err)
+                }
+
+                setMyTeachersSelect(orderedArr);
+              })
+            }
+          }
+        });
+      });
+      /*
+      getMySchedules(function(err, data) {
+        if(err) {
+          return errorHand(err);
+        }
+        console.log(data)
+        //check if valid
+        if(data && data.schedule) {
+
+        }
+      })*/
+    }
+
+    function onSelectMyTeachersChange(select) {
+      onPeriod = $(select).find(':selected').attr("data-period");
+      console.log(onPeriod)
+      fromPerson = $(select).find(':selected').attr("data-teacherId");
+      if (!fromPerson) {
+        fromPerson = "";
+      }
+      console.log(fromPerson)
+      readyTheSubmit();
+    }
+
+    function getToPersonSchedule() {
+
+    }
+
+
+    function readyTheSubmit() {
+      if ((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
+        $("#submitPass").removeClass("disabled").attr("onclick", "submitPass()");
+      } else {
+        $("#submitPass").addClass("disabled").attr("onclick", "");
+      }
+    }
+
+    function submitPass() {
+      if ((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
+        console.log(moment(dayToCome).toISOString())
+        $.ajax({
+          type: "post",
+          url: "/api/passes/me/",
+          data: {
+            fromPerson: fromPerson,
+            toPerson: toPerson.id,
+            period: onPeriod,
+            date: moment(dayToCome).toISOString()
+          },
+          dataType: "json",
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+          },
+          success: function (data) {
+            if(data.state === "waitlisted") {
+              Materialize.toast("Pass limit reached.  You have been waitlisted.", 8000)
+              setMyPasses();
+              materialResponse("check", "warning");
+            } else if (data.transaction.inserted > 0) {
+              //confirm pass
+              console.log(data)
+              setMyPasses();
+              materialResponse("check", "success");
+            } else {
+              var err = new Error("Unknown Error");
+              console.log(data)
+              materialResponse("cancel", "error");
+              errorHand(err);
+            }
+          },
+          error: function (jqXHR) {
+            materialResponse("cancel", "error");
+            return errorHand(jqXHR)
+          }
+        })
+      } else {
+        materialResponse("cancel", "warning");
+        var err = new Error("Undefined Values")
+        errorHand(err);
+      }
+    }
+
+    //reset all fields 
+
+
+    ////MY PASSES CARD////
+
+    function getMyUpcomeingPasses(done) {
+      $.ajax({
+        type: "get",
+        url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
+
+
+
+
+    function setMyPasses() {
+      getMyUpcomeingPasses(function (err, myPasses) {
+        if (err) {
+          return errorHand(err)
+        }
+        console.log(myPasses)
+        $myPasses = $('#myPassesReturn')
+        $myPasses.empty();
+        for (var i = 0; i < myPasses.length; i++) {
+          console.log(myPasses)
+          var checkNo = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light red tooltipped")
+              .attr("data-position", "right")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Cancel This Pass")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("not_interested")
+              )
+            )
+
+          var checkYes = $("<span/>")
+            .addClass("right")
+            .append(
+              $("<a/>")
+              .addClass("btn-floating waves-effect waves-light green tooltipped")
+              .attr("data-position", "left")
+              .attr("data-delay", "50")
+              .attr("data-tooltip", "Confirm This Pass")
+              .append(
+                $("<i/>")
+                .addClass("material-icons")
+                .text("check")
+              )
+            )
+
+          var avatarEl = $("<img/>")
+            .addClass("passport-avatar circle")
+            .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
+            .attr("alt", "Avatar")
+
+          var titleEl = $("<span/>")
+            .addClass("title")
+            .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
+
+          titleEl.prepend(
+            $("<i/>")
+            .addClass("material-icons")
+            .text("remove_red_eye")
+          )
+
+          var dateEl = $("<p/>")
+            .text("Date: ")
+            .append(
+              $("<strong/>")
+              .text(moment(myPasses[i].date).format("dddd, LL"))
+            )
+
+          var periodEl = $("<p/>")
+            .text("Period: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].period.toUpperCase())
+            )
+
+          var statusEl = $("<span/>")
+            //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
+            .addClass("new badge")
+
+          if (myPasses[i].fromPerson) {
+            var leavingFromEl = $("<p/>")
+              .text("Leaving From: ")
+              .append(
+                $("<strong/>")
+                .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
+              )
+          } else {
+            var leavingFromEl = $("<p/>")
+              .text("Leaving From No One")
+          }
+
+
+          var requesterEl = $("<p/>")
+            .text("Requester: ")
+            .append(
+              $("<strong/>")
+              .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
+            )
+
+
+          //set final holder
+          var li = $("<li/>")
+            .addClass("collection-item avatar")
+            .append(checkNo)
+            .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
+            .append(checkYes)
+            .append(avatarEl)
+            .append(titleEl)
+            .append(dateEl)
+            .append(periodEl)
+            .append(statusEl)
+            .append(leavingFromEl)
+            .append(requesterEl)
+            .attr("data-passId-arriving", myPasses[i].id)
+            .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
+            .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
+          $myPasses.append(li)
+          if (myPasses[i].status.migration.arrivedTime) {
+            setArrivingButtonsAndState(myPasses[i].id, "arrived");
+          } else if (myPasses[i].status.migration.excusedTime) {
+            setArrivingButtonsAndState(myPasses[i].id, "enroute");
+          } else {
+            if (myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state ==
+              "canceled") {
+              if (myPasses[i].status.confirmation.setByUser != idOfUser) {
                 setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
+              } else {
+                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+              }
+            } else if (myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
+
+              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
             } else {
               setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
             }
-        } else if(myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
-          
-          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
-        } else {
-          setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
+          }
+
+
+
         }
-      }
-      
-      
-
-    }
-  })
- }
-
-function arrivingButtonActions(passLI, action) {
-  passLI = $(passLI);
-  setPassStatus(passLI.attr("data-passId-arriving"), action, function(err, transaction) {
-    
-    if(err && err.status == 403) {
-      Materialize.toast('Action Forbidden', 4000);
-      console.log("Forbidden");
-      return materialResponse("cancel", "warning");
-    } else if(err) {
-      console.log("Error");
-      materialResponse("cancel", "error");
-      return errorHand(err);
+      })
     }
 
-    if(transaction && transaction.replaced == 1) {
-      Materialize.toast('Successfully Updated State', 4000) 
-      if(action == "denied" || action == "canceled") {
-        $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr("data-stateSetByCurrentUser", true);
-      }
-      setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+    function arrivingButtonActions(passLI, action) {
+      passLI = $(passLI);
+      setPassStatus(passLI.attr("data-passId-arriving"), action, function (err, transaction) {
 
-    } else {
-      materialResponse("cancel", "warning");
+        if (err && err.status == 403) {
+          Materialize.toast('Action Forbidden', 4000);
+          console.log("Forbidden");
+          return materialResponse("cancel", "warning");
+        } else if (err) {
+          console.log("Error");
+          materialResponse("cancel", "error");
+          return errorHand(err);
+        }
+        console.log(transaction)
+        if (transaction && transaction.replaced == 1) {
+          Materialize.toast('Successfully Updated State', 4000)
+          if (action == "denied" || action == "canceled") {
+            $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr(
+              "data-stateSetByCurrentUser", true);
+          }
+          setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
+
+        } else {
+          materialResponse("cancel", "warning");
+        }
+
+      })
     }
 
-  })
-}
+    function setPassStatus(passId, status, done) {
+      $.ajax({
+        type: "patch",
+        url: "/api/passes/status/" + passId + "/state/" + status,
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          done(null, data)
+        },
+        error: function (jqXHR) {
+          done(jqXHR)
+        }
+      });
+    }
 
-function setPassStatus(passId, status, done) {
-  $.ajax({
-      type: "patch",
-      url: "/api/passes/status/" + passId + "/state/" + status,
-      dataType: "json",
-      beforeSend: function(xhr){xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));},
-      success: function(data) {done(null, data)},
-      error: function(jqXHR) {done(jqXHR)}                      
-    });
-}
 
+    function setArrivingButtonsAndState(passId, state, cantAccept) {
 
- function setArrivingButtonsAndState(passId, state, cantAccept) {
+      var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
+      var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
+      var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
+      var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true";
+      var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") ==
+        "true";
 
-  var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
-  var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
-  var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
-  var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true";
-  var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") == "true";
+      console.log(typeof userIsRequester)
+      //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
+      console.log(cantAccept)
+      switch (state) {
+        case "pending":
+          if (!cantAccept && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Cancel This Pass");
+          if (userIsRequester) {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+          } else {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+          }
+          badge.removeClass().addClass("new badge");
 
-  console.log(typeof userIsRequester)
-//releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
-console.log(cantAccept)
-  switch(state){
-    case "pending": 
-      if(!cantAccept && !userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-      } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
+          break;
+        case "waitlisted":
+          if (!cantAccept && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Cancel This Pass");
+          if (userIsRequester) {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+          } else {
+            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
+          }
+          badge.removeClass().addClass("new badge orange");
+
+          break;
+        case "accepted":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", false);
+          undoBtn.attr("data-tooltip", "Cancel This Pass");
+          undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
+          badge.removeClass().addClass("new badge green");
+
+          break;
+        case "denied":
+        case "canceled":
+          if (stateSetByCurrentUser && !userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("data-tooltip", "ReAccept Pass");
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
+          } else if (stateSetByCurrentUser && userIsRequester) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("data-tooltip", "Reopen Pass");
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
+          } else {
+            releaseBtn.attr("disabled", true);
+            releaseBtn.attr("onclick", false);
+          }
+          /* else if(!cantAccept) {
+            releaseBtn.attr("disabled", false);
+            releaseBtn.attr("data-tooltip", "Reopen Pass");
+            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
+          } */
+
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge red");
+
+          break;
+        case "enroute":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge green accent-4");
+
+          break;
+        case "arrived":
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("data-tooltip", "Undo Check In");
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge green accent-4");
+          break;
+
+        default:
+          releaseBtn.attr("disabled", true);
+          releaseBtn.attr("onclick", false);
+          undoBtn.attr("disabled", true);
+          undoBtn.attr("onclick", false);
+          badge.removeClass().addClass("new badge black");
+
+          break;
       }
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Cancel This Pass");
-      if(userIsRequester) {
-        undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-      } else {
-        undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
-      }
-      badge.removeClass().addClass("new badge");
-      
-      break;
-    case "accepted": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", false);
-      undoBtn.attr("data-tooltip", "Cancel This Pass");
-      undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-      badge.removeClass().addClass("new badge green");
-      
-      break;
-    case "denied":
-    case "canceled":
-      if(stateSetByCurrentUser && !userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "ReAccept Pass");
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-      } else if(stateSetByCurrentUser && userIsRequester) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "Reopen Pass");
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
-      } else {
-        releaseBtn.attr("disabled", true);
-        releaseBtn.attr("onclick", false);
-      }
-      /* else if(!cantAccept) {
-        releaseBtn.attr("disabled", false);
-        releaseBtn.attr("data-tooltip", "Reopen Pass");
-        releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
-      } */
-      
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge red");
-      
-      break;
-    case "enroute": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge green accent-4");
+      badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
+      $('.tooltipped').tooltip({
+        delay: 50
+      });
+    }
 
-      break;
-    case "arrived": 
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("data-tooltip", "Undo Check In");
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge green accent-4");
-      break;
-
-    default:
-      releaseBtn.attr("disabled", true);
-      releaseBtn.attr("onclick", false);
-      undoBtn.attr("disabled", true);
-      undoBtn.attr("onclick", false);
-      badge.removeClass().addClass("new badge black");
-
-      break;
-  }
-  badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
-  $('.tooltipped').tooltip({delay: 50});
- }
-
-                 /*
+    /*
 
 
 
-                 <li class="collection-item avatar">
-                            
-                            <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
-                            <span class="right">&nbsp;</span>
-                            <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
+    <li class="collection-item avatar">
+               
+               <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
+               <span class="right">&nbsp;</span>
+               <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
 
-                            <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
-                            
-                            <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
-                            <p>Date: <strong>07/14/2017</strong></p>
-                            <p>Period: <strong>B</strong></p>
-                            <span class="new badge" data-badge-caption="Pending"></span>
-                            <p>Leaving From: <strong>Hunter Youngblood</strong></p>
-                            <p>Requester: <strong>Student McStudent</strong></p>
-                            <span> Viewed</span>
-                          </li>
+               <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
+               
+               <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
+               <p>Date: <strong>07/14/2017</strong></p>
+               <p>Period: <strong>B</strong></p>
+               <span class="new badge" data-badge-caption="Pending"></span>
+               <p>Leaving From: <strong>Hunter Youngblood</strong></p>
+               <p>Requester: <strong>Student McStudent</strong></p>
+               <span> Viewed</span>
+             </li>
 
-                          */
-              </script>
+             */
+  </script>
 
-  </body>
-  </html>
+</body>
+
+</html>

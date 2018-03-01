@@ -22,15 +22,16 @@ email: hi@josephhassell.com
 * @module authRESTAPI
 */
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var passport = require('passport');
-var api = require('../../modules/passport-api/auth.js');
+var passport = require("passport");
+var api = require("../../modules/passport-api/auth.js");
+var utils = require("../../modules/passport-utils/index.js");
 
-var cors = require('cors');
+var cors = require("cors");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors())
 
 
 //serializeUser becaule the default passport.serializeUser function wont be called without session
@@ -64,20 +65,28 @@ function serializeUser(req, res, done) {
     * @todo Test application/json
     * @apiresponse {json} Returns in a json object with key: "token" and the value has a PassportJS compatible JWT
     */
-router.post('/login', passport.authenticate('local-login', {
+    //utils.rateLimit.publicApiBruteforce.prevent,
+router.post("/login", utils.rateLimit.loginBruteforce.getMiddleware({
+    key: function(req, res, next) {
+        next(req.body.email);
+    }
+}), passport.authenticate("local-login", {
   session: false
 }), function handleAuthLogin(req, res, next) {
-
+    req.brute.reset();
     api.newJWT(req.user[0].id, function(err, jwt) {
         if(err) {
             return next(err);
         }
         res.status(200).json({
             token: "JWT " + jwt,
-            userId: req.user[0].id
+            userID: req.user[0].id
         });
     });
 });
+
+
+
 
 /**
     * Logges the user in using passport.authenticate AND uses the Double Submit Cookies Method for web apps.  This sets cookies
@@ -85,7 +94,7 @@ router.post('/login', passport.authenticate('local-login', {
     * @async
     * @param {request} req
     * @param {response} res
-    * @api POST /api/auth/login/
+    * @api POST /api/auth/login/dscm
     * @apibody {application/json}
     * @example 
     * <caption>Body structure: </caption>
@@ -94,18 +103,25 @@ router.post('/login', passport.authenticate('local-login', {
     * @todo Test application/json
     * @apiresponse {json} Sends Status code of 200.  Sets Cookies for webapp auth
     */
-
-router.post('/login/dscm', passport.authenticate('local-login', {
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.post("/login/dscm", utils.rateLimit.loginBruteforce.getMiddleware({
+    key: function(req, res, next) {
+        next(req.body.email);
+    }
+}), passport.authenticate("local-login", {
   session: true
 }), function loginDSCM(req, res, next) {
+    req.brute.reset();
     api.newJWTForCookies(req.user[0].id, function(err, jwtData) {
         if(err) {
             return next(err);
         }
-        res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
-        res.cookie('XSRF-TOKEN', jwtData.dscm);
+        
+        res.cookie("JWT", "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+        res.cookie("XSRF-TOKEN", jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+        res.cookie("ACCOUNT-ID", req.user[0].id, {maxAge: 24 * 60 * 60 * 1000});
         res.status(200).json({
-            userId: req.user[0].id
+            userID: req.user[0].id
         });
     })
 });
@@ -114,9 +130,9 @@ router.post('/login/dscm', passport.authenticate('local-login', {
 
 
 
-
-router.get("/google/callback", passport.authenticate( 'google', { 
-        failureRedirect: '/auth/login?failGoogle=true'
+//utils.rateLimit.publicApiBruteforce.prevent,
+router.get("/google/callback",  passport.authenticate( "google", { 
+        failureRedirect: "/auth/login?failGoogle=true"
 }), function(req, res, next) {
     console.log(req.user, "USER RETURNED")
     if(req.session.googleDSCM) {
@@ -124,8 +140,9 @@ router.get("/google/callback", passport.authenticate( 'google', {
             if(err) {
                 return next(err);
             }
-            res.cookie('JWT', "JWT " + jwtData.token, {httpOnly: true, signed: true});
-            res.cookie('XSRF-TOKEN', jwtData.dscm);
+            res.cookie("JWT", "JWT " + jwtData.token, {httpOnly: true, signed: true, maxAge: 24 * 60 * 60 * 1000});
+            res.cookie("XSRF-TOKEN", jwtData.dscm, {maxAge: 24 * 60 * 60 * 1000});
+            res.cookie("ACCOUNT-ID", req.user.id, {maxAge: 24 * 60 * 60 * 1000});
             res.redirect("/?userId=" + req.user.id);
         });
     } else {
@@ -135,11 +152,13 @@ router.get("/google/callback", passport.authenticate( 'google', {
             }
             res.status(200).json({
                 token: "JWT " + jwt,
-                userId: req.user.id
+                userID: req.user.id
             });
         });
     }
     
 });
+
+
 
 module.exports = router;
