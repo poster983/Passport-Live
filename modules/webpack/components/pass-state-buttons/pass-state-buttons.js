@@ -120,10 +120,23 @@ class PassportPassStateButtons extends polymer.Element {
         }
     }
     _updateButtons() {
+        let arrivedButton = this.shadowRoot.querySelector("#arrived");
         let acceptedButton = this.shadowRoot.querySelector("#check");
         let canceledButton = this.shadowRoot.querySelector("#block");
         //check if pass state is enroute or arrived
         //console.log(acceptedButton)
+        if(arrivedButton) {
+            if(this.allowedChanges.arrived) {
+                //enable arrived button
+                arrivedButton.disabled = false;
+            } else {
+                arrivedButton.disabled = true;
+            }
+        }
+        if(this.allowedChanges.enroute) {
+            this._makeEnroute("#check");
+            this._leftButtonAction = "enroute";
+        } else {acceptedButton.disabled = true;}
         if(this.allowedChanges.accepted) {
             //enable accepted 
             this._makeAccepted("#check");
@@ -166,6 +179,12 @@ class PassportPassStateButtons extends polymer.Element {
         button.icon = "icons:block";
         button.className = "cancel";
     }
+    _makeEnroute(selector) {
+        let button = this.shadowRoot.querySelector(selector);
+        button.disabled = false;
+        button.icon = "icons:assignment-turned-in";
+        button.className = "accept";
+    }
 
     _leftButtonClicked(e) {
         console.log(this._leftButtonAction);   
@@ -175,7 +194,9 @@ class PassportPassStateButtons extends polymer.Element {
         console.log(this._rightButtonAction);
         this.setState(this._rightButtonAction);
     }
-
+    _arrivedButtonClicked(e) {
+        this.setState("arrived");
+    }
     setState(newStateType) {
         //Start loader 
         this.disabled = true;

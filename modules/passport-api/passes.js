@@ -750,6 +750,12 @@ state.isCanceled = (state) => {
     return false;
 };
 
+
+
+/*state.isEnroute = (state) => {
+
+}*/
+
 /**
 * Sets the state back to the previous state
 * @function
@@ -858,17 +864,25 @@ state.allowedChanges = (passID, forUserID) => {
 
                 //check of the forUserID is the from person and give them enroute perms
                 if(forUserID === passData.fromPerson) {
-                    permissions.enroute = true;
-                    return permissions;
-                }
-
-                if(forUserID !== passData.requester) {
-                    permissions.arrived = true;
-                    //DO NOT RETURN YET
-                }
-
-                //change permissions object for neutral type state
-                if(state.isNeutral(stateData.state)) {
+                    //if migratin, allow them to undo it.  if not allow them to set it
+                    if(passData.status.migration.excusedTime) {
+                        permissions.undo = "UNDO";
+                    } else {
+                        permissions.enroute = true;
+                    }
+                    
+                } else if(passData.status.migration.arrivedTime) {
+                    // if pseudo state is arrived 
+                    if(forUserID === passData.toPerson) {
+                        //if user is the to person
+                        permissions.undo = "UNDO";
+                    }
+                } else if(passData.status.migration.excusedTime) {
+                    if(forUserID === passData.toPerson) {
+                        permissions.arrived = true;
+                    }
+                } else if(state.isNeutral(stateData.state)) {
+                    //change permissions object for neutral type state
                     if(forUserID !== passData.requester) {
                         //if user is the receiver
                         //permissions.neutral = true;
@@ -882,7 +896,11 @@ state.allowedChanges = (passID, forUserID) => {
                         permissions.canceled = true;
                         permissions.undo = "NEUTRAL";
                     }  
-                    return permissions;
+
+                    if(forUserID === passData.toPerson) {
+                        //if user is tuPerson, allow them to set the pass to arrived
+                        permissions.arrived = true;
+                    }
                 } else if(state.isAccepted(stateData.state)) {
                     //for accepted type
                     if(forUserID !== passData.requester) {
@@ -897,7 +915,10 @@ state.allowedChanges = (passID, forUserID) => {
                         permissions.canceled = true;
                         //permissions.undo = "NEUTRAL";
                     }  
-                    return permissions;
+                    if(forUserID === passData.toPerson) {
+                        //if user is tuPerson, allow them to set the pass to arrived
+                        permissions.arrived = true;
+                    }
                 } else if(state.isCanceled(stateData.state)) {
                     //for Canceled type
                     if(forUserID !== passData.requester) {
@@ -912,12 +933,12 @@ state.allowedChanges = (passID, forUserID) => {
                         permissions.neutral = true;
                         permissions.undo = "NEUTRAL";
                     }  
-                    return permissions;
                 } else {
                     let err = new Error("Pass state not valid");
                     err.status = 500;
                     throw err;
                 }
+                return permissions;
             })
             .then(resolve)
             .catch(reject);
