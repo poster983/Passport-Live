@@ -105,11 +105,15 @@ class PassportPassStateButtons extends polymer.Element {
             showArrived: {
                 type: Boolean,
                 reflectToAttribute: false,
-                notify: true
+                notify: true,
+                observer: "_showArrivedChanged"
             }
         };
     }
-
+    _showArrivedChanged(newVal) {
+        console.log("NEWVAL", newVal)
+        this.shadowRoot.querySelector("#arrived").style.display = newVal?"":"none"
+    }
     _passIDChanged() {
         this.updateState();
     }
@@ -133,15 +137,17 @@ class PassportPassStateButtons extends polymer.Element {
                 arrivedButton.disabled = true;
             }
         }
-        if(this.allowedChanges.enroute) {
-            this._makeEnroute("#check");
-            this._leftButtonAction = "enroute";
-        } else {acceptedButton.disabled = true;}
         if(this.allowedChanges.accepted) {
             //enable accepted 
             this._makeAccepted("#check");
             this._leftButtonAction = "accepted";
-        } else {acceptedButton.disabled = true;}
+        } else if(this.allowedChanges.enroute) {
+            this._makeEnroute("#check");
+            this._leftButtonAction = "enroute";
+        } else {
+            //dissable leftbutton action
+            acceptedButton.disabled = true;
+        }
         if(this.allowedChanges.canceled) {
             //enable cancel
             this._makeCanceled("#block");

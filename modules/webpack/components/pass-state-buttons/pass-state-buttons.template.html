@@ -20,8 +20,6 @@
 
     /* Span Styles */
 </style>
-<template is="dom-if" if="[[_showArrived]]">
-	<paper-fab id="arrived" class="arrived" mini disabled="[[disabled]]" on-click="_arrivedButtonClicked" icon="icons:create"></paper-fab>
-</template>
+<paper-fab id="arrived" class="arrived" style="display: none;" mini disabled="[[disabled]]" on-click="_arrivedButtonClicked" icon="icons:create"></paper-fab>
 <paper-fab id="check" class="accept" mini disabled="[[disabled]]" on-click="_leftButtonClicked" icon="icons:check"></paper-fab>
 <paper-fab id="block" class="cancel" mini disabled="[[disabled]]" on-click="_rightButtonClicked" icon="icons:block"></paper-fab>
