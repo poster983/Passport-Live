@@ -24,6 +24,7 @@ email: hi@josephhassell.com
 document.createElement = Document.prototype.createElement;
 /** require webcomponents **/
 require("../../components/pass-state-buttons/pass-state-buttons.js");
+require("../../components/pass-state-badge/pass-state-badge.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");
@@ -32,7 +33,7 @@ var utils = require("../../utils/index.js");
 window.onload = function() {
     //check for errors TEST
     $("passport-pass-state-buttons").on("error", (e) => {
-        console.log(e);
+        //console.log(e);
         utils.throwError(e.originalEvent.detail.error);
     });
 };
