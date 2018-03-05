@@ -982,11 +982,13 @@ state.allowedChanges = (passID, forUserID) => {
 
                 //check of the forUserID is the from person and give them enroute perms
                 if(forUserID === passData.fromPerson && forUserID !== passData.toPerson) {
-                    //if migratin, allow them to undo it.  if not allow them to set it
-                    if(passData.status.migration.excusedTime) {
-                        permissions.undo = "UNDO";
-                    } else {
-                        permissions.enroute = true;
+                    //if migratin, allow them to undo it.  if not allow them to set it unless arrived is set
+                    if(!passData.status.migration.arrivedTime) {
+                        if(passData.status.migration.excusedTime) {
+                            permissions.undo = "UNDO";
+                        } else {
+                            permissions.enroute = true;
+                        }
                     }
                     
                 } else if(passData.status.migration.arrivedTime) {

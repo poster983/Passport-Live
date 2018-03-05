@@ -521,7 +521,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
                     throw err;
                 }
             } else if(req.body.type === "enroute") {
-                if(permissions.arrived) {
+                if(permissions.enroute) {
                     return api.state.enroute(req.params.passID);
                 } else {
                     throw err;
