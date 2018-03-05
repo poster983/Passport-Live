@@ -49,7 +49,11 @@ exports.passStates = {
     /** The migrator does not have permission / will not go see to go see toPerson. */
     DENIED: "denied",
     /** The pass has been previously accepted, but now is canceled */
-    CANCELED: "canceled"
+    CANCELED: "canceled",
+    /** The migrator has been excused and is moving to the toPerson.  This is a pseudo state and is determined if the excusedTime key is set */
+    ENROUTE: "enroute",
+    /** The migrator has arrived at the toPerson.  This is a pseudo state and is determined if the arrivedTime key is set.  arrivedTime overrides enroute if both are set */
+    ARRIVED: "arrived"
 };
 exports.passStates = Object.freeze(exports.passStates);
 
@@ -492,11 +496,17 @@ exports.limitTally = (userID, period, date) => {
                 outOf = tSchedule.schedule[period].passLimit;
             }
             //get tally count
-            r.table("passes").filter(function (doc) {
-                return doc("date").date().eq(r.ISO8601(date).date())
-                    .and(doc("toPerson").eq(userID))
-                    .and(doc("period").eq(period));
-            }).count()
+            r.table("passes")
+                //filter state (denied and canceled do not count)
+                .filter((doc) => {
+                    return doc("status")("confirmation")("state").ne(exports.passStates.CANCELED).or(doc("status")("confirmation")("state").ne(exports.passStates.DENIED));
+                })
+                //filter date and time
+                .filter(function (doc) {
+                    return doc("date").date().eq(r.ISO8601(date).date())
+                        .and(doc("toPerson").eq(userID))
+                        .and(doc("period").eq(period));
+                }).count()
                 .do(function (count) {
                     return {
                         tally: count,
@@ -583,7 +593,7 @@ state.neutral = (passID, setByID) => {
         return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
-                console.log(passData)
+                //console.log(passData)
                 if(!passData) {
                     let err = new Error("Pass not found");
                     err.status = 404;
@@ -706,6 +716,7 @@ state.canceled = (passID, setByID) => {
         return r.table("passes").get(passID).run()
             .then((passData) => {
                 //Check pass id validity
+                //console.log(passData);
                 if(!passData) {
                     let err = new Error("Pass not found");
                     err.status = 404;
@@ -716,7 +727,7 @@ state.canceled = (passID, setByID) => {
             .then((passData) => {
                 //check states to determine new state 
                 let stateData = passData.status.confirmation;
-                if(setByID && state.neutral(stateData.state) && setByID !== passData.requester) {
+                if(setByID && state.isNeutral(stateData.state) && setByID !== passData.requester) {
                     return exports.passStates.DENIED;
                 } else {
                     return exports.passStates.CANCELED;
@@ -751,10 +762,95 @@ state.isCanceled = (state) => {
 };
 
 
+/**
+* Sets the migration pass state to enroute.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {Boolean} [set=true] - if true, excusedTime will be set to now. if false, excusedTime will be set to null
+* @returns {Promise} Object with Transaction statement (transaction)
+* @throws {(TypeError|ReQL)}
+*/
+state.enroute = (passID, set) => {
+    if(typeof set !== "boolean") {set = true;}
+    return r.table("passes").get(passID)
+        .update({
+            status: {
+                migration: {
+                    excusedTime: set?r.now():null
+                }
+            }
+        })
+        .do((trans) => {
+            //calculate new state and generate return value
+            return r.table("passes").get(passID).pluck("status").do((status) => {
+                status = status("status");
+                //check if arrivedTime is set
+                return r.branch(
+                    //if typeof migration.arrivedTime === "string"
+                    status("migration")("arrivedTime").typeOf().eq("STRING"),
+                    //then the state is arrived
+                    {transaction: trans, state: exports.passStates.ARRIVED},
+                    //else. 
+                    r.branch(
+                        //if set === true
+                        r.expr(set).eq(true),
+                        //then
+                        {transaction: trans, state: exports.passStates.ENROUTE},
+                        //else
+                        {transaction: trans, state: status("confirmation")("state")}
+                    )
+                );
+            });
+        })
+        .run();
+};
 
-/*state.isEnroute = (state) => {
 
-}*/
+/**
+* Sets the migration pass state to arrived.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {Boolean} [set=true] - if true, arrivedTime will be set to now. if false, arrivedTime will be set to null
+* @returns {Promise} Object with Transaction statement (transaction)
+* @throws {(TypeError|ReQL)}
+*/
+state.arrived = (passID, set) => {
+    if(typeof set !== "boolean") {set = true;}
+    return r.table("passes").get(passID)
+        .update({
+            status: {
+                migration: {
+                    arrivedTime: set?r.now():null
+                }
+            }
+        })
+        .do((trans) => {
+        //calculate new state and generate return value
+            return r.table("passes").get(passID).pluck("status").do((status) => {
+                status = status("status");
+            //check if arrivedTime is set
+                return r.branch(
+                    //if set === true
+                
+                    r.expr(set).eq(true),
+                    //then the state is arrived
+                    {transaction: trans, state: exports.passStates.ARRIVED},
+                    //else. 
+                    r.branch(
+                        //if typeof migration.excusedTime === "string"
+                        status("migration")("excusedTime").typeOf().eq("STRING"),
+                        //then state is enroute
+                        {transaction: trans, state: exports.passStates.ENROUTE},
+                        //else state is a real state
+                        {transaction: trans, state: status("confirmation")("state")}
+                    )
+                );
+            });
+        })
+        .run();
+};
 
 /**
 * Sets the state back to the previous state
@@ -762,10 +858,11 @@ state.isCanceled = (state) => {
 * @memberof module:js/passes
 * @param {String} passID
 * @param {?String} [setByID=null] - Account ID that set this state.  
-* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).  No transaction will be returned if nothing changes.
+* @param {Boolean} [checkMigrationStates=false] - Will prioritize undoing (null) the migration states (arrived and enroue)
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).  No transaction will be returned if nothing changes. 
 * @throws {(TypeError|ReQL)}
 */
-state.undo = (passID, setByID) => {
+state.undo = (passID, setByID, checkMigrationStates) => {
     return new Promise((resolve, reject) => {
         //Type check 
         if(!typeCheck("String", passID)) {
@@ -784,9 +881,30 @@ state.undo = (passID, setByID) => {
                 return passData;
             })
             .then((passData) => {
-                //determine new state
+                
+                let migrationData = passData.status.migration;
                 let stateData = passData.status.confirmation;
-                if(stateData.previousState) {
+                //check for pseudo states arrived and enroute 
+                if(checkMigrationStates && (migrationData.arrivedTime || migrationData.excusedTime)) {
+                    
+                    //undo the one that has the latest time
+                    if(migrationData.arrivedTime && migrationData.excusedTime) {
+                        if(moment(migrationData.arrivedTime).isAfter(migrationData.excusedTime)) {
+                            //undo arrivedTime
+                            return state.arrived(passID, false);
+                        } else {
+                            //undo excusedTime
+                            return state.enroute(passID, false);
+                        }
+                    } else if(migrationData.arrivedTime) {
+                        //undo arrivedTime 
+                        return state.arrived(passID, false);
+                    } else {
+                        //undo Excused time
+                        return state.enroute(passID, false);
+                    }
+                } else if(stateData.previousState) {
+                    //determine new state
                     //determine what state change function to call.
                     if(state.isNeutral(stateData.previousState)) {
                         return state.neutral(passID, setByID);
@@ -863,7 +981,7 @@ state.allowedChanges = (passID, forUserID) => {
                 }
 
                 //check of the forUserID is the from person and give them enroute perms
-                if(forUserID === passData.fromPerson) {
+                if(forUserID === passData.fromPerson && forUserID !== passData.toPerson) {
                     //if migratin, allow them to undo it.  if not allow them to set it
                     if(passData.status.migration.excusedTime) {
                         permissions.undo = "UNDO";
@@ -953,10 +1071,14 @@ state.type = (rawState) => {
         return exports.stateTypes.ACCEPTED;
     } else if (state.isCanceled(rawState)) {
         return exports.stateTypes.CANCELED;
+    } else if(rawState === exports.passStates.ARRIVED) {
+        return exports.passStates.ARRIVED;
+    } else if(rawState === exports.passStates.ENROUTE) {
+        return exports.passStates.ENROUTE;
     } else {
         throw new Error("Not a valid state");
     }
-}
+};
 
 /*
     Neutral:

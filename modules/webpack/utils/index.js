@@ -57,6 +57,9 @@ exports.throwError = (err) => {
     }
     Materialize.toast($toastHTML, 4000);
     console.error(err);
+    if(err.isFetch) {
+        console.error(decodeURIComponent(err.response.headers.get("errormessage")));
+    }
 };
 
 /**

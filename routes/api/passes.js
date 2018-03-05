@@ -54,7 +54,7 @@ router.options("*", cors());
 * @apiresponse {Object[]} Array of pass objects
 */
 router.get("/", passport.authenticate("jwt", { session: false}), function getPasses(req, res, next) {
-    console.log(req.query)
+    console.log(req.query);
     api.get({
         id: req.query.id,
         fromPerson: req.query.fromPerson,
@@ -72,8 +72,8 @@ router.get("/", passport.authenticate("jwt", { session: false}), function getPas
         })
         .catch((err) => {
             return next(err);
-        })
-})
+        });
+});
 
 /**
     * Creates a new Pass from/for currently logged in account.
@@ -458,12 +458,12 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
 });
 /**
     * Sets Pass State by state type 
-    * Can be set by toPerson and Migrator
+    * Can be set by toPerson and Migrator and fromPerson
     * REQUIRES JWT Authorization in headers.
     * @function updatePassState
     * @param {request} req
     * @param {Object} req.body - Body of the request
-    * @param {String} req.body.type - can be "neutral", "accepted", or "canceled" 
+    * @param {String} req.body.type - can be "neutral", "accepted", "canceled", "arrived", or "enroute"
     * @param {response} res
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
@@ -478,8 +478,8 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
         err.status = 400;
         return next(err);
     }
-    if(req.body.type !== "neutral" && req.body.type !== "accepted" && req.body.type !== "canceled") {
-        let err = new Error("type must be either \"neutral\", \"accepted\", or \"canceled\"");
+    if(req.body.type !== "neutral" && req.body.type !== "accepted" && req.body.type !== "canceled" && req.body.type !== "arrived" && req.body.type !== "enroute") {
+        let err = new Error("type must be either \"neutral\", \"accepted\", \"canceled\", \"arrived\", or \"enroute\"");
         err.status = 400;
         return next(err);
     }
@@ -493,7 +493,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
             if(req.body.type === "neutral" ) {
                 if(permissions.neutral) {
                     //allowed to change
-                    return api.state.neutral(req.params.passID, req.user.id)
+                    return api.state.neutral(req.params.passID, req.user.id);
                 } else {
                     //not allowed
                     throw err;
@@ -501,7 +501,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
             } else if(req.body.type === "accepted" ) {
                 if(permissions.accepted) {
                     //allowed to change
-                    return api.state.accepted(req.params.passID, req.user.id)
+                    return api.state.accepted(req.params.passID, req.user.id);
                 } else {
                     //not allowed
                     throw err;
@@ -509,9 +509,21 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
             } else if(req.body.type === "canceled" ) {
                 if(permissions.canceled) {
                     //allowed to change
-                    return api.state.canceled(req.params.passID, req.user.id)
+                    return api.state.canceled(req.params.passID, req.user.id);
                 } else {
                     //not allowed
+                    throw err;
+                }
+            } else if(req.body.type === "arrived") {
+                if(permissions.arrived) {
+                    return api.state.arrived(req.params.passID);
+                } else {
+                    throw err;
+                }
+            } else if(req.body.type === "enroute") {
+                if(permissions.arrived) {
+                    return api.state.enroute(req.params.passID);
+                } else {
                     throw err;
                 }
             } else {
@@ -529,8 +541,8 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
                     return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));
                 });
         })
-        .catch((err) => {return next(err);})
-})
+        .catch((err) => {return next(err);});
+});
 
 /**
     * Undos a pass state to the previous state 
@@ -550,10 +562,10 @@ router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: fals
             //check undo actions 
             if(permissions.undo === "UNDO") {
                 //undo the pass 
-                return api.state.undo(req.params.passID, req.user.id)
+                return api.state.undo(req.params.passID, req.user.id, true);
             } else if(permissions.undo === "NEUTRAL") {
                 //set the pass state to a neutral state  
-                return api.state.neutral(req.params.passID, req.user.id)
+                return api.state.neutral(req.params.passID, req.user.id);
             } else {
                 //pass locked cannot change
                 let err = new Error("Forbidden");
@@ -570,7 +582,7 @@ router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: fals
                     return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));
                 });
         })
-        .catch((err) => {return next(err);})
+        .catch((err) => {return next(err);});
 });
 
 module.exports = router;
