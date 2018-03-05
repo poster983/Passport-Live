@@ -222,10 +222,10 @@ class PassportPassStateButtons extends polymer.Element {
             this.disabled = false;
             
         })
-        .catch((err) => {
+            .catch((err) => {
             //end loader, show error
-            this._error(err);
-        })
+                this._error(err);
+            })
         return fetch;
     }
 
