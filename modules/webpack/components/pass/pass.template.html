@@ -2,6 +2,7 @@
     paper-item-body {
         --paper-item-body-secondary-color: var(--paper-grey-500)
     }
+
     .right {
         float: right;
     }
@@ -10,13 +11,15 @@
     <iron-icon icon="favorite" slot="item-icon"></iron-icon>
     <paper-item-body two-line>
         <template is="dom-if" if="[[showStateButtons]]">
-                <passport-pass-state-buttons class="right" pass-id="{{passId}}"></passport-pass-state-buttons>
-            </template>
+            <passport-pass-state-buttons class="right" pass-id="{{passId}}"></passport-pass-state-buttons>
+        </template>
         <div class="">head</div>
-        <div secondary>Date: <strong>[[date]]</strong></div>
+        <div secondary>Date:
+            <strong>[[date]]</strong>
+        </div>
         <!--<div secondary>Period: <strong>[[period]]</strong></div>
         <div secondary>Date: <strong>[[date]]</strong></div>
         <div secondary>Date: <strong>[[date]]</strong></div>-->
-        
+
     </paper-item-body>
 </paper-icon-item>
