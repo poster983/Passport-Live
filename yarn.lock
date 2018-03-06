@@ -62,9 +62,30 @@
     "@polymer/iron-meta" "^3.0.0-pre.10"
     "@polymer/polymer" "^3.0.0-pre.10"
 
+"@polymer/iron-image@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-image/-/iron-image-3.0.0-pre.10.tgz#8b37a6a2963d1c05caecafe362ed7864e3de60ac"
+  dependencies:
+    "@polymer/polymer" "^3.0.0-pre.10"
+
+"@polymer/iron-menu-behavior@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-menu-behavior/-/iron-menu-behavior-3.0.0-pre.10.tgz#c852eac1618196dc7b8caf5553adba4f6402fa6d"
+  dependencies:
+    "@polymer/iron-a11y-keys-behavior" "^3.0.0-pre.10"
+    "@polymer/iron-flex-layout" "^3.0.0-pre.10"
+    "@polymer/iron-selector" "^3.0.0-pre.10"
+    "@polymer/polymer" "^3.0.0-pre.10"
+
 "@polymer/iron-meta@^3.0.0-pre.10":
   version "3.0.0-pre.10"
   resolved "https://registry.yarnpkg.com/@polymer/iron-meta/-/iron-meta-3.0.0-pre.10.tgz#84bd9216726673b8d7b4617633e8be3f8cacea89"
+  dependencies:
+    "@polymer/polymer" "^3.0.0-pre.10"
+
+"@polymer/iron-selector@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-selector/-/iron-selector-3.0.0-pre.10.tgz#a99379f041fa28e889de290644c6baeaec6401e8"
   dependencies:
     "@polymer/polymer" "^3.0.0-pre.10"
 
@@ -84,6 +105,15 @@
     "@polymer/paper-ripple" "^3.0.0-pre.10"
     "@polymer/polymer" "^3.0.0-pre.10"
 
+"@polymer/paper-card@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/paper-card/-/paper-card-3.0.0-pre.10.tgz#201e06928d9d9728e2ba9454019d10244d88c00c"
+  dependencies:
+    "@polymer/iron-flex-layout" "^3.0.0-pre.10"
+    "@polymer/iron-image" "^3.0.0-pre.10"
+    "@polymer/paper-styles" "^3.0.0-pre.10"
+    "@polymer/polymer" "^3.0.0-pre.10"
+
 "@polymer/paper-fab@^3.0.0-pre.10":
   version "3.0.0-pre.10"
   resolved "https://registry.yarnpkg.com/@polymer/paper-fab/-/paper-fab-3.0.0-pre.10.tgz#83eeb3dc51be10896e2ea18ba363fd69ae237db8"
@@ -91,6 +121,24 @@
     "@polymer/iron-flex-layout" "^3.0.0-pre.10"
     "@polymer/iron-icon" "^3.0.0-pre.10"
     "@polymer/paper-behaviors" "^3.0.0-pre.10"
+    "@polymer/paper-styles" "^3.0.0-pre.10"
+    "@polymer/polymer" "^3.0.0-pre.10"
+
+"@polymer/paper-item@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/paper-item/-/paper-item-3.0.0-pre.10.tgz#246f60a4abaca6178aa2c4a95bb9dbe54f15d5d7"
+  dependencies:
+    "@polymer/iron-behaviors" "^3.0.0-pre.10"
+    "@polymer/iron-flex-layout" "^3.0.0-pre.10"
+    "@polymer/paper-styles" "^3.0.0-pre.10"
+    "@polymer/polymer" "^3.0.0-pre.10"
+
+"@polymer/paper-listbox@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@polymer/paper-listbox/-/paper-listbox-3.0.0-pre.10.tgz#9e87f093d8d9fbc3c2c40e62428338f43fbcff3b"
+  dependencies:
+    "@polymer/iron-behaviors" "^3.0.0-pre.10"
+    "@polymer/iron-menu-behavior" "^3.0.0-pre.10"
     "@polymer/paper-styles" "^3.0.0-pre.10"
     "@polymer/polymer" "^3.0.0-pre.10"
 

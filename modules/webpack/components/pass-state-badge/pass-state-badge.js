@@ -30,7 +30,7 @@ require("@polymer/paper-styles/color.js");
  * @class 
  * @property {String} state - state string.  can be pending, waitlisted, accepted, denied, canceled, enroute, or arrived
  * @example
- * <passport-pass-state-badge state="pending"></passport-pass-state-buttons>
+ * <passport-pass-state-badge state="pending"></passport-pass-state-badge>
  */
 class PassportPassStateBadge extends polymer.Element {
     static get template() {

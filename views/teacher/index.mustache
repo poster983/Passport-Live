@@ -244,6 +244,10 @@ email: hi@josephhassell.com
     <div id="studentsArriving" class="col s12">
     <!--567d6371-127e-4dd5-bee0-21dbb6689fe2--> <!--b9456331-3170-4714-9192-781e0e75ffac-->
     <passport-pass-state-buttons pass-id="b9456331-3170-4714-9192-781e0e75ffac" show-arrived></passport-pass-state-buttons>
+      <paper-listbox style="--paper-listbox-background-color: white; --paper-listbox-color: black;">
+        <passport-pass pass-id="b9456331-3170-4714-9192-781e0e75ffac" date="todea" show-state-buttons></passport-pass>
+        <passport-pass show-state-buttons></passport-pass>
+      </paper-listbox>
       <div class="section">
         <div class="row">
           <div class="col s12">
@@ -365,7 +369,6 @@ email: hi@josephhassell.com
   </footer>
 
   <!-- Scripts -->
-  <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
   <script>
     if ('addEventListener' in window) {
       window.addEventListener('load', function () {

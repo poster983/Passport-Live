@@ -66,16 +66,13 @@ class PassportPassStateButtons extends polymer.Element {
             state: {
                 type: String,
                 reflectToAttribute: true,
-                notify: false
+                notify: true
             },
             stateType: {
-                type: String,
-                reflectToAttribute: true,
-                notify: false
+                type: String
             },
             allowedChanges: {
                 type: Object,
-                reflectToAttribute: true,
                 notify: true,
                 observer: "_updateButtons"
             },
@@ -85,19 +82,13 @@ class PassportPassStateButtons extends polymer.Element {
                 observer: "_observeAllDisabled"
             },
             status: {
-                type: Object,
-                reflectToAttribute: false,
-                notify: false
+                type: Object
             },
             _leftButtonAction: {
-                type: String,
-                reflectToAttribute: true,
-                notify: false
+                type: String
             },
             _rightButtonAction: {
-                type: String,
-                reflectToAttribute: true,
-                notify: false
+                type: String
             },
             _errorRetry: {
                 type: Boolean,
@@ -105,8 +96,6 @@ class PassportPassStateButtons extends polymer.Element {
             },
             showArrived: {
                 type: Boolean,
-                reflectToAttribute: false,
-                notify: true,
                 observer: "_showArrivedChanged"
             }
         };
