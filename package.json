@@ -92,6 +92,7 @@
     "shortid": "^2.2.8",
     "socket.io": "^2.0.0",
     "ssarv": "latest",
+    "time-elements": "^1.0.0",
     "type-check": "^0.3.2",
     "ua-parser-js": "^0.7.14",
     "uglifyjs-webpack-plugin": "^1.1.1",

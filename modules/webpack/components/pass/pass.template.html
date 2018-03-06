@@ -1,25 +1,71 @@
 <style is="custom-style">
-    paper-item-body {
-        --paper-item-body-secondary-color: var(--paper-grey-500)
+    paper-item-body [secondary] {
+        --paper-item-body-secondary-color: var(--paper-grey-500);
+        color: var(--paper-grey-700);
     }
-
-    .right {
+    paper-icon-item {
+        --paper-item-icon-width: 75px;
+    }
+    .right-elements {
         float: right;
+        position: absolute;
+        right: 0px;
+        padding: 16px;
+    }
+    .avatar {
+        border-radius: 50%;
+        background-color: var(--paper-grey-300);
+        width: 42px;
+        height: 42px;
+    }
+    .left-items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: calc(var(--paper-item-icon-width) - 16px);
+        /*padding-right: 16px;*/
+    }
+    .left-items .block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        
+    }
+    .left-items .item {
+        margin-top: 3px;
+        margin-bottom: 3px;
     }
 </style>
 <paper-icon-item>
-    <iron-icon icon="favorite" slot="item-icon"></iron-icon>
-    <paper-item-body two-line>
-        <template is="dom-if" if="[[showStateButtons]]">
-            <passport-pass-state-buttons class="right" pass-id="{{passId}}"></passport-pass-state-buttons>
-        </template>
-        <div class="">head</div>
-        <div secondary>Date:
-            <strong>[[date]]</strong>
+    <!--<iron-icon icon="favorite" slot="item-icon"></iron-icon>-->
+    <div slot="item-icon">
+        <div class="left-items">
+            <div class="block">
+                <img class="avatar item" src$="/api/media/avatar/[[avatarId]]/50.svg" alt="Avatar" slot="item-icon">
+                <passport-pass-state-badge class="item" state="{{state}}"></passport-pass-state-badge>
+            </div>
         </div>
-        <!--<div secondary>Period: <strong>[[period]]</strong></div>
-        <div secondary>Date: <strong>[[date]]</strong></div>
-        <div secondary>Date: <strong>[[date]]</strong></div>-->
+    </div>
+    <div class="right-elements">
+        <template is="dom-if" if="[[showStateButtons]]">
+            <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
+        </template>
+        
+    </div>
+    <paper-item-body three-line>
+        
+        <div class="">[[header]]</div>
+        <div secondary>
+            Arriving <relative-time datetime$="[[date]]"></relative-time> <span title$="[[period]]">[[_formattedPeriod]]</span>
+        </div>
+        <div secondary id="fromPerson" style="display: none;">From: [[fromPerson]]</div>
+        <div secondary id="toPerson" style="display: none;">To: [[toPerson]]</div>
+        <div secondary id="migrator" style="display: none;">Migrator: [[migrator]]</div>
+        <div secondary>[[_requesterPhrase]]<relative-time datetime$="[[dateRequested]]"></relative-time></div>
 
     </paper-item-body>
+    
+    
 </paper-icon-item>

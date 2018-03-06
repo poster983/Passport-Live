@@ -244,10 +244,15 @@ email: hi@josephhassell.com
     <div id="studentsArriving" class="col s12">
     <!--567d6371-127e-4dd5-bee0-21dbb6689fe2--> <!--b9456331-3170-4714-9192-781e0e75ffac-->
     <passport-pass-state-buttons pass-id="b9456331-3170-4714-9192-781e0e75ffac" show-arrived></passport-pass-state-buttons>
+    <passport-pass-state-badge ></passport-pass-state-badge>
       <paper-listbox style="--paper-listbox-background-color: white; --paper-listbox-color: black;">
-        <passport-pass pass-id="b9456331-3170-4714-9192-781e0e75ffac" date="todea" show-state-buttons></passport-pass>
-        <passport-pass show-state-buttons></passport-pass>
+        <passport-pass pass-id="b9456331-3170-4714-9192-781e0e75ffac" date-requested="2018-03-05T11:06:08-06:00" date="2017-12-15T06:30:55Z" period="a" avatar-id="da6655ec-d98c-4194-8c43-daafe1b648fe" show-state-buttons></passport-pass>
+        <passport-pass date="2017-12-15T06:30:55Z" period="lunch1" show-state-buttons></passport-pass>
       </paper-listbox>
+      <paper-card>
+         <passport-pass pass-id="b9456331-3170-4714-9192-781e0e75ffac" date="2017-12-15T06:30:55Z" period="a" avatar-id="da6655ec-d98c-4194-8c43-daafe1b648fe" show-state-buttons></passport-pass>
+          <passport-pass date="2017-12-15T06:30:55Z" period="lunch1" show-state-buttons></passport-pass>
+      </paper-card>
       <div class="section">
         <div class="row">
           <div class="col s12">
@@ -377,6 +382,8 @@ email: hi@josephhassell.com
       document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
   </script>
+  <!--<script type="text/javascript">document.createElement = Document.prototype.createElement;</script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.1.0/webcomponents-loader.js"></script>-->
   <script type="text/javascript" src=/js/polyfill/webcomponents-lite.js></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
@@ -384,7 +391,7 @@ email: hi@josephhassell.com
   <script src="js/materialize.js"></script>
   <script type="text/javascript" src=/js/webpack/teacher.js></script>
   <script src="js/passport.js"></script>
-  <script src="js/materialize.clockpicker.js"></script>
+  <!--<script src="js/materialize.clockpicker.js"></script>-->
   <script src="/moment/min/moment-with-locales.min.js"></script>
   <script>
     var idOfUser = "{{user.id}}";

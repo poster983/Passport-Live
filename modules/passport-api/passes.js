@@ -830,7 +830,7 @@ state.arrived = (passID, set) => {
         //calculate new state and generate return value
             return r.table("passes").get(passID).pluck("status").do((status) => {
                 status = status("status");
-            //check if arrivedTime is set
+                //check if arrivedTime is set
                 return r.branch(
                     //if set === true
                 
@@ -884,6 +884,7 @@ state.undo = (passID, setByID, checkMigrationStates) => {
                 
                 let migrationData = passData.status.migration;
                 let stateData = passData.status.confirmation;
+                //console.log(checkMigrationStates, migrationData.arrivedTime, migrationData.excusedTime);
                 //check for pseudo states arrived and enroute 
                 if(checkMigrationStates && (migrationData.arrivedTime || migrationData.excusedTime)) {
                     
@@ -909,8 +910,10 @@ state.undo = (passID, setByID, checkMigrationStates) => {
                     if(state.isNeutral(stateData.previousState)) {
                         return state.neutral(passID, setByID);
                     } else if(state.isAccepted(stateData.previousState)) {
+                        console.log("YES")
                         return state.accepted(passID, setByID);
                     } else if(state.isCanceled(stateData.previousState)) {
+                        console.log("YES")
                         return state.canceled(passID, setByID);
                     } else {
                         let err = new Error("Pass state invalid");

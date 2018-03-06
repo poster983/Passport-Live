@@ -61,17 +61,21 @@ class PassportPassStateBadge extends polymer.Element {
      */
     stateColor(state) {
         state = state.toLowerCase();
+        let display = "inline";
         let bg = "black";
         let color = "white";
+        if(!state || state.length<1) {
+            display = "none";
+        }
         switch(state) {
         case "pending": 
             bg = "paper-cyan-a700";
-            color = "black";
+            color = "white";
             break;
 
         case "accepted": 
             bg = "paper-green-500";
-            color = "black";
+            color = "white";
             break;
         
         case "denied":
@@ -98,6 +102,7 @@ class PassportPassStateBadge extends polymer.Element {
         this.updateStyles({
             "--pass-state-badge-background-color": "var(--" + bg + ")",
             "--pass-state-badge-color": color,
+            "--pass-state-badge_-_display": display,
         });
     }
 }

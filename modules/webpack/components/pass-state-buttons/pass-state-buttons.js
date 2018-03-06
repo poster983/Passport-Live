@@ -97,11 +97,24 @@ class PassportPassStateButtons extends polymer.Element {
             showArrived: {
                 type: Boolean,
                 observer: "_showArrivedChanged"
+            },
+            verticalAlign: {
+                type: Boolean,
+                observer: "_alignmentChanged"
             }
         };
     }
+    _alignmentChanged() {
+        let update = "";
+        if(this.verticalAlign) {
+            update = "block";
+        }
+        this.updateStyles({
+            "--pass-state-buttons-fab-display": update
+        });
+    }
     _showArrivedChanged(newVal) {
-        console.log("NEWVAL", newVal)
+        //console.log("NEWVAL", newVal)
         this.shadowRoot.querySelector("#arrived").style.display = newVal?"":"none"
     }
     _passIDChanged() {

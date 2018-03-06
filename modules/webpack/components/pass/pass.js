@@ -25,7 +25,10 @@ let view = require("./pass.template.html");
 //components
 require("@polymer/paper-styles/color.js");
 require("../pass-state-buttons/pass-state-buttons.js");
-require("@polymer/iron-icons/iron-icons.js");
+require("../pass-state-badge/pass-state-badge.js");
+require("time-elements/dist/time-elements.js");
+require("../styles/default-theme.js");
+//require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/paper-item/paper-icon-item.js");
 /**
  * Polymer Element that displays a pass.  
@@ -49,6 +52,8 @@ class PassportPass extends polymer.Element {
         if(typeof this.passId !== "string") {
             this.showStateButtons = false;
         }
+        //initial requester format
+        //this._requesterPhrase = this._requesterChanged(this.requester, this.dateRequested)
     }
     static get properties() {
         return {
@@ -63,26 +68,43 @@ class PassportPass extends polymer.Element {
             avatarId: {
                 type: String
             }, 
-            focus: {
+            header: {
                 type: String,
-                observer: "_mainFocus"
             },
             date: {
+                type: String
+            },
+            dateRequested: {
                 type: String
             },
             period: {
                 type: String
             },
+            _formattedPeriod: {
+                type: String,
+                computed: "_formatPeriod(period)"
+            },
             migrator: {
-                type: String
+                type: String,
+                observer: "_migratorChanged"
             },
             fromPerson: {
-                type: String
+                type: String,
+                observer: "_fromPersonChanged"
             },
             toPerson: {
-                type: String
+                type: String,
+                observer: "_toPersonChanged"
             },
             requester: {
+                type: String,
+            },
+            _requesterPhrase: {
+                type: String,
+                computed: "_requesterChanged(requester, dateRequested)",
+                value: ""
+            },
+            state: {
                 type: String
             },
             hasViewed: {
@@ -94,9 +116,36 @@ class PassportPass extends polymer.Element {
     _hasViewed() {
 
     }
-    _mainFocus() {
-        if(this.focus === "migrator") {
-            //hide toPerson 
+    _migratorChanged(newVal) {
+        this.shadowRoot.querySelector("#migrator").style.display = newVal?"":"none";
+    }
+    _fromPersonChanged(newVal) {
+        this.shadowRoot.querySelector("#fromPerson").style.display = newVal?"":"none";
+    }
+    _toPersonChanged(newVal) {
+        this.shadowRoot.querySelector("#toPerson").style.display = newVal?"":"none";
+    }
+    //If the period is a 1 or two letter word, it adds "period" to the end, if not, it quotes it. This var is used after the date.
+    _formatPeriod(period) {
+        if(!period || period.length < 1) {
+            return "";
+        } else if (period.length<=2) {
+            return "during " + period.toUpperCase() + " period";
+        } else {
+            return "during period: \""+ period.toUpperCase() + "\"";
+        }
+    }
+    //hides or shows "this" if there is a requestor 
+    _requesterChanged(requester, dateRequested) {
+        //if nothing
+        if((!requester || requester.length<1) && (!dateRequested || dateRequested.length<1)) {
+            return "";
+        } else if (!requester || requester.length<1) {
+            //if we only have the date requested
+            return "Requested ";
+        } else {
+            //if we only have the person or have everything 
+            return requester + "requested this ";
         }
     }
 }
