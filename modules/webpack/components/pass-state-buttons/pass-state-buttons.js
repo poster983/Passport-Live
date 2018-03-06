@@ -115,13 +115,13 @@ class PassportPassStateButtons extends polymer.Element {
     }
     _showArrivedChanged(newVal) {
         //console.log("NEWVAL", newVal)
-        this.shadowRoot.querySelector("#arrived").style.display = newVal?"":"none"
+        this.shadowRoot.querySelector("#arrived").style.display = newVal?"":"none";
     }
     _passIDChanged() {
         this.updateState();
     }
     //observer: "_updateButtons"
-    _observeAllDisabled(newVal, oldVal) {
+    _observeAllDisabled(newVal) {
         if(newVal === false) {
             this._updateButtons();
         }

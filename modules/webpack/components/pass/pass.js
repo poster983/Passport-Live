@@ -78,11 +78,8 @@ class PassportPass extends polymer.Element {
                 type: String
             },
             period: {
-                type: String
-            },
-            _formattedPeriod: {
                 type: String,
-                computed: "_formatPeriod(period)"
+                observer: "_formatPeriod"
             },
             migrator: {
                 type: String,
@@ -127,12 +124,13 @@ class PassportPass extends polymer.Element {
     }
     //If the period is a 1 or two letter word, it adds "period" to the end, if not, it quotes it. This var is used after the date.
     _formatPeriod(period) {
+        let slot = this.shadowRoot.querySelector("#formattedPeriod"); 
         if(!period || period.length < 1) {
-            return "";
+            slot.innerHTML = "";
         } else if (period.length<=2) {
-            return "during " + period.toUpperCase() + " period";
+            slot.innerHTML = "during <strong>" + period.toUpperCase() + "</strong> period";
         } else {
-            return "during period: \""+ period.toUpperCase() + "\"";
+            slot.innerHTML = "during period: <strong>\""+ period.toUpperCase() + "\"</strong>";
         }
     }
     //hides or shows "this" if there is a requestor 

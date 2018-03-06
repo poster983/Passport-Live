@@ -2,12 +2,16 @@
     paper-item-body [secondary] {
         --paper-item-body-secondary-color: var(--paper-grey-500);
         color: var(--paper-grey-700);
+        font-size: 15px;
+    }
+    paper-item-body {
+        max-width: ;
     }
     paper-icon-item {
         --paper-item-icon-width: 75px;
     }
     .right-elements {
-        float: right;
+        display: inline;
         position: absolute;
         right: 0px;
         padding: 16px;
@@ -37,8 +41,33 @@
         margin-top: 3px;
         margin-bottom: 3px;
     }
+
+    .state-overlay::after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0,0,0, 0.5);
+    }
+    div.overlay-buttons {
+        display: none;
+    }
+    .state-overlay div.overlay-buttons {
+        display: block;
+        position: absolute;
+        text-align: center;
+        left: 50%;
+        z-index: 2;
+    }
 </style>
-<paper-icon-item>
+
+<paper-icon-item class="state-overlayDISABLED">
+    <div class="overlay-buttons">
+        <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
+    </div>
     <!--<iron-icon icon="favorite" slot="item-icon"></iron-icon>-->
     <div slot="item-icon">
         <div class="left-items">
@@ -52,19 +81,22 @@
         <template is="dom-if" if="[[showStateButtons]]">
             <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
         </template>
-        
     </div>
     <paper-item-body three-line>
-        
-        <div class="">[[header]]</div>
+        <div>[[header]]</div>
         <div secondary>
-            Arriving <relative-time datetime$="[[date]]"></relative-time> <span title$="[[period]]">[[_formattedPeriod]]</span>
+            Arriving <strong><local-time datetime$="[[date]]"
+            weekday="long"
+            month="long"
+            day="numeric"
+            year="numeric"></local-time></strong> <span id="formattedPeriod" title$="[[period]]"></span> <!--<relative-time datetime$="[[date]]"></relative-time>-->
         </div>
-        <div secondary id="fromPerson" style="display: none;">From: [[fromPerson]]</div>
-        <div secondary id="toPerson" style="display: none;">To: [[toPerson]]</div>
-        <div secondary id="migrator" style="display: none;">Migrator: [[migrator]]</div>
+        <div secondary id="fromPerson" style="display: none;">From: <strong>[[fromPerson]]</strong></div>
+        <div secondary id="toPerson" style="display: none;">To: <strong>[[toPerson]]</strong></div>
+        <div secondary id="migrator" style="display: none;">Migrator: <strong>[[migrator]]</strong></div>
         <div secondary>[[_requesterPhrase]]<relative-time datetime$="[[dateRequested]]"></relative-time></div>
 
+        
     </paper-item-body>
     
     
