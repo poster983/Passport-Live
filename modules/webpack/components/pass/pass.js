@@ -34,9 +34,18 @@ require("@polymer/paper-item/paper-icon-item.js");
  * Polymer Element that displays a pass.  
  * @class 
  * @property {Boolean} [showStateButtons=true] - if true, the buttons to change the state will be shown.  
- * @property {String} passId - The ID of the pass.  If undefined, showStateButtons will be set to false
- * @property {String} avatarId - id of user to show avatar,
- * @property {String} date - ISO String 
+ * @property {String} [passId] - The ID of the pass.  If undefined, showStateButtons will be set to false
+ * @property {String} [avatarId] - id of user to show avatar,
+ * @property {String} [date] - ISO String 
+ * @property {String} [dateRequested] - ISO String
+ * @property {String} [header] - The primary title for the pass.
+ * @property {String} [period] - Period the migrator is arriving 
+ * @property {String} [migrator] - The name of the person leaving and moving to tthe toPerson 
+ * @property {String} [fromPerson] - The name of the person excusing the migrator. Also the origin of the migrator. 
+ * @property {String} [toPerson] - The name of the person the migrator is going to 
+ * @property {String} [requester] - The name of the person that made this pass 
+ * @property {String} [state] - State of the pass. Can be used if the state buttons are not shown. 
+ * @property {Boolean} [hasViewed=false] - Shows the has viewed icon 
  * @example
  * <passport-pass showStateButtons></passport-pass>
  */
@@ -106,7 +115,8 @@ class PassportPass extends polymer.Element {
             },
             hasViewed: {
                 type: Boolean,
-                observer: "_hasViewed"
+                observer: "_hasViewed",
+                value: false
             }
         };
     }
@@ -128,9 +138,9 @@ class PassportPass extends polymer.Element {
         if(!period || period.length < 1) {
             slot.innerHTML = "";
         } else if (period.length<=2) {
-            slot.innerHTML = "during <strong>" + period.toUpperCase() + "</strong> period";
+            slot.innerHTML = "During <strong>" + period.toUpperCase() + "</strong> period";
         } else {
-            slot.innerHTML = "during period: <strong>\""+ period.toUpperCase() + "\"</strong>";
+            slot.innerHTML = "During period <strong>\""+ period.toUpperCase() + "\"</strong>";
         }
     }
     //hides or shows "this" if there is a requestor 

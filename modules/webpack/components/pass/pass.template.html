@@ -5,16 +5,26 @@
         font-size: 15px;
     }
     paper-item-body {
-        max-width: ;
+        width: 100%;
     }
     paper-icon-item {
-        --paper-item-icon-width: 75px;
+        --paper-item-icon-width: 80px;
     }
-    .right-elements {
+    /*.right-elements {
         display: inline;
         position: absolute;
         right: 0px;
-        padding: 16px;
+        padding-right: 16px;
+    }*/
+    .right-elements {
+        display: block;
+        position: relative;
+        right: 0px;
+        padding-right: 16px;
+        padding-left: 5px;
+        padding-top: 10px;
+        padding-bottom: 3px;
+        float: right;
     }
     .avatar {
         border-radius: 50%;
@@ -41,61 +51,36 @@
         margin-top: 3px;
         margin-bottom: 3px;
     }
-
-    .state-overlay::after {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background-color: rgba(0,0,0, 0.5);
-    }
-    div.overlay-buttons {
-        display: none;
-    }
-    .state-overlay div.overlay-buttons {
-        display: block;
-        position: absolute;
-        text-align: center;
-        left: 50%;
-        z-index: 2;
-    }
 </style>
 
-<paper-icon-item class="state-overlayDISABLED">
-    <div class="overlay-buttons">
-        <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
-    </div>
-    <!--<iron-icon icon="favorite" slot="item-icon"></iron-icon>-->
+<paper-icon-item>
     <div slot="item-icon">
         <div class="left-items">
             <div class="block">
-                <img class="avatar item" src$="/api/media/avatar/[[avatarId]]/50.svg" alt="Avatar" slot="item-icon">
+                <img class="avatar item" src$="/api/media/avatar/[[avatarId]]/50.svg" alt="Avatar"><!--slot="item-icon"-->
                 <passport-pass-state-badge class="item" state="{{state}}"></passport-pass-state-badge>
             </div>
         </div>
     </div>
-    <div class="right-elements">
-        <template is="dom-if" if="[[showStateButtons]]">
-            <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
-        </template>
-    </div>
     <paper-item-body three-line>
+        <template is="dom-if" if="[[showStateButtons]]">
+            <div class="right-elements">
+                <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} show-arrived></passport-pass-state-buttons>
+            </div>
+        </template>
         <div>[[header]]</div>
         <div secondary>
             Arriving <strong><local-time datetime$="[[date]]"
             weekday="long"
             month="long"
             day="numeric"
-            year="numeric"></local-time></strong> <span id="formattedPeriod" title$="[[period]]"></span> <!--<relative-time datetime$="[[date]]"></relative-time>-->
+            year="numeric"></local-time></strong><!--<relative-time datetime$="[[date]]"></relative-time>-->
         </div>
-        <div secondary id="fromPerson" style="display: none;">From: <strong>[[fromPerson]]</strong></div>
-        <div secondary id="toPerson" style="display: none;">To: <strong>[[toPerson]]</strong></div>
-        <div secondary id="migrator" style="display: none;">Migrator: <strong>[[migrator]]</strong></div>
+        <div secondary id="formattedPeriod" title$="[[period]]"></div>
+        <div secondary id="migrator" style="display: none;">Migrator <strong>[[migrator]]</strong></div>
+        <div secondary id="fromPerson" style="display: none;">Leaving from <strong>[[fromPerson]]</strong></div>
+        <div secondary id="toPerson" style="display: none;">Going to <strong>[[toPerson]]</strong></div>
         <div secondary>[[_requesterPhrase]]<relative-time datetime$="[[dateRequested]]"></relative-time></div>
-
         
     </paper-item-body>
     
