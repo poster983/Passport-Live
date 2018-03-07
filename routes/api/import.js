@@ -47,7 +47,7 @@ router.options("*", cors());
  */
 router.get("/log", passport.authenticate("jwt", {
     session: false
-}), utils.middlewarePermission(["administrator"]), function searchBulkImport(req, res, next) {
+}), utils.dashboardPermission(["administrator"]), function searchBulkImport(req, res, next) {
     importJS.searchBulkLogs({
         name: req.query.name,
         type: req.query.type,
@@ -82,7 +82,7 @@ router.get("/log", passport.authenticate("jwt", {
 
 router.post("/accounts", passport.authenticate("jwt", {
     session: false
-}), utils.middlewarePermission(["administrator"]), function importJsonAccounts(req, res, next) {
+}), utils.dashboardPermission(["administrator"]), function importJsonAccounts(req, res, next) {
     importJS.accounts.json(req.body.accounts, req.body.importName).then((trans) => {
         return res.json(trans);
     }).catch((err) => {
@@ -101,7 +101,7 @@ router.post("/accounts", passport.authenticate("jwt", {
 
 router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
     session: false
-}), utils.middlewarePermission(["administrator"]), function activate(req, res, next) {
+}), utils.dashboardPermission(["administrator"]), function activate(req, res, next) {
     if (typeof req.params.bulkID !== "string") {
         let err = new Error("Not Found");
         err.status = 404;
@@ -129,7 +129,7 @@ router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
 
 router.delete("/accounts/:bulkID/rollback", passport.authenticate("jwt", {
     session: false
-}), utils.middlewarePermission(["administrator"]), function rollback(req, res, next) {
+}), utils.dashboardPermission(["administrator"]), function rollback(req, res, next) {
     if (typeof req.params.bulkID !== "string") {
         let err = new Error("Not Found");
         err.status = 404;

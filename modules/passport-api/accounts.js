@@ -28,13 +28,11 @@ var r_ = db.dash();
 var config = require("config");
 var bcrypt = require("bcrypt-nodejs");
 var utils = require("../passport-utils/index.js");
-var human = require("humanparser");
 var moment = require("moment");
-var _ = require("underscore");
 const util = require("util");
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
-var emailJS = require("./email.js");
+let emailJS = require("./email.js");
 var accountScheduleJS = require("./accountSchedule.js");
 
 /** ACCOUNT TYPE DEFS **/ 
@@ -911,23 +909,25 @@ exports.sendActivation = (userID) => {
             return reject(err);
         }
         //get account
-        return r_.table("accounts").get(userID).pluck("id", "email", {name: ["first"]}, "isVerified").run()
+        return r_.table("accounts").get(userID).pluck("id", "email", "name", "isVerified").run()
             .then((accounts) => {
                 //check if account exists
                 if(!accounts) {
                     let err = new Error("Account Not Found");
                     err.status = 404;
-                    return reject(err);
+                    throw err;
                 }
                 //check if the user is already verified
                 if(accounts.isVerified) {
                     let err = new Error("User already verified");
                     err.status = 406;
-                    return reject(err);
+                    throw err;
                 }
 
-                //
-            })
-    })
-}
+                //prepare object to pass to email function and send it on to the email queue 
+                return emailJS.sendActivationEmail({to: accounts.email, name: name, accountID: userID});
+            });
+    });
+};
+
 

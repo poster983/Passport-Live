@@ -29,7 +29,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
     customHead = config.get("webInterface.customHeadCode");
 }
 
-router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["teacher"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.dashboardPermission(["teacher"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {};
     user.name = req.user.name;
     user.email = req.user.email;

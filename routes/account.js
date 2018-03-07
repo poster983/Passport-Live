@@ -45,10 +45,10 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.compileDashboardN
     var elements = {};
     elements.schedules = {};
     //enable elements
-    elements.schedules.student = utils.checkPermission(req.user.userGroup, ["student"]);
-    elements.schedules.teacher = utils.checkPermission(req.user.userGroup, ["teacher"]);
+    elements.schedules.student = utils.checkDashboards(req.user.userGroup, ["student"]);
+    elements.schedules.teacher = utils.checkDashboards(req.user.userGroup, ["teacher"]);
 
-    console.log(elements);
+    //console.log(elements);
     
     //set links in sidenav
     if(req.query.referral) {
@@ -108,7 +108,7 @@ router.patch("/resetPassword", (req, res, next) => {
                             if(trans && trans.replaced > 1) {
                                 return next(new Error("An impossible error has just occurred. Please perform a reality check."));
                             } else if(trans && trans.replaced < 1) {
-                                var err = new Error("Nothing Changed");
+                                let err = new Error("Nothing Changed");
                                 err.status = 400;
                                 return next(err);
                             } else {
@@ -122,20 +122,20 @@ router.patch("/resetPassword", (req, res, next) => {
 
                         
                     } else {
-                        var err = new Error("Passwords Must Match");
+                        let err = new Error("Passwords Must Match");
                         err.status = 400;
                         return next(err);
                     }
                 
                 } else {
-                    var err = new Error("Invalid Key");
+                    let err = new Error("Invalid Key");
                     err.status = 400;
                     return next(err);
                 }
             });
         });
     } else {
-        var err = new Error("Invalid JWT");
+        let err = new Error("Invalid JWT");
         err.status = 401;
         return next(err);
     }
@@ -155,13 +155,13 @@ router.get("/activate", function(req, res, next) {
         securityJS.checkPermissionKeyValidity(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).then((payload) => {
         //console.log(payload)
             if(!payload) {
-                var err = new Error("Invalid Key");
+                let err = new Error("Invalid Key");
                 err.status = 400;
                 return next(err);
             }
         
             if(!typeCheck("{params: {accountID: String}, ...}", payload)) {
-                var err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
+                let err = new TypeError("Key Payload Malformed.  Expected \"params.accountID\" to be a String.");
                 err.status = 500;
                 return next(err);
             }
@@ -187,7 +187,7 @@ router.get("/activate", function(req, res, next) {
                 
                 //res.send(resp)
                 } else if(resp && resp.replaced > 1) {
-                    var err = new Error("An impossible error has just occurred. Please perform a reality check.");
+                    let err = new Error("An impossible error has just occurred. Please perform a reality check.");
                     err.status = 500;
                     return next(err);
                 } else if(resp && resp.unchanged > 0) {
@@ -195,7 +195,7 @@ router.get("/activate", function(req, res, next) {
                     securityJS.keyUsed(securityJS.permissionKeyType.ACTIVATE_ACCOUNT, permissionKey).catch((err) => {console.error(err, "Account Activation");});
                     res.redirect("/auth/login?notif=" + encodeURIComponent("Your account is already verified")); 
                 } else {
-                    var err = new Error("User Not Found");
+                    let err = new Error("User Not Found");
                     err.status = 500;
                     return next(err);
                 }
@@ -226,7 +226,7 @@ router.post("/sendResetPasswordEmail", utils.rateLimit.emailPasswordResetBrutefo
     }
 }), function sendResetPasswordEmail(req, res, next) {
     if(!typeCheck("{email: String, ...}", req.body)) {
-        var err = new Error("body.email expected a string"); err.status = 400; return next(err);
+        let err = new Error("body.email expected a string"); err.status = 400; return next(err);
     }
     accountJS.getAccountByEmail(req.body.email, (err, user) => {
         if(err) {return next(err);}
@@ -234,7 +234,7 @@ router.post("/sendResetPasswordEmail", utils.rateLimit.emailPasswordResetBrutefo
             //Sends fake accepted response
             return res.sendStatus(202);
         }
-        if(user.length > 1) {var err = new Error("Conflicting Emails"); err.status = 409; return next(err);}
+        if(user.length > 1) {let err = new Error("Conflicting Emails"); err.status = 409; return next(err);}
         emailJS.sendResetPasswordEmail({
             to: user[0].email,
             name: user[0].name,

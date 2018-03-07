@@ -23,16 +23,15 @@ email: hi@josephhassell.com
 
 var express = require("express");
 var router = express.Router();
-var cors = require('cors');
+var cors = require("cors");
 var passport = require("passport");
 var config = require("config");
 var api = require("../../modules/passport-api/security.js");
 var utils = require("../../modules/passport-utils/index.js");
 var typeCheck = require("type-check").typeCheck;
-var ssarv = require("ssarv");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
@@ -41,7 +40,7 @@ function serializeUser(req, res, done) {
     //req.user = req.user[0];
     req.user = utils.cleanUser(req.user);
     done();
-};
+}
 
 /**
     * Creates a new permission key for creating a new Account.
@@ -61,16 +60,16 @@ function serializeUser(req, res, done) {
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.post('/key/NEW_ACCOUNT', passport.authenticate('jwt', { session: false}), ssarv(["admin", "dev"], {locationOfRoles: "user.userGroup"}), function handleCreatePermissionKey(req, res, next) {
+router.post("/key/NEW_ACCOUNT", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function handleCreatePermissionKey(req, res, next) {
     var userGroups=req.body.userGroups;
     var timeout=req.body.timeout;
     
     api.newKey.newAccount(userGroups, timeout).then((key)=> {
         res.status(201).send({
             key: key
-        })
+        });
     }).catch((err) => {
-        return next(err)
+        return next(err);
     });
 });
 
@@ -89,7 +88,7 @@ router.post('/key/NEW_ACCOUNT', passport.authenticate('jwt', { session: false}),
     * @todo NOT ENABLED YET
     */
 
-router.post('/key/API', function handleNewApiKey(req, res, next) {
+router.post("/key/API", function handleNewApiKey(req, res, next) {
     res.sendStatus(501);
 });
 
@@ -110,25 +109,25 @@ router.post('/key/API', function handleNewApiKey(req, res, next) {
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 
-router.get('/key/:type', utils.rateLimit.publicApiBruteforce.prevent, function getPermissionKeyData(req, res, next) {
+router.get("/key/:type", utils.rateLimit.publicApiBruteforce.prevent, function getPermissionKeyData(req, res, next) {
     var key = req.query.key;
     var type = req.params.type;
     if(!typeCheck("String", key)) {
         var err = TypeError("Query \"key\" must be a string.  Got " + typeof key);
         err.status = 400;
-        return next(err)
+        return next(err);
     }
     if(type !== api.permissionKeyType.NEW_ACCOUNT && type !== api.permissionKeyType.UNKNOWN) {
         var err = TypeError("Forbidden");
         err.status = 403;
-        return next(err)
+        return next(err);
     }
     api.getPermissionKeyData(type, key, function(err, data) {
         if(err) {
             return next(err);
         }
         return res.json(data);
-    })
+    });
 });
 
 

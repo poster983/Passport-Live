@@ -29,16 +29,12 @@ var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
 var passport = require("passport");
 var config = require("config");
-var ssarv = require("ssarv");
+var moment = require("moment");
 
 var miscApi = require("../../modules/passport-api/index.js");
 var securityJS = require("../../modules/passport-api/security.js");
-
 var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passApi = require("../../modules/passport-api/passes.js");
-var moment = require("moment");
-
-//var for backwards compadability.  neads to be removed later 
 
 
 
@@ -664,22 +660,6 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
     });
 }
 
-/**/
-
-/** Checks if an accuunt is missing required fields by that dashboard  
-    * @function studentCheckIfIncomplete
-    * @link module:api/accounts
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/incomplete/dashboard/student
-    * @apiresponse {json} Returns missing fields
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo SSARV
-*/
-router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
-    //todo 
-});
 
 
 
@@ -717,6 +697,22 @@ router.patch("/password/", passport.authenticate('jwt', { session: false}), func
         return next(err);
     }
 });
+
+/** Updates user Password   
+    * @function updateUserPassword
+    * @link module:api/accounts
+    * @param {request} req
+    * @property {Object} body
+    * @property {String} body.current - The user's current password.
+    * @property {String} body.new - The user's new password.
+    * @property {String} body.newVerify - body.new again.
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api PATCH /api/account/password/
+    * @apiresponse {json} Status Code
+    * @returns {callback} - See: {@link nextCallback} 
+*/
+router.post("/send-activation", passport.authenticate('jwt', { session: false}), );
 
 module.exports = router;
 

@@ -23,10 +23,10 @@ email: hi@josephhassell.com
 * @module js/utils 
 */
 var jwt = require("jsonwebtoken");
-var shortid = require('shortid');
+var shortid = require("shortid");
 var config = require("config");
 var moment = require("moment");
-var uaParser = require('ua-parser-js');
+var uaParser = require("ua-parser-js");
 /*var typeCheck = require("./customTypeCheck.js");
 exports.typeCheck = {};
 exports.typeCheck = typeCheck*/
@@ -56,7 +56,7 @@ exports.urlQuery = (params) => {
 * @param {Object} [options]
 * @param {string} [options.failRedirect] - if set, the user will be redirected here on a failure
 */
-exports.middlewarePermission = (dashboards, options) => {
+exports.dashboardPermission = (dashboards, options) => {
     let getErr = () => {
         //make english error
         let dashList = "";
@@ -72,21 +72,21 @@ exports.middlewarePermission = (dashboards, options) => {
         let err = new Error("Account must have access to " + dashList + " dashboards to access this resource");
         err.status = 403;
         return err;
-    }
+    };
     return function(req, res, next) {
         if(req.user) {
-            if(exports.checkPermission(req.user.userGroup, dashboards)) {
+            if(exports.checkDashboards(req.user.userGroup, dashboards)) {
                 return next();
             } else {
                 if(options && options.failRedirect) {
-                    return res.redirect(307, options.failRedirect)
+                    return res.redirect(307, options.failRedirect);
                 } else {
                     return next(getErr());
                 }
             }
         }
-    }
-}
+    };
+};
 
 /** 
 * Checks if the allowed dashboards for the given usergroup are present
@@ -95,21 +95,21 @@ exports.middlewarePermission = (dashboards, options) => {
 * @param {string[]} dashboards - Holds the allowed dashboards (Like "student", "teacher", "administrator")
 * @returns {boolean} 
 */
-exports.checkPermission = (userGroup, dashboards) => {
+exports.checkDashboards = (userGroup, dashboards) => {
     
     //return new Promise((resolve, reject) => {
-        let groupDashboards = exports.getAllowedDashboards(userGroup);
-        if(groupDashboards.length > 0) {
-            if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
-                return true;
-            } else {
-                return false;
-            }
+    let groupDashboards = exports.getAllowedDashboards(userGroup);
+    if(groupDashboards.length > 0) {
+        if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
+            return true;
         } else {
             return false;
         }
+    } else {
+        return false;
+    }
     //})
-} 
+}; 
 
 /** 
 * Gets the allowed dashboard array from the usergroup configs
@@ -123,7 +123,7 @@ exports.getAllowedDashboards = (userGroup) => {
     } else {
         return [];
     }
-}
+};
 
 
 /** 
@@ -135,7 +135,7 @@ exports.getAllowedDashboards = (userGroup) => {
 * @returns {function}
 */
 exports.compileDashboardNav = (req,res,next) => {
-    let sidenav = {}
+    let sidenav = {};
     //make the dashboard picker
     sidenav.dashboards = {};
     sidenav.dashboards.names = exports.getAllowedDashboards(req.user.userGroup);
@@ -144,16 +144,16 @@ exports.compileDashboardNav = (req,res,next) => {
     } else {sidenav.dashboards.showPicker=true;}
     sidenav.dashboards.format = function () {
         return this.substring(0,1).toUpperCase()  + this.substring(1).toLowerCase();
-    }
+    };
     sidenav.dashboards.icon = function () {
         if(this == "student") {return "book";}
         else if(this == "teacher") {return "assignment";}
-        else if(this == "administrator") {return "gavel"}
-        else {return "computer"}
-    }
+        else if(this == "administrator") {return "gavel";}
+        else {return "computer";}
+    };
     req.sidenav = sidenav;
     return next();
-}
+};
 
 /**
 * Removes data like passwords and other sensitive info before sending it to the user 
@@ -174,7 +174,7 @@ exports.cleanUser = function(user){
     }
 },
 
- /**
+/**
     * Checks if req is using DSCM and then allows passport to view the data 
     * @function dscm
     * @link module:js/utils
@@ -203,9 +203,9 @@ exports.dscm = function(req, res, next) {
 
                 var err = new Error("Unauthorized");
                 err.status = 401;
-                return next(err)
+                return next(err);
             }
-        })
+        });
 
     } else {
         if(req.header("authorization") && req.signedCookies.JWT) {
@@ -217,20 +217,20 @@ exports.dscm = function(req, res, next) {
                     //console.log("WEEEEEEEEEEEE")
                     var err = new Error("Unauthorized");
                     err.status = 401;
-                    return next(err)
+                    return next(err);
                 } else {
                     return next();
                 }
-            })
+            });
         } else {
             return next();
         }
         
     }
     
-}
+};
 
-     /**
+/**
         * Checks if period is a period constant  
         * @function checkPeriod
         * @link module:js/utils
@@ -238,26 +238,26 @@ exports.dscm = function(req, res, next) {
         * @param {function} done - callback. 
         * @returns {done} Includes error, and a boolean.  True for valid period, false for not
         */
-  exports.checkPeriod = function(period, done) {
-      var periodConst = config.get("schedule.periods");
-      if(periodConst.includes(period)) {
-          return done(null, true);
-      } else {
-          return done(null, false);
-      }
-  }
+exports.checkPeriod = function(period, done) {
+    var periodConst = config.get("schedule.periods");
+    if(periodConst.includes(period)) {
+        return done(null, true);
+    } else {
+        return done(null, false);
+    }
+};
 
-    /**
+/**
         * Generates a secure token/key
         * @function generateSecureKey
         * @link module:js/utils
         * @returns {string} Secure token/key.
         */
-  exports.generateSecureKey = function() {
-      return shortid.generate() + shortid.generate();
-  }
+exports.generateSecureKey = function() {
+    return shortid.generate() + shortid.generate();
+};
 
-    /**
+/**
         * Checks if password is complient with password rules in the config file.  
         * @function checkPasswordPolicy
         * @link module:js/utils
@@ -275,20 +275,20 @@ exports.checkPasswordPolicy = function(password) {
         var rules = config.get("passwordPolicy.regexRules");
         if(password.length >= config.get("passwordPolicy.minimumLength") && password.length <= config.get("passwordPolicy.maximumLength")) {
             if(rules.length <=0) {
-                return resolve({valid: true})
+                return resolve({valid: true});
             }
             for(var x = 0; x < rules.length; x++) {
                 if(!new RegExp(rules[x]).test(password)) {
-                    var err = new Error(config.get("passwordPolicy.humanReadableRule") + "Failed at regex test: " + rules[x])
+                    var err = new Error(config.get("passwordPolicy.humanReadableRule") + "Failed at regex test: " + rules[x]);
                     err.status = 400;
                     return resolve({
                         valid: false,
                         failedAt: rules[x],
                         humanReadableRule: config.get("passwordPolicy.humanReadableRule")
-                    })
+                    });
                 }
                 if(x >= rules.length-1) {
-                    return resolve({valid: true})
+                    return resolve({valid: true});
                 }
             }
         } else {
@@ -299,11 +299,11 @@ exports.checkPasswordPolicy = function(password) {
                 valid: false,
                 failedAt: "{" + config.get("passwordPolicy.minimumLength") + "," + config.get("passwordPolicy.maximumLength") + "}",
                 humanReadableRule: config.get("passwordPolicy.humanReadableRule")
-            })
+            });
         }
-    })
+    });
     
-}
+};
 
 /**
     * Given a user agent, the function determines if it is compatible with passport's web app
@@ -332,7 +332,7 @@ exports.getBrowserSupport = function(userAgent) {
                 blocked:   false,
                 outdated:  false,
                 ua: ua
-            } 
+            }; 
             if(bS.supported && bS.supported[ua.browser.name]) {
                 //FOUND BROWSER IN SUPPORTED LIST
                 if(ua.browser.major >= bS.supported[ua.browser.name] || bS.supported[ua.browser.name] === true) { 
@@ -359,8 +359,8 @@ exports.getBrowserSupport = function(userAgent) {
             return resolve({untested: true, supported: false, blocked: false, outdated: false, ua: ua});
             
         }
-    })  
-}
+    });  
+};
 
 
 /**

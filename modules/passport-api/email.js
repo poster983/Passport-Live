@@ -23,11 +23,11 @@ email: hi@josephhassell.com
 * @module js/email
 */
 
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
-var config = require('config');
-const nodemailer = require('nodemailer');
-var emailTemplates = require('./emailTemplates/index.js');
+var r = require("rethinkdb");
+var db = require("../../modules/db/index.js");
+var config = require("config");
+const nodemailer = require("nodemailer");
+var emailTemplates = require("./emailTemplates/index.js");
 var securityJS = require("./security.js");
 //console.log(config.get("email.nodemailerConfig"))
 var SMTPTransporter = nodemailer.createTransport(config.get("email.nodemailerConfig"));
@@ -48,7 +48,7 @@ exports.sendMail = function(messageConfig, options) {
             if(!messageConfig.from) {
                 messageConfig.from = "";
                 if(config.has("email.defaults.fromName")) {
-                    messageConfig.from += config.get("email.defaults.fromName")
+                    messageConfig.from += config.get("email.defaults.fromName");
                 }
                 if(config.has("email.defaults.fromEmail") && config.get("email.defaults.fromEmail")) {
                     messageConfig.from += " <" + config.get("email.defaults.fromEmail") + ">";
@@ -59,17 +59,17 @@ exports.sendMail = function(messageConfig, options) {
             //console.log(messageConfig, config.get("email.nodemailerConfig"))
             //console.log(SMTPTransporter)
             SMTPTransporter.sendMail(messageConfig).then(function(resp) {
-                return resolve(resp)
+                return resolve(resp);
             }).catch(function(err) {
-                return reject(err)
-            })
+                return reject(err);
+            });
         } else {
             var err = new Error("messageConfig undefined");
             err.status = 500;
-            return reject(err)
+            return reject(err);
         }
-    })
-}
+    });
+};
 
 
 /*
@@ -126,7 +126,7 @@ exports.sendNewAccountWithPassEmail = function(mailOptions) {
 * @param {(Object | Object[])} mailOptions
 * @param {String} mailOptions.to - Email address to send the email to. 
 * @param {Object} mailOptions.name - Name object.
-* @param {Object} mailOptions.name.first - User's First Name.
+* @param {String} mailOptions.name.first - User's First Name.
 * @param {String} mailOptions.accountID - User ID in the DB.  
 * @returns {Promise} - Job Cursor.  Kinda Useless.
 */
@@ -137,7 +137,7 @@ exports.sendActivationEmail = function(mailOptions) {
             var jobs = [];
             if(mailOptions.length)
                 for(var x = 0; x < mailOptions.length; x++) {
-                    var job = db.queue.activateEmail().createJob()
+                    var job = db.queue.activateEmail().createJob();
                     job.to = mailOptions[x].to;
                     job.name = mailOptions[x].name;
                     job.accountID = mailOptions[x].accountID;
@@ -157,11 +157,11 @@ exports.sendActivationEmail = function(mailOptions) {
                 return resolve(cur);
             });
         } else {
-            console.log(typeof mailOptions)
-            return reject(new Error("mailOptions must be either an array or an object."))
+            console.log(typeof mailOptions);
+            return reject(new Error("mailOptions must be either an array or an object."));
         }
-    })  
-}
+    });  
+};
 /*setTimeout(function() {exports.sendActivationEmail({
     to: "example@example.log",
     name:{first: "Joey"},
@@ -175,7 +175,7 @@ exports.sendActivationEmail = function(mailOptions) {
 * @param {(Object | Object[])} mailOptions
 * @param {String} mailOptions.to - Email address to send the email to. 
 * @param {Object} mailOptions.name - Name object.
-* @param {Object} mailOptions.name.first - User's First Name.
+* @param {String} mailOptions.name.first - User's First Name.
 * @param {String} mailOptions.accountID - User ID in the DB.  
 * @returns {Promise} - Job Cursor.  Kinda Useless.
 */
@@ -186,7 +186,7 @@ exports.sendResetPasswordEmail = function(mailOptions) {
             var jobs = [];
             if(mailOptions.length)
                 for(var x = 0; x < mailOptions.length; x++) {
-                    var job = db.queue.resetPasswordEmail().createJob()
+                    var job = db.queue.resetPasswordEmail().createJob();
                     job.to = mailOptions[x].to;
                     job.name = mailOptions[x].name;
                     job.accountID = mailOptions[x].accountID;
@@ -206,11 +206,11 @@ exports.sendResetPasswordEmail = function(mailOptions) {
                 return resolve(cur);
             });
         } else {
-            console.log(typeof mailOptions)
-            return reject(new Error("mailOptions must be either an array or an object."))
+            console.log(typeof mailOptions);
+            return reject(new Error("mailOptions must be either an array or an object."));
         }
-    })  
-}
+    });  
+};
 
 /*setTimeout(function() {exports.sendResetPasswordEmail({
     to: "example@example.log",
@@ -242,48 +242,48 @@ db.queue.newAccountEmail().process((job, next) => {
 
 //sendActivation Email 
 db.queue.activateEmail().process((job, next) => {
-    console.log("Attempting To Send Activation Email.")
+    console.log("Attempting To Send Activation Email.");
     securityJS.newKey.activateAccount(job.accountID).then((key) => {
         var messageConfig = {
             to: job.to,
             subject: "Activate Your New Passport ID",
             text: "To activate your passport account, go here: " + config.get("server.domain") + "/account/activate?key=" + key,
             html: emailTemplates.activateAccount(job.name, key).html
-        }
+        };
         exports.sendMail(messageConfig).then((trans) => {
             console.log(trans, "debig");
-            return next(null, trans)
+            return next(null, trans);
         }).catch((err) => {
             console.error(err, "ERROR ");
             return next(err);
         });
-    }).catch((err) => {return next(err);})
+    }).catch((err) => {return next(err);});
     
-})
+});
 
 
 db.queue.resetPasswordEmail().process((job, next) => {
-    console.log("Attempting To Send a Reset Password Email.")
+    console.log("Attempting To Send a Reset Password Email.");
     securityJS.newKey.resetPassword(job.accountID).then((key) => {
         var messageConfig = {
             to: job.to,
             subject: "Reset Your Passport ID's Password",
             text: "To reset your passport ID's password, go here: " + config.get("server.domain") + "/account/resetPassword?key=" + key,
             html: emailTemplates.resetPassword(job.name, key).html
-        }
+        };
         exports.sendMail(messageConfig).then((trans) => {
             console.log(trans, "debig");
             if(trans.rejected.length >0) {
-                var err = new Error("Failed to send " + trans.rejected.length + " email(s). ")
-                return next(err)
+                var err = new Error("Failed to send " + trans.rejected.length + " email(s). ");
+                return next(err);
             }
-            return next(null, trans)
+            return next(null, trans);
         }).catch((err) => {
             return next(err);
         });
-    }).catch((err) => {return next(err);})
+    }).catch((err) => {return next(err);});
     
-})
+});
 
 /**
  * Nodemailer Message options. Can use any property found [Here]{@link: https://nodemailer.com/message/}
