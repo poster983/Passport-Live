@@ -897,7 +897,37 @@ exports.setVerification = function(id, isVerified) {
     });
 };
 
-/*setTimeout(function() {
-    exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
-}, 1000);*/
+/**
+* Sends an activation email to a single user.
+* @link module:js/accounts
+* @param {String} userID - Account ID
+* @returns {Promise} - returns the cursor of the email job log.
+*/
+exports.sendActivation = (userID) => {
+    return new Promise((resolve, reject) => {
+        if(!userID || typeof userID !== "string") {
+            let err = new TypeError("userID expected a string, got: " + typeof userID);
+            err.status = 400;
+            return reject(err);
+        }
+        //get account
+        return r_.table("accounts").get(userID).pluck("id", "email", {name: ["first"]}, "isVerified").run()
+            .then((accounts) => {
+                //check if account exists
+                if(!accounts) {
+                    let err = new Error("Account Not Found");
+                    err.status = 404;
+                    return reject(err);
+                }
+                //check if the user is already verified
+                if(accounts.isVerified) {
+                    let err = new Error("User already verified");
+                    err.status = 406;
+                    return reject(err);
+                }
+
+                //
+            })
+    })
+}
 
