@@ -909,24 +909,24 @@ exports.sendActivation = (userID) => {
             return reject(err);
         }
         //get account
-        return r_.table("accounts").get(userID).pluck("id", "email", "name", "isVerified").run()
-            .then((accounts) => {
+        return r_.table("accounts").get(userID).pluck("email", "name", "isVerified").default(null).run()
+            .then((account) => {
                 //check if account exists
-                if(!accounts) {
+                if(!account) {
                     let err = new Error("Account Not Found");
                     err.status = 404;
                     throw err;
                 }
                 //check if the user is already verified
-                if(accounts.isVerified) {
+                if(account.isVerified) {
                     let err = new Error("User already verified");
                     err.status = 406;
                     throw err;
                 }
 
                 //prepare object to pass to email function and send it on to the email queue 
-                return emailJS.sendActivationEmail({to: accounts.email, name: name, accountID: userID});
-            });
+                return emailJS.sendActivationEmail({to: account.email, name: account.name, accountID: userID});
+            }).then(resolve).catch(reject);
     });
 };
 
