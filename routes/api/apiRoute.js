@@ -22,26 +22,26 @@ email: hi@josephhassell.com
 /**
 * @module apiRoute
 */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var r = require('rethinkdb');
+var r = require("rethinkdb");
 //var bcrypt = require('bcrypt-nodejs');
-var passport = require('passport');
-var config = require('config');
-var utils = require('../../modules/passport-utils/index.js');
-var api = require('../../modules/passport-api/index.js'); //("jdsfak"); 
-var cors = require('cors');
+var passport = require("passport");
+var config = require("config");
+var utils = require("../../modules/passport-utils/index.js");
+var api = require("../../modules/passport-api/index.js"); //("jdsfak"); 
+var cors = require("cors");
 var ssarv = require("ssarv");
 
 var accountApi = require("../../modules/passport-api/accounts.js");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
 
-  // Rethink db connection
+// Rethink db connection
 var connection = null;
-r.connect( {host: config.get('rethinkdb.host'), port: config.get('rethinkdb.port'), db: config.get('rethinkdb.database'), password: config.get("rethinkdb.password")}, function(err, conn) {
+r.connect( {host: config.get("rethinkdb.host"), port: config.get("rethinkdb.port"), db: config.get("rethinkdb.database"), password: config.get("rethinkdb.password")}, function(err, conn) {
     if (err) throw err;
     connection = conn;
 });
@@ -83,15 +83,15 @@ function serializeUser(req, res, done) {
     //req.user = req.user[0];
     req.user = utils.cleanUser(req.user);
     done();
-};
+}
 
 
 //debug function
 function getHead(req, res, done) {
-    console.log(req.headers)
+    console.log(req.headers);
     console.log(req.header("Authorization"));
     done();
-};
+}
 
 /** 
 AUTH 
@@ -150,7 +150,7 @@ SECURITY
 schedule
 **/
 //new Schedule Definition 
-router.post('/schedule/definition', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post("/schedule/definition", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
     var name=req.body.name;
     var scheduleData=req.body.scheduleData;
 
@@ -160,10 +160,10 @@ router.post('/schedule/definition', passport.authenticate('jwt', { session: fals
         }
         res.status(201).json(data);
     });
-})
+});
 //get All Schedule Definition
 //ssarv(["teacher", "counselor", "lc", "dev", "admin"], {locationOfRoles: "user.userGroup"}), 
-router.get('/schedule/definition', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+router.get("/schedule/definition", passport.authenticate("jwt", { session: false}), function(req, res, next) {
 
     api.getScheduleDefinition(connection, null, function(err, data) {
         if(err) {
@@ -171,10 +171,10 @@ router.get('/schedule/definition', passport.authenticate('jwt', { session: false
         }
         res.json(data);
     });
-})
+});
 
 //get Schedule Definition
-router.get('/schedule/definition/:id', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+router.get("/schedule/definition/:id", passport.authenticate("jwt", { session: false}), function(req, res, next) {
     var id=req.params.id;
 
     api.getScheduleDefinition(connection, id, function(err, data) {
@@ -183,10 +183,10 @@ router.get('/schedule/definition/:id', passport.authenticate('jwt', { session: f
         }
         res.json(data);
     });
-})
+});
 //schedule Single Schedule Definition
 
-router.post('/schedule/date', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
+router.post("/schedule/date", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -197,12 +197,12 @@ router.post('/schedule/date', passport.authenticate('jwt', { session: false}), s
 
         res.status(201).json(data);
     });
-})
-router.get('/schedule/date/:id', function(req, res, next) {
+});
+router.get("/schedule/date/:id", function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.post('/schedule/repeat', passport.authenticate('jwt', { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post("/schedule/repeat", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var repeatingRule=req.body.repeatingRule;
 
@@ -212,13 +212,13 @@ router.post('/schedule/repeat', passport.authenticate('jwt', { session: false}),
         }
         res.status(201).json(data);
     });
-})
+});
 
-router.get('/schedule/repeat/:id', function(req, res, next) {
+router.get("/schedule/repeat/:id", function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.get('/schedule/for/:date', passport.authenticate('jwt', { session: false}), function(req, res, next) {
+router.get("/schedule/for/:date", passport.authenticate("jwt", { session: false}), function(req, res, next) {
     var date=req.params.date;
     api.getScheduleOfADate(connection, date, false, function(err, data) {
         if(err) {
@@ -227,7 +227,7 @@ router.get('/schedule/for/:date', passport.authenticate('jwt', { session: false}
 
         res.json(data);
     });
-})
+});
 
 /**
 SERVER
@@ -244,13 +244,13 @@ SERVER
     * @apiresponse {object} Returns Array with all constants
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/schedule/', utils.rateLimit.publicApiBruteforce.prevent, function getScheduleConstants(req, res, next) {
+router.get("/server/config/schedule/", utils.rateLimit.publicApiBruteforce.prevent, function getScheduleConstants(req, res, next) {
     try {
-        res.json(config.get('schedule'));
+        res.json(config.get("schedule"));
     } catch (e) {
         next(e);
     }
-})
+});
 
 /**
     * GETs all user groups defined in the config
@@ -263,15 +263,15 @@ router.get('/server/config/schedule/', utils.rateLimit.publicApiBruteforce.preve
     * @apiresponse {json} All usergroup data
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */ 
-router.get('/server/config/userGroups/', utils.rateLimit.publicApiBruteforce.prevent, function getUserGroups(req, res, next) {
+router.get("/server/config/userGroups/", utils.rateLimit.publicApiBruteforce.prevent, function getUserGroups(req, res, next) {
     try {
-        res.json(config.get('userGroups'));
+        res.json(config.get("userGroups"));
     } catch (e) {
         next(e);
     }
-})
+});
 
-router.get('/server/config/passGroup', utils.rateLimit.publicApiBruteforce.prevent, getPassGroups);
+router.get("/server/config/passGroup", utils.rateLimit.publicApiBruteforce.prevent, getPassGroups);
 /**
     * GETs pass groups defined in the config
     * @function handleGetAccountsByName
@@ -285,10 +285,10 @@ router.get('/server/config/passGroup', utils.rateLimit.publicApiBruteforce.preve
     */
 function getPassGroups(req, res, next) {
     api.getPassGroups(function(err, data) {
-        if(err) {return next(err)}
+        if(err) {return next(err);}
 
         res.json(data);  
-    })
+    });
 }
 
 
@@ -356,9 +356,9 @@ router.get("/test/date/:dateTime", function(req, res, next) {
 
 
 //default Responce
-router.get('/', function(req, res, next) {
-  res.status(418)
-	res.send('Brewing your coffee');
+router.get("/", function(req, res, next) {
+    res.status(418);
+    res.send("Brewing your coffee");
 
 });
 
@@ -370,18 +370,18 @@ module.exports = router;
  * A name of a userGroup defined in the configs
  * @typedef {string} userGroup
  */
- /**
+/**
  * The request object 
  * @typedef {object} request
  */
 
-  /**
+/**
  * The response object sent to the requester 
  * @typedef {object} response
  */
 
 
- /**
+/**
  * @callback nextCallback
  * @param {object} err - Any errors that may arrise should be passed through here
  */

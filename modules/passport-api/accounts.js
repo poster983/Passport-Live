@@ -28,13 +28,11 @@ var r_ = db.dash();
 var config = require("config");
 var bcrypt = require("bcrypt-nodejs");
 var utils = require("../passport-utils/index.js");
-var human = require("humanparser");
 var moment = require("moment");
-var _ = require("underscore");
 const util = require("util");
 var typeCheck = require("type-check").typeCheck;
 var securityJS = require("./security.js");
-var emailJS = require("./email.js");
+let emailJS = require("./email.js");
 var accountScheduleJS = require("./accountSchedule.js");
 
 /** ACCOUNT TYPE DEFS **/ 
@@ -897,7 +895,39 @@ exports.setVerification = function(id, isVerified) {
     });
 };
 
-/*setTimeout(function() {
-    exports.setVerification("44399ee5-9d08-4f4b-92b5-fd502c0841d9", true).then((res) => {console.log(res);}).catch((err) => console.log(err))
-}, 1000);*/
+/**
+* Sends an activation email to a single user.
+* @link module:js/accounts
+* @param {String} userID - Account ID
+* @returns {Promise} - returns the cursor of the email job log.
+*/
+exports.sendActivation = (userID) => {
+    return new Promise((resolve, reject) => {
+        if(!userID || typeof userID !== "string") {
+            let err = new TypeError("userID expected a string, got: " + typeof userID);
+            err.status = 400;
+            return reject(err);
+        }
+        //get account
+        return r_.table("accounts").get(userID).pluck("email", "name", "isVerified").default(null).run()
+            .then((account) => {
+                //check if account exists
+                if(!account) {
+                    let err = new Error("Account Not Found");
+                    err.status = 404;
+                    throw err;
+                }
+                //check if the user is already verified
+                if(account.isVerified) {
+                    let err = new Error("User already verified");
+                    err.status = 406;
+                    throw err;
+                }
+
+                //prepare object to pass to email function and send it on to the email queue 
+                return emailJS.sendActivationEmail({to: account.email, name: account.name, accountID: userID});
+            }).then(resolve).catch(reject);
+    });
+};
+
 

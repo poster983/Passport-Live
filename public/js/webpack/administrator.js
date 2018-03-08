@@ -607,27 +607,27 @@ $("#accountPermKey-submit").on("click", (e) => {
     console.log(time.val())*/
     //console.log(new Date(date).)
     if(!date.val() && time.val()) {
-        buttonLoader.warning("#accountPermKey-submit", 2000)
-        return Materialize.toast("Date required for timeout", 4000)
+        buttonLoader.warning("#accountPermKey-submit", 2000);
+        return Materialize.toast("Date required for timeout", 4000);
     }
 
     //check tally 
-    let tallyNum = parseInt(tally.val())
+    let tallyNum = parseInt(tally.val());
     if(tally.val() && isNaN(tallyNum)) {
-        Materialize.toast("Invalid tally", 4000)
-        return buttonLoader.warning("#accountPermKey-submit", 2000)
+        Materialize.toast("Invalid tally", 4000);
+        return buttonLoader.warning("#accountPermKey-submit", 2000);
     }
     if(userGroups.val().length > 0) {
 
         //Submit
         let returner = {
             userGroups: userGroups.val()
-        }
+        };
         if(datetime.isValid() || !isNaN(tallyNum)) {
-            returner.timeout = {}
+            returner.timeout = {};
         }
         if(datetime.isValid()) {
-            returner.timeout.time = datetime.toISOString()
+            returner.timeout.time = datetime.toISOString();
         }
         if(!isNaN(tallyNum)) {
             returner.timeout.tally = tallyNum;
@@ -635,25 +635,25 @@ $("#accountPermKey-submit").on("click", (e) => {
         //console.log(returner)
         securityJS.newAccount(returner).then((res) => {
             if(res.key) {
-                buttonLoader.success("#accountPermKey-submit", 2000)
+                buttonLoader.success("#accountPermKey-submit", 2000);
                 let fullURL = location.protocol+"//"+location.hostname+(location.port ? ":"+location.port: "");
                 let link = fullURL + "/auth/signup?pk=" + res.key;
                 $("#accountPermKey-response").html("<p>Permission Key: <strong>" + res.key + "</strong></p><br> <p>Signup link: <a href=\"" + link + "\">" + link + "</a></p>");
-                userGroups.val(null)
+                userGroups.val(null);
                 userGroups.material_select();
                 return true;
             } else {
-                Materialize.toast("Key was not returned. Please try again.", 4000)
-                return buttonLoader.warning("#accountPermKey-submit", 2000)
+                Materialize.toast("Key was not returned. Please try again.", 4000);
+                return buttonLoader.warning("#accountPermKey-submit", 2000);
             }
-        })
+        });
         
 
     } else {
-        Materialize.toast("User Group Required", 4000)
-        buttonLoader.warning("#accountPermKey-submit", 2000)
+        Materialize.toast("User Group Required", 4000);
+        buttonLoader.warning("#accountPermKey-submit", 2000);
     }
-})
+});
 
 
 

@@ -34,7 +34,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 
 //
 /* GET Student page. */
-router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["student"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.dashboardPermission(["student"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {}
     user.name = req.user.name;
     user.email = req.user.email;

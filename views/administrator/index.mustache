@@ -306,7 +306,12 @@ email: hi@josephhassell.com
                 ).append(
                   $("<p/>").attr("title", "User Group").prepend("Account Type: ").append($("<strong/>")
                     .html(userArray[x].userGroup))
-                ).append(button)
+                )
+                //TEMPORARY BUTTON.  REMOVE
+                .append(
+                  $("<button/>").html("SEND ACTIVATION EMAIL (Temporary button)").attr("onclick", "tempSendActivationEmail(\""+userArray[x].id+"\");")
+                )
+                .append(button)
                 listElm.push(li);
                 if (x >= userArray.length - 1) {
                   resolve(listElm)
@@ -338,6 +343,23 @@ email: hi@josephhassell.com
       }
     });
 
+    //TEMPORARY FUNCTION FOR TEMP BUTTON 
+    function tempSendActivationEmail(id) {
+      $.ajax({
+        type: "post",
+        url: "/api/account/" + id + "/send-activation",
+        dataType: "text",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
+        },
+        success: function (data) {
+          Materialize.toast(data + ", Adding to Queue", 10000);
+        },
+        error: function (jqXHR) {
+          errorHand(jqXHR);
+        }
+      });
+    }
     /*new AccountOverlay("797fe81b-cf0a-448b-8782-6e35b711e535", function(err) {
       if(err) {errorHand(err);}
     }).generateOverlay("overlay797fe81b-cf0a-448b-8782-6e35b711e535", true, false);*/

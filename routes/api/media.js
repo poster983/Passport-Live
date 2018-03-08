@@ -22,7 +22,7 @@ email: hi@josephhassell.com
 */
 var express = require("express");
 var router = express.Router();
-var r = require("rethinkdb")
+var r = require("rethinkdb");
 var db = require("../../modules/db/index.js");
 var GeoPattern = require("geopattern");
 var jdenticon = require("jdenticon");
@@ -31,7 +31,7 @@ var cors = require("cors");
 var utils = require("../../modules/passport-utils/index.js");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
 jdenticon.config = {
     lightness: {
@@ -69,10 +69,10 @@ router.get("/background/:id.svg", utils.rateLimit.mediaBruteforce.prevent, funct
         } else {
             var err = new Error("Not Found");
             err.status = 404;
-            return next(err)
+            return next(err);
         }
 
-    })
+    });
     
 });
 
@@ -89,28 +89,28 @@ router.get("/background/:id.svg", utils.rateLimit.mediaBruteforce.prevent, funct
 * @todo move rethink db to passport-api module
 */
 router.get("/avatar/:id/:size.svg", utils.rateLimit.mediaBruteforce.prevent, function getAvatar(req, res, next) {
-    var size = parseInt(req.params.size)
+    var size = parseInt(req.params.size);
     if(isNaN(size)) {
-         var err = new Error("Size must be a number");
-                err.status = 400;
-                return next(err)
+        let err = new Error("Size must be a number");
+        err.status = 400;
+        return next(err);
     } else {
         r.table("accounts").get(req.params.id).run(db.conn(), function(err, data) {
             if (err) {
                 return next(err);
             } 
             if(data) {
-                var hash = crypto.createHash("md5").update(data.name.salutation + " " + data.name.first + " " + data.name.last).digest("hex")
+                var hash = crypto.createHash("md5").update(data.name.salutation + " " + data.name.first + " " + data.name.last).digest("hex");
                 var svg = jdenticon.toSvg(hash, size);
                 res.setHeader("Content-Type", "image/svg+xml");
                 res.status(200).send(svg);
             } else {
-                var err = new Error("Not Found");
+                let err = new Error("Not Found");
                 err.status = 404;
-                return next(err)
+                return next(err);
             }
 
-        })
+        });
     }
 });
 

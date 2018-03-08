@@ -3,7 +3,7 @@ var config = require("config");
 
 module.exports = function(name, activateLinkKey) {
   var bURL = config.get("server.domain");
-  var activateLink = bURL + "/account/resetPassword?utm_source=password_reset_email&utm_medium=emailkey=" + activateLinkKey;
+  var activateLink = bURL + "/account/resetPassword?utm_source=password_reset_email&utm_medium=email&key=" + activateLinkKey;
   return mjml2html(`
 <mjml>
 <mj-head>

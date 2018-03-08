@@ -29,7 +29,7 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
     customHead = config.get("webInterface.customHeadCode");
 }
 
-router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.dashboardPermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {};
     user.name = req.user.name;
     user.email = req.user.email;
@@ -48,7 +48,7 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermiss
     res.render("administrator/index", { doc_Title: "Passport-Administrator", customHead: customHead, user: user, cards: cards, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
 });
 
-router.get("/import", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
+router.get("/import", checkAuth.ensureLoggedIn("/auth/login"), utils.dashboardPermission(["administrator"], {failRedirect: "/"}), utils.compileDashboardNav, function(req, res, next) {
     var user = {};
     user.name = req.user.name;
     user.email = req.user.email;

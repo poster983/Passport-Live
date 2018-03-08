@@ -24,26 +24,22 @@ email: hi@josephhassell.com
 var express = require("express");
 var router = express.Router();
 var r = require("../../modules/db/index.js");
-var cors = require('cors');
+var cors = require("cors");
 var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/accounts.js"); //("jdsfak"); 
 var passport = require("passport");
 var config = require("config");
-var ssarv = require("ssarv");
+var moment = require("moment");
 
 var miscApi = require("../../modules/passport-api/index.js");
 var securityJS = require("../../modules/passport-api/security.js");
-
 var scheduleApi = require("../../modules/passport-api/schedules.js");
 var passApi = require("../../modules/passport-api/passes.js");
-var moment = require("moment");
-
-//var for backwards compadability.  neads to be removed later 
 
 
 
 router.use(cors());
-router.options('*', cors());
+router.options("*", cors());
 
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
@@ -52,7 +48,7 @@ function serializeUser(req, res, done) {
     //req.user = req.user[0];
     req.user = utils.cleanUser(req.user);
     done();
-};
+}
 
 
 //NEW ACCOUNT//
@@ -96,8 +92,8 @@ router.post("/new/:userGroup/", utils.rateLimit.publicApiBruteforce.prevent, fun
     console.log(userGroup);
     //Checks to see if the account needs a verification key
     var promise = new Promise(function(resolve, reject) {
-        if (config.has('userGroups.' + userGroup)) {
-            if(config.get('userGroups.' + userGroup + ".verifyAccountCreation")) {
+        if (config.has("userGroups." + userGroup)) {
+            if(config.get("userGroups." + userGroup + ".verifyAccountCreation")) {
                 if(!permissionKey) {
                     var err = new Error("Permission Key Required");
                     err.status = 403;
@@ -159,7 +155,7 @@ router.post("/new/:userGroup/", utils.rateLimit.publicApiBruteforce.prevent, fun
     * @apiresponse {Object[]} Returnes the safe info
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/", passport.authenticate('jwt', { session: false}), function searchAccounts(req, res, next) {
+router.get("/", passport.authenticate("jwt", { session: false}), function searchAccounts(req, res, next) {
     if(!req.query.name) {
         if(req.query.name_salutation || req.query.name_first || req.query.name_last) {
             req.query.name = {};
@@ -200,7 +196,7 @@ router.get("/", passport.authenticate('jwt', { session: false}), function search
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
 //GET FULL ACCOUNT (WITH SAFTEY REMOVAL)//
-router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function handleGetAccountsById(req, res, next) {
+router.get("/id/:id/", passport.authenticate("jwt", { session: false}), function handleGetAccountsById(req, res, next) {
     var id = req.params.id;
     api.getUserByID(id, function(err, data) {
         if(err) {
@@ -223,7 +219,7 @@ router.get("/id/:id/", passport.authenticate('jwt', { session: false}), function
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo KILL OFF WHEN AUTOCOMPLETE WITH IDs ARE ADDED.  PRIVACY RISK!
     */
-router.get("/email/:email/", passport.authenticate('jwt', { session: false}), function getAccountsByEmail(req, res, next) {
+router.get("/email/:email/", passport.authenticate("jwt", { session: false}), function getAccountsByEmail(req, res, next) {
     var email = req.params.email;
     api.getAccountByEmail(email, function(err, data) {
         if(err) {
@@ -256,7 +252,7 @@ router.get("/email/:email/", passport.authenticate('jwt', { session: false}), fu
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, and ID
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: false}), function handleGetAccountsByUserGroup(req, res, next) {
+router.get("/userGroup/:userGroup/", passport.authenticate("jwt", { session: false}), function handleGetAccountsByUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
 
     
@@ -295,7 +291,7 @@ router.get("/userGroup/:userGroup/", passport.authenticate('jwt', { session: fal
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByNameAndUserGroup(req, res, next) {
+router.get("/userGroup/:userGroup/name/:name", passport.authenticate("jwt", { session: false}), function handleGetAccountsByNameAndUserGroup(req, res, next) {
     var userGroup = req.params.userGroup;
     var name = req.params.name;
 
@@ -332,7 +328,7 @@ router.get("/userGroup/:userGroup/name/:name", passport.authenticate('jwt', { se
     * @apiresponse {json} Returns in a json object from the database, the name object, the email, the userGroup, ID, and some group fields
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/name/:name", passport.authenticate('jwt', { session: false}), function handleGetAccountsByName(req, res, next) {
+router.get("/name/:name", passport.authenticate("jwt", { session: false}), function handleGetAccountsByName(req, res, next) {
     var name = req.params.name;
 
     
@@ -369,15 +365,15 @@ router.get("/name/:name", passport.authenticate('jwt', { session: false}), funct
     * @apiresponse {json} Returns in a json object from the database, the full account
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.get("/hasClasses/", passport.authenticate('jwt', { session: false}), function getAccountsWithClasses(req, res, next) {
-    var uG = config.get('userGroups');
+router.get("/hasClasses/", passport.authenticate("jwt", { session: false}), function getAccountsWithClasses(req, res, next) {
+    var uG = config.get("userGroups");
     var valKeys = [];
     var i = 0;
     for (var key in uG) {
 
             
         console.log(i);
-        if (uG.hasOwnProperty(key) && config.has('userGroups.' + key + '.hasClasses') && config.get('userGroups.' + key + '.hasClasses') == true) {
+        if (uG.hasOwnProperty(key) && config.has("userGroups." + key + ".hasClasses") && config.get("userGroups." + key + ".hasClasses") == true) {
                
             valKeys.push(key);
         } 
@@ -460,7 +456,7 @@ function recurrConcatHasClass(keys, finalArr, done) {
     * 
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     */
-router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
+router.patch("/groupfields/", passport.authenticate("jwt", { session: false}), function handleUpdateAccountGroupFieldsByUser(req, res, next) {
     var updateDoc = req.body;
 
     api.updateAccountGroupFieldsByID(r.conn(), req.user.id, updateDoc, function(err, data) {
@@ -487,7 +483,7 @@ router.patch("/groupfields/", passport.authenticate('jwt', { session: false}), f
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
 
-router.get('/location/datetime/:dateTime/id/:id/', passport.authenticate('jwt', { session: false}), function getCurrentLocation(req, res, next) {
+router.get("/location/datetime/:dateTime/id/:id/", passport.authenticate("jwt", { session: false}), function getCurrentLocation(req, res, next) {
     var promises = [];
     if(!req.params.id) {
         var err = new Error("ID Required");
@@ -664,22 +660,6 @@ function getPeriodsInScheduleThenReformat(userID, forPeriods, scheduleKeyName, e
     });
 }
 
-/**/
-
-/** Checks if an accuunt is missing required fields by that dashboard  
-    * @function studentCheckIfIncomplete
-    * @link module:api/accounts
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api GET /api/account/incomplete/dashboard/student
-    * @apiresponse {json} Returns missing fields
-    * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
-    * @todo SSARV
-*/
-router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { session: false}), function studentCheckIfIncomplete(req, res, next) {
-    //todo 
-});
 
 
 
@@ -697,7 +677,7 @@ router.get('/incomplete/dashboard/student', passport.authenticate('jwt', { sessi
     * @apiresponse {json} Status Code
     * @returns {callback} - See: {@link nextCallback} 
 */
-router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
+router.patch("/password/", passport.authenticate("jwt", { session: false}), function updateUserPassword(req, res, next) {
     if(typeof req.body.current === "string" && typeof req.body.new === "string" && typeof req.body.newVerify === "string") {
         if(req.body.new == req.body.newVerify) {
             api.changePassword(req.user.id, req.body.current, req.body.new).then(function(trans) {
@@ -706,16 +686,36 @@ router.patch("/password/", passport.authenticate('jwt', { session: false}), func
                 return next(err);
             });
         } else {
-            var err = new Error("Passwords Do Not Match");
+            let err = new Error("Passwords Do Not Match");
             err.status = 400;
             return next(err);
         }
         
     } else {
-        var err = new Error("Body Malformed");
+        let err = new Error("Body Malformed");
         err.status = 400;
         return next(err);
     }
+});
+
+/** Sends an activation email to the user.  Will error if account is already activated   
+    * @function sendActivationEmail
+    * @link module:api/accounts
+    * @param {request} req
+    * @param {response} res
+    * @param {nextCallback} next
+    * @api POST /api/account/:id/send-activation/
+    * @apiparam {String} id - The account id to send the email to
+    * @apiresponse {String} Status Code or Error
+    * @returns {callback} - See: {@link nextCallback} 
+*/
+router.post("/:id/send-activation", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function sendActivationEmail(req, res, next) {
+    api.sendActivation(req.params.id).then(() => {
+        //just return 202 
+        return res.sendStatus(202);
+    }).catch((err) => {
+        return next(err);
+    });
 });
 
 module.exports = router;
