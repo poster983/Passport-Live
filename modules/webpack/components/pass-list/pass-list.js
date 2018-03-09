@@ -29,10 +29,10 @@ require("../pass/pass.js");
  * Polymer Element that displays and fetches a list of <passport-pass> elements.  
  * @class 
  * @property {Object[]} [passes] - The list of raw pass objects  
- * @property {Boolean} [fetchPasses=true] - if false, the element will NOT fetch the passes from the server automatically
+ * @property {Boolean} [noAutoFetch=false] - if true, the element will NOT fetch the passes from the server automatically
  * @property {String} [userId] - The ID of the 
  * @example
- * <passport-pass-list fetchPasses></passport-pass-list>
+ * <passport-pass-list noAutoFetch></passport-pass-list>
  */
 class PassportPassList extends polymer.Element {
     static get template() {
@@ -48,9 +48,9 @@ class PassportPassList extends polymer.Element {
                 type: Array,
                 notify: true
             },
-            fetchPasses: {
+            noAutoFetch: {
                 type: Boolean,
-                value: true
+                value: false
             },
             userId: {
                 type: String,
