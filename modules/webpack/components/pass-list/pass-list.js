@@ -74,12 +74,21 @@ class PassportPassList extends polymer.Element {
     refreshPasses() {
 
     }
+
     _getPassHead(pass) {
-        if(!this.forUser || this.forUser.length<1) {
+        if(this.forUser === pass.migrator.id) {
+            //show toPerson in title
+            return this._formatName(pass.toPerson);
+        } else if(this.forUser === pass.migrator.id) {
+            //show migrator in title
+            return this._formatName(pass.migrator);
+        } else {
             //if no main user is provided,
-            return this._formatName(pass.migrator) + " to " + this._formatName(pass.toPerson)
-        } else if(this.forUser )
+            return this._formatName(pass.migrator) + " to " + this._formatName(pass.toPerson);
+        }
     }
+
+    
     _formatName(nameObject) {
         //chack if the key is a string, if not set var as an empty string
         let first = typeof nameObject.first === "string"?utils.capitalizeFirstLetter(nameObject.first):"";
