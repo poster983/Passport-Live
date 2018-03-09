@@ -22,6 +22,7 @@ email: hi@josephhassell.com
 let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass-state-badge.template.html");
 
+let utils = require("../../utils/index.js");
 //components
 require("@polymer/paper-styles/color.js");
 
@@ -53,7 +54,7 @@ class PassportPassStateBadge extends polymer.Element {
         };
     }
     _computeState(state) {
-        return state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+        return utils.capitalizeFirstLetter(state);
     }
     /**
      * Updates the color of the badge with a color for each state

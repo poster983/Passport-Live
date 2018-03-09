@@ -341,11 +341,15 @@ exports.loader = ({size, color, active}) => {
 exports.formatJSON = (json) => {
     let obj = JSON.parse(json);
     let pretty = JSON.stringify(obj, undefined, 4);
-    return pretty;
-    /*try {
-        
-    } catch(err) {
-        throw err;
-    }*/
-    
+    return pretty;    
 };
+
+/** 
+* Takes a string and capitalizes the first letter in it
+* @link module:webpack/utils
+* @param {String} string
+* @returns {String}
+*/
+exports.capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}

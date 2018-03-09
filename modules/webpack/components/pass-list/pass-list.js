@@ -22,6 +22,8 @@ email: hi@josephhassell.com
 let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass-list.template.html");
 
+let utils = require("../../utils/index.js");
+
 /** COMPONENTS **/
 require("@polymer/paper-listbox/paper-listbox.js");
 require("../pass/pass.js");
@@ -30,7 +32,8 @@ require("../pass/pass.js");
  * @class 
  * @property {Object[]} [passes] - The list of raw pass objects  
  * @property {Boolean} [noAutoFetch=false] - if true, the element will NOT fetch the passes from the server automatically
- * @property {String} [userId] - The ID of the 
+ * @property {String} [forUser] - Gets all passes that involve this user.  Use "me" for current user
+ * @property {Object} [filter] - Please See {@link module:api/passes.getPasses} for filter keys. 
  * @example
  * <passport-pass-list noAutoFetch></passport-pass-list>
  */
@@ -52,16 +55,38 @@ class PassportPassList extends polymer.Element {
                 type: Boolean,
                 value: false
             },
-            userId: {
+            forUser: {
                 type: String,
                 notify: true
             },
             filter: {
                 type: Object
-            }
+            },
+
         };
     }
+    /** OBSERVERS **/
 
+    /**
+     * Fetches pass array from server
+     * Uses 
+     */
+    refreshPasses() {
+
+    }
+    _getPassHead(pass) {
+        if(!this.forUser || this.forUser.length<1) {
+            //if no main user is provided,
+            return this._formatName(pass.migrator) + " to " + this._formatName(pass.toPerson)
+        } else if(this.forUser )
+    }
+    _formatName(nameObject) {
+        //chack if the key is a string, if not set var as an empty string
+        let first = typeof nameObject.first === "string"?utils.capitalizeFirstLetter(nameObject.first):"";
+        let last = typeof nameObject.last === "string"?utils.capitalizeFirstLetter(nameObject.last):"";
+        
+        return first + " " + last;
+    }
 }
 
 module.exports = PassportPassList;
