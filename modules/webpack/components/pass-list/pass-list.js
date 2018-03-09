@@ -25,7 +25,15 @@ let view = require("./pass-list.template.html");
 /** COMPONENTS **/
 require("@polymer/paper-listbox/paper-listbox.js");
 require("../pass/pass.js");
-
+/**
+ * Polymer Element that displays and fetches a list of <passport-pass> elements.  
+ * @class 
+ * @property {Object[]} [passes] - The list of raw pass objects  
+ * @property {Boolean} [fetchPasses=true] - if false, the element will NOT fetch the passes from the server automatically
+ * @property {String} [userId] - The ID of the 
+ * @example
+ * <passport-pass-list fetchPasses></passport-pass-list>
+ */
 class PassportPassList extends polymer.Element {
     static get template() {
         return view;
@@ -35,11 +43,22 @@ class PassportPassList extends polymer.Element {
     }
     static get properties() {
         return {
+            //Raw pass object array
             passes: {
                 type: Array,
                 notify: true
             },
-            
+            fetchPasses: {
+                type: Boolean,
+                value: true
+            },
+            userId: {
+                type: String,
+                notify: true
+            },
+            filter: {
+                type: Object
+            }
         };
     }
 
