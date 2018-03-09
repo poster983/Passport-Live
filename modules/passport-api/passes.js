@@ -251,6 +251,7 @@ exports.newPass = function (pass, options) {
  * @param {Object} [filter.date]
  * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string
  * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string
+ * @param {String} [filter.forUser] - filters every pass that involves this person. Ignores  
  * 
  * @param {Object} [options] -- unused
  * 
