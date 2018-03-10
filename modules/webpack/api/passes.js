@@ -33,7 +33,7 @@ var utils = require("../utils/index.js");
  * @todo NOT implemented
  */
 exports.get = (filter) => {
-    //NOT implemented
+    return utils.fetch("GET", "/api/passes/", {query: filter, auth: true});
 };
 
 /**

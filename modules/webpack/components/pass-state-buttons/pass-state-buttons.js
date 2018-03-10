@@ -196,11 +196,11 @@ class PassportPassStateButtons extends polymer.Element {
     }
 
     _leftButtonClicked(e) {
-        console.log(this._leftButtonAction);   
+        //console.log(this._leftButtonAction);   
         this.setState(this._leftButtonAction)
     }
     _rightButtonClicked(e) {
-        console.log(this._rightButtonAction);
+        //console.log(this._rightButtonAction);
         this.setState(this._rightButtonAction);
     }
     _arrivedButtonClicked(e) {
@@ -245,7 +245,7 @@ class PassportPassStateButtons extends polymer.Element {
                 } else {
                     this.state = data.status.confirmation.state;
                 }
-                console.log(data)
+                //console.log(data)
                 this.stateType = data.type;
                 this.status = data.status;
                 this.allowedChanges = data.allowedChanges;

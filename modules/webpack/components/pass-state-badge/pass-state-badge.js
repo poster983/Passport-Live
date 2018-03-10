@@ -87,7 +87,7 @@ class PassportPassStateBadge extends polymer.Element {
 
         case "waitlisted": 
             bg = "paper-orange-500";
-            color = "black";
+            color = "white";
             break;
 
         case "enroute": 

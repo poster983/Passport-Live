@@ -1,5 +1,38 @@
+<style is="custom-style">
+  passport-pass::after {
+    content: "";
+    display: block;
+    height: 1px;
+    min-height: 1px;
+    max-height: 1px;
+    background-color: var(--divider-color, #000);
+    opacity: 0.12;
+  }
+  passport-pass:last-child:after {
+    content: "";
+    display: none;
+  }
+  paper-listbox {
+    --paper-listbox-background-color: white; 
+    --paper-listbox-color: black;
+    border-radius: 10px;
+  }
+  
+</style>
 <paper-listbox>
-  <template is="dom-repeat" items="{{passes}}" as="{{pass}}">
-    <passport-pass pass-id="{{pass.id}}" avatat-id></passport-pass>
+  <template is="dom-repeat" items="{{passes}}" as="pass">
+    <passport-pass 
+      pass-id="[[pass.id]]" 
+      avatar-id="[[_getAvatarID(pass)]]" 
+      date="[[pass.date]]" 
+      date-requested="[[pass.dateTimeRequested]]"
+      header="[[_getPassHead(pass)]]"
+      period="[[pass.period]]"
+      migrator="[[_formatName(pass.migrator.name)]]"
+      from-person="[[_formatName(pass.fromPerson.name)]]"
+      to-person="[[_formatName(pass.toPerson.name)]]"
+      requester="[[_formatName(pass.requester.name)]]"
+      state="[[pass.state]]"
+      ></passport-pass>
   </template>
 </paper-listbox>

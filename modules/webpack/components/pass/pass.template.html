@@ -6,16 +6,16 @@
     }
     paper-item-body {
         width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
     paper-icon-item {
         --paper-item-icon-width: 80px;
+        --paper-item-focused-before: {
+          background-color: inherit;
+        }
+
     }
-    /*.right-elements {
-        display: inline;
-        position: absolute;
-        right: 0px;
-        padding-right: 16px;
-    }*/
     .right-elements {
         display: block;
         position: relative;
@@ -76,7 +76,7 @@
             day="numeric"
             year="numeric"></local-time></strong><!--<relative-time datetime$="[[date]]"></relative-time>-->
         </div>
-        <div secondary id="formattedPeriod" title$="[[period]]"></div>
+        <div secondary id="formattedPeriod"></div>
         <div secondary id="migrator" style="display: none;">Migrator <strong>[[migrator]]</strong></div>
         <div secondary id="fromPerson" style="display: none;">Leaving from <strong>[[fromPerson]]</strong></div>
         <div secondary id="toPerson" style="display: none;">Going to <strong>[[toPerson]]</strong></div>

@@ -23,12 +23,14 @@ let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass-list.template.html");
 
 let utils = require("../../utils/index.js");
+let passJS = require("../../api/passes.js");
 
 /** COMPONENTS **/
 require("@polymer/paper-listbox/paper-listbox.js");
 require("../pass/pass.js");
 /**
  * Polymer Element that displays and fetches a list of <passport-pass> elements.  
+ * Errors trigger the "error" event. Error found in the "detail" key 
  * @class 
  * @property {Object[]} [passes] - The list of raw pass objects  
  * @property {Boolean} [noAutoFetch=false] - if true, the element will NOT fetch the passes from the server automatically
@@ -44,6 +46,13 @@ class PassportPassList extends polymer.Element {
     constructor() {
         super();
     }
+    ready() {
+        super.ready();
+        if((!this.filter && !this.forUser) && !this.noAutoFetch) {
+            //fetch all passes without filter
+            this.refreshPasses();
+        }
+    }
     static get properties() {
         return {
             //Raw pass object array
@@ -57,44 +66,74 @@ class PassportPassList extends polymer.Element {
             },
             forUser: {
                 type: String,
-                notify: true
+                notify: true,
+                observer: "_filtersChanged"
             },
             filter: {
-                type: Object
+                type: Object,
+                observer: "_filtersChanged"
             },
 
         };
     }
     /** OBSERVERS **/
-
+    _filtersChanged() {
+        this.refreshPasses();
+    } 
     /**
      * Fetches pass array from server
      * Uses 
      */
     refreshPasses() {
-
+        let fetchTrans = null;
+        if(this.forUser) {
+            //WOULD CALL USER's PASS API 
+        } else {
+            fetchTrans = passJS.get(this.filter);
+        }
+        fetchTrans.then((passes) => {
+            this.passes = passes;
+        }).catch((err) => {
+            this._error(err);
+        });
     }
 
     _getPassHead(pass) {
         if(this.forUser === pass.migrator.id) {
             //show toPerson in title
-            return this._formatName(pass.toPerson);
+            return this._formatName(pass.toPerson.name);
         } else if(this.forUser === pass.migrator.id) {
             //show migrator in title
-            return this._formatName(pass.migrator);
+            return this._formatName(pass.migrator.name);
         } else {
             //if no main user is provided,
-            return this._formatName(pass.migrator) + " to " + this._formatName(pass.toPerson);
+            return this._formatName(pass.migrator.name) + " to " + this._formatName(pass.toPerson.name);
+        }
+    }
+
+
+    _getAvatarID(pass) {
+        if(this.forUser === pass.migrator.id) {
+            //show toPerson's avatar 
+            return pass.toPerson.id;
+        } else {
+            //return migrator for everything else
+            return pass.migrator.id;
         }
     }
 
     
     _formatName(nameObject) {
+        if(!nameObject) {return undefined;}
         //chack if the key is a string, if not set var as an empty string
         let first = typeof nameObject.first === "string"?utils.capitalizeFirstLetter(nameObject.first):"";
         let last = typeof nameObject.last === "string"?utils.capitalizeFirstLetter(nameObject.last):"";
-        
         return first + " " + last;
+    }
+
+    _error(err) {
+        console.error(err);
+        this.dispatchEvent(new CustomEvent("error", {detail: {error: err}}));
     }
 }
 

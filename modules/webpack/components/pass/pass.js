@@ -153,7 +153,7 @@ class PassportPass extends polymer.Element {
             return "Requested ";
         } else {
             //if we only have the person or have everything 
-            return requester + "requested this ";
+            return requester + " requested this ";
         }
     }
 }

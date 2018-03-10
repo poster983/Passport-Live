@@ -25,9 +25,9 @@ document.createElement = Document.prototype.createElement;
 /** require webcomponents **/
 require("@polymer/paper-card/paper-card.js");
 require("@polymer/paper-listbox/paper-listbox.js");
+require("../../components/pass-list/pass-list.js");
 require("../../components/pass/pass.js");
-require("../../components/pass-state-buttons/pass-state-buttons.js");
-require("../../components/pass-state-badge/pass-state-badge.js");
+
 
 /** require modules **/
 var utils = require("../../utils/index.js");
