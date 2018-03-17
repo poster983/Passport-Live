@@ -195,15 +195,15 @@ class PassportPassStateButtons extends polymer.Element {
         button.className = "accept";
     }
 
-    _leftButtonClicked(e) {
+    _leftButtonClicked() {
         //console.log(this._leftButtonAction);   
-        this.setState(this._leftButtonAction)
+        this.setState(this._leftButtonAction);
     }
-    _rightButtonClicked(e) {
+    _rightButtonClicked() {
         //console.log(this._rightButtonAction);
         this.setState(this._rightButtonAction);
     }
-    _arrivedButtonClicked(e) {
+    _arrivedButtonClicked() {
         this.setState("arrived");
     }
     setState(newStateType) {
@@ -228,7 +228,7 @@ class PassportPassStateButtons extends polymer.Element {
             .catch((err) => {
             //end loader, show error
                 this._error(err);
-            })
+            });
         return fetch;
     }
 
@@ -257,17 +257,16 @@ class PassportPassStateButtons extends polymer.Element {
             });
     }
     _error(error) {
-        console.error(error);
-        this.shadowRoot.querySelector("paper-fab").icon = "icon:error-outline";
-
         //try regetting the state
         if(this._errorRetry) {
             this._errorRetry = false;
             this.updateState();
 
+        } else {
+            this.shadowRoot.querySelector("paper-fab").icon = "icon:error-outline";
+            //event 
+            this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
         }
-        //event 
-        this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }
 }
 module.exports = PassportPassStateButtons;

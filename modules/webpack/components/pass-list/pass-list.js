@@ -78,7 +78,13 @@ class PassportPassList extends polymer.Element {
     }
     /** OBSERVERS **/
     _filtersChanged() {
-        this.refreshPasses();
+        if(typeof this.filter === "string") {
+            //parse it
+            this.filter = JSON.parse(this.filter);
+        } else {
+            this.refreshPasses();
+        }
+        
     } 
     /**
      * Fetches pass array from server
