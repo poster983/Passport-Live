@@ -251,7 +251,7 @@ exports.newPass = function (pass, options) {
  * @param {Object} [filter.date]
  * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string
  * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string
- * @param {String} [filter.forUser] - filters every pass that involves this person.  
+ * @param {String} [filter.forUser] - filters every pass that involves this person. 
  * 
  * @param {Object} [options] -- unused
  * 
@@ -275,7 +275,9 @@ exports.get = function (filter, options) {
             date: Maybe {
                 from: Maybe ISODate|Date,
                 to: Maybe ISODate|Date
-            }, ...
+            }, 
+            forUser: Maybe String,
+            ...
         }
         `;
         //Top level type check.
@@ -316,6 +318,20 @@ exports.get = function (filter, options) {
         if(filter.id) {
             query = query.getAll(filter.id);
             delete filter.id;
+        }
+
+        //filter "for user"
+        if(filter.forUser) {
+            query = query.filter((doc) => {
+                //check migrator
+                return r.or(
+                    doc("fromPerson").eq(filter.forUser),
+                    doc("toPerson").eq(filter.forUser),
+                    doc("migrator").eq(filter.forUser),
+                    doc("requester").eq(filter.forUser)
+                );
+            });
+            delete filter.forUser;
         }
 
         //filter date

@@ -24,6 +24,7 @@ let view = require("./pass-list.template.html");
 
 let utils = require("../../utils/index.js");
 let passJS = require("../../api/passes.js");
+let accountJS = require("../../api/account.js");
 
 /** COMPONENTS **/
 require("@polymer/paper-listbox/paper-listbox.js");
@@ -94,6 +95,7 @@ class PassportPassList extends polymer.Element {
         let fetchTrans = null;
         if(this.forUser) {
             //WOULD CALL USER's PASS API 
+            fetchTrans = accountJS.getPasses(this.forUser, this.filter);
         } else {
             fetchTrans = passJS.get(this.filter);
         }

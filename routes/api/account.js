@@ -45,6 +45,8 @@ var moment = require("moment");
 router.use(cors());
 router.options('*', cors());
 
+
+
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS
@@ -717,6 +719,8 @@ router.patch("/password/", passport.authenticate('jwt', { session: false}), func
         return next(err);
     }
 });
+
+router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
 
 module.exports = router;
 

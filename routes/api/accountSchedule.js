@@ -24,14 +24,14 @@ email: hi@josephhassell.com
 
 var express = require("express");
 var router = express.Router();
-var cors = require('cors');
-var passport = require("passport")
+var cors = require("cors");
+var passport = require("passport");
 let accountScheduleJS = require("../../modules/passport-api/accountSchedule.js");
 
 
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
 
 
@@ -47,7 +47,7 @@ router.options('*', cors())
     * @apiresponse {Object} student schedule is in "studentType" and teacher is in "teacherType"
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.get(['/', '/:id/'], passport.authenticate('jwt', { session: false}), function getAllSchedules(req, res, next) {
+router.get(["/", "/:id/"], passport.authenticate("jwt", { session: false}), function getAllSchedules(req, res, next) {
     if(!req.params.id) {
         req.params.id = req.user.id;
     }
@@ -58,23 +58,23 @@ router.get(['/', '/:id/'], passport.authenticate('jwt', { session: false}), func
             if(err && err.status != 404) {
                 return reject(err);
             } 
-            return resolve()
-        })
-    }))
+            return resolve();
+        });
+    }));
 
     prom.push(new Promise(function(resolve, reject) {
         return accountScheduleJS.getTeacherSchedule(req.params.id).then(resolve).catch((err) => {
             if(err && err.status != 404) {
                 return reject(err);
             } 
-            return resolve()
-        })
-    }))
+            return resolve();
+        });
+    }));
 
     Promise.all(prom).then(function(arr) {
         res.json({studentType: arr[0], teacherType: arr[1]});
     }).catch(function(err) {
-        return next(err)
+        return next(err);
     });
 });
 
@@ -99,13 +99,13 @@ router.get(['/', '/:id/'], passport.authenticate('jwt', { session: false}), func
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
 
-router.post("/:dashboard", passport.authenticate('jwt', { session: false}), function setUserSchedule(req, res, next) {
+router.post("/:dashboard", passport.authenticate("jwt", { session: false}), function setUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     //console.log(dashboard)
     accountScheduleJS.new(req.user.id, dashboard, schedule).then((data) => {
-        res.send(data)
-    }).catch((err) => {return next(err)})
+        res.send(data);
+    }).catch((err) => {return next(err);});
 });
 /** Updates the user's schedule for a dashboard
     * @function updateUserSchedule
@@ -126,13 +126,13 @@ router.post("/:dashboard", passport.authenticate('jwt', { session: false}), func
     * }
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.patch("/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+router.patch("/:dashboard", passport.authenticate("jwt", { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     //console.log(dashboard)
     accountScheduleJS.update(req.user.id, dashboard, schedule).then((data) => {
-        res.send(data)
-    }).catch((err) => {return next(err)})
+        res.send(data);
+    }).catch((err) => {return next(err);});
 });
 
 /** Creates or Replaces the user's schedule for a dashboard
@@ -147,19 +147,19 @@ router.patch("/:dashboard", passport.authenticate('jwt', { session: false}), fun
     * @apibody {module:js/userSchedule#studentSchedule}
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.put("/:dashboard", passport.authenticate('jwt', { session: false}), function updateUserSchedule(req, res, next) {
+router.put("/:dashboard", passport.authenticate("jwt", { session: false}), function updateUserSchedule(req, res, next) {
     var dashboard = req.params.dashboard;
     var schedule = req.body;
     //console.log(req.user)
     if(req.user.schedules && req.user.schedules[dashboard]) {
         accountScheduleJS.replace(req.user.id, dashboard, schedule).then((trans) => {
             //console.log(trans)
-            res.json(trans)
-        }).catch((err) => {return next(err);})
+            res.json(trans);
+        }).catch((err) => {return next(err);});
     } else {
         accountScheduleJS.new(req.user.id, dashboard, schedule).then((data) => {
-            res.send(data)
-        }).catch((err) => {return next(err)})
+            res.send(data);
+        }).catch((err) => {return next(err);});
     }
 
 });
@@ -178,15 +178,15 @@ router.put("/:dashboard", passport.authenticate('jwt', { session: false}), funct
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
     * @todo Auth
 */
-router.get('/student/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForStudentDash(req, res, next) {
+router.get("/student/id/:id/", passport.authenticate("jwt", { session: false}), function getSchedulesForStudentDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
-        return next(err)
+        return next(err);
     }
     accountScheduleJS.getStudentSchedule(req.params.id).then((data) => {
-        res.send(data)
-    }).catch((err) => {return next(err)})
+        res.send(data);
+    }).catch((err) => {return next(err);});
 });
 
 /** GETs account schedules for teacher dash
@@ -200,15 +200,15 @@ router.get('/student/id/:id/', passport.authenticate('jwt', { session: false}), 
     * @apiresponse {json} Returns the schedule
     * @returns {callback} - See: {@link #params-params-nextCallback|<a href="#params-nextCallback">Callback Definition</a>} 
 */
-router.get('/teacher/id/:id/', passport.authenticate('jwt', { session: false}), function getSchedulesForTeacherDash(req, res, next) {
+router.get("/teacher/id/:id/", passport.authenticate("jwt", { session: false}), function getSchedulesForTeacherDash(req, res, next) {
     if(!req.params.id) {
         var err = new Error("ID Required");
         err.status = 400;
-        return next(err)
+        return next(err);
     }
     accountScheduleJS.getTeacherSchedule(req.params.id).then((data) => {
-        res.send(data)
-    }).catch((err) => {return next(err)})
+        res.send(data);
+    }).catch((err) => {return next(err);});
 });
 
 module.exports = router;

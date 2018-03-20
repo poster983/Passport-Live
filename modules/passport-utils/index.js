@@ -98,16 +98,16 @@ exports.middlewarePermission = (dashboards, options) => {
 exports.checkPermission = (userGroup, dashboards) => {
     
     //return new Promise((resolve, reject) => {
-        let groupDashboards = exports.getAllowedDashboards(userGroup);
-        if(groupDashboards.length > 0) {
-            if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
-                return true;
-            } else {
-                return false;
-            }
+    let groupDashboards = exports.getAllowedDashboards(userGroup);
+    if(groupDashboards.length > 0) {
+        if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
+            return true;
         } else {
             return false;
         }
+    } else {
+        return false;
+    }
     //})
 } 
 
@@ -174,7 +174,7 @@ exports.cleanUser = function(user){
     }
 },
 
- /**
+/**
     * Checks if req is using DSCM and then allows passport to view the data 
     * @function dscm
     * @link module:js/utils
@@ -230,7 +230,7 @@ exports.dscm = function(req, res, next) {
     
 }
 
-     /**
+/**
         * Checks if period is a period constant  
         * @function checkPeriod
         * @link module:js/utils
@@ -238,26 +238,26 @@ exports.dscm = function(req, res, next) {
         * @param {function} done - callback. 
         * @returns {done} Includes error, and a boolean.  True for valid period, false for not
         */
-  exports.checkPeriod = function(period, done) {
-      var periodConst = config.get("schedule.periods");
-      if(periodConst.includes(period)) {
-          return done(null, true);
-      } else {
-          return done(null, false);
-      }
-  }
+exports.checkPeriod = function(period, done) {
+    var periodConst = config.get("schedule.periods");
+    if(periodConst.includes(period)) {
+        return done(null, true);
+    } else {
+        return done(null, false);
+    }
+}
 
-    /**
+/**
         * Generates a secure token/key
         * @function generateSecureKey
         * @link module:js/utils
         * @returns {string} Secure token/key.
         */
-  exports.generateSecureKey = function() {
-      return shortid.generate() + shortid.generate();
-  }
+exports.generateSecureKey = function() {
+    return shortid.generate() + shortid.generate();
+}
 
-    /**
+/**
         * Checks if password is complient with password rules in the config file.  
         * @function checkPasswordPolicy
         * @link module:js/utils

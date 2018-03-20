@@ -28,12 +28,11 @@ var utils = require("../utils/index.js");
 
 /**
  * Gets passes and filters them.
- * @param {Object} filter - SEE: {@link module:js/passes.get} filter param
+ * @param {Object} filter - SEE: {@link module:api/passes.getPasses} filter param
  * @returns {Object[]}
- * @todo NOT implemented
  */
 exports.get = (filter) => {
-    console.log(filter)
+    //console.log(filter)
     return utils.fetch("GET", "/api/passes/", {query: filter, auth: true});
 };
 
