@@ -23,10 +23,7 @@ email: hi@josephhassell.com
 /**Work-around for lastpass issue on firefox**/
 document.createElement = Document.prototype.createElement;
 /** require webcomponents **/
-require("@polymer/paper-card/paper-card.js");
-require("@polymer/paper-listbox/paper-listbox.js");
 require("../../components/pass-list/pass-list.js");
-require("../../components/pass/pass.js");
 
 
 /** require modules **/
@@ -34,6 +31,7 @@ var utils = require("../../utils/index.js");
 
 //Main Elements
 let toPersonList = document.getElementById("toPersonList");
+let fromPersonList = document.getElementById("fromPersonList");
 
 window.onload = function() {
     //check for errors TEST
@@ -43,7 +41,9 @@ window.onload = function() {
     });
 
     //Set the filter for the pass lists 
-    
-    toPersonList.filter = {date_from: new Date().toISOString()};
+    toPersonList.filter = {date_from: new Date().toISOString(), toPerson: utils.thisUser()};
     toPersonList.refreshPasses();
+
+    fromPersonList.filter = {date_from: new Date().toISOString(), fromPerson: utils.thisUser()};
+    fromPersonList.refreshPasses();
 };

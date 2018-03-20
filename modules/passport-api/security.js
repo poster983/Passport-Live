@@ -22,16 +22,16 @@ email: hi@josephhassell.com
 * @module js/security
 */
 
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
-var r_ = db.dash()
+var r = require("rethinkdb");
+var db = require("../../modules/db/index.js");
+var r_ = db.dash();
 var config = require("config");
 var moment = require("moment");
 var shortid = require("shortid");
-var oldApi = require("./index.js")
+var oldApi = require("./index.js");
 var typeCheck = require("type-check").typeCheck;
-var utils = require("../passport-utils/index.js")
-var accountsJS = require("./accounts.js")
+var utils = require("../passport-utils/index.js");
+var accountsJS = require("./accounts.js");
 
 
 ///PERMISSON KEYS
@@ -39,7 +39,7 @@ var accountsJS = require("./accounts.js")
 
 
 
-    /*
+/*
     Creates a short permission key 
 
     
@@ -54,7 +54,7 @@ var accountsJS = require("./accounts.js")
         time: Date object
     }
     */
-    /**
+/**
      * Creates a New Permission Key.
      * @link module:js/security
      * @param {permissionKeyType} type - ENUM for the type of permission key this is.  Each may impose diffrent requirements.
@@ -65,74 +65,74 @@ var accountsJS = require("./accounts.js")
      * @param {(undefined|Date|ISO)} timeout.time - Will become inactive after given time.
      * @returns {Promise}
      */
-    exports.createPermissionKey = function(type, permissions, params, timeout) {
-        return new Promise((resolve, reject) => {
-            var ins = {}
-            var key = shortid.generate() + shortid.generate();
+exports.createPermissionKey = function(type, permissions, params, timeout) {
+    return new Promise((resolve, reject) => {
+        var ins = {};
+        var key = shortid.generate() + shortid.generate();
             
-            if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
-                var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
-                    err.status = 400;
-                    return reject(err)
-            }
+        if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
+            var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
+            err.status = 400;
+            return reject(err);
+        }
 
-            if(timeout) {
-                if(typeCheck("ISODate", timeout.time, utils.typeCheck)) {
-                    timeout.time = r.ISO8601(timeout.time)
-                }
-                ins.timeout = timeout;
+        if(timeout) {
+            if(typeCheck("ISODate", timeout.time, utils.typeCheck)) {
+                timeout.time = r.ISO8601(timeout.time);
             }
-            if(params) {
-                ins.params = params;
-            }
-            if(permissions) {
-                ins.permissions = permissions;
-            }
+            ins.timeout = timeout;
+        }
+        if(params) {
+            ins.params = params;
+        }
+        if(permissions) {
+            ins.permissions = permissions;
+        }
 
-            if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
-                var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
-                    err.status = 400;
-                    return reject(err)
-            }
+        if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
+            var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+            err.status = 400;
+            return reject(err);
+        }
 
-            //CHeck Type Rules
-            if(type === "NEW_ACCOUNT") {
-                if(!typeCheck("{userGroups: [userGroup]}", permissions, utils.typeCheck)) {
-                    var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        //CHeck Type Rules
+        if(type === "NEW_ACCOUNT") {
+            if(!typeCheck("{userGroups: [userGroup]}", permissions, utils.typeCheck)) {
+                var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
+                err.status = 400;
+                return reject(err);
             }
-            if(type === "ACTIVATE_ACCOUNT") {
-                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
-                    var err = new TypeError("permissions.accountID must be an ID string.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        }
+        if(type === "ACTIVATE_ACCOUNT") {
+            if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
+                var err = new TypeError("permissions.accountID must be an ID string.");
+                err.status = 400;
+                return reject(err);
             }
-            if(type === "RESET_PASSWORD") {
-                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
-                    var err = new TypeError("permissions.accountID must be an ID string.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        }
+        if(type === "RESET_PASSWORD") {
+            if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
+                var err = new TypeError("permissions.accountID must be an ID string.");
+                err.status = 400;
+                return reject(err);
             }
+        }
 
-            ins.key = key;
-            ins.type = type;
-            ins.uses = 0;
+        ins.key = key;
+        ins.type = type;
+        ins.uses = 0;
 
-            r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
-                if(err) {
-                    return reject(err);
-                }
-                return resolve(key);
-            })
-        })
-    }//* @link module:js/security
-    //* @memberof! js/security.newKey#
-    //* @exports js/security/newKey
-     /**
+        r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
+            if(err) {
+                return reject(err);
+            }
+            return resolve(key);
+        });
+    });
+};//* @link module:js/security
+//* @memberof! js/security.newKey#
+//* @exports js/security/newKey
+/**
      * A set of wrappers for creating specific types of perm keys. 
      * @name newKey
      * @inner
@@ -141,8 +141,8 @@ var accountsJS = require("./accounts.js")
      * @property {Object} newKey
      * @property {function} newKey.newAccount - Creates a New Permission Key For New Accounts
      */
-    var newKey = {};
-     /**
+var newKey = {};
+/**
      * Creates a New Permission Key For Creating New Accounts from the new account form and API
      * @function
      * @memberof module:js/security
@@ -152,50 +152,50 @@ var accountsJS = require("./accounts.js")
      * @param {(undefined|Date|string)} timeout.time - Will become inactive after given time.
      * @returns {Promise} - key 
      */
-    newKey.newAccount = function(userGroups, timeout) {
-        return new Promise((resolve, reject) => {
-            return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
-        }) 
-    }
+newKey.newAccount = function(userGroups, timeout) {
+    return new Promise((resolve, reject) => {
+        return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject);
+    }); 
+};
 
-     /**
+/**
      * Creates a New Permission Key For Activating New Accounts From email
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
      * @returns {Promise} -key
      */
-    newKey.activateAccount = function(id) {
-        return new Promise((resolve, reject) => {
-            accountsJS.getUserByID(id, (err, user) => {
-                if(err) {return reject(err);}
-                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
-                var date = moment().add(7, "days")
-                return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
-            })
+newKey.activateAccount = function(id) {
+    return new Promise((resolve, reject) => {
+        accountsJS.getUserByID(id, (err, user) => {
+            if(err) {return reject(err);}
+            if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+            var date = moment().add(7, "days");
+            return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject);
+        });
             
-        }) 
-    }
+    }); 
+};
 
-    /**
+/**
      * Creates a New Permission Key For resetting a forgotten password Accounts From email. Times out after 1 hour
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
      * @returns {Promise} - key
      */
-    newKey.resetPassword = function(id) {
-        return new Promise((resolve, reject) => {
-            accountsJS.getUserByID(id, (err, user) => {
-                if(err) {return reject(err);}
-                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
-                var date = moment().add(1, "hours")
-                return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
-            });
-        }) 
-    }
-    //setTimeout(function() {newKey.resetPassword("653f06df-c797-4795-993f-9d2870a57315").then((res)=>{console.log(res)}).catch((err) => {console.error(err)})}, 1000);
-    /*
+newKey.resetPassword = function(id) {
+    return new Promise((resolve, reject) => {
+        accountsJS.getUserByID(id, (err, user) => {
+            if(err) {return reject(err);}
+            if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+            var date = moment().add(1, "hours");
+            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject);
+        });
+    }); 
+};
+//setTimeout(function() {newKey.resetPassword("653f06df-c797-4795-993f-9d2870a57315").then((res)=>{console.log(res)}).catch((err) => {console.error(err)})}, 1000);
+/*
     setTimeout(function() {
         //newKey.newAccount(["student", "teacher"], {tally: }) //["student", "teacher"]
         console.log(typeCheck("Date", new Date()))
@@ -206,13 +206,13 @@ var accountsJS = require("./accounts.js")
         //newKey.newAccount(["student"], {time: "2017-11-10T02:41:57+00:00", tally:6})
         //newKey.newAccount(["student"], {time: date, tally:12})
     }, 1000);*/
-    exports.newKey = newKey;
+exports.newKey = newKey;
 
 
-    //This checks to see if the Permission key is valid and returns a json object with the permissions.
-    //Callback: done(err, perms)
-    //SHould only return one
-    /**
+//This checks to see if the Permission key is valid and returns a json object with the permissions.
+//Callback: done(err, perms)
+//SHould only return one
+/**
      * Checks a Permission Key.  It also may change the timeout field if on tally mode
      * @link module:js/security
      * @deprecated since version 0.10
@@ -230,9 +230,9 @@ exports.checkPermissionKey = function(key, done) {
 
         document.toArray(function(err, arr) {
             if(err) {
-                return done(err)
+                return done(err);
             }
-            console.log(arr)
+            console.log(arr);
             //Found key
             if(0<arr.length) {
                 if(arr[0].timeout.time) {
@@ -278,7 +278,7 @@ exports.checkPermissionKey = function(key, done) {
             }
         });
     });
-}
+};
 
 /**
  * Gets Permission Key data.
@@ -288,17 +288,17 @@ exports.checkPermissionKey = function(key, done) {
  * @param {function} done - Callback.
  */
 exports.getPermissionKeyData = function(type, key, done) {
-	if(!key || typeof key != "string") {
-		var err = new Error("Invalid Key");
-		err.status = 400;
-		return done(err);
-	}
+    if(!key || typeof key != "string") {
+        var err = new Error("Invalid Key");
+        err.status = 400;
+        return done(err);
+    }
     if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
         var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
-            err.status = 400;
-            return done(err)
+        err.status = 400;
+        return done(err);
     }
-	r.table("permissionKeys").filter({
+    r.table("permissionKeys").filter({
         key: key,
         type: type
     }).run(db.conn(), function(err, document) {
@@ -308,7 +308,7 @@ exports.getPermissionKeyData = function(type, key, done) {
 
         document.toArray(function(err, arr) {
             if(err) {
-                return done(err)
+                return done(err);
             }
             if(arr.length == 1) {
             	return done(null, arr[0]);
@@ -323,7 +323,7 @@ exports.getPermissionKeyData = function(type, key, done) {
             }
         });
     });
-}
+};
 
 /**
  * Checks if Permission Key is Valid according to the timeout field.  DOES NOT INCREASE TALLY.
@@ -337,35 +337,35 @@ exports.getPermissionKeyData = function(type, key, done) {
 exports.checkPermissionKeyValidity = (type, key) => {
     return new Promise((resolve, reject) => {
         return r.table("permissionKeys")
-        .filter({
-            key: key,
-            type: type
-        })
-        .filter((key) => {
-            return key("timeout")("time").ge(r.now()).default(true);
-        })
-        .filter((key) => {
-            return key("timeout")("tally").gt(0).default(true);
-        })
-        .run(db.conn()).then((keyDoc) => {
-            keyDoc.toArray(function(err, keyData) {
-                if(err) {
-                    return reject(err)
-                }
-                if(keyData.length == 1) {
-                    return resolve(keyData[0]);
-                } else if(keyData.length < 1) {
-                    return resolve(null)
-                } else {
-                    var err = new Error("Conflicting Keys");
-                    err.status = 500;
-                    return reject(err);
-                }
-            });
-        }).catch(reject);
-    })
+            .filter({
+                key: key,
+                type: type
+            })
+            .filter((key) => {
+                return key("timeout")("time").ge(r.now()).default(true);
+            })
+            .filter((key) => {
+                return key("timeout")("tally").gt(0).default(true);
+            })
+            .run(db.conn()).then((keyDoc) => {
+                keyDoc.toArray(function(err, keyData) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(keyData.length == 1) {
+                        return resolve(keyData[0]);
+                    } else if(keyData.length < 1) {
+                        return resolve(null);
+                    } else {
+                        var err = new Error("Conflicting Keys");
+                        err.status = 500;
+                        return reject(err);
+                    }
+                });
+            }).catch(reject);
+    });
     
-}
+};
 
 
 
@@ -378,17 +378,17 @@ exports.checkPermissionKeyValidity = (type, key) => {
  */
 exports.keyUsed = (type, key) => {
     return r_.table("permissionKeys")
-    .filter({
-        key: key,
-        type: type
-    })
-    .filter((row) => {
-        return row.hasFields({timeout: {tally: true}})
-    })
-    .update((row) => {
-        return {timeout: {tally: row("timeout")("tally").sub(1)}, uses: row("uses").add(1)}
-    }).run()
-}
+        .filter({
+            key: key,
+            type: type
+        })
+        .filter((row) => {
+            return row.hasFields({timeout: {tally: true}});
+        })
+        .update((row) => {
+            return {timeout: {tally: row("timeout")("tally").sub(1)}, uses: row("uses").add(1)};
+        }).run();
+};
 
 //exports.keyUsed("ACTIVATE_ACCOUNT", "SJrZpBryGHklrbTBHkf").then((res) => {console.log(res)}).catch((err)=>{console.error(err)})
 /**
@@ -398,12 +398,12 @@ exports.keyUsed = (type, key) => {
  */
 exports.cleanDB = () => {
     return r_.table("permissionKeys")
-    .filter((key) => {
-        return key("timeout")("time").lt(r_.now())
-        .or(key("timeout")("tally").le(0))
-        .default(false);
-    }).delete().run();
-}
+        .filter((key) => {
+            return key("timeout")("time").lt(r_.now())
+                .or(key("timeout")("tally").le(0))
+                .default(false);
+        }).delete().run();
+};
 //exports.cleanDB().then((res) => {console.log(res)})
 /**
 ENUM TYPES
@@ -416,13 +416,13 @@ ENUM TYPES
  * @readonly
  * @enum {String}
  */
- exports.permissionKeyType = {
-        /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
-        NEW_ACCOUNT: "NEW_ACCOUNT", 
-        /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
-        ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
-        /** Used for resetting your password via an email. */
-        RESET_PASSWORD: "RESET_PASSWORD",
-        UNKNOWN: "UNKNOWN"
-    };
+exports.permissionKeyType = {
+    /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
+    NEW_ACCOUNT: "NEW_ACCOUNT", 
+    /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
+    ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
+    /** Used for resetting your password via an email. */
+    RESET_PASSWORD: "RESET_PASSWORD",
+    UNKNOWN: "UNKNOWN"
+};
 exports.permissionKeyType = Object.freeze(exports.permissionKeyType);

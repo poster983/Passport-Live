@@ -17,9 +17,15 @@
     --paper-listbox-color: black;
     border-radius: 10px;
   }
-  
+  .message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 </style>
 <paper-listbox>
+  <div class="message"><iron-icon icon="icons:mood-bad"></iron-icon>No passes found</div>
   <template is="dom-repeat" items="{{passes}}" as="pass">
     <passport-pass 
       pass-id="[[pass.id]]" 

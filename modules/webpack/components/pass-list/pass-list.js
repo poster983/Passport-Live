@@ -27,7 +27,10 @@ let passJS = require("../../api/passes.js");
 let accountJS = require("../../api/account.js");
 
 /** COMPONENTS **/
+require("../styles/default-theme.js");
 require("@polymer/paper-listbox/paper-listbox.js");
+require("@polymer/iron-icons/iron-icons.js");
+require("@polymer/iron-icon/iron-icon.js");
 require("../pass/pass.js");
 /**
  * Polymer Element that displays and fetches a list of <passport-pass> elements.  

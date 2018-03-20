@@ -163,7 +163,7 @@ app.use("/api", api);
 app.use("/api/media", apiMedia);
 app.use("/api/account", apiAccounts);
 app.use("/api/account/schedule", apiAccountSchedule);
-app.use("/api/account/:accountID", apiAccountUser);
+app.use("/api/account", apiAccountUser);
 app.use("/api/auth", apiAuth);
 app.use("/api/blackout", apiBlackouts);
 app.use("/api/passes", apiPasses);

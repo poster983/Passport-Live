@@ -229,6 +229,7 @@ email: hi@josephhassell.com
             <div id="MyPassesCard" class="card grey darken-3 hoverable">
               <div class="card-content ">
                 <span class="card-title white-text">Students Leaving</span>
+                <passport-pass-list id="fromPersonList" no-auto-fetch for-user="me"></passport-pass-list>
                 <ul class="collection">
                   <div id="studentsLeavingReturn">
                   </div>
@@ -413,9 +414,10 @@ email: hi@josephhassell.com
       });
       $('.collapsible').collapsible();
       $(".button-collapse").sideNav();
-      $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function (a1, a2, a3) {
+      $('#fullAjaxLoadingScreen').removeClass("loading");
+      /*$.when(setLeaving(), setArriving(), checkForUrlHash()).done(function (a1, a2, a3) {
         $('#fullAjaxLoadingScreen').removeClass("loading");
-      });
+      });*/
     });
 
     // Pass Avatar Button
@@ -532,7 +534,7 @@ email: hi@josephhassell.com
     }
 
     ////MY Leaving CARD////
-
+/*
     function getstudentsLeaving(done) {
       $.ajax({
         type: "get",
@@ -1200,6 +1202,7 @@ email: hi@josephhassell.com
         delay: 50
       });
     }
+    */
   </script>
 </body>
 

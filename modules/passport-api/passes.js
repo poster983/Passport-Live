@@ -249,8 +249,8 @@ exports.newPass = function (pass, options) {
  * @param {String} [filter.requester] - User ID of the person that requested the pass
  * @param {(String|String[])} [filter.period] - An array r string of period constants.
  * @param {Object} [filter.date]
- * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string
- * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string
+ * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored
+ * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string Time is ignored
  * @param {String} [filter.forUser] - filters every pass that involves this person. 
  * 
  * @param {Object} [options] -- unused
@@ -338,11 +338,11 @@ exports.get = function (filter, options) {
         if(filter.date && (filter.date.from || filter.date.to)) {
             query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
-                    return date("date").during(r.ISO8601(filter.date.from), r.ISO8601(filter.date.to), {leftBound: "closed", rightBound: "closed"});
+                    return date("date").date().during(r.ISO8601(filter.date.from).date(), r.ISO8601(filter.date.to).date(), {leftBound: "closed", rightBound: "closed"});
                 } else if(filter.date && filter.date.from) {
-                    return date("date").ge(r.ISO8601(filter.date.from));
+                    return date("date").date().ge(r.ISO8601(filter.date.from).date());
                 } else if(filter.date && filter.date.to) {
-                    return date("date").le(r.ISO8601(filter.date.to));
+                    return date("date").date().le(r.ISO8601(filter.date.to).date());
                 } else {
                     return true;
                 }

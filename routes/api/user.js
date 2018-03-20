@@ -34,28 +34,26 @@ let passesJS = require("../../modules/passport-api/passes");
 router.use(cors());
 router.options("*", cors());
 
+//JWT auth
+router.use(passport.authenticate("jwt", { session: false}));
 
-//accountID Param permission middleware
-function accountIDParamPermCheck(req, res, next) {
-    //makesure there is a param of accountID 
-    if(req.params.accountID) {
-        //check for "me"
-        console.log(req.user)
-        if(req.params.accountID.toLowerCase() === "me") {
-            req.params.id = req.user.id;
-        }
-        //check permissions 
-        //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
-        if(!utils.checkPermission(req.user.userGroup, ["administrator"])) {
-            //current user is only allowed to see themselves 
-            if(req.params.accountID !== req.user.id) {
-                //403 Forbidden 
-                return res.sendStatus(403);
-            }
+//Checks for "me" and replaces it with the user ID
+router.param("accountID", (req, res, next) => {
+    if(req.params.accountID.toLowerCase() === "me") {
+        req.params.accountID = req.user.id;
+    }
+    //check permissions 
+    //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
+    if(!utils.checkPermission(req.user.userGroup, ["administrator"])) {
+        //current user is only allowed to see themselves 
+        if(req.params.accountID !== req.user.id) {
+            //403 Forbidden 
+            return res.sendStatus(403);
         }
     }
     return next();
-}
+});
+
 
 /**
  * Gets all passes that are relevant to the user 
@@ -65,9 +63,8 @@ function accountIDParamPermCheck(req, res, next) {
  * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes.getPasses} for filters 
  * @apiresponse {Object[]} Pass objects in an array
  */
-router.get("/passes/", passport.authenticate("jwt", { session: false}), accountIDParamPermCheck, function getUserPasses(req, res, next) {
+router.get("/:accountID/passes/", function getUserPasses(req, res, next) {
     //check for accountID
-    console.log(req.params)
     if(typeof req.params.accountID !== "string") {
         let err = TypeError("accountID expected a string");
         err.status = 400;

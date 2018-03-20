@@ -71,7 +71,7 @@ function deleteBulkLog(id) {
     return r.table("bulkImports").get(id).delete().run(db.conn());
 }
 
-/*
+/**
 * Searches the bulk log database 
 * @link module:js/import
 * @param {Object} queries
