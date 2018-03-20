@@ -223,8 +223,6 @@ email: hi@josephhassell.com
     <!--Students Leaving-->
     <!--Tab-->
     <div id="studentsLeaving" class="col s12">
-      <passport-pass-state-buttons pass-id="1d63605a-072f-4d04-8868-2cfe566e5ba2"></passport-pass-state-buttons>
-      <passport-pass-state-badge state="pending"></passport-pass-state-badge>
       <div class="section">
         <div class="row">
           <div class="col s12">
@@ -248,13 +246,14 @@ email: hi@josephhassell.com
         <passport-pass pass-id="1d63605a-072f-4d04-8868-2cfe566e5ba2" header="Joseph Hassell" from-person="Joey McJoeface" date-requested="2018-03-05T11:06:08-06:00" date="2018-03-07T11:06:08-06:00" period="a" avatar-id="3c4fb0e7-9330-45d0-8d7c-9c29142fac45" show-state-buttons></passport-pass>
         <passport-pass date="2017-12-15T06:30:55Z" period="lunch1" show-state-buttons></passport-pass>
       </paper-listbox>-->
-      <passport-pass-list filter="{dateFrom: &quot;2018-03-17T00:00:00+00:00&quot;}"></passport-pass-list>
+      <!--<passport-pass-list for-user="me" filter="{dateFrom: &quot;2018-03-17T00:00:00+00:00&quot;}"></passport-pass-list>-->
       <div class="section">
         <div class="row">
           <div class="col s12">
             <div id="MyPassesCard" class="card grey darken-3 hoverable">
               <div class="card-content ">
                 <span class="card-title white-text">Students Arriving</span>
+                <passport-pass-list id="toPersonList" no-auto-fetch for-user="me"></passport-pass-list>
                 <ul class="collection">
                   <div id="studentsArrivingReturn">
                   </div>

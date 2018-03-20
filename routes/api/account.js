@@ -720,7 +720,7 @@ router.patch("/password/", passport.authenticate('jwt', { session: false}), func
     }
 });
 
-router.patch("/password/", passport.authenticate('jwt', { session: false}), function updateUserPassword(req, res, next) {
+
 
 module.exports = router;
 

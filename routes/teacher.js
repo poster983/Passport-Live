@@ -39,7 +39,14 @@ router.get("/", checkAuth.ensureLoggedIn("/auth/login"), utils.middlewarePermiss
         "<li><a class=\"waves-effect\" href=\"/account?referral=teacher\"><i class=\"material-icons\">account_circle</i>My Account</a></li>"
     ];
 
-    res.render("teacher/index", { doc_Title: "Passport-Teacher", user, customHead: customHead, sidenav: req.sidenav, passportVersion: process.env.npm_package_version, currentYear: new Date().getFullYear()});
+    res.render("teacher/index", { 
+        doc_Title: "Passport-Teacher", 
+        user, 
+        customHead: customHead, 
+        sidenav: req.sidenav, 
+        passportVersion: process.env.npm_package_version, 
+        currentYear: new Date().getFullYear()
+    });
 });
 
 

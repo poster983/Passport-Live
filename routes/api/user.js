@@ -40,6 +40,7 @@ function accountIDParamPermCheck(req, res, next) {
     //makesure there is a param of accountID 
     if(req.params.accountID) {
         //check for "me"
+        console.log(req.user)
         if(req.params.accountID.toLowerCase() === "me") {
             req.params.id = req.user.id;
         }
@@ -66,6 +67,7 @@ function accountIDParamPermCheck(req, res, next) {
  */
 router.get("/passes/", passport.authenticate("jwt", { session: false}), accountIDParamPermCheck, function getUserPasses(req, res, next) {
     //check for accountID
+    console.log(req.params)
     if(typeof req.params.accountID !== "string") {
         let err = TypeError("accountID expected a string");
         err.status = 400;
@@ -89,5 +91,8 @@ router.get("/passes/", passport.authenticate("jwt", { session: false}), accountI
         })
         .catch((err) => {
             return next(err);
-        })
+        });
 });
+
+
+module.exports = router;

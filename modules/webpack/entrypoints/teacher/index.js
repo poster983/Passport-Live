@@ -32,11 +32,18 @@ require("../../components/pass/pass.js");
 /** require modules **/
 var utils = require("../../utils/index.js");
 
+//Main Elements
+let toPersonList = document.getElementById("toPersonList");
 
 window.onload = function() {
     //check for errors TEST
-    $("passport-pass-state-buttons").on("error", (e) => {
+    $("passport-pass-list").on("error", (e) => {
         //console.log(e);
         utils.throwError(e.originalEvent.detail.error);
     });
+
+    //Set the filter for the pass lists 
+    
+    toPersonList.filter = {date_from: new Date().toISOString()};
+    toPersonList.refreshPasses();
 };

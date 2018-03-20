@@ -67,7 +67,6 @@ class PassportPassList extends polymer.Element {
             },
             forUser: {
                 type: String,
-                notify: true,
                 observer: "_filtersChanged"
             },
             filter: {
@@ -83,13 +82,14 @@ class PassportPassList extends polymer.Element {
             //parse it
             this.filter = JSON.parse(this.filter);
         } else {
-            this.refreshPasses();
+            if(!this.noAutoFetch) {
+                this.refreshPasses();
+            }
         }
         
     } 
     /**
      * Fetches pass array from server
-     * Uses 
      */
     refreshPasses() {
         let fetchTrans = null;
@@ -140,7 +140,6 @@ class PassportPassList extends polymer.Element {
     }
 
     _error(err) {
-        console.error(err);
         this.dispatchEvent(new CustomEvent("error", {detail: {error: err}}));
     }
 }
