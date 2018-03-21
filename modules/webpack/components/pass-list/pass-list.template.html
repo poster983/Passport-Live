@@ -22,11 +22,23 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    font-size: calc(0.75em + 1vmin);
+    color: var(--secondary-text-color);
+    opacity: 0.6;
+    --iron-icon-fill-color: var(--secondary-text-color);
+    --iron-icon-height: 32px;
+    --iron-icon-width: 32px;
   }
 </style>
 <paper-listbox>
-  <div class="message"><iron-icon icon="icons:mood-bad"></iron-icon>No passes found</div>
-  <template is="dom-repeat" items="{{passes}}" as="pass">
+  <template is="dom-if" if="{{!passCount}}">
+    <div class="message">
+      <span>
+        <iron-icon icon="social:sentiment-dissatisfied"></iron-icon> No passes found
+      </span>
+    </div>
+  </template>
+  <template is="dom-repeat" items="{{passes}}" as="pass" rendered-item-count="{{passCount}}">
     <passport-pass 
       pass-id="[[pass.id]]" 
       avatar-id="[[_getAvatarID(pass)]]" 

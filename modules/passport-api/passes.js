@@ -102,6 +102,7 @@ exports.newPass = function (pass, options) {
         if (typeCheck("Date", pass.date)) {
             pass.date = moment(pass.date).toISOString();
         }
+        
         if (!pass.fromPerson) {
             pass.fromPerson = null;
         }
@@ -280,6 +281,7 @@ exports.get = function (filter, options) {
             ...
         }
         `;
+        //console.log(filter.date)
         //Top level type check.
         if(!typeCheck(filterType, filter, utils.typeCheck)) {
             let err = new TypeError("\"filter\" expected an object with structure: " + filterType);
