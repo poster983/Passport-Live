@@ -108,6 +108,21 @@ class PassportPassList extends polymer.Element {
             this._error(err);
         });
     }
+    /**
+     * An array.sort callback function for sorting the passes property
+     * Sorts by date ONLY right now
+     */
+    sort(a, b) {
+        a.date = new Date(a.date);
+        b.date = new Date(b.date);
+        if(a.date > b.date) {
+            return 1;
+        } else if(a.date < b.date) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
     _getPassHead(pass) {
         if(this.forUser === pass.migrator.id) {

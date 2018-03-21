@@ -33,17 +33,20 @@ var utils = require("../../utils/index.js");
 let toPersonList = document.getElementById("toPersonList");
 let fromPersonList = document.getElementById("fromPersonList");
 
+
 window.onload = function() {
     //check for errors TEST
     $("passport-pass-list").on("error", (e) => {
         //console.log(e);
         utils.throwError(e.originalEvent.detail.error);
     });
-
+    //Generate today's date
+    let date = new Date().setTime(0,0,0,0);
+    //date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
     //Set the filter for the pass lists 
-    toPersonList.filter = {date_from: new Date().toISOString(), toPerson: utils.thisUser()};
+    toPersonList.filter = {date_from: date, toPerson: utils.thisUser()};
     toPersonList.refreshPasses();
 
-    fromPersonList.filter = {date_from: new Date().toISOString(), fromPerson: utils.thisUser()};
+    fromPersonList.filter = {date_from: date, fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
 };

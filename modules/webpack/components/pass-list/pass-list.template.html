@@ -31,14 +31,14 @@
   }
 </style>
 <paper-listbox>
-  <template is="dom-if" if="{{!passCount}}">
+  <template is="dom-if" if="[[!passCount]]">
     <div class="message">
       <span>
         <iron-icon icon="social:sentiment-dissatisfied"></iron-icon> No passes found
       </span>
     </div>
   </template>
-  <template is="dom-repeat" items="{{passes}}" as="pass" rendered-item-count="{{passCount}}">
+  <template is="dom-repeat" items="{{passes}}" as="pass" sort="{{sort}}" rendered-item-count="{{passCount}}">
     <passport-pass 
       pass-id="[[pass.id]]" 
       avatar-id="[[_getAvatarID(pass)]]" 
