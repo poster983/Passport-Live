@@ -128,7 +128,7 @@ class PassportPassList extends polymer.Element {
         if(this.forUser === pass.migrator.id) {
             //show toPerson in title
             return this._formatName(pass.toPerson.name);
-        } else if(this.forUser === pass.migrator.id) {
+        } else if(this.forUser === pass.toPerson.id) {
             //show migrator in title
             return this._formatName(pass.migrator.name);
         } else {
@@ -148,7 +148,10 @@ class PassportPassList extends polymer.Element {
         }
     }
 
-    
+    /*_shouldShowStateButtons(pass) {
+
+    }*/
+
     _formatName(nameObject) {
         if(!nameObject) {return undefined;}
         //chack if the key is a string, if not set var as an empty string

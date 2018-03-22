@@ -966,7 +966,7 @@ state.undo = (passID, setByID, checkMigrationStates) => {
  *  accepted: (Boolean),
  *  canceled: (Boolean),
  *  undo: (Boolean|"UNDO"|"NEUTRAL"),
- *  arrived: (Boolean),
+ *  arrived: (Boolean|Null), //Will be null if "forUserID" is not "toPerson"
  *  enroute: (Boolean)
  * }
  */
@@ -988,7 +988,7 @@ state.allowedChanges = (passID, forUserID) => {
                     neutral: false,
                     accepted: false,
                     canceled: false,
-                    arrived: false,
+                    arrived: null,
                     enroute: false,
                     undo: false
                 };
@@ -1001,6 +1001,11 @@ state.allowedChanges = (passID, forUserID) => {
                 if(state.isCanceled(stateData.state) && forUserID !== stateData.setByUser) {
                     return permissions;
                 }
+
+                //set arrived to false if the forUserID toPerson. for baseline
+                if(forUserID === passData.toPerson) {
+                    permissions.arrived = false;
+                } 
 
                 //check of the forUserID is the from person and give them enroute perms
                 if(forUserID === passData.fromPerson && forUserID !== passData.toPerson) {

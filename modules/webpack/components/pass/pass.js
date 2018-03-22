@@ -33,7 +33,7 @@ require("@polymer/paper-item/paper-icon-item.js");
 /**
  * Polymer Element that displays a pass.  
  * @class 
- * @property {Boolean} [showStateButtons=true] - if true, the buttons to change the state will be shown.  
+ * @property {Boolean} [showStateButtons] - if true, the buttons to change the state will be shown.  
  * @property {String} [passId] - The ID of the pass.  If undefined, showStateButtons will be set to false
  * @property {String} [avatarId] - id of user to show avatar,
  * @property {String} [date] - ISO String 
@@ -67,9 +67,7 @@ class PassportPass extends polymer.Element {
     static get properties() {
         return {
             showStateButtons: {
-                type: Boolean,
-                reflectToAttribute: true,
-                value: true
+                type: Boolean
             },
             passId: {
                 type: String
@@ -156,6 +154,7 @@ class PassportPass extends polymer.Element {
             return requester + " requested this ";
         }
     }
+
 }
 
 

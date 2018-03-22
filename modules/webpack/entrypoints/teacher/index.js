@@ -41,8 +41,8 @@ window.onload = function() {
         utils.throwError(e.originalEvent.detail.error);
     });
     //Generate today's date
-    let date = new Date().setTime(0,0,0,0);
-    //date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+    let date = new Date();
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
     //Set the filter for the pass lists 
     toPersonList.filter = {date_from: date, toPerson: utils.thisUser()};
     toPersonList.refreshPasses();
@@ -50,3 +50,4 @@ window.onload = function() {
     fromPersonList.filter = {date_from: date, fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
 };
+

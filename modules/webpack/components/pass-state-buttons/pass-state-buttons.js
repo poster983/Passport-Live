@@ -40,7 +40,6 @@ require("@polymer/paper-styles/color.js");
  * @property {Object} allowedChanges - Object of allowed state changes
  * @property {String} state - the actual state of the pass in the database.  This string should be presented to the user.
  * @property {Boolean} disabled - Grays out the buttons
- * @property {Boolean} showArrived - will show the check in button
  * @example
  * <passport-pass-state-buttons pass-id="sad5-fd4s-d45f6s-56sdf4-56sdf"></passport-pass-state-buttons>
  */
@@ -94,10 +93,6 @@ class PassportPassStateButtons extends polymer.Element {
                 type: Boolean,
                 value: true
             },
-            showArrived: {
-                type: Boolean,
-                observer: "_showArrivedChanged"
-            },
             verticalAlign: {
                 type: Boolean,
                 observer: "_alignmentChanged"
@@ -113,10 +108,6 @@ class PassportPassStateButtons extends polymer.Element {
             "--pass-state-buttons-fab-display": update
         });
     }
-    _showArrivedChanged(newVal) {
-        //console.log("NEWVAL", newVal)
-        this.shadowRoot.querySelector("#arrived").style.display = newVal?"":"none";
-    }
     _passIDChanged() {
         this.updateState();
     }
@@ -131,8 +122,13 @@ class PassportPassStateButtons extends polymer.Element {
         let acceptedButton = this.shadowRoot.querySelector("#check");
         let canceledButton = this.shadowRoot.querySelector("#block");
         //check if pass state is enroute or arrived
-        //console.log(acceptedButton)
-        if(arrivedButton) {
+        
+        if(this.allowedChanges.arrived === null) {
+            //Check if the button should be shown
+            arrivedButton.style.display = "none";
+        } else {
+            //reset display to default
+            arrivedButton.style.display = "";
             if(this.allowedChanges.arrived) {
                 //enable arrived button
                 arrivedButton.disabled = false;
@@ -140,6 +136,7 @@ class PassportPassStateButtons extends polymer.Element {
                 arrivedButton.disabled = true;
             }
         }
+
         if(this.allowedChanges.accepted) {
             //enable accepted 
             this._makeAccepted("#check");

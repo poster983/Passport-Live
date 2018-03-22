@@ -70,6 +70,7 @@ router.get("/:accountID/passes/", function getUserPasses(req, res, next) {
         err.status = 400;
         return next(err);
     }
+    console.log(req.query)
     passesJS.get({
         id: req.query.id,
         fromPerson: req.query.fromPerson,
