@@ -81,7 +81,9 @@ class PassportPassList extends polymer.Element {
     }
     /** OBSERVERS **/
     _filtersChanged() {
-        if(typeof this.filter === "string") {
+        if(this.forUser.toLowerCase() === "me") {
+            this.forUser = utils.thisUser();
+        } else if(typeof this.filter === "string") {
             //parse it
             this.filter = JSON.parse(this.filter);
         } else {
@@ -125,6 +127,7 @@ class PassportPassList extends polymer.Element {
     }
 
     _getPassHead(pass) {
+
         if(this.forUser === pass.migrator.id) {
             //show toPerson in title
             return this._formatName(pass.toPerson.name);
