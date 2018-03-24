@@ -151,10 +151,6 @@ class PassportPassList extends polymer.Element {
         }
     }
 
-    /*_shouldShowStateButtons(pass) {
-
-    }*/
-
     _formatName(nameObject) {
         if(!nameObject) {return undefined;}
         //chack if the key is a string, if not set var as an empty string

@@ -45,7 +45,6 @@ require("@polymer/paper-item/paper-icon-item.js");
  * @property {String} [toPerson] - The name of the person the migrator is going to 
  * @property {String} [requester] - The name of the person that made this pass 
  * @property {String} [state] - State of the pass. Can be used if the state buttons are not shown. 
- * @property {Boolean} [hasViewed=false] - Shows the has viewed icon 
  * @example
  * <passport-pass showStateButtons></passport-pass>
  */
@@ -110,16 +109,8 @@ class PassportPass extends polymer.Element {
             },
             state: {
                 type: String
-            },
-            hasViewed: {
-                type: Boolean,
-                observer: "_hasViewed",
-                value: false
             }
         };
-    }
-    _hasViewed() {
-
     }
     _migratorChanged(newVal) {
         this.shadowRoot.querySelector("#migrator").style.display = newVal?"":"none";
