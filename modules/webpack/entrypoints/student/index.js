@@ -28,11 +28,19 @@ require("../../components/pass-list/pass-list.js");
 /** require modules **/
 var utils = require("../../utils/index.js");
 
+//Main Elements 
+let myPassesList = document.getElementById("myPassesList");
 
 window.onload = function() {
     //check for errors TEST
     $("passport-pass-state-buttons").on("error", (e) => {
-        console.log(e);
         utils.throwError(e.originalEvent.detail.error);
     });
+
+    //Generate today's date
+    let date = new Date();
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+    //Set the filter for the pass lists 
+    myPassesList.filter = {date_from: date};
+    myPassesList.refreshPasses();
 };

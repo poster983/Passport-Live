@@ -20,6 +20,7 @@ email: hi@josephhassell.com
 
 /**
  * Endpoints for a single user.
+ * All endpoints here require a JWT in the Authorization Header or a x-xsrf-token header with a JWT cookie
 * @module api/account/user
 */
 
@@ -37,11 +38,18 @@ router.options("*", cors());
 //JWT auth
 router.use(passport.authenticate("jwt", { session: false}));
 
+
+
 //Checks for "me" and replaces it with the user ID
 router.param("accountID", (req, res, next) => {
     if(req.params.accountID.toLowerCase() === "me") {
         req.params.accountID = req.user.id;
     }
+    return next();
+});
+
+//only allow the current user or an admin to see your resource
+let allowMeOrAdminOnly = (req, res, next) => {
     //check permissions 
     //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
     if(!utils.checkPermission(req.user.userGroup, ["administrator"])) {
@@ -52,25 +60,25 @@ router.param("accountID", (req, res, next) => {
         }
     }
     return next();
-});
+};
 
 
 /**
- * Gets all passes that are relevant to the user 
+ * Gets all passes that are relevant to the user
+ *  
  * @function getUserPasses
  * @api GET /api/account/:accountID/passes
  * @apiparam {String} accountID
  * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes.getPasses} for filters 
  * @apiresponse {Object[]} Pass objects in an array
  */
-router.get("/:accountID/passes/", function getUserPasses(req, res, next) {
+router.get("/:accountID/passes/", allowMeOrAdminOnly, function getUserPasses(req, res, next) {
     //check for accountID
     if(typeof req.params.accountID !== "string") {
         let err = TypeError("accountID expected a string");
         err.status = 400;
         return next(err);
     }
-    console.log(req.query)
     passesJS.get({
         id: req.query.id,
         fromPerson: req.query.fromPerson,

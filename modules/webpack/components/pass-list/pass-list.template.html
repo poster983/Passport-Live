@@ -24,7 +24,7 @@
     flex-direction: column;
     font-size: calc(0.75em + 1vmin);
     color: var(--secondary-text-color);
-    opacity: 0.6;
+    opacity: 1;
     --iron-icon-fill-color: var(--secondary-text-color);
     --iron-icon-height: 32px;
     --iron-icon-width: 32px;
@@ -38,6 +38,13 @@
       </span>
     </div>
   </template>
+
+  <template is="dom-if" if="[[loading]]">
+    <div class="message">
+      <paper-spinner active>Loading</paper-spinner>
+    </div>
+  </template>
+  
   <template is="dom-repeat" items="{{passes}}" as="pass" sort="{{sort}}" rendered-item-count="{{passCount}}">
     <passport-pass 
       pass-id="[[pass.id]]" 
@@ -50,7 +57,6 @@
       from-person="[[_formatName(pass.fromPerson.name)]]"
       to-person="[[_formatName(pass.toPerson.name)]]"
       requester="[[_formatName(pass.requester.name)]]"
-      state="[[pass.state]]"
       show-state-buttons
       ></passport-pass>
   </template>

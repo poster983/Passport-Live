@@ -31,6 +31,7 @@ require("../styles/default-theme.js");
 require("@polymer/paper-listbox/paper-listbox.js");
 require("@polymer/iron-icons/social-icons.js");
 require("@polymer/iron-icon/iron-icon.js");
+require("@polymer/paper-spinner/paper-spinner.js");
 require("../pass/pass.js");
 /**
  * Polymer Element that displays and fetches a list of <passport-pass> elements.  
@@ -76,7 +77,11 @@ class PassportPassList extends polymer.Element {
                 type: Object,
                 observer: "_filtersChanged"
             },
-
+            loading: {
+                type: Boolean,
+                notify: true,
+                readOnly: true
+            }
         };
     }
     /** OBSERVERS **/
@@ -97,6 +102,7 @@ class PassportPassList extends polymer.Element {
      * Fetches pass array from server
      */
     refreshPasses() {
+        this._setLoading(true);
         let fetchTrans = null;
         if(this.forUser) {
             //WOULD CALL USER's PASS API 
@@ -105,10 +111,17 @@ class PassportPassList extends polymer.Element {
             fetchTrans = passJS.get(this.filter);
         }
         fetchTrans.then((passes) => {
+            this._setLoading(false);
             this.passes = passes;
         }).catch((err) => {
+            this._setLoading(false);
             this._error(err);
         });
+        /*
+        DAMMIT SAFARI
+        .finally(() => {
+            this._setLoading(false);
+        });*/
     }
     /**
      * An array.sort callback function for sorting the passes property
