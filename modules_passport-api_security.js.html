@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Importing Accounts.html">Importing Accounts</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/:id/send-activation/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~sendActivationEmail">POST</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/import/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/activate</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/rollback</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~rollback">DELETE</a></li></ul></li><li><a href="#">/api/import/log</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~searchBulkImport">GET</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_accounts.html">api/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">searchAccounts</a></li><li data-type='method'><a href="module-api_accounts.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">updateUserPassword</a></li></ul></li><li><a href="module-api_import.html">api/import</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">activate</a></li><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">importJsonAccounts</a></li><li data-type='method'><a href="module-api_import.html#~rollback">rollback</a></li><li data-type='method'><a href="module-api_import.html#~searchBulkImport">searchBulkImport</a></li></ul></li><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.sendActivation">sendActivation</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkDashboards">checkDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.dashboardPermission">dashboardPermission</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.accounts">accounts</a></li><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li><li data-type='method'><a href="module-webpack_api_misc.html#.getUserGroups">getUserGroups</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_api_security.html">webpack/api/security</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_security.html#.newAccount">newAccount</a></li></ul></li><li><a href="module-webpack_buttonLoader.html">webpack/buttonLoader</a><ul class='methods'><li data-type='method'><a href="module-webpack_buttonLoader.html#.done">done</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.fail">fail</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.load">load</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.success">success</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.warning">warning</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.formatJSON">formatJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.loader">loader</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a><ul class='methods'><li data-type='method'><a href="Caret.html#destroy">destroy</a></li><li data-type='method'><a href="Caret.html#initialize">initialize</a></li><li data-type='method'><a href="Caret.html#toggle">toggle</a></li></ul></li><li><a href="Logger.html">Logger</a><ul class='methods'><li data-type='method'><a href="Logger.html#debug">debug</a></li><li data-type='method'><a href="Logger.html#done">done</a></li><li data-type='method'><a href="Logger.html#error">error</a></li><li data-type='method'><a href="Logger.html#fetchError">fetchError</a></li><li data-type='method'><a href="Logger.html#log">log</a></li><li data-type='method'><a href="Logger.html#warn">warn</a></li><li data-type='method'><a href="Logger.html#working">working</a></li></ul></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Importing Accounts.html">Importing Accounts</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/:accountID/passes</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~getUserPasses">GET</a></li></ul></li><li><a href="#">/api/account/:accountID/send-activation/</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~sendActivationEmail">POST</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/import/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/activate</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/rollback</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~rollback">DELETE</a></li></ul></li><li><a href="#">/api/import/log</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~searchBulkImport">GET</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPasses">GET</a></li></ul></li><li><a href="#">/api/passes/:passID/state</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPassState">GET</a></li><li data-type='method'><a href="module-api_passes.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/passes/:passID/state/undo</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~undoPassState">PATCH</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_account_user.html">api/account/user</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~getUserPasses">getUserPasses</a></li><li data-type='method'><a href="module-api_account_user.html#~sendActivationEmail">sendActivationEmail</a></li></ul></li><li><a href="module-api_accounts.html">api/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">searchAccounts</a></li><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">updateUserPassword</a></li></ul></li><li><a href="module-api_import.html">api/import</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">activate</a></li><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">importJsonAccounts</a></li><li data-type='method'><a href="module-api_import.html#~rollback">rollback</a></li><li data-type='method'><a href="module-api_import.html#~searchBulkImport">searchBulkImport</a></li></ul></li><li><a href="module-api_passes.html">api/passes</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPasses">getPasses</a></li><li data-type='method'><a href="module-api_passes.html#~getPassState">getPassState</a></li><li data-type='method'><a href="module-api_passes.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-api_passes.html#~undoPassState">undoPassState</a></li><li data-type='method'><a href="module-api_passes.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.sendActivation">sendActivation</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#.accounts.json">accounts.json</a></li><li data-type='method'><a href="module-js_import.html#.accounts.rollback">accounts.rollback</a></li><li data-type='method'><a href="module-js_import.html#.accounts.sendActivation">accounts.sendActivation</a></li><li data-type='method'><a href="module-js_import.html#.searchBulkLogs">searchBulkLogs</a></li><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.get">get</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.state.accepted">state.accepted</a></li><li data-type='method'><a href="module-js_passes.html#.state.allowedChanges">state.allowedChanges</a></li><li data-type='method'><a href="module-js_passes.html#.state.arrived">state.arrived</a></li><li data-type='method'><a href="module-js_passes.html#.state.canceled">state.canceled</a></li><li data-type='method'><a href="module-js_passes.html#.state.enroute">state.enroute</a></li><li data-type='method'><a href="module-js_passes.html#.state.isAccepted">state.isAccepted</a></li><li data-type='method'><a href="module-js_passes.html#.state.isCanceled">state.isCanceled</a></li><li data-type='method'><a href="module-js_passes.html#.state.isNeutral">state.isNeutral</a></li><li data-type='method'><a href="module-js_passes.html#.state.neutral">state.neutral</a></li><li data-type='method'><a href="module-js_passes.html#.state.set">state.set</a></li><li data-type='method'><a href="module-js_passes.html#.state.undo">state.undo</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkDashboards">checkDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.dashboardPermission">dashboardPermission</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getPasses">getPasses</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.accounts">accounts</a></li><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li><li data-type='method'><a href="module-webpack_api_misc.html#.getUserGroups">getUserGroups</a></li></ul></li><li><a href="module-webpack_api_passes.html">webpack/api/passes</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_passes.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.getState">getState</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.setState">setState</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.undoState">undoState</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_api_security.html">webpack/api/security</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_security.html#.newAccount">newAccount</a></li></ul></li><li><a href="module-webpack_buttonLoader.html">webpack/buttonLoader</a><ul class='methods'><li data-type='method'><a href="module-webpack_buttonLoader.html#.done">done</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.fail">fail</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.load">load</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.success">success</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.warning">warning</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.capitalizeFirstLetter">capitalizeFirstLetter</a></li><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.formatJSON">formatJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.loader">loader</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a><ul class='methods'><li data-type='method'><a href="Caret.html#destroy">destroy</a></li><li data-type='method'><a href="Caret.html#initialize">initialize</a></li><li data-type='method'><a href="Caret.html#toggle">toggle</a></li></ul></li><li><a href="Logger.html">Logger</a><ul class='methods'><li data-type='method'><a href="Logger.html#debug">debug</a></li><li data-type='method'><a href="Logger.html#done">done</a></li><li data-type='method'><a href="Logger.html#error">error</a></li><li data-type='method'><a href="Logger.html#fetchError">fetchError</a></li><li data-type='method'><a href="Logger.html#log">log</a></li><li data-type='method'><a href="Logger.html#warn">warn</a></li><li data-type='method'><a href="Logger.html#working">working</a></li></ul></li><li><a href="PassportPass.html">PassportPass</a></li><li><a href="PassportPassList.html">PassportPassList</a><ul class='methods'><li data-type='method'><a href="PassportPassList.html#_filtersChanged">_filtersChanged</a></li><li data-type='method'><a href="PassportPassList.html#refreshPasses">refreshPasses</a></li><li data-type='method'><a href="PassportPassList.html#sort">sort</a></li></ul></li><li><a href="PassportPassStateBadge.html">PassportPassStateBadge</a><ul class='methods'><li data-type='method'><a href="PassportPassStateBadge.html#stateColor">stateColor</a></li></ul></li><li><a href="PassportPassStateButtons.html">PassportPassStateButtons</a><ul class='methods'><li data-type='method'><a href="PassportPassStateButtons.html#updateState">updateState</a></li></ul></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -70,16 +70,16 @@ email: hi@josephhassell.com
 * @module js/security
 */
 
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
-var r_ = db.dash()
+var r = require("rethinkdb");
+var db = require("../../modules/db/index.js");
+var r_ = db.dash();
 var config = require("config");
 var moment = require("moment");
 var shortid = require("shortid");
-var oldApi = require("./index.js")
+var oldApi = require("./index.js");
 var typeCheck = require("type-check").typeCheck;
-var utils = require("../passport-utils/index.js")
-var accountsJS = require("./accounts.js")
+var utils = require("../passport-utils/index.js");
+var accountsJS = require("./accounts.js");
 
 
 ///PERMISSON KEYS
@@ -87,7 +87,7 @@ var accountsJS = require("./accounts.js")
 
 
 
-    /*
+/*
     Creates a short permission key 
 
     
@@ -102,7 +102,7 @@ var accountsJS = require("./accounts.js")
         time: Date object
     }
     */
-    /**
+/**
      * Creates a New Permission Key.
      * @link module:js/security
      * @param {permissionKeyType} type - ENUM for the type of permission key this is.  Each may impose diffrent requirements.
@@ -113,74 +113,74 @@ var accountsJS = require("./accounts.js")
      * @param {(undefined|Date|ISO)} timeout.time - Will become inactive after given time.
      * @returns {Promise}
      */
-    exports.createPermissionKey = function(type, permissions, params, timeout) {
-        return new Promise((resolve, reject) => {
-            var ins = {}
-            var key = shortid.generate() + shortid.generate();
+exports.createPermissionKey = function(type, permissions, params, timeout) {
+    return new Promise((resolve, reject) => {
+        var ins = {};
+        var key = shortid.generate() + shortid.generate();
             
-            if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
-                var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
-                    err.status = 400;
-                    return reject(err)
-            }
+        if(!typeCheck("Maybe {tally: Maybe Number, time: Maybe ISODate | Date}", timeout, utils.typeCheck)) {
+            var err = new TypeError("timeout expects an Object with the following types: \"Maybe {tally: Maybe Number, time: Maybe ISODate | Date}\"");
+            err.status = 400;
+            return reject(err);
+        }
 
-            if(timeout) {
-                if(typeCheck("ISODate", timeout.time, utils.typeCheck)) {
-                    timeout.time = r.ISO8601(timeout.time)
-                }
-                ins.timeout = timeout;
+        if(timeout) {
+            if(typeCheck("ISODate", timeout.time, utils.typeCheck)) {
+                timeout.time = r.ISO8601(timeout.time);
             }
-            if(params) {
-                ins.params = params;
-            }
-            if(permissions) {
-                ins.permissions = permissions;
-            }
+            ins.timeout = timeout;
+        }
+        if(params) {
+            ins.params = params;
+        }
+        if(permissions) {
+            ins.permissions = permissions;
+        }
 
-            if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
-                var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
-                    err.status = 400;
-                    return reject(err)
-            }
+        if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
+            var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
+            err.status = 400;
+            return reject(err);
+        }
 
-            //CHeck Type Rules
-            if(type === "NEW_ACCOUNT") {
-                if(!typeCheck("{userGroups: [userGroup]}", permissions, utils.typeCheck)) {
-                    var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        //CHeck Type Rules
+        if(type === "NEW_ACCOUNT") {
+            if(!typeCheck("{userGroups: [userGroup]}", permissions, utils.typeCheck)) {
+                var err = new TypeError("permissions.userGroups must be an array of type \"userGroup\" strings.");
+                err.status = 400;
+                return reject(err);
             }
-            if(type === "ACTIVATE_ACCOUNT") {
-                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
-                    var err = new TypeError("permissions.accountID must be an ID string.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        }
+        if(type === "ACTIVATE_ACCOUNT") {
+            if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
+                var err = new TypeError("permissions.accountID must be an ID string.");
+                err.status = 400;
+                return reject(err);
             }
-            if(type === "RESET_PASSWORD") {
-                if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
-                    var err = new TypeError("permissions.accountID must be an ID string.");
-                    err.status = 400;
-                    return reject(err);
-                }
+        }
+        if(type === "RESET_PASSWORD") {
+            if(!typeCheck("{accountID: String}", params, utils.typeCheck)) {
+                var err = new TypeError("permissions.accountID must be an ID string.");
+                err.status = 400;
+                return reject(err);
             }
+        }
 
-            ins.key = key;
-            ins.type = type;
-            ins.uses = 0;
+        ins.key = key;
+        ins.type = type;
+        ins.uses = 0;
 
-            r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
-                if(err) {
-                    return reject(err);
-                }
-                return resolve(key);
-            })
-        })
-    }//* @link module:js/security
-    //* @memberof! js/security.newKey#
-    //* @exports js/security/newKey
-     /**
+        r.table("permissionKeys").insert(ins).run(db.conn(), function(err) {
+            if(err) {
+                return reject(err);
+            }
+            return resolve(key);
+        });
+    });
+};//* @link module:js/security
+//* @memberof! js/security.newKey#
+//* @exports js/security/newKey
+/**
      * A set of wrappers for creating specific types of perm keys. 
      * @name newKey
      * @inner
@@ -189,8 +189,8 @@ var accountsJS = require("./accounts.js")
      * @property {Object} newKey
      * @property {function} newKey.newAccount - Creates a New Permission Key For New Accounts
      */
-    var newKey = {};
-     /**
+var newKey = {};
+/**
      * Creates a New Permission Key For Creating New Accounts from the new account form and API
      * @function
      * @memberof module:js/security
@@ -200,50 +200,50 @@ var accountsJS = require("./accounts.js")
      * @param {(undefined|Date|string)} timeout.time - Will become inactive after given time.
      * @returns {Promise} - key 
      */
-    newKey.newAccount = function(userGroups, timeout) {
-        return new Promise((resolve, reject) => {
-            return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject)
-        }) 
-    }
+newKey.newAccount = function(userGroups, timeout) {
+    return new Promise((resolve, reject) => {
+        return exports.createPermissionKey(exports.permissionKeyType.NEW_ACCOUNT, {userGroups: userGroups}, null, timeout).then(resolve).catch(reject);
+    }); 
+};
 
-     /**
+/**
      * Creates a New Permission Key For Activating New Accounts From email
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
      * @returns {Promise} -key
      */
-    newKey.activateAccount = function(id) {
-        return new Promise((resolve, reject) => {
-            accountsJS.getUserByID(id, (err, user) => {
-                if(err) {return reject(err);}
-                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
-                var date = moment().add(7, "days")
-                return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
-            })
+newKey.activateAccount = function(id) {
+    return new Promise((resolve, reject) => {
+        accountsJS.getUserByID(id, (err, user) => {
+            if(err) {return reject(err);}
+            if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+            var date = moment().add(7, "days");
+            return exports.createPermissionKey(exports.permissionKeyType.ACTIVATE_ACCOUNT, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject);
+        });
             
-        }) 
-    }
+    }); 
+};
 
-    /**
+/**
      * Creates a New Permission Key For resetting a forgotten password Accounts From email. Times out after 1 hour
      * @function
      * @memberof module:js/security
      * @param {String} id - Account id that this key will work for.
      * @returns {Promise} - key
      */
-    newKey.resetPassword = function(id) {
-        return new Promise((resolve, reject) => {
-            accountsJS.getUserByID(id, (err, user) => {
-                if(err) {return reject(err);}
-                if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
-                var date = moment().add(1, "hours")
-                return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject)
-            });
-        }) 
-    }
-    //setTimeout(function() {newKey.resetPassword("653f06df-c797-4795-993f-9d2870a57315").then((res)=>{console.log(res)}).catch((err) => {console.error(err)})}, 1000);
-    /*
+newKey.resetPassword = function(id) {
+    return new Promise((resolve, reject) => {
+        accountsJS.getUserByID(id, (err, user) => {
+            if(err) {return reject(err);}
+            if(!user){var err = new Error("User not found"); err.status = 404; return reject(err);}
+            var date = moment().add(1, "hours");
+            return exports.createPermissionKey(exports.permissionKeyType.RESET_PASSWORD, null, {accountID: id}, {time: date.toISOString(), tally: 1}).then(resolve).catch(reject);
+        });
+    }); 
+};
+//setTimeout(function() {newKey.resetPassword("653f06df-c797-4795-993f-9d2870a57315").then((res)=>{console.log(res)}).catch((err) => {console.error(err)})}, 1000);
+/*
     setTimeout(function() {
         //newKey.newAccount(["student", "teacher"], {tally: }) //["student", "teacher"]
         console.log(typeCheck("Date", new Date()))
@@ -254,13 +254,13 @@ var accountsJS = require("./accounts.js")
         //newKey.newAccount(["student"], {time: "2017-11-10T02:41:57+00:00", tally:6})
         //newKey.newAccount(["student"], {time: date, tally:12})
     }, 1000);*/
-    exports.newKey = newKey;
+exports.newKey = newKey;
 
 
-    //This checks to see if the Permission key is valid and returns a json object with the permissions.
-    //Callback: done(err, perms)
-    //SHould only return one
-    /**
+//This checks to see if the Permission key is valid and returns a json object with the permissions.
+//Callback: done(err, perms)
+//SHould only return one
+/**
      * Checks a Permission Key.  It also may change the timeout field if on tally mode
      * @link module:js/security
      * @deprecated since version 0.10
@@ -278,9 +278,9 @@ exports.checkPermissionKey = function(key, done) {
 
         document.toArray(function(err, arr) {
             if(err) {
-                return done(err)
+                return done(err);
             }
-            console.log(arr)
+            console.log(arr);
             //Found key
             if(0&lt;arr.length) {
                 if(arr[0].timeout.time) {
@@ -326,7 +326,7 @@ exports.checkPermissionKey = function(key, done) {
             }
         });
     });
-}
+};
 
 /**
  * Gets Permission Key data.
@@ -336,17 +336,17 @@ exports.checkPermissionKey = function(key, done) {
  * @param {function} done - Callback.
  */
 exports.getPermissionKeyData = function(type, key, done) {
-	if(!key || typeof key != "string") {
-		var err = new Error("Invalid Key");
-		err.status = 400;
-		return done(err);
-	}
+    if(!key || typeof key != "string") {
+        var err = new Error("Invalid Key");
+        err.status = 400;
+        return done(err);
+    }
     if(!typeCheck("permissionKeyType", type, utils.typeCheck)) {
         var err = new TypeError("Type expected the \"permissionKeyType\" ENUM ");
-            err.status = 400;
-            return done(err)
+        err.status = 400;
+        return done(err);
     }
-	r.table("permissionKeys").filter({
+    r.table("permissionKeys").filter({
         key: key,
         type: type
     }).run(db.conn(), function(err, document) {
@@ -356,7 +356,7 @@ exports.getPermissionKeyData = function(type, key, done) {
 
         document.toArray(function(err, arr) {
             if(err) {
-                return done(err)
+                return done(err);
             }
             if(arr.length == 1) {
             	return done(null, arr[0]);
@@ -371,7 +371,7 @@ exports.getPermissionKeyData = function(type, key, done) {
             }
         });
     });
-}
+};
 
 /**
  * Checks if Permission Key is Valid according to the timeout field.  DOES NOT INCREASE TALLY.
@@ -385,35 +385,35 @@ exports.getPermissionKeyData = function(type, key, done) {
 exports.checkPermissionKeyValidity = (type, key) => {
     return new Promise((resolve, reject) => {
         return r.table("permissionKeys")
-        .filter({
-            key: key,
-            type: type
-        })
-        .filter((key) => {
-            return key("timeout")("time").ge(r.now()).default(true);
-        })
-        .filter((key) => {
-            return key("timeout")("tally").gt(0).default(true);
-        })
-        .run(db.conn()).then((keyDoc) => {
-            keyDoc.toArray(function(err, keyData) {
-                if(err) {
-                    return reject(err)
-                }
-                if(keyData.length == 1) {
-                    return resolve(keyData[0]);
-                } else if(keyData.length &lt; 1) {
-                    return resolve(null)
-                } else {
-                    var err = new Error("Conflicting Keys");
-                    err.status = 500;
-                    return reject(err);
-                }
-            });
-        }).catch(reject);
-    })
+            .filter({
+                key: key,
+                type: type
+            })
+            .filter((key) => {
+                return key("timeout")("time").ge(r.now()).default(true);
+            })
+            .filter((key) => {
+                return key("timeout")("tally").gt(0).default(true);
+            })
+            .run(db.conn()).then((keyDoc) => {
+                keyDoc.toArray(function(err, keyData) {
+                    if(err) {
+                        return reject(err);
+                    }
+                    if(keyData.length == 1) {
+                        return resolve(keyData[0]);
+                    } else if(keyData.length &lt; 1) {
+                        return resolve(null);
+                    } else {
+                        var err = new Error("Conflicting Keys");
+                        err.status = 500;
+                        return reject(err);
+                    }
+                });
+            }).catch(reject);
+    });
     
-}
+};
 
 
 
@@ -426,17 +426,17 @@ exports.checkPermissionKeyValidity = (type, key) => {
  */
 exports.keyUsed = (type, key) => {
     return r_.table("permissionKeys")
-    .filter({
-        key: key,
-        type: type
-    })
-    .filter((row) => {
-        return row.hasFields({timeout: {tally: true}})
-    })
-    .update((row) => {
-        return {timeout: {tally: row("timeout")("tally").sub(1)}, uses: row("uses").add(1)}
-    }).run()
-}
+        .filter({
+            key: key,
+            type: type
+        })
+        .filter((row) => {
+            return row.hasFields({timeout: {tally: true}});
+        })
+        .update((row) => {
+            return {timeout: {tally: row("timeout")("tally").sub(1)}, uses: row("uses").add(1)};
+        }).run();
+};
 
 //exports.keyUsed("ACTIVATE_ACCOUNT", "SJrZpBryGHklrbTBHkf").then((res) => {console.log(res)}).catch((err)=>{console.error(err)})
 /**
@@ -446,12 +446,12 @@ exports.keyUsed = (type, key) => {
  */
 exports.cleanDB = () => {
     return r_.table("permissionKeys")
-    .filter((key) => {
-        return key("timeout")("time").lt(r_.now())
-        .or(key("timeout")("tally").le(0))
-        .default(false);
-    }).delete().run();
-}
+        .filter((key) => {
+            return key("timeout")("time").lt(r_.now())
+                .or(key("timeout")("tally").le(0))
+                .default(false);
+        }).delete().run();
+};
 //exports.cleanDB().then((res) => {console.log(res)})
 /**
 ENUM TYPES
@@ -464,15 +464,15 @@ ENUM TYPES
  * @readonly
  * @enum {String}
  */
- exports.permissionKeyType = {
-        /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
-        NEW_ACCOUNT: "NEW_ACCOUNT", 
-        /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
-        ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
-        /** Used for resetting your password via an email. */
-        RESET_PASSWORD: "RESET_PASSWORD",
-        UNKNOWN: "UNKNOWN"
-    };
+exports.permissionKeyType = {
+    /** Used For Account Creation API.  The key gives the user permission to create a protected account (I.E. userGroup with "verifyAccountCreation" set to true) */
+    NEW_ACCOUNT: "NEW_ACCOUNT", 
+    /** Used for activating an account from an email.  Used for both self signup and mass import activation with and without a password*/
+    ACTIVATE_ACCOUNT: "ACTIVATE_ACCOUNT", 
+    /** Used for resetting your password via an email. */
+    RESET_PASSWORD: "RESET_PASSWORD",
+    UNKNOWN: "UNKNOWN"
+};
 exports.permissionKeyType = Object.freeze(exports.permissionKeyType);
 </code></pre>
         </article>
@@ -487,7 +487,7 @@ exports.permissionKeyType = Object.freeze(exports.permissionKeyType);
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 08 2018 01:28:27 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Mar 25 2018 15:15:02 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>

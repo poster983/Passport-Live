@@ -29,7 +29,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav class="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Importing Accounts.html">Importing Accounts</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/:id/send-activation/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~sendActivationEmail">POST</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/import/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/activate</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/rollback</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~rollback">DELETE</a></li></ul></li><li><a href="#">/api/import/log</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~searchBulkImport">GET</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">GET</a></li></ul></li><li><a href="#">/api/passes/me/by/:idCol/from/:fromDay/to/:toDay</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">GET</a></li></ul></li><li><a href="#">/api/passes/status/:passId/isMigrating/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">PATCH</a></li></ul></li><li><a href="#">/api/passes/status/:passId/state/:state</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_accounts.html">api/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">searchAccounts</a></li><li data-type='method'><a href="module-api_accounts.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">updateUserPassword</a></li></ul></li><li><a href="module-api_import.html">api/import</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">activate</a></li><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">importJsonAccounts</a></li><li data-type='method'><a href="module-api_import.html#~rollback">rollback</a></li><li data-type='method'><a href="module-api_import.html#~searchBulkImport">searchBulkImport</a></li></ul></li><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.sendActivation">sendActivation</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.flexableGetPasses">flexableGetPasses</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkDashboards">checkDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.dashboardPermission">dashboardPermission</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-passRESTApi.html">passRESTApi</a><ul class='methods'><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromDay">getPassForMeFromDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~getPassForMeFromToDay">getPassForMeFromToDay</a></li><li data-type='method'><a href="module-passRESTApi.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateArrivedStatus">updateArrivedStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updateMigrationStatus">updateMigrationStatus</a></li><li data-type='method'><a href="module-passRESTApi.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.accounts">accounts</a></li><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li><li data-type='method'><a href="module-webpack_api_misc.html#.getUserGroups">getUserGroups</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_api_security.html">webpack/api/security</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_security.html#.newAccount">newAccount</a></li></ul></li><li><a href="module-webpack_buttonLoader.html">webpack/buttonLoader</a><ul class='methods'><li data-type='method'><a href="module-webpack_buttonLoader.html#.done">done</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.fail">fail</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.load">load</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.success">success</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.warning">warning</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.formatJSON">formatJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.loader">loader</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a><ul class='methods'><li data-type='method'><a href="Caret.html#destroy">destroy</a></li><li data-type='method'><a href="Caret.html#initialize">initialize</a></li><li data-type='method'><a href="Caret.html#toggle">toggle</a></li></ul></li><li><a href="Logger.html">Logger</a><ul class='methods'><li data-type='method'><a href="Logger.html#debug">debug</a></li><li data-type='method'><a href="Logger.html#done">done</a></li><li data-type='method'><a href="Logger.html#error">error</a></li><li data-type='method'><a href="Logger.html#fetchError">fetchError</a></li><li data-type='method'><a href="Logger.html#log">log</a></li><li data-type='method'><a href="Logger.html#warn">warn</a></li><li data-type='method'><a href="Logger.html#working">working</a></li></ul></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-Configs.html">Configs</a></li><li><a href="tutorial-Importing Accounts.html">Importing Accounts</a></li><li><a href="tutorial-Setup Error Monitoring.html">Setup Error Monitoring</a></li><li><a href="tutorial-Web App System Requirements.html">Web App System Requirements</a></li></ul><h3>API</h3><ul><li><a href="#">/api/account/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">GET</a></li></ul></li><li><a href="#">/api/account/:accountID/passes</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~getUserPasses">GET</a></li></ul></li><li><a href="#">/api/account/:accountID/send-activation/</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~sendActivationEmail">POST</a></li></ul></li><li><a href="#">/api/account/email/:email/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">GET</a></li></ul></li><li><a href="#">/api/account/groupfields/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">PATCH</a></li></ul></li><li><a href="#">/api/account/hasClasses</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">GET</a></li></ul></li><li><a href="#">/api/account/id/:id</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">GET</a></li></ul></li><li><a href="#">/api/account/location/datetime/:dateTime/id/:id/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">GET</a></li></ul></li><li><a href="#">/api/account/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/account/new/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">POST</a></li></ul></li><li><a href="#">/api/account/password/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">PATCH</a></li></ul></li><li><a href="#">/api/account/schedule/:dashboard</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">POST</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PATCH</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">PUT</a></li></ul></li><li><a href="#">/api/account/schedule/[:id]</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">GET</a></li></ul></li><li><a href="#">/api/account/schedule/student/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">GET</a></li></ul></li><li><a href="#">/api/account/schedule/teacher/:id</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">GET</a></li></ul></li><li><a href="#">/api/account/userGroup/:userGroup/name/:name/</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">GET</a></li></ul></li><li><a href="#">/api/auth/login/</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">POST</a></li></ul></li><li><a href="#">/api/auth/login/dscm</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">POST</a></li></ul></li><li><a href="#">/api/blackout/</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">POST</a></li></ul></li><li><a href="#">/api/blackout/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">POST</a></li></ul></li><li><a href="#">/api/blackout/user/:userId/date/:date</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">POST</a></li></ul></li><li><a href="#">/api/import/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/activate</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">POST</a></li></ul></li><li><a href="#">/api/import/accounts/:bulkID/rollback</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~rollback">DELETE</a></li></ul></li><li><a href="#">/api/import/log</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~searchBulkImport">GET</a></li></ul></li><li><a href="#">/api/media/avatar/:id/:size.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">GET</a></li></ul></li><li><a href="#">/api/media/background/:id.svg</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">GET</a></li></ul></li><li><a href="#">/api/passes/</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPasses">GET</a></li></ul></li><li><a href="#">/api/passes/:passID/state</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPassState">GET</a></li><li data-type='method'><a href="module-api_passes.html#~updatePassState">PATCH</a></li></ul></li><li><a href="#">/api/passes/:passID/state/undo</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~undoPassState">PATCH</a></li></ul></li><li><a href="#">/api/passes/me/</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~newPassForMe">POST</a></li></ul></li><li><a href="#">/api/security/key/:type</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">GET</a></li></ul></li><li><a href="#">/api/security/key/API/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">POST</a></li></ul></li><li><a href="#">/api/security/key/NEW_ACCOUNT/</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">POST</a></li></ul></li><li><a href="#">/api/server/config/passGroup/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">GET</a></li></ul></li><li><a href="#">/api/server/config/schedule/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">GET</a></li></ul></li><li><a href="#">/api/server/config/userGroups/</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">GET</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-api_account_user.html">api/account/user</a><ul class='methods'><li data-type='method'><a href="module-api_account_user.html#~getUserPasses">getUserPasses</a></li><li data-type='method'><a href="module-api_account_user.html#~sendActivationEmail">sendActivationEmail</a></li></ul></li><li><a href="module-api_accounts.html">api/accounts</a><ul class='methods'><li data-type='method'><a href="module-api_accounts.html#~getAccountsByEmail">getAccountsByEmail</a></li><li data-type='method'><a href="module-api_accounts.html#~getAccountsWithClasses">getAccountsWithClasses</a></li><li data-type='method'><a href="module-api_accounts.html#~getCurrentLocation">getCurrentLocation</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsById">handleGetAccountsById</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByName">handleGetAccountsByName</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByNameAndUserGroup">handleGetAccountsByNameAndUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleGetAccountsByUserGroup">handleGetAccountsByUserGroup</a></li><li data-type='method'><a href="module-api_accounts.html#~handleNewAccount">handleNewAccount</a></li><li data-type='method'><a href="module-api_accounts.html#~handleUpdateAccountGroupFieldsByUser">handleUpdateAccountGroupFieldsByUser</a></li><li data-type='method'><a href="module-api_accounts.html#~searchAccounts">searchAccounts</a></li><li data-type='method'><a href="module-api_accounts.html#~updateUserPassword">updateUserPassword</a></li></ul></li><li><a href="module-api_import.html">api/import</a><ul class='methods'><li data-type='method'><a href="module-api_import.html#~activate">activate</a></li><li data-type='method'><a href="module-api_import.html#~importJsonAccounts">importJsonAccounts</a></li><li data-type='method'><a href="module-api_import.html#~rollback">rollback</a></li><li data-type='method'><a href="module-api_import.html#~searchBulkImport">searchBulkImport</a></li></ul></li><li><a href="module-api_passes.html">api/passes</a><ul class='methods'><li data-type='method'><a href="module-api_passes.html#~getPasses">getPasses</a></li><li data-type='method'><a href="module-api_passes.html#~getPassState">getPassState</a></li><li data-type='method'><a href="module-api_passes.html#~newPassForMe">newPassForMe</a></li><li data-type='method'><a href="module-api_passes.html#~undoPassState">undoPassState</a></li><li data-type='method'><a href="module-api_passes.html#~updatePassState">updatePassState</a></li></ul></li><li><a href="module-api_userSchedule.html">api/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-api_userSchedule.html#~getAllSchedules">getAllSchedules</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForStudentDash">getSchedulesForStudentDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~getSchedulesForTeacherDash">getSchedulesForTeacherDash</a></li><li data-type='method'><a href="module-api_userSchedule.html#~setUserSchedule">setUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-api_userSchedule.html#~updateUserSchedule">updateUserSchedule</a></li></ul></li><li><a href="module-apiRoute.html">apiRoute</a><ul class='methods'><li data-type='method'><a href="module-apiRoute.html#~getScheduleConstants">getScheduleConstants</a></li><li data-type='method'><a href="module-apiRoute.html#~getUserGroups">getUserGroups</a></li><li data-type='method'><a href="module-apiRoute.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-apiRoute.html#~handleGetAccountsByName">handleGetAccountsByName</a></li></ul></li><li><a href="module-authRESTAPI.html">authRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-authRESTAPI.html#~handleAuthLogin">handleAuthLogin</a></li><li data-type='method'><a href="module-authRESTAPI.html#~loginDSCM">loginDSCM</a></li></ul></li><li><a href="module-blackoutAPI.html">blackoutAPI</a></li><li><a href="module-blackoutRESTAPI.html">blackoutRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByDate">getBlackoutByDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserId">getBlackoutByUserId</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~getBlackoutByUserIdAndDate">getBlackoutByUserIdAndDate</a></li><li data-type='method'><a href="module-blackoutRESTAPI.html#~newBlackout">newBlackout</a></li></ul></li><li><a href="module-js_accounts.html">js/accounts</a><ul class='methods'><li data-type='method'><a href="module-js_accounts.html#.get">get</a></li><li data-type='method'><a href="module-js_accounts.html#.newUserSchedule">newUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.replaceUserSchedule">replaceUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#.sendActivation">sendActivation</a></li><li data-type='method'><a href="module-js_accounts.html#.updateUserSchedule">updateUserSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~changePassword">changePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~createAccount">createAccount</a></li><li data-type='method'><a href="module-js_accounts.html#~getAccountByEmail">getAccountByEmail</a></li><li data-type='method'><a href="module-js_accounts.html#~getSpecificPeriods">getSpecificPeriods</a></li><li data-type='method'><a href="module-js_accounts.html#~getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserByID">getUserByID</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByName">getUserGroupAccountByName</a></li><li data-type='method'><a href="module-js_accounts.html#~getUserGroupAccountByUserGroup">getUserGroupAccountByUserGroup</a></li><li data-type='method'><a href="module-js_accounts.html#~setVerification">setVerification</a></li><li data-type='method'><a href="module-js_accounts.html#~updateAccountGroupFieldsByID">updateAccountGroupFieldsByID</a></li><li data-type='method'><a href="module-js_accounts.html#~updatePassword">updatePassword</a></li><li data-type='method'><a href="module-js_accounts.html#~updateTags">updateTags</a></li><li data-type='method'><a href="module-js_accounts.html#~verifyPassword">verifyPassword</a></li></ul></li><li><a href="module-js_email.html">js/email</a><ul class='methods'><li data-type='method'><a href="module-js_email.html#~sendActivationEmail">sendActivationEmail</a></li><li data-type='method'><a href="module-js_email.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-js_email.html#~sendResetPasswordEmail">sendResetPasswordEmail</a></li></ul></li><li><a href="module-js_emailTemplates.html">js/emailTemplates</a></li><li><a href="module-js_import.html">js/import</a><ul class='methods'><li data-type='method'><a href="module-js_import.html#.accounts.json">accounts.json</a></li><li data-type='method'><a href="module-js_import.html#.accounts.rollback">accounts.rollback</a></li><li data-type='method'><a href="module-js_import.html#.accounts.sendActivation">accounts.sendActivation</a></li><li data-type='method'><a href="module-js_import.html#.searchBulkLogs">searchBulkLogs</a></li><li data-type='method'><a href="module-js_import.html#~deleteBulkLog">deleteBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~importAccountsExcel">importAccountsExcel</a></li><li data-type='method'><a href="module-js_import.html#~mapAccounts">mapAccounts</a></li><li data-type='method'><a href="module-js_import.html#~newBulkLog">newBulkLog</a></li><li data-type='method'><a href="module-js_import.html#~updateBulkLog">updateBulkLog</a></li></ul></li><li><a href="module-js_passes.html">js/passes</a><ul class='methods'><li data-type='method'><a href="module-js_passes.html#.get">get</a></li><li data-type='method'><a href="module-js_passes.html#.getPass">getPass</a></li><li data-type='method'><a href="module-js_passes.html#.limitTally">limitTally</a></li><li data-type='method'><a href="module-js_passes.html#.newPass">newPass</a></li><li data-type='method'><a href="module-js_passes.html#.state.accepted">state.accepted</a></li><li data-type='method'><a href="module-js_passes.html#.state.allowedChanges">state.allowedChanges</a></li><li data-type='method'><a href="module-js_passes.html#.state.arrived">state.arrived</a></li><li data-type='method'><a href="module-js_passes.html#.state.canceled">state.canceled</a></li><li data-type='method'><a href="module-js_passes.html#.state.enroute">state.enroute</a></li><li data-type='method'><a href="module-js_passes.html#.state.isAccepted">state.isAccepted</a></li><li data-type='method'><a href="module-js_passes.html#.state.isCanceled">state.isCanceled</a></li><li data-type='method'><a href="module-js_passes.html#.state.isNeutral">state.isNeutral</a></li><li data-type='method'><a href="module-js_passes.html#.state.neutral">state.neutral</a></li><li data-type='method'><a href="module-js_passes.html#.state.set">state.set</a></li><li data-type='method'><a href="module-js_passes.html#.state.undo">state.undo</a></li><li data-type='method'><a href="module-js_passes.html#.updatePass">updatePass</a></li></ul></li><li><a href="module-js_schedules.html">js/schedules</a><ul class='methods'><li data-type='method'><a href="module-js_schedules.html#~getActivePeriodsAtDateTime">getActivePeriodsAtDateTime</a></li></ul></li><li><a href="module-js_security.html">js/security</a><ul class='methods'><li data-type='method'><a href="module-js_security.html#.checkPermissionKey">checkPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.checkPermissionKeyValidity">checkPermissionKeyValidity</a></li><li data-type='method'><a href="module-js_security.html#.cleanDB">cleanDB</a></li><li data-type='method'><a href="module-js_security.html#.createPermissionKey">createPermissionKey</a></li><li data-type='method'><a href="module-js_security.html#.getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-js_security.html#.keyUsed">keyUsed</a></li><li data-type='method'><a href="module-js_security.html#.newKey.activateAccount">newKey.activateAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.newAccount">newKey.newAccount</a></li><li data-type='method'><a href="module-js_security.html#.newKey.resetPassword">newKey.resetPassword</a></li></ul></li><li><a href="module-js_userSchedule.html">js/userSchedule</a><ul class='methods'><li data-type='method'><a href="module-js_userSchedule.html#.get">get</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getStudentSchedule">getStudentSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.getTeacherSchedule">getTeacherSchedule</a></li><li data-type='method'><a href="module-js_userSchedule.html#.new">new</a></li><li data-type='method'><a href="module-js_userSchedule.html#.replace">replace</a></li><li data-type='method'><a href="module-js_userSchedule.html#.update">update</a></li></ul></li><li><a href="module-js_utils.html">js/utils</a><ul class='methods'><li data-type='method'><a href="module-js_utils.html#.checkDashboards">checkDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.compileDashboardNav">compileDashboardNav</a></li><li data-type='method'><a href="module-js_utils.html#.dashboardPermission">dashboardPermission</a></li><li data-type='method'><a href="module-js_utils.html#.getAllowedDashboards">getAllowedDashboards</a></li><li data-type='method'><a href="module-js_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-js_utils.html#~checkPasswordPolicy">checkPasswordPolicy</a></li><li data-type='method'><a href="module-js_utils.html#~checkPeriod">checkPeriod</a></li><li data-type='method'><a href="module-js_utils.html#~cleanUser">cleanUser</a></li><li data-type='method'><a href="module-js_utils.html#~dscm">dscm</a></li><li data-type='method'><a href="module-js_utils.html#~generateSecureKey">generateSecureKey</a></li><li data-type='method'><a href="module-js_utils.html#~getBrowserSupport">getBrowserSupport</a></li></ul></li><li><a href="module-js_utils_rateLimit.html">js/utils/rateLimit</a><ul class='methods'><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~emailPasswordResetBruteforce">emailPasswordResetBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li><li data-type='method'><a href="module-js_utils_rateLimit.html#~loginBruteforce">loginBruteforce</a></li></ul></li><li><a href="module-mediaRESTAPI.html">mediaRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-mediaRESTAPI.html#~generateBackdrop">generateBackdrop</a></li><li data-type='method'><a href="module-mediaRESTAPI.html#~getIdenticon">getIdenticon</a></li></ul></li><li><a href="module-miscRESTApi.html">miscRESTApi</a></li><li><a href="module-passportApi.html">passportApi</a><ul class='methods'><li data-type='method'><a href="module-passportApi.html#~getPassGroups">getPassGroups</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleDefinition">getScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~getScheduleOfADate">getScheduleOfADate</a></li><li data-type='method'><a href="module-passportApi.html#~newScheduleDefinition">newScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleRepeatingScheduleDefinition">scheduleRepeatingScheduleDefinition</a></li><li data-type='method'><a href="module-passportApi.html#~scheduleSingleScheduleDefinition">scheduleSingleScheduleDefinition</a></li></ul></li><li><a href="module-passportAuthApi.html">passportAuthApi</a><ul class='methods'><li data-type='method'><a href="module-passportAuthApi.html#~newJWT">newJWT</a></li><li data-type='method'><a href="module-passportAuthApi.html#~newJWTForCookies">newJWTForCookies</a></li></ul></li><li><a href="module-securityRESTAPI.html">securityRESTAPI</a><ul class='methods'><li data-type='method'><a href="module-securityRESTAPI.html#~getPermissionKeyData">getPermissionKeyData</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleCreatePermissionKey">handleCreatePermissionKey</a></li><li data-type='method'><a href="module-securityRESTAPI.html#~handleNewApiKey">handleNewApiKey</a></li></ul></li><li><a href="module-webpack_api_accounts.html">webpack/api/accounts</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_accounts.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getPasses">getPasses</a></li><li data-type='method'><a href="module-webpack_api_accounts.html#.getWithClasses">getWithClasses</a></li></ul></li><li><a href="module-webpack_api_import.html">webpack/api/import</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_import.html#.accounts">accounts</a></li><li data-type='method'><a href="module-webpack_api_import.html#.searchBulkLogs">searchBulkLogs</a></li></ul></li><li><a href="module-webpack_api_misc.html">webpack/api/misc</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_misc.html#.getScheduleConfig">getScheduleConfig</a></li><li data-type='method'><a href="module-webpack_api_misc.html#.getUserGroups">getUserGroups</a></li></ul></li><li><a href="module-webpack_api_passes.html">webpack/api/passes</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_passes.html#.get">get</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.getState">getState</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.setState">setState</a></li><li data-type='method'><a href="module-webpack_api_passes.html#.undoState">undoState</a></li></ul></li><li><a href="module-webpack_api_schedule.html">webpack/api/schedule</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_schedule.html#.getSchedules">getSchedules</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.newSchedule">newSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.replaceSchedule">replaceSchedule</a></li><li data-type='method'><a href="module-webpack_api_schedule.html#.updateSchedule">updateSchedule</a></li></ul></li><li><a href="module-webpack_api_security.html">webpack/api/security</a><ul class='methods'><li data-type='method'><a href="module-webpack_api_security.html#.newAccount">newAccount</a></li></ul></li><li><a href="module-webpack_buttonLoader.html">webpack/buttonLoader</a><ul class='methods'><li data-type='method'><a href="module-webpack_buttonLoader.html#.done">done</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.fail">fail</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.load">load</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.success">success</a></li><li data-type='method'><a href="module-webpack_buttonLoader.html#.warning">warning</a></li></ul></li><li><a href="module-webpack_unsavedWork.html">webpack/unsavedWork</a><ul class='methods'><li data-type='method'><a href="module-webpack_unsavedWork.html#.button">button</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.changed">changed</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.destroy">destroy</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.reset">reset</a></li><li data-type='method'><a href="module-webpack_unsavedWork.html#.saved">saved</a></li></ul></li><li><a href="module-webpack_utils.html">webpack/utils</a><ul class='methods'><li data-type='method'><a href="module-webpack_utils.html#.capitalizeFirstLetter">capitalizeFirstLetter</a></li><li data-type='method'><a href="module-webpack_utils.html#.closePage">closePage</a></li><li data-type='method'><a href="module-webpack_utils.html#.distinctKeys">distinctKeys</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetch">fetch</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchJSON">fetchJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.fetchStatus">fetchStatus</a></li><li data-type='method'><a href="module-webpack_utils.html#.formatJSON">formatJSON</a></li><li data-type='method'><a href="module-webpack_utils.html#.getCookie">getCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.loader">loader</a></li><li data-type='method'><a href="module-webpack_utils.html#.materialResponse">materialResponse</a></li><li data-type='method'><a href="module-webpack_utils.html#.openPage">openPage</a></li><li data-type='method'><a href="module-webpack_utils.html#.setCookie">setCookie</a></li><li data-type='method'><a href="module-webpack_utils.html#.thisUser">thisUser</a></li><li data-type='method'><a href="module-webpack_utils.html#.throwError">throwError</a></li><li data-type='method'><a href="module-webpack_utils.html#.urlQuery">urlQuery</a></li><li data-type='method'><a href="module-webpack_utils.html#.uuidv4">uuidv4</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="Caret.html">Caret</a><ul class='methods'><li data-type='method'><a href="Caret.html#destroy">destroy</a></li><li data-type='method'><a href="Caret.html#initialize">initialize</a></li><li data-type='method'><a href="Caret.html#toggle">toggle</a></li></ul></li><li><a href="Logger.html">Logger</a><ul class='methods'><li data-type='method'><a href="Logger.html#debug">debug</a></li><li data-type='method'><a href="Logger.html#done">done</a></li><li data-type='method'><a href="Logger.html#error">error</a></li><li data-type='method'><a href="Logger.html#fetchError">fetchError</a></li><li data-type='method'><a href="Logger.html#log">log</a></li><li data-type='method'><a href="Logger.html#warn">warn</a></li><li data-type='method'><a href="Logger.html#working">working</a></li></ul></li><li><a href="PassportPass.html">PassportPass</a></li><li><a href="PassportPassList.html">PassportPassList</a><ul class='methods'><li data-type='method'><a href="PassportPassList.html#_filtersChanged">_filtersChanged</a></li><li data-type='method'><a href="PassportPassList.html#refreshPasses">refreshPasses</a></li><li data-type='method'><a href="PassportPassList.html#sort">sort</a></li></ul></li><li><a href="PassportPassStateBadge.html">PassportPassStateBadge</a><ul class='methods'><li data-type='method'><a href="PassportPassStateBadge.html#stateColor">stateColor</a></li></ul></li><li><a href="PassportPassStateButtons.html">PassportPassStateButtons</a><ul class='methods'><li data-type='method'><a href="PassportPassStateButtons.html#updateState">updateState</a></li></ul></li><li><a href="StudentScheduleEditor.html">StudentScheduleEditor</a><ul class='methods'><li data-type='method'><a href="StudentScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="StudentScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="StudentScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="StudentScheduleEditor.html#submit">submit</a></li></ul></li><li><a href="Table.html">Table</a></li><li><a href="TeacherScheduleEditor.html">TeacherScheduleEditor</a><ul class='methods'><li data-type='method'><a href="TeacherScheduleEditor.html#checkValidity">checkValidity</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#generate">generate</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#getHasChanged">getHasChanged</a></li><li data-type='method'><a href="TeacherScheduleEditor.html#submit">submit</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -69,9 +69,8 @@ email: hi@josephhassell.com
  * @module js/passes
  */
 
-var r = require("rethinkdb");
 var db = require("../db/index.js");
-var r_ = db.dash();
+var r = db.dash();
 var utils = require("../passport-utils/index.js");
 var moment = require("moment");
 var validator = require("validator");
@@ -79,8 +78,53 @@ var typeCheck = require("type-check").typeCheck;
 
 var accountScheduleJS = require("./accountSchedule.js");
 
+
 /**
- * Creates a new account
+ENUM TYPES
+**/
+/**
+ * Pass state values.
+ * @readonly
+ * @enum {String}
+ */
+exports.passStates = {
+    /** One of the default states */
+    PENDING: "pending", 
+    /** One of the default states Used when the toPerson's period limit is full*/
+    WAITLISTED: "waitlisted", 
+    /** The pass has been seen by toPerson or migrator, and migrator has permission to come/is coming */
+    ACCEPTED: "accepted",
+    /** The migrator does not have permission / will not go see to go see toPerson. */
+    DENIED: "denied",
+    /** The pass has been previously accepted, but now is canceled */
+    CANCELED: "canceled",
+    /** The migrator has been excused and is moving to the toPerson.  This is a pseudo state and is determined if the excusedTime key is set */
+    ENROUTE: "enroute",
+    /** The migrator has arrived at the toPerson.  This is a pseudo state and is determined if the arrivedTime key is set.  arrivedTime overrides enroute if both are set */
+    ARRIVED: "arrived"
+};
+exports.passStates = Object.freeze(exports.passStates);
+
+/**
+ * Pass types.
+ * @readonly
+ * @enum {String}
+ */
+exports.stateTypes = {
+    /** Can be either pending or waitlisted */
+    NEUTRAL: "neutral", 
+    /** The pass has been seen by toPerson or migrator, and migrator has permission to come/is coming */
+    ACCEPTED: "accepted",
+    /** The pass has been previously accepted, but now is canceled */
+    CANCELED: "canceled"
+};
+exports.stateTypes = Object.freeze(exports.stateTypes);
+
+
+
+
+/**
+ * Creates a new pass
  * @link module:js/passes
  * @param {Object} pass
  * @param {string} pass.toPerson - Id of the account recieving the migrating person
@@ -88,7 +132,7 @@ var accountScheduleJS = require("./accountSchedule.js");
  * @param {string} pass.migrator - Id of the account moving between people
  * @param {string} pass.requester - Id of the account who requested the pass
  * @param {string} pass.period - must be a valid period set in the configs
- * @param {(date|ISOString)} pass.date
+ * @param {(Date|ISOString)} pass.date
  * @param {Object} [options]
  * @param {boolean} [options.checkLimit=true] - Checks if toPerson is full. If so, the pass will be set as "waitlisted"
  * @param {boolean} [options.checkDupe=true] - Sheck if there is an identical pass in the system already.
@@ -106,6 +150,7 @@ exports.newPass = function (pass, options) {
         if (typeCheck("Date", pass.date)) {
             pass.date = moment(pass.date).toISOString();
         }
+        
         if (!pass.fromPerson) {
             pass.fromPerson = null;
         }
@@ -153,7 +198,6 @@ exports.newPass = function (pass, options) {
         preChecks.push(new Promise((limResolve, limReject) => {
             if (options.checkLimit !== false) {
                 exports.limitTally(pass.toPerson, pass.period, pass.date).then((limit) => {
-                    console.log(limit)
                     if(typeof limit.passLimit !== "number" || limit.tally &lt; limit.passLimit) {
                         return limResolve("pending");
                     } else {
@@ -176,22 +220,17 @@ exports.newPass = function (pass, options) {
                     requester: pass.requester,
                     period: pass.period,
                     date: r.ISO8601(pass.date)
-                }).run(db.conn(), function (err, cur) {
+                }).run(function (err, data) {
                     if (err) {
                         return dupeReject(err);
                     }
-                    cur.toArray(function (err, data) {
-                        if (err) {
-                            return dupeReject(err);
-                        }
-                        if (data.length > 0) {
-                            var err = new Error("Duplicate pass found");
-                            err.status = 409;
-                            dupeReject(err);
-                        } else {
-                            dupeResolve();
-                        }
-                    });
+                    if (data.length > 0) {
+                        let err = new Error("Duplicate pass found");
+                        err.status = 409;
+                        dupeReject(err);
+                    } else {
+                        dupeResolve();
+                    }
                 });
             } else {
                 dupeResolve();
@@ -217,7 +256,6 @@ exports.newPass = function (pass, options) {
                     },
                     migration: {
                         excusedTime: null,
-                        inLimbo: false,
                         arrivedTime: null
                     }
                 },
@@ -225,7 +263,7 @@ exports.newPass = function (pass, options) {
                     email: [],
                     web: []
                 }
-            }).run(db.conn(), function (err, trans) {
+            }).run(function (err, trans) {
                 if (err) {
                     return reject(err);
                 }
@@ -237,8 +275,8 @@ exports.newPass = function (pass, options) {
     });
 };
 
-/**
- * Gets passes with flexable id search
+/*
+ * Gets passes
  * @link module:js/passes
  * @param {string} id - Id of the account
  * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
@@ -248,145 +286,209 @@ exports.newPass = function (pass, options) {
  * @param {function} done - callback
  * @returns {done} Error, or a transaction statement 
  */
-exports.flexableGetPasses = function (id, byColl, fromDate, toDate, periods, done) {
-    console.log(periods);
-    if (!id || typeof id != "string") {
-        var err = new Error("Invalid ID");
-        err.status = 400;
-        return done(err);
-    }
-    if (!byColl || typeof byColl != "string" || (byColl != "fromPerson" &amp;&amp; byColl != "toPerson" &amp;&amp; byColl != "migrator" &amp;&amp; byColl != "requester")) {
-        var err = new Error("By Column Is Invalid");
-        err.status = 400;
-        return done(err);
-    }
-    if (!moment(fromDate, "Y-MM-DD", true).isValid()) {
-        var err = new Error("fromDate Not Valid");
-        err.status = 400;
-        return done(err);
-    } else {
 
-        fromDate = moment(fromDate).toISOString();
-    }
+/**
+ * Gets passes
+ * @link module:js/passes
+ * @param {Object} [filter] - Object with fields to filter by.  You can also include fields of the pass that are not documented 
+ * @param {String} [filter.id] - ID of the pass itself (will still return an array)
+ * @param {String} [filter.fromPerson] - User ID of the person that the migrator is leaving from
+ * @param {String} [filter.toPerson] - User ID of the person that the migrator is going to
+ * @param {String} [filter.migrator] - User ID of the person that is actually moving
+ * @param {String} [filter.requester] - User ID of the person that requested the pass
+ * @param {(String|String[])} [filter.period] - An array r string of period constants.
+ * @param {Object} [filter.date]
+ * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored
+ * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string Time is ignored
+ * @param {String} [filter.forUser] - filters every pass that involves this person. 
+ * 
+ * @param {Object} [options] -- unused
+ * 
+ * @returns {Promise} - Array of passes
+ * @throws {(TypeError|Error|ReQL)}
+ */
+exports.get = function (filter, options) {
+    return new Promise((resolve, reject) => {
+        if(!filter) {
+            filter = {};
+        }
+        //check filter type
+        let filterType = `
+        {
+            id: Maybe String,
+            fromPerson: Maybe String,
+            toPerson: Maybe String,
+            migrator: Maybe String,
+            requester: Maybe String,
+            period: Maybe period|[period],
+            date: Maybe {
+                from: Maybe ISODate|Date,
+                to: Maybe ISODate|Date
+            }, 
+            forUser: Maybe String,
+            ...
+        }
+        `;
+        //console.log(filter.date)
+        //Top level type check.
+        if(!typeCheck(filterType, filter, utils.typeCheck)) {
+            let err = new TypeError("\"filter\" expected an object with structure: " + filterType);
+            err.status = 400;
+            return reject(err);
+        }
 
-    if (!moment(toDate, "Y-MM-DD", true).isValid()) {
-        toDate = null;
-    } else {
+        //type check options 
+        /*if(!options) {
+            options = {};
+        }
+        let optionsType = `
+        {
+            includeAllowedChanges: Maybe Boolean
+        }
+        `
+        if(!typeCheck(optionsType, options, utils.typeCheck)) {
+            let err = new TypeError("\"options\" expected an object with structure: " + optionsType);
+            err.status = 400;
+            return reject(err);
+        }*/
 
-        toDate = moment(toDate).toISOString();
 
-    }
+        // Prepare dates
+        if(filter.date &amp;&amp; typeCheck("Date", filter.date.from)) {
+            filter.date.from = moment(filter.date.from).toISOString();
+        }
+        if(filter.date &amp;&amp; typeCheck("Date", filter.date.to)) {
+            filter.date.to = moment(filter.date.to).toISOString();
+        }
+
+        //Start query
+        let query = r.table("passes");
+
+        //Filter Primary Keys 
+        if(filter.id) {
+            query = query.getAll(filter.id);
+            delete filter.id;
+        }
+
+        //filter "for user"
+        if(filter.forUser) {
+            query = query.filter((doc) => {
+                //check migrator
+                return r.or(
+                    doc("fromPerson").eq(filter.forUser),
+                    doc("toPerson").eq(filter.forUser),
+                    doc("migrator").eq(filter.forUser),
+                    doc("requester").eq(filter.forUser)
+                );
+            });
+            delete filter.forUser;
+        }
+
+        //filter date
+        if(filter.date &amp;&amp; (filter.date.from || filter.date.to)) {
+            query = query.filter((date) => {
+                if(filter.date &amp;&amp; filter.date.from &amp;&amp; filter.date.to) {
+                    return date("date").date().during(r.ISO8601(filter.date.from).date(), r.ISO8601(filter.date.to).date(), {leftBound: "closed", rightBound: "closed"});
+                } else if(filter.date &amp;&amp; filter.date.from) {
+                    return date("date").date().ge(r.ISO8601(filter.date.from).date());
+                } else if(filter.date &amp;&amp; filter.date.to) {
+                    return date("date").date().le(r.ISO8601(filter.date.to).date());
+                } else {
+                    return true;
+                }
+            });
+            delete filter.date;
+        }
+
+        //filter if periods is an array
+        if(typeCheck("[period]", filter.period, utils.typeCheck)) {
+            query = query.filter(function(period) {
+                return r.expr(filter.period).contains(period("period")); 
+            });
+            delete filter.period;
+        }
 
 
-    if (periods != null &amp;&amp; !Array.isArray(periods)) {
-        var err = new Error("Expected periods to be either undefined, null or an array.  Got: " + typeof periods);
-        err.status = 400;
-        return done(err);
-    }
+        //filter everything else
+        query = query.filter(filter);            
 
-
-
-    r.table("passes")
-
-        .filter(function (person) {
-            return person(byColl).eq(id);
-        })
-        .filter(function (day) {
-            if (!toDate) {
-                return day("date").date().gt(r.ISO8601(fromDate).date()).or(
-                    day("date").date().eq(r.ISO8601(fromDate).date()));
-            } else {
-                return day("date").date().during(r.ISO8601(fromDate).date(), r.ISO8601(toDate).date());
-            }
-        })
-        .filter(function (period) {
-            if (!periods) {
-                return true;
-            } else {
-                console.log(period("period"));
-                return r.expr(periods).contains(period("period"));
-            }
-        })
+        //Account Joins: 
         //join optional fromPerson value
-        .outerJoin(r.table("accounts"), function (passRow, accountRow) {
+        query = query.outerJoin(r.table("accounts"), function (passRow, accountRow) {
             return passRow("fromPerson").eq(accountRow("id"));
         })
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        .map(r.row.merge(function (ro) {
-            return {
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            .map(r.row.merge(function (ro) {
+                return {
 
-                "fromPerson": ro("right").pluck("id", "name", "email", "schedules").default(null)
+                    "fromPerson": ro("right").pluck("id", "name", "email", "schedules").default(null)
 
-            };
-        }))
-        .without("right")
-        //_______
-        //merge toPerson
+                };
+            }))
+            .without("right")
+            //_______
+            //merge toPerson
 
-        .eqJoin("toPerson", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        .map(r.row.merge(function (ro) {
-            return {
-                "toPerson": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
-        //___________
-        //merge Requester
+            .eqJoin("toPerson", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            .map(r.row.merge(function (ro) {
+                return {
+                    "toPerson": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
+            //___________
+            //merge Requester
 
-        .eqJoin("requester", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        //merge correct values
-        .map(r.row.merge(function (ro) {
+            .eqJoin("requester", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            //merge correct values
+            .map(r.row.merge(function (ro) {
 
-            return {
-                "requester": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
+                return {
+                    "requester": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
 
-        //___________
-        //migrator Requester
+            //___________
+            //migrator Requester
 
-        .eqJoin("migrator", r.table("accounts"))
-        //remove left
-        .map(r.row.merge(function (ro) {
-            return ro("left");
-        }))
-        .without("left")
-        //merge correct values
-        .map(r.row.merge(function (ro) {
-            return {
-                "migrator": ro("right").pluck("id", "name", "email", "schedules")
-            };
-        }))
-        .without("right")
+            .eqJoin("migrator", r.table("accounts"))
+            //remove left
+            .map(r.row.merge(function (ro) {
+                return ro("left");
+            }))
+            .without("left")
+            //merge correct values
+            .map(r.row.merge(function (ro) {
+                return {
+                    "migrator": ro("right").pluck("id", "name", "email", "schedules")
+                };
+            }))
+            .without("right")
 
-        .run(db.conn(), function (err, dataCur) {
-            if (err) {
-                return done(err);
-            }
-            dataCur.toArray(function (err, data) {
-                if (err) {
-                    return done(err);
-                }
-                return done(null, data);
-            });
-        });
+            
 
+            .run()
+            .then((data) => {
+                return resolve(data);
+            })
+            .catch(reject);
+        return query;
+    });
 };
-
 
 
 /**
@@ -403,7 +505,7 @@ exports.getPass = function (passId, done) {
         return done(err);
     }
 
-    r.table("passes").get(passId).run(db.conn(), function (err, pass) {
+    r.table("passes").get(passId).run(function (err, pass) {
         if (err) {
             return done(err);
         }
@@ -434,7 +536,7 @@ exports.updatePass = function (passId, doc, done) {
     }
 
 
-    r.table("passes").get(passId).update(doc).run(db.conn(), function (err, trans) {
+    r.table("passes").get(passId).update(doc).run(function (err, trans) {
         if (err) {
             return done(err);
         }
@@ -461,11 +563,17 @@ exports.limitTally = (userID, period, date) => {
                 outOf = tSchedule.schedule[period].passLimit;
             }
             //get tally count
-            r_.table("passes").filter(function (doc) {
-                return doc("date").date().eq(r_.ISO8601(date).date())
-                    .and(doc("toPerson").eq(userID))
-                    .and(doc("period").eq(period));
-            }).count()
+            r.table("passes")
+                //filter state (denied and canceled do not count)
+                .filter((doc) => {
+                    return doc("status")("confirmation")("state").ne(exports.passStates.CANCELED).or(doc("status")("confirmation")("state").ne(exports.passStates.DENIED));
+                })
+                //filter date and time
+                .filter(function (doc) {
+                    return doc("date").date().eq(r.ISO8601(date).date())
+                        .and(doc("toPerson").eq(userID))
+                        .and(doc("period").eq(period));
+                }).count()
                 .do(function (count) {
                     return {
                         tally: count,
@@ -482,12 +590,590 @@ exports.limitTally = (userID, period, date) => {
 
     });
 };
-/*
-exports.tally("b17c14ad-4799-4644-85e0-bd029475a17b", "a", "2018-01-08T06:00:00+00:00").then((res) => {
+
+
+/**
+     * Functions for manupulating the state of passes
+     * @name state
+     * @inner
+     * @private
+     * @memberof module:js/passes
+     * @property {Object} state
+     */
+var state = {};
+
+/**
+* Sets the pass state back to an origin state. Either Pending or Waitlisted
+* @function
+* @param {String} passID
+* @param {String} state
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @memberof module:js/passes
+* @returns {Promise} Transaction Statement
+* @throws {(TypeError|ReQL)}
+*/
+state.set = (passID, state, setByID) => {
+    if(!setByID) {setByID = null;}
+
+    return r.table("passes").get(passID).update((pass) => {
+        return {
+            status: {
+                confirmation: {
+                    setByUser: setByID,
+                    state: state,
+                    previousState: r.branch(
+                        pass("status")("confirmation")("state").ne(state),
+                        pass("status")("confirmation")("state"),
+                        pass("status")("confirmation")("previousState")
+                    ),
+                    /*previousSetByUser: r.branch(
+                        pass("status")("confirmation")("setByUser").ne(state),
+                        pass("status")("confirmation")("state"),
+                        pass("status")("confirmation")("previousState")
+                    )*/
+                }
+            }
+        };
+    }).run();
+};
+
+/**
+* Sets the pass state back to a neutral state. Either Pending or Waitlisted
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+state.neutral = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        
+
+        //get pass data 
+        return r.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                //console.log(passData)
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+
+                //Get limit data for toPerson
+                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+            })
+            .then((limit) => {
+                //check if limit is reached.  
+                if(typeof limit.passLimit !== "number" || limit.tally &lt; limit.passLimit) {
+                    return exports.passStates.PENDING;
+                } else {
+                    return exports.passStates.WAITLISTED;
+                }
+            })
+            .then((newState) => {
+                //update state
+                return state.set(passID, newState, setByID).then((transaction) => {
+                    //ready return 
+                    return {state: newState, transaction: transaction};
+                });
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+};
+
+/**
+* Determines if the given state is a neutral state (Pending or Waitlisted).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isNeutral = (state) => {
+    if(state === exports.passStates.PENDING || state === exports.passStates.WAITLISTED) {
+        return true;
+    }
+    return false;
+};
+/*state.neutral("0bb1ecde-b63e-4961-a5e2-2da40bae1e51", "da6655ec-d98c-4194-8c43-daafe1b648fe").then((res) => {
     console.log(res)
 }).catch((err) => {
-    console.error(err)
-})*/</code></pre>
+    console.log(err);
+})*/
+
+/**
+* Sets the pass state to accepted.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+
+state.accepted = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        //Set pass state to accepted
+        return state.set(passID, exports.passStates.ACCEPTED, setByID).then((transaction) => {
+            //Check if pass was found
+            if(transaction.replaced &lt; 1) {
+                let err = new Error("Pass not found");
+                err.status = 404;
+                throw err;
+            }
+            //ready return 
+            return {state: exports.passStates.ACCEPTED, transaction: transaction};
+        })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+};
+
+/**
+* Determines if the given state is an accepted state (Accepted).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isAccepted = (state) => {
+    if(state === exports.passStates.ACCEPTED) {
+        return true;
+    }
+    return false;
+};
+
+/**
+* Sets the pass state to canceled or denied.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).
+* @throws {(TypeError|ReQL)}
+*/
+
+state.canceled = (passID, setByID) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+
+        return r.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                //console.log(passData);
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                return passData;
+            })
+            .then((passData) => {
+                //check states to determine new state 
+                let stateData = passData.status.confirmation;
+                if(setByID &amp;&amp; state.isNeutral(stateData.state) &amp;&amp; setByID !== passData.requester) {
+                    return exports.passStates.DENIED;
+                } else {
+                    return exports.passStates.CANCELED;
+                }
+            })
+            .then((newState) => {
+                //Set new state
+                return state.set(passID, newState, setByID).then((transaction) => {
+                    //Prepare return value 
+                    return {state: newState, transaction: transaction};
+                });
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+};
+
+/**
+* Determines if the given state is a canceled state (Canceled).
+* @function
+* @memberof module:js/passes
+* @param {String} state
+* @returns {Boolean} 
+*/
+state.isCanceled = (state) => {
+    if(state === exports.passStates.CANCELED || state === exports.passStates.DENIED) {
+        return true;
+    }
+    return false;
+};
+
+
+/**
+* Sets the migration pass state to enroute.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {Boolean} [set=true] - if true, excusedTime will be set to now. if false, excusedTime will be set to null
+* @returns {Promise} Object with Transaction statement (transaction)
+* @throws {(TypeError|ReQL)}
+*/
+state.enroute = (passID, set) => {
+    if(typeof set !== "boolean") {set = true;}
+    return r.table("passes").get(passID)
+        .update({
+            status: {
+                migration: {
+                    excusedTime: set?r.now():null
+                }
+            }
+        })
+        .do((trans) => {
+            //calculate new state and generate return value
+            return r.table("passes").get(passID).pluck("status").do((status) => {
+                status = status("status");
+                //check if arrivedTime is set
+                return r.branch(
+                    //if typeof migration.arrivedTime === "string"
+                    status("migration")("arrivedTime").typeOf().eq("STRING"),
+                    //then the state is arrived
+                    {transaction: trans, state: exports.passStates.ARRIVED},
+                    //else. 
+                    r.branch(
+                        //if set === true
+                        r.expr(set).eq(true),
+                        //then
+                        {transaction: trans, state: exports.passStates.ENROUTE},
+                        //else
+                        {transaction: trans, state: status("confirmation")("state")}
+                    )
+                );
+            });
+        })
+        .run();
+};
+
+
+/**
+* Sets the migration pass state to arrived.
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {Boolean} [set=true] - if true, arrivedTime will be set to now. if false, arrivedTime will be set to null
+* @returns {Promise} Object with Transaction statement (transaction)
+* @throws {(TypeError|ReQL)}
+*/
+state.arrived = (passID, set) => {
+    if(typeof set !== "boolean") {set = true;}
+    return r.table("passes").get(passID)
+        .update({
+            status: {
+                migration: {
+                    arrivedTime: set?r.now():null
+                }
+            }
+        })
+        .do((trans) => {
+        //calculate new state and generate return value
+            return r.table("passes").get(passID).pluck("status").do((status) => {
+                status = status("status");
+                //check if arrivedTime is set
+                return r.branch(
+                    //if set === true
+                
+                    r.expr(set).eq(true),
+                    //then the state is arrived
+                    {transaction: trans, state: exports.passStates.ARRIVED},
+                    //else. 
+                    r.branch(
+                        //if typeof migration.excusedTime === "string"
+                        status("migration")("excusedTime").typeOf().eq("STRING"),
+                        //then state is enroute
+                        {transaction: trans, state: exports.passStates.ENROUTE},
+                        //else state is a real state
+                        {transaction: trans, state: status("confirmation")("state")}
+                    )
+                );
+            });
+        })
+        .run();
+};
+
+/**
+* Sets the state back to the previous state
+* @function
+* @memberof module:js/passes
+* @param {String} passID
+* @param {?String} [setByID=null] - Account ID that set this state.  
+* @param {Boolean} [checkMigrationStates=false] - Will prioritize undoing (null) the migration states (arrived and enroue)
+* @returns {Promise} Object with Transaction statement (transaction) and the new state (state).  No transaction will be returned if nothing changes. 
+* @throws {(TypeError|ReQL)}
+*/
+state.undo = (passID, setByID, checkMigrationStates) => {
+    return new Promise((resolve, reject) => {
+        //Type check 
+        if(!typeCheck("String", passID)) {
+            let err = new TypeError("passID expected a string");
+            err.status = 400;
+            return reject(err);
+        }
+        return r.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                return passData;
+            })
+            .then((passData) => {
+                
+                let migrationData = passData.status.migration;
+                let stateData = passData.status.confirmation;
+                //console.log(checkMigrationStates, migrationData.arrivedTime, migrationData.excusedTime);
+                //check for pseudo states arrived and enroute 
+                if(checkMigrationStates &amp;&amp; (migrationData.arrivedTime || migrationData.excusedTime)) {
+                    
+                    //undo the one that has the latest time
+                    if(migrationData.arrivedTime &amp;&amp; migrationData.excusedTime) {
+                        if(moment(migrationData.arrivedTime).isAfter(migrationData.excusedTime)) {
+                            //undo arrivedTime
+                            return state.arrived(passID, false);
+                        } else {
+                            //undo excusedTime
+                            return state.enroute(passID, false);
+                        }
+                    } else if(migrationData.arrivedTime) {
+                        //undo arrivedTime 
+                        return state.arrived(passID, false);
+                    } else {
+                        //undo Excused time
+                        return state.enroute(passID, false);
+                    }
+                } else if(stateData.previousState) {
+                    //determine new state
+                    //determine what state change function to call.
+                    if(state.isNeutral(stateData.previousState)) {
+                        return state.neutral(passID, setByID);
+                    } else if(state.isAccepted(stateData.previousState)) {
+                        console.log("YES")
+                        return state.accepted(passID, setByID);
+                    } else if(state.isCanceled(stateData.previousState)) {
+                        console.log("YES")
+                        return state.canceled(passID, setByID);
+                    } else {
+                        let err = new Error("Pass state invalid");
+                        err.status = 500;
+                        throw err;
+                    }
+                } else {
+                    //there was no previous state, don't change anything
+                    return {state: passData.status.confirmation.state};
+                }
+            })
+            .then(resolve)
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+};
+
+/**
+ * Calculates the allowed state changes for a particular pass's state.  Also includes the Pseudo migration states: arrived and enroute
+ * @function
+ * @memberof module:js/passes
+ * @param {String} passID 
+ * @param {String} forUserID 
+ * @returns {Promise} - See Example
+ * @throws {(TypeError|ReQL)}
+ * @example 
+ * &lt;caption>Return Object&lt;/caption>
+ * {
+ *  neutral: (Boolean),
+ *  accepted: (Boolean),
+ *  canceled: (Boolean),
+ *  undo: (Boolean|"UNDO"|"NEUTRAL"),
+ *  arrived: (Boolean|Null), //Will be null if "forUserID" is not "toPerson"
+ *  enroute: (Boolean)
+ * }
+ */
+state.allowedChanges = (passID, forUserID) => {
+    return new Promise((resolve, reject) => {
+        return r.table("passes").get(passID).run()
+            .then((passData) => {
+                //Check pass id validity
+                if(!passData) {
+                    let err = new Error("Pass not found");
+                    err.status = 404;
+                    throw err;
+                }
+                return passData;
+            })
+            .then((passData) => {
+                //calculate permissions
+                let permissions = {
+                    neutral: false,
+                    accepted: false,
+                    canceled: false,
+                    arrived: null,
+                    enroute: false,
+                    undo: false
+                };
+                let stateData = passData.status.confirmation;
+                //check if forUserID is NOT an id in the toPerson or fromPerson or migrator slots  
+                if(forUserID !== passData.migrator &amp;&amp; forUserID !== passData.toPerson &amp;&amp; forUserID !== passData.fromPerson) {
+                    return permissions;
+                }
+                //check if pass is locked, and if forUserID is not the serByUser
+                if(state.isCanceled(stateData.state) &amp;&amp; forUserID !== stateData.setByUser) {
+                    return permissions;
+                }
+
+                //set arrived to false if the forUserID toPerson. for baseline
+                if(forUserID === passData.toPerson) {
+                    permissions.arrived = false;
+                } 
+
+                //check of the forUserID is the from person and give them enroute perms
+                if(forUserID === passData.fromPerson &amp;&amp; forUserID !== passData.toPerson) {
+                    //if migratin, allow them to undo it.  if not allow them to set it unless arrived is set
+                    if(!passData.status.migration.arrivedTime) {
+                        if(passData.status.migration.excusedTime) {
+                            permissions.undo = "UNDO";
+                        } else {
+                            permissions.enroute = true;
+                        }
+                    }
+                    
+                } else if(passData.status.migration.arrivedTime) {
+                    // if pseudo state is arrived 
+                    if(forUserID === passData.toPerson) {
+                        //if user is the to person
+                        permissions.undo = "UNDO";
+                    }
+                } else if(passData.status.migration.excusedTime) {
+                    if(forUserID === passData.toPerson) {
+                        permissions.arrived = true;
+                    }
+                } else if(state.isNeutral(stateData.state)) {
+                    //change permissions object for neutral type state
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        //permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.accepted = true;
+                        //permissions.undo = "UNDO";
+                        permissions.undo = "NEUTRAL";
+                    } else {
+                        //If user is requester
+                        //permissions.neutral = true;
+                        permissions.canceled = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+
+                    if(forUserID === passData.toPerson) {
+                        //if user is tuPerson, allow them to set the pass to arrived
+                        permissions.arrived = true;
+                    }
+                } else if(state.isAccepted(stateData.state)) {
+                    //for accepted type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        permissions.canceled = true;
+                        //permissions.accepted = true;
+                        //permissions.undo = "UNDO"
+                        permissions.undo = "NEUTRAL";
+                    } else {
+                        //If user is requester
+                        permissions.canceled = true;
+                        //permissions.undo = "NEUTRAL";
+                    }  
+                    if(forUserID === passData.toPerson) {
+                        //if user is tuPerson, allow them to set the pass to arrived
+                        permissions.arrived = true;
+                    }
+                } else if(state.isCanceled(stateData.state)) {
+                    //for Canceled type
+                    if(forUserID !== passData.requester) {
+                        //if user is the receiver
+                        permissions.neutral = true;
+                        //permissions.canceled = true;
+                        permissions.accepted = true;
+                        //permissions.undo = "UNDO";
+                        permissions.undo = "NEUTRAL";
+                    } else {
+                        //If user is requester
+                        permissions.neutral = true;
+                        permissions.undo = "NEUTRAL";
+                    }  
+                } else {
+                    let err = new Error("Pass state not valid");
+                    err.status = 500;
+                    throw err;
+                }
+                return permissions;
+            })
+            .then(resolve)
+            .catch(reject);
+    });
+};
+
+
+state.type = (rawState) => {
+    if(state.isNeutral(rawState)) {
+        return exports.stateTypes.NEUTRAL;
+    } else if(state.isAccepted(rawState)) {
+        return exports.stateTypes.ACCEPTED;
+    } else if (state.isCanceled(rawState)) {
+        return exports.stateTypes.CANCELED;
+    } else if(rawState === exports.passStates.ARRIVED) {
+        return exports.passStates.ARRIVED;
+    } else if(rawState === exports.passStates.ENROUTE) {
+        return exports.passStates.ENROUTE;
+    } else {
+        throw new Error("Not a valid state");
+    }
+};
+
+/*
+    Neutral:
+        requester can change to type canceled or type neutral.  when they undo, they go to a neutral state
+        non requester can change to type accepted type canceled or type neutral
+
+    Accepted:
+        requester can change to type canceled.  when they undo, it goes to state neutral
+        not requester can change to type canceled.  When they undo, it goes to previous state
+    
+    Canceled: LOCKS PASS TO SETBYUSER 
+        requester can undo and set type to neutral.  When they undo, it goes to state neutral
+        no requester can change type to accepted or neutral. When they undo, it goes to previous state
+    
+*/
+
+
+exports.state = state;</code></pre>
         </article>
     </section>
 
@@ -500,7 +1186,7 @@ exports.tally("b17c14ad-4799-4644-85e0-bd029475a17b", "a", "2018-01-08T06:00:00+
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 08 2018 01:28:27 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Mar 25 2018 15:15:02 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
