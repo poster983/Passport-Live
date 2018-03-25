@@ -24,7 +24,7 @@ email: hi@josephhassell.com
 * @module webpack/api/security
 */
 
-let utils = require("../utils/index.js")
+let utils = require("../utils/index.js");
 
 /**
 * Creates a new permission key for creating accounts
@@ -35,5 +35,5 @@ let utils = require("../utils/index.js")
 * @param {String} [body.timeout.time] - ISO date/time
 */
 exports.newAccount = (body) => {
-    return utils.fetch("POST", "/api/security/key/NEW_ACCOUNT", {body: body, auth: true})
-}  
+    return utils.fetch("POST", "/api/security/key/NEW_ACCOUNT", {body: body, auth: true});
+};  

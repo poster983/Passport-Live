@@ -238,14 +238,14 @@ exports.dscm = function(req, res, next) {
         * @param {function} done - callback. 
         * @returns {done} Includes error, and a boolean.  True for valid period, false for not
         */
-exports.checkPeriod = function(period, done) {
-    var periodConst = config.get("schedule.periods");
-    if(periodConst.includes(period)) {
-        return done(null, true);
-    } else {
-        return done(null, false);
-    }
-};
+  exports.checkPeriod = function(period, done) {
+      var periodConst = config.get("schedule.periods");
+      if(periodConst.includes(period)) {
+          return done(null, true);
+      } else {
+          return done(null, false);
+      }
+  }
 
 /**
         * Generates a secure token/key
@@ -253,9 +253,9 @@ exports.checkPeriod = function(period, done) {
         * @link module:js/utils
         * @returns {string} Secure token/key.
         */
-exports.generateSecureKey = function() {
-    return shortid.generate() + shortid.generate();
-};
+  exports.generateSecureKey = function() {
+      return shortid.generate() + shortid.generate();
+  }
 
 /**
         * Checks if password is complient with password rules in the config file.  

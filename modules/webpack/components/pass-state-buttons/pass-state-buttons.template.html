@@ -1,0 +1,27 @@
+<style is="custom-style">
+    paper-fab {
+        display: var(--pass-state-buttons-fab-display, inline-block);
+        margin: 1px;
+        --paper-fab-keyboard-focus-background: var(--dark-primary-color);
+        transition: all 0.2s;
+    }
+    .cancel {
+        --paper-fab-background: var(--paper-red-500);
+    }
+    .accept {
+        --paper-fab-background: var(--paper-green-500);
+    }
+    .undo {
+    	--paper-fab-background: var(--paper-orange-500);
+    }
+    .arrived {
+    	--paper-fab-background: var(--accent-color);
+    }
+
+    /* Span Styles */
+</style>
+<paper-fab id="arrived" class="arrived" style="display: none;" mini disabled="[[disabled]]" on-click="_arrivedButtonClicked" icon="icons:create"></paper-fab>
+<paper-fab id="check" class="accept" mini disabled="[[disabled]]" on-click="_leftButtonClicked" icon="icons:check"></paper-fab>
+<!--<paper-spinner active for="block">...</paper-spinner>-->
+<paper-fab id="block" class="cancel" mini disabled="[[disabled]]" on-click="_rightButtonClicked" icon="icons:block"></paper-fab>
+

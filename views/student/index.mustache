@@ -279,7 +279,6 @@ email: hi@josephhassell.com
         </div>
       </div>
     </div>
-
     <!-- MyPasses-->
     <div class="section">
       <div class="row">
@@ -287,11 +286,12 @@ email: hi@josephhassell.com
           <div id="MyPassesCard" class="card grey darken-3 hoverable">
             <div class="card-content ">
               <span class="card-title white-text">My Passes</span>
-              <ul class="collection">
+              <passport-pass-list id="myPassesList" no-auto-fetch for-user="me"></passport-pass-list>
+              <!--<ul class="collection">
                 <div id="myPassesReturn">
 
                 </div>
-              </ul>
+              </ul>-->
             </div>
           </div>
         </div>
@@ -320,14 +320,15 @@ email: hi@josephhassell.com
       document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
   </script>
+  <script type="text/javascript" src=/js/polyfill/webcomponents-lite.js></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
   <!-- Compiled and minified JavaScript -->
   <script src="/js/materialize.js"></script>
+  <script type="text/javascript" src=/js/webpack/student.js></script>
   <script src="/js/passport.js"></script>
   <script src="/moment/min/moment-with-locales.min.js"></script>
   <script src="/sw.js"></script>
-  <!--<script src="js/PICS.js"></script>-->
   <script>
     /*Vars*/
     var idOfUser = "{{user.id}}";
@@ -347,7 +348,7 @@ email: hi@josephhassell.com
       $('select').material_select();
 
 
-      $.when(setPassGroupSelect(), setMyPasses(), checkDebugModeCookies()).done(function (a1, a2, a3) {
+      $.when(setPassGroupSelect(), checkDebugModeCookies()).done(function (a1, a2, a3) {
         $('#fullAjaxLoadingScreen').removeClass("loading");
       });
 
@@ -1016,12 +1017,12 @@ email: hi@josephhassell.com
           success: function (data) {
             if(data.state === "waitlisted") {
               Materialize.toast("Pass limit reached.  You have been waitlisted.", 8000)
-              setMyPasses();
+              document.getElementById("myPassesList").refreshPasses();
               materialResponse("check", "warning");
             } else if (data.transaction.inserted > 0) {
               //confirm pass
               console.log(data)
-              setMyPasses();
+              document.getElementById("myPassesList").refreshPasses();
               materialResponse("check", "success");
             } else {
               var err = new Error("Unknown Error");
@@ -1044,350 +1045,7 @@ email: hi@josephhassell.com
 
     //reset all fields 
 
-
-    ////MY PASSES CARD////
-
-    function getMyUpcomeingPasses(done) {
-      $.ajax({
-        type: "get",
-        url: "/api/passes/me/by/migrator/from/" + moment().format("Y-MM-DD"),
-        dataType: "json",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
-        },
-        success: function (data) {
-          done(null, data)
-        },
-        error: function (jqXHR) {
-          done(jqXHR)
-        }
-      });
-    }
-
-
-
-
-    function setMyPasses() {
-      getMyUpcomeingPasses(function (err, myPasses) {
-        if (err) {
-          return errorHand(err)
-        }
-        console.log(myPasses)
-        $myPasses = $('#myPassesReturn')
-        $myPasses.empty();
-        for (var i = 0; i < myPasses.length; i++) {
-          console.log(myPasses)
-          var checkNo = $("<span/>")
-            .addClass("right")
-            .append(
-              $("<a/>")
-              .addClass("btn-floating waves-effect waves-light red tooltipped")
-              .attr("data-position", "right")
-              .attr("data-delay", "50")
-              .attr("data-tooltip", "Cancel This Pass")
-              .append(
-                $("<i/>")
-                .addClass("material-icons")
-                .text("not_interested")
-              )
-            )
-
-          var checkYes = $("<span/>")
-            .addClass("right")
-            .append(
-              $("<a/>")
-              .addClass("btn-floating waves-effect waves-light green tooltipped")
-              .attr("data-position", "left")
-              .attr("data-delay", "50")
-              .attr("data-tooltip", "Confirm This Pass")
-              .append(
-                $("<i/>")
-                .addClass("material-icons")
-                .text("check")
-              )
-            )
-
-          var avatarEl = $("<img/>")
-            .addClass("passport-avatar circle")
-            .attr("src", "/api/media/avatar/" + myPasses[i].toPerson.id + "/50.svg")
-            .attr("alt", "Avatar")
-
-          var titleEl = $("<span/>")
-            .addClass("title")
-            .text(myPasses[i].toPerson.name.first + " " + myPasses[i].toPerson.name.last)
-
-          titleEl.prepend(
-            $("<i/>")
-            .addClass("material-icons")
-            .text("remove_red_eye")
-          )
-
-          var dateEl = $("<p/>")
-            .text("Date: ")
-            .append(
-              $("<strong/>")
-              .text(moment(myPasses[i].date).format("dddd, LL"))
-            )
-
-          var periodEl = $("<p/>")
-            .text("Period: ")
-            .append(
-              $("<strong/>")
-              .text(myPasses[i].period.toUpperCase())
-            )
-
-          var statusEl = $("<span/>")
-            //.attr("data-badge-caption", myPasses[i].status.confirmation.state.charAt(0).toUpperCase() + myPasses[i].status.confirmation.state.slice(1))
-            .addClass("new badge")
-
-          if (myPasses[i].fromPerson) {
-            var leavingFromEl = $("<p/>")
-              .text("Leaving From: ")
-              .append(
-                $("<strong/>")
-                .text(myPasses[i].fromPerson.name.first + " " + myPasses[i].fromPerson.name.last)
-              )
-          } else {
-            var leavingFromEl = $("<p/>")
-              .text("Leaving From No One")
-          }
-
-
-          var requesterEl = $("<p/>")
-            .text("Requester: ")
-            .append(
-              $("<strong/>")
-              .text(myPasses[i].requester.name.first + " " + myPasses[i].requester.name.last)
-            )
-
-
-          //set final holder
-          var li = $("<li/>")
-            .addClass("collection-item avatar")
-            .append(checkNo)
-            .append($("<span/>").addClass("right").text(String.fromCharCode(160)))
-            .append(checkYes)
-            .append(avatarEl)
-            .append(titleEl)
-            .append(dateEl)
-            .append(periodEl)
-            .append(statusEl)
-            .append(leavingFromEl)
-            .append(requesterEl)
-            .attr("data-passId-arriving", myPasses[i].id)
-            .attr("data-userIsRequester", myPasses[i].requester.id == idOfUser)
-            .attr("data-stateSetByCurrentUser", myPasses[i].status.confirmation.setByUser == idOfUser)
-          $myPasses.append(li)
-          if (myPasses[i].status.migration.arrivedTime) {
-            setArrivingButtonsAndState(myPasses[i].id, "arrived");
-          } else if (myPasses[i].status.migration.excusedTime) {
-            setArrivingButtonsAndState(myPasses[i].id, "enroute");
-          } else {
-            if (myPasses[i].status.confirmation.state == "denied" || myPasses[i].status.confirmation.state ==
-              "canceled") {
-              if (myPasses[i].status.confirmation.setByUser != idOfUser) {
-                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
-              } else {
-                setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
-              }
-            } else if (myPasses[i].status.confirmation.state == "pending" && myPasses[i].requester.id == idOfUser) {
-
-              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state, true);
-            } else {
-              setArrivingButtonsAndState(myPasses[i].id, myPasses[i].status.confirmation.state);
-            }
-          }
-
-
-
-        }
-      })
-    }
-
-    function arrivingButtonActions(passLI, action) {
-      passLI = $(passLI);
-      setPassStatus(passLI.attr("data-passId-arriving"), action, function (err, transaction) {
-
-        if (err && err.status == 403) {
-          Materialize.toast('Action Forbidden', 4000);
-          console.log("Forbidden");
-          return materialResponse("cancel", "warning");
-        } else if (err) {
-          console.log("Error");
-          materialResponse("cancel", "error");
-          return errorHand(err);
-        }
-        console.log(transaction)
-        if (transaction && transaction.replaced == 1) {
-          Materialize.toast('Successfully Updated State', 4000)
-          if (action == "denied" || action == "canceled") {
-            $("*[data-passId-arriving=" + passLI.attr("data-passId-arriving") + "]").attr(
-              "data-stateSetByCurrentUser", true);
-          }
-          setArrivingButtonsAndState(passLI.attr("data-passId-arriving"), action);
-
-        } else {
-          materialResponse("cancel", "warning");
-        }
-
-      })
-    }
-
-    function setPassStatus(passId, status, done) {
-      $.ajax({
-        type: "patch",
-        url: "/api/passes/status/" + passId + "/state/" + status,
-        dataType: "json",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-XSRF-TOKEN', getCookie("XSRF-TOKEN"));
-        },
-        success: function (data) {
-          done(null, data)
-        },
-        error: function (jqXHR) {
-          done(jqXHR)
-        }
-      });
-    }
-
-
-    function setArrivingButtonsAndState(passId, state, cantAccept) {
-
-      var releaseBtn = $("*[data-passId-arriving=" + passId + "]").find("a.green.btn-floating");
-      var undoBtn = $("*[data-passId-arriving=" + passId + "]").find("a.red.btn-floating");
-      var badge = $("*[data-passId-arriving=" + passId + "]").find("span.new.badge");
-      var userIsRequester = $("*[data-passId-arriving=" + passId + "]").attr("data-userIsRequester") == "true";
-      var stateSetByCurrentUser = $("*[data-passId-arriving=" + passId + "]").attr("data-stateSetByCurrentUser") ==
-        "true";
-
-      console.log(typeof userIsRequester)
-      //releaseBtn.attr("onclick", "releaseMigratorActions(this.closest(\'li\'), \"true\");");
-      console.log(cantAccept)
-      switch (state) {
-        case "pending":
-          if (!cantAccept && !userIsRequester) {
-            releaseBtn.attr("disabled", false);
-            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-          } else {
-            releaseBtn.attr("disabled", true);
-            releaseBtn.attr("onclick", false);
-          }
-          undoBtn.attr("disabled", false);
-          undoBtn.attr("data-tooltip", "Cancel This Pass");
-          if (userIsRequester) {
-            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-          } else {
-            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
-          }
-          badge.removeClass().addClass("new badge");
-
-          break;
-        case "waitlisted":
-          if (!cantAccept && !userIsRequester) {
-            releaseBtn.attr("disabled", false);
-            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-          } else {
-            releaseBtn.attr("disabled", true);
-            releaseBtn.attr("onclick", false);
-          }
-          undoBtn.attr("disabled", false);
-          undoBtn.attr("data-tooltip", "Cancel This Pass");
-          if (userIsRequester) {
-            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-          } else {
-            undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"denied\");");
-          }
-          badge.removeClass().addClass("new badge orange");
-
-          break;
-        case "accepted":
-          releaseBtn.attr("disabled", true);
-          releaseBtn.attr("onclick", false);
-          undoBtn.attr("disabled", false);
-          undoBtn.attr("data-tooltip", "Cancel This Pass");
-          undoBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"canceled\");");
-          badge.removeClass().addClass("new badge green");
-
-          break;
-        case "denied":
-        case "canceled":
-          if (stateSetByCurrentUser && !userIsRequester) {
-            releaseBtn.attr("disabled", false);
-            releaseBtn.attr("data-tooltip", "ReAccept Pass");
-            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"accepted\");");
-          } else if (stateSetByCurrentUser && userIsRequester) {
-            releaseBtn.attr("disabled", false);
-            releaseBtn.attr("data-tooltip", "Reopen Pass");
-            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
-          } else {
-            releaseBtn.attr("disabled", true);
-            releaseBtn.attr("onclick", false);
-          }
-          /* else if(!cantAccept) {
-            releaseBtn.attr("disabled", false);
-            releaseBtn.attr("data-tooltip", "Reopen Pass");
-            releaseBtn.attr("onclick", "arrivingButtonActions(this.closest(\'li\'), \"pending\");");
-          } */
-
-          undoBtn.attr("disabled", true);
-          undoBtn.attr("onclick", false);
-          badge.removeClass().addClass("new badge red");
-
-          break;
-        case "enroute":
-          releaseBtn.attr("disabled", true);
-          releaseBtn.attr("onclick", false);
-          undoBtn.attr("disabled", true);
-          undoBtn.attr("onclick", false);
-          badge.removeClass().addClass("new badge green accent-4");
-
-          break;
-        case "arrived":
-          releaseBtn.attr("disabled", true);
-          releaseBtn.attr("onclick", false);
-          undoBtn.attr("disabled", true);
-          undoBtn.attr("data-tooltip", "Undo Check In");
-          undoBtn.attr("onclick", false);
-          badge.removeClass().addClass("new badge green accent-4");
-          break;
-
-        default:
-          releaseBtn.attr("disabled", true);
-          releaseBtn.attr("onclick", false);
-          undoBtn.attr("disabled", true);
-          undoBtn.attr("onclick", false);
-          badge.removeClass().addClass("new badge black");
-
-          break;
-      }
-      badge.empty().attr("data-badge-caption", state.charAt(0).toUpperCase() + state.slice(1));
-      $('.tooltipped').tooltip({
-        delay: 50
-      });
-    }
-
-    /*
-
-
-
-    <li class="collection-item avatar">
-               
-               <span class="right"><a class="btn-floating waves-effect waves-light red tooltipped" data-position="right" data-delay="50" data-tooltip="Cancel This Pass"><i class="material-icons">not_interested</i></a></span>
-               <span class="right">&nbsp;</span>
-               <span class="right"><a class="btn-floating waves-effect waves-light green tooltipped" data-position="left" data-delay="50" data-tooltip="Confirm This Pass"><i class="material-icons">check</i></a></span>
-
-               <img src="/api/media/avatar/564947b0-a382-489c-9a5f-94252d67b50e/50.svg" alt="Name" class="passport-avatar circle">
-               
-               <span class="title"> <i class="material-icons">remove_red_eye</i> Teacher Teacher </span>
-               <p>Date: <strong>07/14/2017</strong></p>
-               <p>Period: <strong>B</strong></p>
-               <span class="new badge" data-badge-caption="Pending"></span>
-               <p>Leaving From: <strong>Hunter Youngblood</strong></p>
-               <p>Requester: <strong>Student McStudent</strong></p>
-               <span> Viewed</span>
-             </li>
-
-             */
+    
   </script>
 
 </body>

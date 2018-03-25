@@ -1,0 +1,63 @@
+<style is="custom-style">
+  passport-pass::after {
+    content: "";
+    display: block;
+    height: 1px;
+    min-height: 1px;
+    max-height: 1px;
+    background-color: var(--divider-color, #000);
+    opacity: 0.12;
+  }
+  passport-pass:last-child:after {
+    content: "";
+    display: none;
+  }
+  paper-listbox {
+    --paper-listbox-background-color: white; 
+    --paper-listbox-color: black;
+    border-radius: 10px;
+  }
+  .message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: calc(0.75em + 1vmin);
+    color: var(--secondary-text-color);
+    opacity: 1;
+    --iron-icon-fill-color: var(--secondary-text-color);
+    --iron-icon-height: 32px;
+    --iron-icon-width: 32px;
+  }
+</style>
+<paper-listbox>
+  <template is="dom-if" if="[[!passCount]]">
+    <div class="message">
+      <span>
+        <iron-icon icon="social:sentiment-dissatisfied"></iron-icon> No passes found
+      </span>
+    </div>
+  </template>
+
+  <template is="dom-if" if="[[loading]]">
+    <div class="message">
+      <paper-spinner active>Loading</paper-spinner>
+    </div>
+  </template>
+  
+  <template is="dom-repeat" items="{{passes}}" as="pass" sort="{{sort}}" rendered-item-count="{{passCount}}">
+    <passport-pass 
+      pass-id="[[pass.id]]" 
+      avatar-id="[[_getAvatarID(pass)]]" 
+      date="[[pass.date]]" 
+      date-requested="[[pass.dateTimeRequested]]"
+      header="[[_getPassHead(pass)]]"
+      period="[[pass.period]]"
+      migrator="[[_formatName(pass.migrator.name)]]"
+      from-person="[[_formatName(pass.fromPerson.name)]]"
+      to-person="[[_formatName(pass.toPerson.name)]]"
+      requester="[[_formatName(pass.requester.name)]]"
+      show-state-buttons
+      ></passport-pass>
+  </template>
+</paper-listbox>

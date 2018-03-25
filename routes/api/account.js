@@ -41,6 +41,8 @@ var passApi = require("../../modules/passport-api/passes.js");
 router.use(cors());
 router.options("*", cors());
 
+
+
 function serializeUser(req, res, done) {
     console.log(req.user[0]);
     //REMOVE SECRET INFO LIKE PASSWORDS

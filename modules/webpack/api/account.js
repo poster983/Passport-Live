@@ -73,3 +73,13 @@ exports.get = (query) => {
         return utils.fetch("GET", "/api/account", {query: query, auth: true}).then(resolve).catch(reject);
     });   
 };
+
+/**
+ * Gets passes and filters them.
+ * @link module:webpack/api/accounts
+ * @param {Object} filter - SEE: {@link module:api/passes.getPasses} For filter params
+ * @returns {Object[]}
+ */
+exports.getPasses = (accountID, filter) => {
+    return utils.fetch("GET", "/api/account/"+accountID+"/passes/", {query: filter, auth: true});
+}

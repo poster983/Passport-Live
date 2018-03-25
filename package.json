@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -35,6 +35,15 @@
     "url": "https://github.com/poster983/Passport-Live/issues"
   },
   "dependencies": {
+    "@polymer/iron-icons": "^3.0.0-pre.10",
+    "@polymer/iron-icon": "^3.0.0-pre.10",
+    "@polymer/paper-card": "^3.0.0-pre.10",
+    "@polymer/paper-fab": "^3.0.0-pre.10",
+    "@polymer/paper-item": "^3.0.0-pre.10",
+    "@polymer/paper-listbox": "^3.0.0-pre.10",
+    "@polymer/paper-spinner": "^3.0.0-pre.10",
+    "@polymer/paper-styles": "^3.0.0-pre.10",
+    "@polymer/polymer": "^3.0.0-pre.10",
     "animejs": "^2.2.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
@@ -45,6 +54,7 @@
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "cookie-session": "^2.0.0-beta.2",
+    "copy-webpack-plugin": "^4.4.1",
     "cors": "^2.8.3",
     "debug": "~2.6.0",
     "express": "~4.16.0",
@@ -56,6 +66,7 @@
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",
     "greenlock-express": "^2.0.11",
+    "html-loader": "^0.5.5",
     "jdenticon": "^1.6.0",
     "jquery": "^3.2.1",
     "jquery.stellar": "^0.6.2",
@@ -83,6 +94,7 @@
     "shortid": "^2.2.8",
     "socket.io": "^2.0.0",
     "ssarv": "latest",
+    "time-elements": "^1.0.0",
     "type-check": "^0.3.2",
     "ua-parser-js": "^0.7.14",
     "uglifyjs-webpack-plugin": "^1.1.1",

@@ -49,6 +49,7 @@ var account = require("./routes/account");
 var apiMedia = require("./routes/api/media");
 var apiAccounts = require("./routes/api/account");
 var apiAccountSchedule = require("./routes/api/accountSchedule");
+var apiAccountUser = require("./routes/api/user");
 var apiAuth = require("./routes/api/auth");
 var apiPasses = require("./routes/api/passes");
 var apiBlackouts = require("./routes/api/blackout");
@@ -146,6 +147,9 @@ function blockedBrowserCheck(req, res, next) {
         }
     });
 }
+
+
+
 // TOP LEVEL ROUTE
 
 app.use("/", rootLevel);
@@ -159,6 +163,7 @@ app.use("/api", api);
 app.use("/api/media", apiMedia);
 app.use("/api/account", apiAccounts);
 app.use("/api/account/schedule", apiAccountSchedule);
+app.use("/api/account", apiAccountUser);
 app.use("/api/auth", apiAuth);
 app.use("/api/blackout", apiBlackouts);
 app.use("/api/passes", apiPasses);

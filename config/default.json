@@ -67,7 +67,7 @@
 				"Firefox": 52,
 				"Safari": 10,
 				"Opera": 42,
-				"Edge": 38,
+				"Edge": 14, //EdgeHTML
 				"Vivaldi": true //every version 
 			},
 			"blocked": { // will not let the user use any front-end page

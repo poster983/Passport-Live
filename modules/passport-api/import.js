@@ -71,7 +71,7 @@ function deleteBulkLog(id) {
     return r.table("bulkImports").get(id).delete().run(db.conn());
 }
 
-/*
+/**
 * Searches the bulk log database 
 * @link module:js/import
 * @param {Object} queries
@@ -133,15 +133,16 @@ exports.searchBulkLogs = (queries) => {
  * @name accounts
  * @inner
  * @private
- * @memberof js/import
+ * @memberof module:js/import
  * @property {Object} accounts
  * @property {function} accounts.rollback - Deletes all accounts linked to a given import job
+ * @property {function} accounts.sendActivation - Sends athe activation email to all unverified users.
  */
 var accounts = {};
 /**
  * Deletes all accounts linked to a given import job ID
  * @function
- * @memberof js/import
+ * @memberof module:js/import
  * @param {String} bulkID - Id of the bulk import.
  * @param {Boolean} ignoreActivated - If true, activated accounts will be skipped.
  * @returns {Promise} - Transaction Statement  
@@ -173,7 +174,7 @@ accounts.rollback = (bulkID, ignoreVerified) => {
 /**
  * Sends athe activation email to all unverified users.  
  * @function
- * @memberof js/import
+ * @memberof module:js/import
  * @param {String} bulkID - Id of the bulk import.
  * @returns {Promise} - accounts: Accounts, cursor: sendActivationEmail Cursor
  */
@@ -221,7 +222,8 @@ setTimeout(() => {
 * Takes in an array of account json objects and imports them
 * NOTE: Email domains are still must follow userGroup settings.
 * If the json object lacks the nessessary values to create an account, the row is skipped 
-* @link module:js/import
+* @function
+* @memberof module:js/import
 * @param {accountImport[]} accounts - The accountImport objects 
 * @param {String} importName - a (non unique) name for this import job
 * @returns {Promise} - Array of objects with key "account" containing the user imported, and key "error" with an error that occured during import for that user 

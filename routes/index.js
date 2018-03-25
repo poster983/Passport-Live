@@ -36,20 +36,25 @@ if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.
 //this page will route each user to the correct page after login 
 router.get("/", function(req, res, next) {
     if(req.user) {
-        if(req.session.returnTo) {
+        if(req.session.returnTo && !req.session.skipReturnTo) {
+
             var url_parts = url.parse(req.session.returnTo, true);
             var query = Object.assign(url_parts.query, req.query);
             let str = Object.keys(query).length>0?"?" + utils.urlQuery(query):"";
-            res.redirect(url_parts.pathname + str);
             delete req.session.returnTo;
+            req.session.skipReturnTo = true;
+            res.redirect(url_parts.pathname + str);
+            //console.log("EWJDHKHDHSKJ")
         } else {
             var permittedDash = config.get("userGroups." + req.user.userGroup + ".permissions.dashboards");
+            delete req.session.returnToRedirectCount;
             if(permittedDash.length > 1 && !req.query.continue) {
                 res.render("multiDashRoute",{doc_Title: "Passport", customHead: customHead, dashboards: permittedDash});
             } else {
                 let query = Object.keys(req.query).length>0?"?" + utils.urlQuery(req.query):"";
                 res.redirect(permittedDash[0] + query);
             }
+            
         }
     } else {
         console.log("not Logged In");

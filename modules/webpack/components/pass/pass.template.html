@@ -1,0 +1,86 @@
+<style is="custom-style">
+    paper-item-body [secondary] {
+        --paper-item-body-secondary-color: var(--paper-grey-500);
+        color: var(--paper-grey-700);
+        font-size: 15px;
+    }
+    paper-item-body {
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    paper-icon-item {
+        --paper-item-icon-width: 80px;
+        --paper-item-focused-before: {
+          background-color: inherit;
+        }
+
+    }
+    .right-elements {
+        display: block;
+        position: relative;
+        right: 0px;
+        padding-right: 16px;
+        padding-left: 5px;
+        padding-top: 10px;
+        padding-bottom: 3px;
+        float: right;
+    }
+    .avatar {
+        border-radius: 50%;
+        background-color: var(--paper-grey-300);
+        width: 42px;
+        height: 42px;
+    }
+    .left-items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: calc(var(--paper-item-icon-width) - 16px);
+        /*padding-right: 16px;*/
+    }
+    .left-items .block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        
+    }
+    .left-items .item {
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+</style>
+
+<paper-icon-item>
+    <div slot="item-icon">
+        <div class="left-items">
+            <div class="block">
+                <img class="avatar item" src$="/api/media/avatar/[[avatarId]]/50.svg" alt="Avatar"><!--slot="item-icon"-->
+                <passport-pass-state-badge class="item" state="{{state}}"></passport-pass-state-badge>
+            </div>
+        </div>
+    </div>
+    <paper-item-body three-line>
+        <template is="dom-if" if="[[showStateButtons]]">
+            <div class="right-elements">
+                <passport-pass-state-buttons pass-id="[[passId]]" state={{state}}></passport-pass-state-buttons>
+            </div>
+        </template>
+        <div>[[header]]</div>
+        <div secondary>
+            Arriving <strong><local-time datetime$="[[date]]"
+            weekday="long"
+            month="long"
+            day="numeric"
+            year="numeric"></local-time></strong><!--<relative-time datetime$="[[date]]"></relative-time>-->
+        </div>
+        <div secondary id="formattedPeriod"></div>
+        <div secondary id="migrator" style="display: none;">Migrator <strong>[[migrator]]</strong></div>
+        <div secondary id="fromPerson" style="display: none;">Leaving from <strong>[[fromPerson]]</strong></div>
+        <div secondary id="toPerson" style="display: none;">Going to <strong>[[toPerson]]</strong></div>
+        <div secondary>[[_requesterPhrase]]<relative-time datetime$="[[dateRequested]]"></relative-time></div>
+        
+    </paper-item-body>
+</paper-icon-item>

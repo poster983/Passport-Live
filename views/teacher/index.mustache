@@ -229,10 +229,7 @@ email: hi@josephhassell.com
             <div id="MyPassesCard" class="card grey darken-3 hoverable">
               <div class="card-content ">
                 <span class="card-title white-text">Students Leaving</span>
-                <ul class="collection">
-                  <div id="studentsLeavingReturn">
-                  </div>
-                </ul>
+                <passport-pass-list id="fromPersonList" no-auto-fetch for-user="me"></passport-pass-list>
               </div>
             </div>
           </div>
@@ -246,10 +243,7 @@ email: hi@josephhassell.com
             <div id="MyPassesCard" class="card grey darken-3 hoverable">
               <div class="card-content ">
                 <span class="card-title white-text">Students Arriving</span>
-                <ul class="collection">
-                  <div id="studentsArrivingReturn">
-                  </div>
-                </ul>
+                <passport-pass-list id="toPersonList" no-auto-fetch for-user="me"></passport-pass-list>
               </div>
             </div>
           </div>
@@ -361,7 +355,6 @@ email: hi@josephhassell.com
   </footer>
 
   <!-- Scripts -->
-  <!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
   <script>
     if ('addEventListener' in window) {
       window.addEventListener('load', function () {
@@ -370,12 +363,16 @@ email: hi@josephhassell.com
       document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
   </script>
+  <!--<script type="text/javascript">document.createElement = Document.prototype.createElement;</script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.1.0/webcomponents-loader.js"></script>-->
+  <script type="text/javascript" src=/js/polyfill/webcomponents-lite.js></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
   <!-- Compiled and minified JavaScript -->
   <script src="js/materialize.js"></script>
+  <script type="text/javascript" src=/js/webpack/teacher.js></script>
   <script src="js/passport.js"></script>
-  <script src="js/materialize.clockpicker.js"></script>
+  <!--<script src="js/materialize.clockpicker.js"></script>-->
   <script src="/moment/min/moment-with-locales.min.js"></script>
   <script>
     var idOfUser = "{{user.id}}";
@@ -402,9 +399,10 @@ email: hi@josephhassell.com
       });
       $('.collapsible').collapsible();
       $(".button-collapse").sideNav();
-      $.when(setLeaving(), setArriving(), checkForUrlHash()).done(function (a1, a2, a3) {
+      $('#fullAjaxLoadingScreen').removeClass("loading");
+      /*$.when(setLeaving(), setArriving(), checkForUrlHash()).done(function (a1, a2, a3) {
         $('#fullAjaxLoadingScreen').removeClass("loading");
-      });
+      });*/
     });
 
     // Pass Avatar Button
@@ -521,7 +519,7 @@ email: hi@josephhassell.com
     }
 
     ////MY Leaving CARD////
-
+/*
     function getstudentsLeaving(done) {
       $.ajax({
         type: "get",
@@ -1189,6 +1187,7 @@ email: hi@josephhassell.com
         delay: 50
       });
     }
+    */
   </script>
 </body>
 
