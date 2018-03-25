@@ -700,25 +700,7 @@ router.patch("/password/", passport.authenticate("jwt", { session: false}), func
     }
 });
 
-/** Sends an activation email to the user.  Will error if account is already activated   
-    * @function sendActivationEmail
-    * @link module:api/accounts
-    * @param {request} req
-    * @param {response} res
-    * @param {nextCallback} next
-    * @api POST /api/account/:id/send-activation/
-    * @apiparam {String} id - The account id to send the email to
-    * @apiresponse {String} Status Code or Error
-    * @returns {callback} - See: {@link nextCallback} 
-*/
-router.post("/:id/send-activation", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function sendActivationEmail(req, res, next) {
-    api.sendActivation(req.params.id).then(() => {
-        //just return 202 
-        return res.sendStatus(202);
-    }).catch((err) => {
-        return next(err);
-    });
-});
+
 
 module.exports = router;
 

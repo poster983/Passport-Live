@@ -54,7 +54,7 @@ router.options("*", cors());
 * @apiquery {ISOString} [date_to] - Upper limit for the date. inclusive
 * @apiresponse {Object[]} Array of pass objects
 */
-router.get("/", passport.authenticate("jwt", { session: false}), utils.middlewarePermission(["administrator"]), function getPasses(req, res, next) {
+router.get("/", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function getPasses(req, res, next) {
     api.get({
         id: req.query.id,
         fromPerson: req.query.fromPerson,

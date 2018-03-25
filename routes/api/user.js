@@ -29,7 +29,9 @@ var router = express.Router();
 var cors = require("cors");
 var passport = require("passport");
 var utils = require("../../modules/passport-utils/index.js");
+
 let passesJS = require("../../modules/passport-api/passes");
+let accountJS = require("../../modules/passport-api/accounts");
 
 
 router.use(cors());
@@ -52,7 +54,7 @@ router.param("accountID", (req, res, next) => {
 let allowMeOrAdminOnly = (req, res, next) => {
     //check permissions 
     //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
-    if(!utils.checkPermission(req.user.userGroup, ["administrator"])) {
+    if(!utils.checkDashboards(req.user.userGroup, ["administrator"])) {
         //current user is only allowed to see themselves 
         if(req.params.accountID !== req.user.id) {
             //403 Forbidden 
@@ -65,7 +67,7 @@ let allowMeOrAdminOnly = (req, res, next) => {
 
 /**
  * Gets all passes that are relevant to the user
- *  
+ * @link module:api/account/user
  * @function getUserPasses
  * @api GET /api/account/:accountID/passes
  * @apiparam {String} accountID
@@ -98,6 +100,22 @@ router.get("/:accountID/passes/", allowMeOrAdminOnly, function getUserPasses(req
         .catch((err) => {
             return next(err);
         });
+});
+
+/** Sends an activation email to the user.  Will error if account is already activated   
+    * @function sendActivationEmail
+    * @link module:api/account/user
+    * @api POST /api/account/:accountID/send-activation/
+    * @apiparam {String} accountID - The account id to send the email to
+    * @apiresponse {String} Status Code or Error
+*/
+router.post("/:accountID/send-activation", allowMeOrAdminOnly, function sendActivationEmail(req, res, next) {
+    accountJS.sendActivation(req.params.accountID).then(() => {
+        //just return 202 
+        return res.sendStatus(202);
+    }).catch((err) => {
+        return next(err);
+    });
 });
 
 
