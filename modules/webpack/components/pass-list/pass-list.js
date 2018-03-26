@@ -44,7 +44,7 @@ require("../pass/pass.js");
  * @example
  * <passport-pass-list noAutoFetch></passport-pass-list>
  */
-class PassportPassList extends polymer.Element {
+class PassportPassList extends polymer.PolymerElement {
     static get template() {
         return view;
     }

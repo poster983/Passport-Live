@@ -33,7 +33,7 @@ require("@polymer/paper-styles/color.js");
  * @example
  * <passport-pass-state-badge state="pending"></passport-pass-state-badge>
  */
-class PassportPassStateBadge extends polymer.Element {
+class PassportPassStateBadge extends polymer.PolymerElement {
     static get template() {
         return view;
     }

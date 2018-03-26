@@ -1,4 +1,4 @@
-require("@polymer/polymer/polymer.js");
+require("@polymer/polymer/polymer-legacy.js");
 require("@polymer/paper-styles/color.js");
 const $_documentContainer = document.createElement("div");
 $_documentContainer.setAttribute("style", "display: none;");

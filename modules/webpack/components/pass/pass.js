@@ -48,7 +48,7 @@ require("@polymer/paper-item/paper-icon-item.js");
  * @example
  * <passport-pass showStateButtons></passport-pass>
  */
-class PassportPass extends polymer.Element {
+class PassportPass extends polymer.PolymerElement {
     static get template() {
         return view;
     }

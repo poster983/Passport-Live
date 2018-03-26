@@ -27,10 +27,9 @@ let passAPI = require("../../api/passes.js");
 /** Components **/
 require("@polymer/paper-fab/paper-fab.js");
 require("@polymer/iron-icons/iron-icons.js");
-//require("@polymer/paper-spinner/paper-spinner.js");
 require("../styles/default-theme.js");
 require("@polymer/paper-styles/color.js");
-//require("@polymer/paper-styles/paper-styles.js"); //FOR ALL STYLES 
+ 
 
 /**
  * Polymer Element that holds pass state manupulation buttons.  
@@ -43,7 +42,7 @@ require("@polymer/paper-styles/color.js");
  * @example
  * <passport-pass-state-buttons pass-id="sad5-fd4s-d45f6s-56sdf4-56sdf"></passport-pass-state-buttons>
  */
-class PassportPassStateButtons extends polymer.Element {
+class PassportPassStateButtons extends polymer.PolymerElement {
 
     //<template>
     static get template() {
