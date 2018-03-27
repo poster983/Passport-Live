@@ -30,6 +30,12 @@ require("@polymer/iron-icons/iron-icons.js");
 require("../styles/default-theme.js");
 require("@polymer/paper-styles/color.js");
  
+/**
+   * Fired when an error occurs
+   *
+   * @event error
+   * @param {Error} error
+   */
 
 /**
  * Polymer Element that holds pass state manupulation buttons.  

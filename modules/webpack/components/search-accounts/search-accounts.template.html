@@ -1,5 +1,12 @@
-<paper-input id="input" label="Search users"></paper-input>
+<style is="custom-style">
+      .autocomplete-wrapper {
+            position: relative;
+      }
+</style>
+<div class="autocomplete-wrapper">
+      <paper-input id="input" label="Search users">
+            <iron-icon icon="icons:search" prefix></iron-icon>
+      </paper-input>
 
-<paper-autocomplete-suggestions
-      for="input"
-      source="[[accounts]]"></paper-autocomplete-suggestions>
+      <paper-autocomplete-suggestions for="input" source="[[accounts]]" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
+</div>

@@ -23,13 +23,14 @@ let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./search-accounts.template.html");
 
 /** Components **/
-//require("paper-autocomplete/paper-autocomplete-suggestions");
+require("paper-autocomplete/paper-autocomplete-suggestions");
 require("@polymer/paper-input/paper-input");
+require("@polymer/iron-icons/iron-icons.js");
+require("@polymer/iron-icon/iron-icon.js");
 
 
 class PassportSearchAccounts extends polymer.PolymerElement {
 
-    //<template>
     static get template() {
         return view;
     }
@@ -44,8 +45,18 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             accounts: {
                 type: Array,
                 value: [{text:"Joseph", value: "sdjkafjhk",}, {text: "hassell", value:"weeeeee"}]
+            },
+            value: {
+                type: String,
+                reflectToAttribute: true,
+                notify: true,
+                observer: "test"
             }
         };
+    }
+
+    test() {
+        console.log(this.value)
     }
 }
 
