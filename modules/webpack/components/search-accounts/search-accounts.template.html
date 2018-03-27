@@ -4,9 +4,9 @@
       }
 </style>
 <div class="autocomplete-wrapper">
-      <paper-input id="input" label="Search users">
+      <paper-input id="input" label="Search users" value="{{query}}">
             <iron-icon icon="icons:search" prefix></iron-icon>
       </paper-input>
 
-      <paper-autocomplete-suggestions for="input" source="[[accounts]]" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
+      <paper-autocomplete-suggestions id="suggestions" for="input" source="[[accounts]]" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
 </div>

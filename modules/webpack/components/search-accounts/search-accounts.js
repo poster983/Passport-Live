@@ -22,11 +22,20 @@ email: hi@josephhassell.com
 let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./search-accounts.template.html");
 
+let accountJS = require("../../api/account.js");
+
 /** Components **/
 require("paper-autocomplete/paper-autocomplete-suggestions");
 require("@polymer/paper-input/paper-input");
 require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/iron-icon/iron-icon.js");
+
+/**
+   * Fired when an error occurs
+   *
+   * @event error
+   * @param {Error} error
+   */
 
 
 class PassportSearchAccounts extends polymer.PolymerElement {
@@ -37,26 +46,82 @@ class PassportSearchAccounts extends polymer.PolymerElement {
     constructor() {
         super();
     }
-    /*ready() {
+    ready() {
         super.ready();
-    }*/
+        let autocomplete = this.shadowRoot.querySelector("#suggestions");
+        autocomplete.queryFn = this.queryFn;
+    }
     static get properties() {
         return {
+            /** Array of account objects */
             accounts: {
                 type: Array,
-                value: [{text:"Joseph", value: "sdjkafjhk",}, {text: "hassell", value:"weeeeee"}]
+                value: [{text:"Joseph Messhall", value: "sdjkafjhk"}, {text: "hassell", value:"weeeeee"}]
             },
+            /** The account object of the selected account */
             value: {
-                type: String,
+                type: Object,
                 reflectToAttribute: true,
                 notify: true,
                 observer: "test"
+            },
+            /** Would hold the account name */
+            query: {
+                type: String,
+                observer: "_queryChanged"
+            },
+            /** How many characters should trigger a database search */
+            queryLengthThreshold: {
+                type: Number,
+                value: 2
             }
         };
     }
 
+    _queryChanged() {
+        if(this.query.length === this.queryLengthThreshold) {
+            //fetch accounts 
+            accountJS.get({
+                name: this.query
+            })
+                .then((accounts) => {
+                    let suggestions = [];
+                    for(let x = 0; x < accounts.length; x++) {
+                        suggestions.push({text: accounts[x].name.salutation + " " + accounts[x].name.first + " " + accounts[x].name.last, value: accounts[x]});
+                    }
+                    this.accounts = suggestions;
+                })
+                .catch((err) => {
+                    this._error(err);
+                });
+        }
+    }
+
+    /**
+   * Query function is called on each keystroke to query the data source and returns the suggestions that matches
+   * with the filtering logic included.
+   * @param {Array} datasource An array containing all items before filtering
+   * @param {string} query Current value in the input field
+   * @returns {Array} an array containing only those items in the data source that matches the filtering logic.
+   */
+    queryFn(datasource, query) {
+        //return array 
+        let suggestions = [];
+        //main loop 
+        for(let x = 0; x < datasource.length; x++) {
+            //if this itt includes the query text, put it in the return array
+            if(datasource[x].text.toLowerCase().includes(query.toLowerCase())) {
+                suggestions.push(datasource[x]);
+            }
+        }
+        return suggestions;
+    }
     test() {
-        console.log(this.value)
+        console.log(this.value);
+    }
+
+    _error(error) {
+        this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }
 }
 
