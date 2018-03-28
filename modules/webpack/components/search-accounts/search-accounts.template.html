@@ -10,10 +10,10 @@
             <input pattern="[0-9]*" id="input" slot="input" label="Search users">
             <paper-input-error slot="add-on">Only numbers are allowed!</paper-input-error>
       </paper-input-container>-->
-      <paper-input id="input" error-message="Invalid input!" label="Search users" value="{{query}}">
+      <paper-input id="input" disabled="[[disabled]]" on-focused-changed="_inputFocusChanged" label="Search users" value="{{query}}">
             <iron-icon icon="icons:search" slot="prefix"></iron-icon>
             <paper-icon-button style="visibility: hidden;" id="clear" icon="icons:cancel" slot="suffix" on-click="_clearInput"></paper-icon-button>
       </paper-input>
 
-      <paper-autocomplete-suggestions id="suggestions" for="input" source="[[accounts]]" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
+      <paper-autocomplete-suggestions id="suggestions" for="input" source="[[accounts]]" on-autocomplete-selected="_queryChanged" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
 </div>

@@ -51,8 +51,7 @@ class PassportSearchAccounts extends polymer.PolymerElement {
     }
     ready() {
         super.ready();
-        let autocomplete = this.shadowRoot.querySelector("#suggestions");
-        autocomplete.queryFn = this.queryFn;
+        this.shadowRoot.querySelector("#suggestions").queryFn = this.queryFn;
     }
     static get properties() {
         return {
@@ -63,9 +62,7 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             /** The account object of the selected account */
             value: {
                 type: Object,
-                reflectToAttribute: true,
-                notify: true,
-                observer: "test"
+                notify: true
             },
             /** Would hold the account name */
             query: {
@@ -76,21 +73,54 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             queryLengthThreshold: {
                 type: Number,
                 value: 2
+            },
+            /** Grays out the input */
+            disabled: {
+                type: Boolean
+            },
+            /** The user must fill this or validation fails */
+            required: {
+                type: Boolean
+            },
+            /** If the element is valid.  If the user has clicked on a autocomplete option and has not changed anything */
+            valid: {
+                type: Boolean,
+                reflectToAttribute: true,
+                notify: true
             }
         };
     }
     _clearInput() {
         this.query = "";
-        this.value = undefined;
+    }
+
+    _inputFocusChanged() {
+        //restore previous selection if no valid selection was made
+        if((this.query && this.query.length > 0) && (this.value && this.value.text)) {
+            this.query = this.value.text; 
+        }
     }
 
     _queryChanged() {
-        if(this.query.length >0) {
+        if(this.query && this.query.length >0) {
             //show clear button 
             this.shadowRoot.querySelector("#clear").style.visibility = "visible";
+
+            //check if the user has clicked an autocomplete option 
+            if(this.value) {
+                this.invalidQuery();
+            } else {
+                this.invalidQuery("Please select a user from the list");
+            }
         } else {
             //hide clear button 
             this.shadowRoot.querySelector("#clear").style.visibility = "hidden";
+            //check if the input is a required field
+            if(this.required) {
+                this.invalidQuery("This field is required");
+            }
+            //delete value
+            this.value = undefined;
         }
 
         if(this.query.length === this.queryLengthThreshold) {
@@ -114,8 +144,8 @@ class PassportSearchAccounts extends polymer.PolymerElement {
     /**
    * Query function is called on each keystroke to query the data source and returns the suggestions that matches
    * with the filtering logic included.
-   * @param {Array} datasource An array containing all items before filtering
-   * @param {string} query Current value in the input field
+   * @param {Array} datasource - An array containing all items before filtering
+   * @param {string} query - Current value in the input field
    * @returns {Array} an array containing only those items in the data source that matches the filtering logic.
    */
     queryFn(datasource, query) {
@@ -130,14 +160,25 @@ class PassportSearchAccounts extends polymer.PolymerElement {
         }
         return suggestions;
     }
-    test() {
-        console.log(this.value);
+    /** 
+     * Shows an error message on the input
+     * @param {String} [message] - if omitted, invalid will be set to false
+     */
+    invalidQuery(message) {
+        let input = this.shadowRoot.querySelector("#input");
+        if(message) {
+            input.errorMessage = message;
+            input.invalid = true;
+        } else {
+            input.invalid = false;
+        }
     }
 
     _error(error) {
-        
         this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }
+
+    
 }
 
 
