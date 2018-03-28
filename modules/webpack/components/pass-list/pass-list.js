@@ -27,7 +27,7 @@ let passJS = require("../../api/passes.js");
 let accountJS = require("../../api/account.js");
 
 /** COMPONENTS **/
-require("../styles/default-theme.js");
+//require("../styles/default-theme.js");
 require("@polymer/paper-listbox/paper-listbox.js");
 require("@polymer/iron-icons/social-icons.js");
 require("@polymer/iron-icon/iron-icon.js");

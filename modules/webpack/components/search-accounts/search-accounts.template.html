@@ -1,11 +1,18 @@
 <style is="custom-style">
       .autocomplete-wrapper {
             position: relative;
+            --iron-icon-fill-color: var(--primary-text-color);
+            --paper-input-container-focus-color: var(--accent-color);
       }
 </style>
 <div class="autocomplete-wrapper">
-      <paper-input id="input" label="Search users" value="{{query}}">
-            <iron-icon icon="icons:search" prefix></iron-icon>
+      <!--<paper-input-container>
+            <input pattern="[0-9]*" id="input" slot="input" label="Search users">
+            <paper-input-error slot="add-on">Only numbers are allowed!</paper-input-error>
+      </paper-input-container>-->
+      <paper-input id="input" error-message="Invalid input!" label="Search users" value="{{query}}">
+            <iron-icon icon="icons:search" slot="prefix"></iron-icon>
+            <paper-icon-button style="visibility: hidden;" id="clear" icon="icons:cancel" slot="suffix" on-click="_clearInput"></paper-icon-button>
       </paper-input>
 
       <paper-autocomplete-suggestions id="suggestions" for="input" source="[[accounts]]" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>

@@ -27,6 +27,9 @@ let accountJS = require("../../api/account.js");
 /** Components **/
 require("paper-autocomplete/paper-autocomplete-suggestions");
 require("@polymer/paper-input/paper-input");
+require("@polymer/paper-icon-button/paper-icon-button");
+//require("@polymer/paper-input/paper-input-container");
+//require("@polymer/paper-input/paper-input-error");
 require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/iron-icon/iron-icon.js");
 
@@ -55,8 +58,7 @@ class PassportSearchAccounts extends polymer.PolymerElement {
         return {
             /** Array of account objects */
             accounts: {
-                type: Array,
-                value: [{text:"Joseph Messhall", value: "sdjkafjhk"}, {text: "hassell", value:"weeeeee"}]
+                type: Array
             },
             /** The account object of the selected account */
             value: {
@@ -77,8 +79,20 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             }
         };
     }
+    _clearInput() {
+        this.query = "";
+        this.value = undefined;
+    }
 
     _queryChanged() {
+        if(this.query.length >0) {
+            //show clear button 
+            this.shadowRoot.querySelector("#clear").style.visibility = "visible";
+        } else {
+            //hide clear button 
+            this.shadowRoot.querySelector("#clear").style.visibility = "hidden";
+        }
+
         if(this.query.length === this.queryLengthThreshold) {
             //fetch accounts 
             accountJS.get({
@@ -121,6 +135,7 @@ class PassportSearchAccounts extends polymer.PolymerElement {
     }
 
     _error(error) {
+        
         this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }
 }

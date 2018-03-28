@@ -27,7 +27,6 @@ let passAPI = require("../../api/passes.js");
 /** Components **/
 require("@polymer/paper-fab/paper-fab.js");
 require("@polymer/iron-icons/iron-icons.js");
-require("../styles/default-theme.js");
 require("@polymer/paper-styles/color.js");
  
 /**

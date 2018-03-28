@@ -27,7 +27,7 @@ require("@polymer/paper-styles/color.js");
 require("../pass-state-buttons/pass-state-buttons.js");
 require("../pass-state-badge/pass-state-badge.js");
 require("time-elements/dist/time-elements.js");
-require("../styles/default-theme.js");
+//require("../styles/default-theme.js");
 //require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/paper-item/paper-icon-item.js");
 /**

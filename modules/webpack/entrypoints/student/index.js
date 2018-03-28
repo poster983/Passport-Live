@@ -22,7 +22,9 @@ email: hi@josephhassell.com
 
 /**Work-around for lastpass issue on firefox**/
 document.createElement = Document.prototype.createElement;
+
 /** require webcomponents **/
+require("../../components/styles/default-theme.js");
 require("../../components/pass-list/pass-list.js");
 require("../../components/search-accounts/search-accounts.js");
 
