@@ -25,7 +25,9 @@ document.createElement = Document.prototype.createElement;
 /** require webcomponents **/
 require("../../components/styles/default-theme.js");
 require("../../components/pass-list/pass-list.js");
-
+require("../../components/search-accounts/search-accounts.js");
+require("@polymer/paper-icon-button/paper-icon-button");
+require("@polymer/iron-icons/iron-icons.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");
@@ -33,7 +35,7 @@ var utils = require("../../utils/index.js");
 //Main Elements
 let toPersonList = document.getElementById("toPersonList");
 let fromPersonList = document.getElementById("fromPersonList");
-
+let subModeAccount = document.getElementById("subModeAccount");
 
 window.onload = function() {
     //check for errors TEST
@@ -41,6 +43,10 @@ window.onload = function() {
         //console.log(e);
         utils.throwError(e.originalEvent.detail.error);
     });
+    subModeAccount.addEventListener("error", (e) => {
+        utils.throwError(e.detail.error);
+    });
+
     //Generate today's date
     let date = new Date();
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
@@ -52,3 +58,21 @@ window.onload = function() {
     fromPersonList.refreshPasses();
 };
 
+/* Table of contents:
+    - Sub Mode (T01)
+*/
+/* START SUB MODE (T01)*/
+
+//listen for changes to subModeAccount textbox selection
+
+subModeAccount.addEventListener("value-changed", (e) => {
+    let account = e.detail.value;
+
+    //update fromPerson list filter\
+    if(account) {
+        //fromPersonList.filter.fromPerson
+    }
+});
+
+
+/* END SUB MODE */

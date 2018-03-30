@@ -6,10 +6,6 @@
       }
 </style>
 <div class="autocomplete-wrapper">
-      <!--<paper-input-container>
-            <input pattern="[0-9]*" id="input" slot="input" label="Search users">
-            <paper-input-error slot="add-on">Only numbers are allowed!</paper-input-error>
-      </paper-input-container>-->
       <paper-input id="input" disabled="[[disabled]]" on-focused-changed="_inputFocusChanged" label="Search users" value="{{query}}">
             <iron-icon icon="icons:search" slot="prefix"></iron-icon>
             <paper-icon-button style="visibility: hidden;" id="clear" icon="icons:cancel" slot="suffix" on-click="_clearInput"></paper-icon-button>

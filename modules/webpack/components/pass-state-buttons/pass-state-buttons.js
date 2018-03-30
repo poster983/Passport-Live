@@ -27,7 +27,9 @@ let passAPI = require("../../api/passes.js");
 /** Components **/
 require("@polymer/paper-fab/paper-fab.js");
 require("@polymer/iron-icons/iron-icons.js");
+require("@polymer/iron-icons/maps-icons.js");
 require("@polymer/paper-styles/color.js");
+require("@polymer/paper-tooltip/paper-tooltip.js");
  
 /**
    * Fired when an error occurs
@@ -173,27 +175,35 @@ class PassportPassStateButtons extends polymer.PolymerElement {
     }
     _makeUndo(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:undo";
         button.className = "undo";
+        tooltip.innerHTML = "Undo";
     }
     _makeAccepted(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:check";
         button.className = "accept";
+        tooltip.innerHTML = "Accept";
     }
     _makeCanceled(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:block";
         button.className = "cancel";
+        tooltip.innerHTML = "Cancel";
     }
     _makeEnroute(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
-        button.icon = "icons:assignment-turned-in";
+        button.icon = "maps:transfer-within-a-station";
         button.className = "accept";
+        tooltip.innerHTML = "Enroute";
     }
 
     _leftButtonClicked() {

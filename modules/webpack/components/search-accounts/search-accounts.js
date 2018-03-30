@@ -28,8 +28,6 @@ let accountJS = require("../../api/account.js");
 require("paper-autocomplete/paper-autocomplete-suggestions");
 require("@polymer/paper-input/paper-input");
 require("@polymer/paper-icon-button/paper-icon-button");
-//require("@polymer/paper-input/paper-input-container");
-//require("@polymer/paper-input/paper-input-error");
 require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/iron-icon/iron-icon.js");
 
@@ -40,7 +38,19 @@ require("@polymer/iron-icon/iron-icon.js");
    * @param {Error} error
    */
 
-
+/**
+ * A Paper autocomplete input for passport accounts.  (polymer)
+ * @class
+ * @property {Object[]} [accounts] - An array of account objects and
+ * @property {Object} [value] - The selected account.  (Notified).
+ * @property {String} [query] - The current value of the input
+ * @property {Nunber} [queryLengthThreshold=2] - after how many letters should the request be sent to the server
+ * @property {Boolean} [disabled] - Grays out the input
+ * @property {Boolean} [required] - Requires the input to be filled 
+ * @property {Boolean} [valid] - True if the input is valid. (Notified).
+ * @example
+ * <passport-search-accounts required></passport-search-accounts>
+ */
 class PassportSearchAccounts extends polymer.PolymerElement {
 
     static get template() {
@@ -55,11 +65,11 @@ class PassportSearchAccounts extends polymer.PolymerElement {
     }
     static get properties() {
         return {
-            /** Array of account objects */
+            /** Array of account objects and the names to search for */
             accounts: {
                 type: Array
             },
-            /** The account object of the selected account */
+            /** The account object of the selected account and the text that was searched */
             value: {
                 type: Object,
                 notify: true
@@ -86,7 +96,8 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             valid: {
                 type: Boolean,
                 reflectToAttribute: true,
-                notify: true
+                notify: true,
+                readOnly: true
             }
         };
     }
@@ -118,6 +129,8 @@ class PassportSearchAccounts extends polymer.PolymerElement {
             //check if the input is a required field
             if(this.required) {
                 this.invalidQuery("This field is required");
+            } else if(!this.value) {
+                this.invalidQuery();
             }
             //delete value
             this.value = undefined;
@@ -169,8 +182,10 @@ class PassportSearchAccounts extends polymer.PolymerElement {
         if(message) {
             input.errorMessage = message;
             input.invalid = true;
+            this._setValid(false);
         } else {
             input.invalid = false;
+            this._setValid(true);
         }
     }
 

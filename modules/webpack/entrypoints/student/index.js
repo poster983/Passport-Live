@@ -26,7 +26,7 @@ document.createElement = Document.prototype.createElement;
 /** require webcomponents **/
 require("../../components/styles/default-theme.js");
 require("../../components/pass-list/pass-list.js");
-require("../../components/search-accounts/search-accounts.js");
+
 
 /** require modules **/
 var utils = require("../../utils/index.js");
