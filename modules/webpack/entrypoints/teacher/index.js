@@ -54,7 +54,7 @@ window.onload = function() {
     toPersonList.filter = {date_from: date, toPerson: utils.thisUser()};
     toPersonList.refreshPasses();
 
-    fromPersonList.filter = {date_from: date, fromPerson: utils.thisUser()};
+    fromPersonList.filter = {date_from: date, date_to: date, fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
 };
 
@@ -70,8 +70,13 @@ subModeAccount.addEventListener("value-changed", (e) => {
 
     //update fromPerson list filter\
     if(account) {
-        //fromPersonList.filter.fromPerson
+        fromPersonList.forUser = account.value.id;
+        fromPersonList.filter.substitute = true;
+    } else {
+        fromPersonList.forUser = "me";
+        delete fromPersonList.filter.substitute;
     }
+    fromPersonList.refreshPasses();
 });
 
 
