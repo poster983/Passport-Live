@@ -60,30 +60,6 @@ email: hi@josephhassell.com
     </div>
   </nav>
 
-  <nav>
-
-    <div class="nav-wrapper theme-second">
-
-      <form method="get" action="">
-        <div class="input-field">
-          <input id="t-Search" name="teacherName" type="search" placeholder="Search by Email" value="{{user.email}}">
-          <label class="label-icon" for="t-Search">
-            <i class="material-icons">search</i>
-          </label>
-          <i class="material-icons">close</i>
-
-
-          <button class="btn waves-effect waves-light" style="position: absolute; left: -9999px" type="submit" name="search">Search
-            <i class="material-icons right">search</i>
-          </button>
-        </div>
-      </form>
-    </div>
-  </nav>
-
-
-
-
 
   <!--FEEDBACK FAB-->
 
@@ -201,20 +177,6 @@ email: hi@josephhassell.com
 
   </div>
 
-  <!--Complete Signup Model-->
-  <div id="completeSignup" class="unclosable modal modal-fixed-footer">
-    <div class="modal-content">
-      <h4>Let's set up your account!</h4>
-      <p>First, </p>
-      <div class="input-field col s12">
-        <label for="timepicker">Time</label>
-        <input id="timepicker" class="timepicker" type="time">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-    </div>
-  </div>
 
 
   <!--Content-->
@@ -375,7 +337,6 @@ email: hi@josephhassell.com
   <script src="js/materialize.js"></script>
   <script type="text/javascript" src=/js/webpack/teacher.js></script>
   <script src="js/passport.js"></script>
-  <!--<script src="js/materialize.clockpicker.js"></script>-->
   <script src="/moment/min/moment-with-locales.min.js"></script>
   <script>
     var idOfUser = "{{user.id}}";

@@ -55,7 +55,7 @@ router.param("accountID", (req, res, next) => {
 let allowMeAndUserGroup = (userGroups) => {
     return (req, res, next) => {
         //check permissions 
-        //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
+        //console.log(req.user.userGroup, userGroups, utils.checkDashboards(req.user.userGroup, userGroups))
         if(!utils.checkDashboards(req.user.userGroup, userGroups)) {
             //current user is only allowed to see themselves 
             if(req.params.accountID !== req.user.id) {
@@ -78,6 +78,7 @@ let allowMeAndUserGroup = (userGroups) => {
  * @apiquery {Boolean} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params)
  * @apiresponse {Object[]} Pass objects in an array
  */
+//
 router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator"]), function getUserPasses(req, res, next) {
     //check for accountID
     if(typeof req.params.accountID !== "string") {
