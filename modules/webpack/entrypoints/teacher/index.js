@@ -75,8 +75,8 @@ subModeAccount.addEventListener("value-changed", (e) => {
         fromPersonList.forUser = account.value.id;
         fromPersonList.substitute = true;
     } else {
+        fromPersonList.substitute = undefined;
         fromPersonList.forUser = "me";
-        delete fromPersonList.substitute;
     }
     fromPersonList.refreshPasses();
 });

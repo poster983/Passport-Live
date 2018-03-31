@@ -139,20 +139,24 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
                 err.status = 404;
                 throw err;
             }
-            return passData;
+            return passData.status;
         })
         .then((final) => {
             //check submode /  req.query.userID permissions 
+            if(typeof req.query.substitute === "string") {
+                req.query.substitute = req.query.substitute.toLowerCase()==="true"?true:false;
+            }
             if(req.query.substitute && !utils.checkDashboards(req.user.userGroup, ["teacher"])) {
                 let err = new Error("Dashboard: \"teacher\" required");
                 err.status = 403;
                 throw err; 
             }
+            
             //get allowed changes 
-            api.state.allowedChanges(req.params.passID, req.query.substitute?final.fromPerson:req.user.id)
+            api.state.allowedChanges(req.params.passID, {forUserID: req.user.id, substitute: req.query.substitute})
                 .then((allowedChanges) => {
                     //send object to user
-                    return res.json({status: final.status, type: api.state.type(final.status.confirmation.state), allowedChanges: allowedChanges});
+                    return res.json({status: final, type: api.state.type(final.confirmation.state), allowedChanges: allowedChanges});
                 });
         })
         .catch((err) => {
@@ -188,13 +192,16 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
         return next(err);
     }
     //check submode /  req.query.userID permissions 
+    if(typeof req.query.substitute === "string") {
+        req.query.substitute = req.query.substitute.toLowerCase()==="true"?true:false;
+    }
     if(req.query.substitute && !utils.checkDashboards(req.user.userGroup, ["teacher"])) {
         let err = new Error("Dashboard: \"teacher\" required");
         err.status = 403;
         throw err; 
     }
     //check change permissions 
-    api.state.allowedChanges(req.params.passID, req.user.id)
+    api.state.allowedChanges(req.params.passID, {forUserID: req.user.id, substitute: req.query.substitute})
         .then((permissions) => {
             //common error 
             let err = new Error("Forbidden");
@@ -245,7 +252,7 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
 
         .then((final) => {
             //get new allowed changes
-            api.state.allowedChanges(req.params.passID, req.user.id)
+            api.state.allowedChanges(req.params.passID, {forUserID: req.user.id, substitute: req.query.substitute})
                 .then((allowedChanges) => {
                     //return new object
                     return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));
@@ -263,11 +270,22 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
     * @param {response} res
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
+    * @apiquery {Boolean} substitute - run the query as a substitute (as the fromPerson).  Must have teacher dashboard permission
     * @api PATCH /api/passes/:passID/state/undo
     * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges), and the state type (key: type)
     */
 router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: false}), function undoPassState(req, res, next) {
-    api.state.allowedChanges(req.params.passID, req.user.id)
+    //check submode /  req.query.userID permissions 
+    if(typeof req.query.substitute === "string") {
+        req.query.substitute = req.query.substitute.toLowerCase()==="true"?true:false;
+    }
+    if(req.query.substitute && !utils.checkDashboards(req.user.userGroup, ["teacher"])) {
+        let err = new Error("Dashboard: \"teacher\" required");
+        err.status = 403;
+        throw err; 
+    }
+
+    api.state.allowedChanges(req.params.passID, {forUserID: req.user.id, substitute: req.query.substitute})
         .then((permissions) => {
             //check undo actions 
             if(permissions.undo === "UNDO") {
@@ -286,7 +304,7 @@ router.patch("/:passID/state/undo", passport.authenticate("jwt", { session: fals
 
         .then((final) => {
             //get new allowed changes
-            api.state.allowedChanges(req.params.passID, req.user.id)
+            api.state.allowedChanges(req.params.passID, {forUserID: req.user.id, substitute: req.query.substitute})
                 .then((allowedChanges) => {
                     //return new object
                     return res.json(Object.assign(final, {allowedChanges: allowedChanges, type: api.state.type(final.state)}));

@@ -227,9 +227,9 @@ class PassportPassStateButtons extends polymer.PolymerElement {
         this.disabled = true;
         let fetch = null;
         if(newStateType === "undo") {
-            fetch = passAPI.undoState(this.passId);
+            fetch = passAPI.undoState(this.passId, this.substitute);
         } else {
-            fetch = passAPI.setState(this.passId, newStateType);
+            fetch = passAPI.setState(this.passId, newStateType, this.substitute);
         }
         fetch.then((res) => {
             //console.log(res)

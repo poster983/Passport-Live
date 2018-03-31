@@ -51,19 +51,21 @@ exports.getState = (passID, substitute) => {
  * Sets a pass's state by a state type.
  * @param {String} passID
  * @param {String} stateType
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.setState = (passID, stateType) => {
+exports.setState = (passID, stateType, substitute) => {
     return utils.fetch("PATCH", "/api/passes/" + passID + "/state", {body: {
         type: stateType
-    }, auth: true});
+    }, query: {substitute: substitute}, auth: true});
 };
 
 /**
  * Sets a pass's state by a state type.
  * @param {String} passID
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.undoState = (passID) => {
-    return utils.fetch("PATCH", "/api/passes/" + passID + "/state/undo", {auth: true});
+exports.undoState = (passID, substitute) => {
+    return utils.fetch("PATCH", "/api/passes/" + passID + "/state/undo", {auth: true, query: {substitute: substitute}});
 };
