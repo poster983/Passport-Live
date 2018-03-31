@@ -39,6 +39,14 @@
     </div>
   </template>
 
+  <template is="dom-if" if="[[_errored]]">
+    <div class="message">
+      <span>
+        <iron-icon icon="social:sentiment-very-dissatisfied"></iron-icon> There was an error
+      </span>
+    </div>
+  </template>
+
   <template is="dom-if" if="[[loading]]">
     <div class="message">
       <paper-spinner active>Loading</paper-spinner>
@@ -57,6 +65,7 @@
       from-person="[[_formatName(pass.fromPerson.name)]]"
       to-person="[[_formatName(pass.toPerson.name)]]"
       requester="[[_formatName(pass.requester.name)]]"
+      substitute="[[substitute]]"
       show-state-buttons
       ></passport-pass>
   </template>

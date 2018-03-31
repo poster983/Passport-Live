@@ -39,10 +39,11 @@ exports.get = (filter) => {
 /**
  * Gets a pass's state AND the change rules.
  * @param {String} passID
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.getState = (passID) => {
-    return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true});
+exports.getState = (passID, substitute) => {
+    return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true, query: {substitute: substitute}});
 };
 
 

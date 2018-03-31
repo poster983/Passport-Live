@@ -98,8 +98,8 @@ router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator
             return res.sendStatus(403);
         }
     } else {
-        if(utils.checkDashboards(req.user.userGroup, ["teacher"])) {
-
+        if(utils.checkDashboards(req.user.userGroup, ["teacher"]) && req.user.id !== req.params.accountID) {
+            return res.sendStatus(403);
         }
     }
     

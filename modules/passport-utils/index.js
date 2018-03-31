@@ -97,10 +97,9 @@ exports.dashboardPermission = (dashboards, options) => {
 */
 exports.checkDashboards = (userGroup, dashboards) => {
     let groupDashboards = exports.getAllowedDashboards(userGroup);
-    console.log(groupDashboards,dashboards)
     if(groupDashboards.length > 0) {
-        //IS THIS WHAT WE WANT?RN IT IS FALSE IF THE USERGROUP DOES NOT NOT HAVE EVERY DASHBOARD LISTED IN THE DASHBOARD ARRAY
-        if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
+        
+        if(dashboards.some(elem => groupDashboards.includes(elem))) {
             return true;
         } else {
             return false;

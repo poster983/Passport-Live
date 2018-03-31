@@ -38,10 +38,12 @@ let fromPersonList = document.getElementById("fromPersonList");
 let subModeAccount = document.getElementById("subModeAccount");
 
 window.onload = function() {
-    //check for errors TEST
-    $("passport-pass-list").on("error", (e) => {
-        //console.log(e);
-        utils.throwError(e.originalEvent.detail.error);
+    //listen for errors
+    toPersonList.addEventListener("error", (e) => {
+        utils.throwError(e.detail.error);
+    });
+    fromPersonList.addEventListener("error", (e) => {
+        utils.throwError(e.detail.error);
     });
     subModeAccount.addEventListener("error", (e) => {
         utils.throwError(e.detail.error);
@@ -71,10 +73,10 @@ subModeAccount.addEventListener("value-changed", (e) => {
     //update fromPerson list filter\
     if(account) {
         fromPersonList.forUser = account.value.id;
-        fromPersonList.filter.substitute = true;
+        fromPersonList.substitute = true;
     } else {
         fromPersonList.forUser = "me";
-        delete fromPersonList.filter.substitute;
+        delete fromPersonList.substitute;
     }
     fromPersonList.refreshPasses();
 });

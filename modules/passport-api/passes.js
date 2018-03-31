@@ -929,10 +929,8 @@ state.undo = (passID, setByID, checkMigrationStates) => {
                     if(state.isNeutral(stateData.previousState)) {
                         return state.neutral(passID, setByID);
                     } else if(state.isAccepted(stateData.previousState)) {
-                        console.log("YES")
                         return state.accepted(passID, setByID);
                     } else if(state.isCanceled(stateData.previousState)) {
-                        console.log("YES")
                         return state.canceled(passID, setByID);
                     } else {
                         let err = new Error("Pass state invalid");

@@ -36,8 +36,8 @@ let myPassesList = document.getElementById("myPassesList");
 
 window.onload = function() {
     //check for errors TEST
-    $("passport-pass-state-buttons").on("error", (e) => {
-        utils.throwError(e.originalEvent.detail.error);
+    myPassesList.addEventListener("error", (e) => {
+        utils.throwError(e.detail.error);
     });
 
     //Generate today's date

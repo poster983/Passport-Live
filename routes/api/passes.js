@@ -120,7 +120,7 @@ router.post("/me", passport.authenticate("jwt", { session: false}), function new
 * @param {response} res
 * @param {nextCallback} next
 * @apiparam {String} passID - The id of the Pass
-* @apiquery {String} userID - run the query as this user.
+* @apiquery {Boolean} substitute - run the query as a substitute (as the fromPerson).  Must have teacher dashboard permission
 * @api GET /api/passes/:passID/state
 * @apiresponse {Object} Object with the state object (key: status) and the allowed changes (key: allowedChanges)
 */
@@ -139,14 +139,20 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
                 err.status = 404;
                 throw err;
             }
-            return passData.status;
+            return passData;
         })
         .then((final) => {
+            //check submode /  req.query.userID permissions 
+            if(req.query.substitute && !utils.checkDashboards(req.user.userGroup, ["teacher"])) {
+                let err = new Error("Dashboard: \"teacher\" required");
+                err.status = 403;
+                throw err; 
+            }
             //get allowed changes 
-            api.state.allowedChanges(req.params.passID, typeof req.query.userID === "string"?req.query.userID:req.user.id)
+            api.state.allowedChanges(req.params.passID, req.query.substitute?final.fromPerson:req.user.id)
                 .then((allowedChanges) => {
                     //send object to user
-                    return res.json({status: final, type: api.state.type(final.confirmation.state), allowedChanges: allowedChanges});
+                    return res.json({status: final.status, type: api.state.type(final.status.confirmation.state), allowedChanges: allowedChanges});
                 });
         })
         .catch((err) => {
@@ -164,6 +170,7 @@ router.get("/:passID/state", passport.authenticate("jwt", { session: false}), fu
     * @param {response} res
     * @param {nextCallback} next
     * @apiparam {String} passID - The id of the Pass
+    * @apiquery {Boolean} substitute - run the query as a substitute (as the fromPerson).  Must have teacher dashboard permission
     * @api PATCH /api/passes/:passID/state
     * @apiresponse {Object} Object with the new state (key: state) a RethinkDB transaction statement (key: transaction) and the new allowed changes (key: allowedChanges), and the state type (key: type)
     */
@@ -179,6 +186,12 @@ router.patch("/:passID/state", passport.authenticate("jwt", { session: false}), 
         let err = new Error("type must be either \"neutral\", \"accepted\", \"canceled\", \"arrived\", or \"enroute\"");
         err.status = 400;
         return next(err);
+    }
+    //check submode /  req.query.userID permissions 
+    if(req.query.substitute && !utils.checkDashboards(req.user.userGroup, ["teacher"])) {
+        let err = new Error("Dashboard: \"teacher\" required");
+        err.status = 403;
+        throw err; 
     }
     //check change permissions 
     api.state.allowedChanges(req.params.passID, req.user.id)
