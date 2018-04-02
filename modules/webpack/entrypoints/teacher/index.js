@@ -26,8 +26,10 @@ document.createElement = Document.prototype.createElement;
 require("../../components/styles/default-theme.js");
 require("../../components/pass-list/pass-list.js");
 require("../../components/search-accounts/search-accounts.js");
+require("../../components/responsive-dialog/responsive-dialog.js");
 require("@polymer/paper-icon-button/paper-icon-button");
 require("@polymer/iron-icons/iron-icons.js");
+require("@polymer/paper-toolbar/paper-toolbar.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");
@@ -58,6 +60,10 @@ window.onload = function() {
 
     fromPersonList.filter = {date_from: date, date_to: date, fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
+
+    document.getElementById("openTestDialog").addEventListener("click", (e) => {
+        document.getElementById("testDialog").open();
+    });
 };
 
 /* Table of contents:
