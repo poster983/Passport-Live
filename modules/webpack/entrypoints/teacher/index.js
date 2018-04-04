@@ -98,21 +98,5 @@ subModeDialog.addEventListener("iron-overlay-closed", (e) => {
     }
     subModeDialog.closingReason.confirmed = false;
 });
-/*
-//listen for changes to subModeAccount textbox selection
-subModeAccount.addEventListener("value-changed", (e) => {
-    let account = e.detail.value;
-
-    //update fromPerson list filter\
-    if(account) {
-        fromPersonList.forUser = account.value.id;
-        fromPersonList.substitute = true;
-    } else {
-        fromPersonList.substitute = undefined;
-        fromPersonList.forUser = "me";
-    }
-    fromPersonList.refreshPasses();
-});*/
-
 
 /* END SUB MODE */
