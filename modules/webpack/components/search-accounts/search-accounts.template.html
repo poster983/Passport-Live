@@ -4,6 +4,15 @@
             --iron-icon-fill-color: var(--primary-text-color);
             --paper-input-container-focus-color: var(--accent-color);
       }
+      paper-autocomplete-suggestions {
+            --suggestions-wrapper: {
+                  background-color: var(--primary-background-color, white);
+            };
+            --suggestions-item: {
+                  color: var(--primary-text-color, black);
+                  
+            };
+      }
 </style>
 <div class="autocomplete-wrapper">
       <paper-input id="input" disabled="[[disabled]]" on-focused-changed="_inputFocusChanged" label="Search users" value="{{query}}">

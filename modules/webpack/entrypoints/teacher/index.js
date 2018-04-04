@@ -29,7 +29,8 @@ require("../../components/search-accounts/search-accounts.js");
 require("../../components/responsive-dialog/responsive-dialog.js");
 require("@polymer/paper-icon-button/paper-icon-button");
 require("@polymer/iron-icons/iron-icons.js");
-require("@polymer/paper-toolbar/paper-toolbar.js");
+require("@polymer/app-layout/app-toolbar/app-toolbar.js");
+require("@polymer/paper-button/paper-button.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");
@@ -38,6 +39,8 @@ var utils = require("../../utils/index.js");
 let toPersonList = document.getElementById("toPersonList");
 let fromPersonList = document.getElementById("fromPersonList");
 let subModeAccount = document.getElementById("subModeAccount");
+let subModeButton = document.getElementById("subModeButton");
+let subModeDialog = document.getElementById("subModeDialog");
 
 window.onload = function() {
     //listen for errors
@@ -60,19 +63,43 @@ window.onload = function() {
 
     fromPersonList.filter = {date_from: date, date_to: date, fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
-
-    document.getElementById("openTestDialog").addEventListener("click", (e) => {
-        document.getElementById("testDialog").open();
-    });
 };
 
 /* Table of contents:
     - Sub Mode (T01)
 */
 /* START SUB MODE (T01)*/
+//Listen for the modal open button to be clicked 
+subModeButton.addEventListener("click", () => {
+    //open modal
+    subModeDialog.open();
+});
 
+//listen for the closing of the dialog 
+subModeDialog.addEventListener("iron-overlay-closed", (e) => {
+    console.log(subModeAccount.value)
+    console.log(e)
+    //if confirmed
+    if(e.detail.confirmed) {
+        //enable/disable sub mode
+        if(subModeAccount.value) {
+            fromPersonList.forUser = subModeAccount.value.value.id;
+            fromPersonList.substitute = true;
+            subModeButton.style.color="var(--accent-color)";
+        } else {
+            fromPersonList.substitute = undefined;
+            fromPersonList.forUser = "me";
+            subModeButton.style.color="var(--primary-text-color)";
+        }
+        fromPersonList.refreshPasses();
+    } else {
+        //canceled so clear the input
+        subModeAccount.query = "";
+    }
+    subModeDialog.closingReason.confirmed = false;
+});
+/*
 //listen for changes to subModeAccount textbox selection
-
 subModeAccount.addEventListener("value-changed", (e) => {
     let account = e.detail.value;
 
@@ -85,7 +112,7 @@ subModeAccount.addEventListener("value-changed", (e) => {
         fromPersonList.forUser = "me";
     }
     fromPersonList.refreshPasses();
-});
+});*/
 
 
 /* END SUB MODE */

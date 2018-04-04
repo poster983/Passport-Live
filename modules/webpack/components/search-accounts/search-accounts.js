@@ -107,8 +107,8 @@ class PassportSearchAccounts extends polymer.PolymerElement {
 
     _inputFocusChanged() {
         //restore previous selection if no valid selection was made
-        if((this.query && this.query.length > 0) && (this.value && this.value.text)) {
-            this.query = this.value.text; 
+        if(this.query && this.query.length > 0) {
+            this.resetQuery();
         }
     }
 
@@ -186,6 +186,14 @@ class PassportSearchAccounts extends polymer.PolymerElement {
         } else {
             input.invalid = false;
             this._setValid(true);
+        }
+    }
+    /** 
+     * Restores the query to the saved state
+     * */
+    resetQuery() {
+        if(this.value && this.value.text) {
+            this.query = this.value.text; 
         }
     }
 

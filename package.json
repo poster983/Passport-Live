@@ -35,8 +35,10 @@
     "url": "https://github.com/poster983/Passport-Live/issues"
   },
   "dependencies": {
+    "@polymer/app-layout": "3.0.0-pre.12",
     "@polymer/iron-icon": "3.0.0-pre.12",
     "@polymer/iron-icons": "3.0.0-pre.12",
+    "@polymer/paper-button": "3.0.0-pre.12",
     "@polymer/paper-card": "3.0.0-pre.12",
     "@polymer/paper-dialog-behavior": "3.0.0-pre.12",
     "@polymer/paper-fab": "3.0.0-pre.12",
@@ -46,7 +48,6 @@
     "@polymer/paper-listbox": "3.0.0-pre.12",
     "@polymer/paper-spinner": "3.0.0-pre.12",
     "@polymer/paper-styles": "3.0.0-pre.12",
-    "@polymer/paper-toolbar": "3.0.0-pre.12",
     "@polymer/paper-tooltip": "3.0.0-pre.12",
     "@polymer/polymer": "3.0.0-pre.12",
     "animejs": "^2.2.0",
