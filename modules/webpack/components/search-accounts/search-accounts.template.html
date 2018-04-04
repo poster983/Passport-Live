@@ -1,5 +1,24 @@
-<paper-input id="input" label="Search users"></paper-input>
+<style>
+      .autocomplete-wrapper {
+            position: relative;
+            --iron-icon-fill-color: var(--primary-text-color);
+            --paper-input-container-focus-color: var(--accent-color);
+      }
+      paper-autocomplete-suggestions {
+            --suggestions-wrapper: {
+                  background-color: var(--primary-background-color, white);
+            };
+            --suggestions-item: {
+                  color: var(--primary-text-color, black);
+                  
+            };
+      }
+</style>
+<div class="autocomplete-wrapper">
+      <paper-input id="input" disabled="[[disabled]]" on-focused-changed="_inputFocusChanged" label="Search users" value="{{query}}">
+            <iron-icon icon="icons:search" slot="prefix"></iron-icon>
+            <paper-icon-button style="visibility: hidden;" id="clear" icon="icons:cancel" slot="suffix" on-click="_clearInput"></paper-icon-button>
+      </paper-input>
 
-<paper-autocomplete-suggestions
-      for="input"
-      source="[[accounts]]"></paper-autocomplete-suggestions>
+      <paper-autocomplete-suggestions id="suggestions" for="input" source="[[accounts]]" on-autocomplete-selected="_queryChanged" selected-option="{{value}}" highlight-first show-results-on-focus></paper-autocomplete-suggestions>
+</div>

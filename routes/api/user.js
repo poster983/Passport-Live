@@ -29,6 +29,7 @@ var router = express.Router();
 var cors = require("cors");
 var passport = require("passport");
 var utils = require("../../modules/passport-utils/index.js");
+let moment = require("moment");
 
 let passesJS = require("../../modules/passport-api/passes");
 let accountJS = require("../../modules/passport-api/accounts");
@@ -50,37 +51,58 @@ router.param("accountID", (req, res, next) => {
     return next();
 });
 
-//only allow the current user or an admin to see your resource
-let allowMeOrAdminOnly = (req, res, next) => {
-    //check permissions 
-    //THIS WILL FAIL AFTER NEXT MERGE WITH MASTER
-    if(!utils.checkDashboards(req.user.userGroup, ["administrator"])) {
-        //current user is only allowed to see themselves 
-        if(req.params.accountID !== req.user.id) {
-            //403 Forbidden 
-            return res.sendStatus(403);
+//only allow the current user or a matching usergroup
+let allowMeAndUserGroup = (userGroups) => {
+    return (req, res, next) => {
+        //check permissions 
+        //console.log(req.user.userGroup, userGroups, utils.checkDashboards(req.user.userGroup, userGroups))
+        if(!utils.checkDashboards(req.user.userGroup, userGroups)) {
+            //current user is only allowed to see themselves 
+            if(req.params.accountID !== req.user.id) {
+                //403 Forbidden 
+                return res.sendStatus(403);
+            }
         }
-    }
-    return next();
+        return next();
+    };
 };
 
 
 /**
- * Gets all passes that are relevant to the user
+ * Gets all passes that are relevant to the user. 
  * @link module:api/account/user
  * @function getUserPasses
  * @api GET /api/account/:accountID/passes
  * @apiparam {String} accountID
  * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes.getPasses} for filters 
+ * @apiquery {Boolean} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params)
  * @apiresponse {Object[]} Pass objects in an array
  */
-router.get("/:accountID/passes/", allowMeOrAdminOnly, function getUserPasses(req, res, next) {
+//
+router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator"]), function getUserPasses(req, res, next) {
     //check for accountID
     if(typeof req.params.accountID !== "string") {
         let err = TypeError("accountID expected a string");
         err.status = 400;
         return next(err);
     }
+    //Check Sub mode
+    if(req.query.substitute) {
+        if(utils.checkDashboards(req.user.userGroup, ["teacher"])) {
+            req.query.fromPerson = req.params.accountID;
+            delete req.params.accountID;
+            req.query.date_from = moment().millisecond(0).second(0).minute(0).hour(0).toISOString();
+            req.query.date_to = req.query.date_from;
+        } else {
+            //no permission to do this
+            return res.sendStatus(403);
+        }
+    } else {
+        if(utils.checkDashboards(req.user.userGroup, ["teacher"]) && req.user.id !== req.params.accountID) {
+            return res.sendStatus(403);
+        }
+    }
+    
     passesJS.get({
         id: req.query.id,
         fromPerson: req.query.fromPerson,
@@ -109,7 +131,7 @@ router.get("/:accountID/passes/", allowMeOrAdminOnly, function getUserPasses(req
     * @apiparam {String} accountID - The account id to send the email to
     * @apiresponse {String} Status Code or Error
 */
-router.post("/:accountID/send-activation", allowMeOrAdminOnly, function sendActivationEmail(req, res, next) {
+router.post("/:accountID/send-activation", allowMeAndUserGroup(["administrator"]), function sendActivationEmail(req, res, next) {
     accountJS.sendActivation(req.params.accountID).then(() => {
         //just return 202 
         return res.sendStatus(202);

@@ -96,11 +96,10 @@ exports.dashboardPermission = (dashboards, options) => {
 * @returns {boolean} 
 */
 exports.checkDashboards = (userGroup, dashboards) => {
-    
-    //return new Promise((resolve, reject) => {
     let groupDashboards = exports.getAllowedDashboards(userGroup);
     if(groupDashboards.length > 0) {
-        if(dashboards.every(elem => groupDashboards.indexOf(elem) > -1)) {
+        
+        if(dashboards.some(elem => groupDashboards.includes(elem))) {
             return true;
         } else {
             return false;
@@ -108,7 +107,6 @@ exports.checkDashboards = (userGroup, dashboards) => {
     } else {
         return false;
     }
-    //})
 }; 
 
 /** 
@@ -238,14 +236,14 @@ exports.dscm = function(req, res, next) {
         * @param {function} done - callback. 
         * @returns {done} Includes error, and a boolean.  True for valid period, false for not
         */
-  exports.checkPeriod = function(period, done) {
-      var periodConst = config.get("schedule.periods");
-      if(periodConst.includes(period)) {
-          return done(null, true);
-      } else {
-          return done(null, false);
-      }
-  }
+exports.checkPeriod = function(period, done) {
+    var periodConst = config.get("schedule.periods");
+    if(periodConst.includes(period)) {
+        return done(null, true);
+    } else {
+        return done(null, false);
+    }
+};
 
 /**
         * Generates a secure token/key
@@ -253,9 +251,9 @@ exports.dscm = function(req, res, next) {
         * @link module:js/utils
         * @returns {string} Secure token/key.
         */
-  exports.generateSecureKey = function() {
-      return shortid.generate() + shortid.generate();
-  }
+exports.generateSecureKey = function() {
+    return shortid.generate() + shortid.generate();
+};
 
 /**
         * Checks if password is complient with password rules in the config file.  

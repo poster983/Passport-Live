@@ -21,7 +21,6 @@ email: hi@josephhassell.com
 var express = require("express");
 var router = express.Router();
 var r = require("rethinkdb");
-var bcrypt = require("bcrypt-nodejs");
 var config = require("config");
 var utils = require("../modules/passport-utils/index.js");
 
@@ -32,21 +31,11 @@ var io = require('socket.io')(httpv);
 //var r = require('../modules/db/index.js')();
 var passport = require("passport");
 //  , LocalStrategy = require('passport-local').Strategy;
-var api = require("../modules/passport-api/index.js");
-var accountJS = require("../modules/passport-api/accounts.js");
-var securityJS = require("../modules/passport-api/security.js");
 
 let customHead = null;
 if(config.has("webInterface.customHeadCode") && typeof config.get("webInterface.customHeadCode") === "string") {
     customHead = config.get("webInterface.customHeadCode");
 }
-
-// Rethink db connection
-var connection = null;
-r.connect( {host: config.get("rethinkdb.host"), port: config.get("rethinkdb.port"), db: config.get("rethinkdb.database"), password: config.get("rethinkdb.password")}, function(err, conn) {
-    if (err) throw err;
-    connection = conn;
-});
 
 
 /** 

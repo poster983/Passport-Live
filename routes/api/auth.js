@@ -31,7 +31,7 @@ var utils = require("../../modules/passport-utils/index.js");
 var cors = require("cors");
 
 router.use(cors());
-router.options("*", cors())
+router.options("*", cors());
 
 
 //serializeUser becaule the default passport.serializeUser function wont be called without session
@@ -134,7 +134,6 @@ router.post("/login/dscm", utils.rateLimit.loginBruteforce.getMiddleware({
 router.get("/google/callback",  passport.authenticate( "google", { 
         failureRedirect: "/auth/login?failGoogle=true"
 }), function(req, res, next) {
-    console.log(req.user, "USER RETURNED")
     if(req.session.googleDSCM) {
         api.newJWTForCookies(req.user.id, function(err, jwtData) {
             if(err) {

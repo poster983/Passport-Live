@@ -289,21 +289,6 @@ exports.get = function (filter, options) {
             return reject(err);
         }
 
-        //type check options 
-        /*if(!options) {
-            options = {};
-        }
-        let optionsType = `
-        {
-            includeAllowedChanges: Maybe Boolean
-        }
-        `
-        if(!typeCheck(optionsType, options, utils.typeCheck)) {
-            let err = new TypeError("\"options\" expected an object with structure: " + optionsType);
-            err.status = 400;
-            return reject(err);
-        }*/
-
 
         // Prepare dates
         if(filter.date && typeCheck("Date", filter.date.from)) {
@@ -929,10 +914,8 @@ state.undo = (passID, setByID, checkMigrationStates) => {
                     if(state.isNeutral(stateData.previousState)) {
                         return state.neutral(passID, setByID);
                     } else if(state.isAccepted(stateData.previousState)) {
-                        console.log("YES")
                         return state.accepted(passID, setByID);
                     } else if(state.isCanceled(stateData.previousState)) {
-                        console.log("YES")
                         return state.canceled(passID, setByID);
                     } else {
                         let err = new Error("Pass state invalid");
@@ -956,7 +939,9 @@ state.undo = (passID, setByID, checkMigrationStates) => {
  * @function
  * @memberof module:js/passes
  * @param {String} passID 
- * @param {String} forUserID 
+ * @param {Object} user
+ * @param {String} [user.forUserID] 
+ * @param {Boolean} [user.substitute] - run the query as a substitute (as the fromPerson).
  * @returns {Promise} - See Example
  * @throws {(TypeError|ReQL)}
  * @example 
@@ -970,7 +955,7 @@ state.undo = (passID, setByID, checkMigrationStates) => {
  *  enroute: (Boolean)
  * }
  */
-state.allowedChanges = (passID, forUserID) => {
+state.allowedChanges = (passID, {forUserID, substitute}) => {
     return new Promise((resolve, reject) => {
         return r.table("passes").get(passID).run()
             .then((passData) => {
@@ -980,6 +965,11 @@ state.allowedChanges = (passID, forUserID) => {
                     err.status = 404;
                     throw err;
                 }
+                //check sub mode
+                if(substitute) {
+                    forUserID = passData.fromPerson;
+                }
+
                 return passData;
             })
             .then((passData) => {

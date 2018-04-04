@@ -27,7 +27,7 @@ require("@polymer/paper-styles/color.js");
 require("../pass-state-buttons/pass-state-buttons.js");
 require("../pass-state-badge/pass-state-badge.js");
 require("time-elements/dist/time-elements.js");
-require("../styles/default-theme.js");
+//require("../styles/default-theme.js");
 //require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/paper-item/paper-icon-item.js");
 /**
@@ -40,11 +40,12 @@ require("@polymer/paper-item/paper-icon-item.js");
  * @property {String} [dateRequested] - ISO String
  * @property {String} [header] - The primary title for the pass.
  * @property {String} [period] - Period the migrator is arriving 
- * @property {String} [migrator] - The name of the person leaving and moving to tthe toPerson 
+ * @property {String} [migrator] - The name of the person leaving and moving to the toPerson 
  * @property {String} [fromPerson] - The name of the person excusing the migrator. Also the origin of the migrator. 
  * @property {String} [toPerson] - The name of the person the migrator is going to 
  * @property {String} [requester] - The name of the person that made this pass 
  * @property {String} [state] - State of the pass. Can be used if the state buttons are not shown. 
+ * @property {Boolean} [substitute] - Enables substitute mode on the state buttons.  Acts if you were the fromPerson.  Only if you have teacher permissions.
  * @example
  * <passport-pass showStateButtons></passport-pass>
  */
@@ -109,6 +110,9 @@ class PassportPass extends polymer.PolymerElement {
             },
             state: {
                 type: String
+            },
+            substitute: {
+                type: Boolean
             }
         };
     }

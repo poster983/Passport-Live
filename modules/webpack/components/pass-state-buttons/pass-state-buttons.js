@@ -27,9 +27,16 @@ let passAPI = require("../../api/passes.js");
 /** Components **/
 require("@polymer/paper-fab/paper-fab.js");
 require("@polymer/iron-icons/iron-icons.js");
-require("../styles/default-theme.js");
+require("@polymer/iron-icons/maps-icons.js");
 require("@polymer/paper-styles/color.js");
+require("@polymer/paper-tooltip/paper-tooltip.js");
  
+/**
+   * Fired when an error occurs
+   *
+   * @event error
+   * @param {Error} error
+   */
 
 /**
  * Polymer Element that holds pass state manupulation buttons.  
@@ -39,6 +46,7 @@ require("@polymer/paper-styles/color.js");
  * @property {Object} allowedChanges - Object of allowed state changes
  * @property {String} state - the actual state of the pass in the database.  This string should be presented to the user.
  * @property {Boolean} disabled - Grays out the buttons
+ * @property {Boolean} substitute - Enables substitute mode on the request.  Acts if you were the fromPerson.  Only if you have teacher permissions
  * @example
  * <passport-pass-state-buttons pass-id="sad5-fd4s-d45f6s-56sdf4-56sdf"></passport-pass-state-buttons>
  */
@@ -95,6 +103,10 @@ class PassportPassStateButtons extends polymer.PolymerElement {
             verticalAlign: {
                 type: Boolean,
                 observer: "_alignmentChanged"
+            },
+            substitute: {
+                type: Boolean,
+                observer: "_passIDChanged"
             }
         };
     }
@@ -168,27 +180,35 @@ class PassportPassStateButtons extends polymer.PolymerElement {
     }
     _makeUndo(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:undo";
         button.className = "undo";
+        tooltip.innerHTML = "Undo";
     }
     _makeAccepted(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:check";
         button.className = "accept";
+        tooltip.innerHTML = "Accept";
     }
     _makeCanceled(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
         button.icon = "icons:block";
         button.className = "cancel";
+        tooltip.innerHTML = "Cancel";
     }
     _makeEnroute(selector) {
         let button = this.shadowRoot.querySelector(selector);
+        let tooltip = this.shadowRoot.querySelector(selector+"Tooltip");
         button.disabled = false;
-        button.icon = "icons:assignment-turned-in";
+        button.icon = "maps:transfer-within-a-station";
         button.className = "accept";
+        tooltip.innerHTML = "Enroute";
     }
 
     _leftButtonClicked() {
@@ -207,9 +227,9 @@ class PassportPassStateButtons extends polymer.PolymerElement {
         this.disabled = true;
         let fetch = null;
         if(newStateType === "undo") {
-            fetch = passAPI.undoState(this.passId);
+            fetch = passAPI.undoState(this.passId, this.substitute);
         } else {
-            fetch = passAPI.setState(this.passId, newStateType);
+            fetch = passAPI.setState(this.passId, newStateType, this.substitute);
         }
         fetch.then((res) => {
             //console.log(res)
@@ -219,7 +239,7 @@ class PassportPassStateButtons extends polymer.PolymerElement {
             this.allowedChanges = res.allowedChanges;
             //End loader
             this.disabled = false;
-            
+            this._errorRetry = true;
         })
             .catch((err) => {
             //end loader, show error
@@ -231,7 +251,7 @@ class PassportPassStateButtons extends polymer.PolymerElement {
     /** Syncs the pass state on the server with the client */
     updateState() {
         this.disabled = true;
-        passAPI.getState(this.passId)
+        passAPI.getState(this.passId, this.substitute)
             .then((data) => {
                 //check if the pseudo states are active
                 if(data.status.migration.arrivedTime) {
@@ -246,7 +266,7 @@ class PassportPassStateButtons extends polymer.PolymerElement {
                 this.status = data.status;
                 this.allowedChanges = data.allowedChanges;
                 this.disabled = false;
-                this._errorRetry = true;
+                
             })
             .catch((err) => {
                 this._error(err);
@@ -259,7 +279,9 @@ class PassportPassStateButtons extends polymer.PolymerElement {
             this.updateState();
 
         } else {
-            this.shadowRoot.querySelector("paper-fab").icon = "icon:error-outline";
+            this.shadowRoot.querySelectorAll("paper-fab").forEach((e) => {
+                e.icon = "icons:error-outline";
+            });
             //event 
             this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
         }

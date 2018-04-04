@@ -39,10 +39,11 @@ exports.get = (filter) => {
 /**
  * Gets a pass's state AND the change rules.
  * @param {String} passID
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.getState = (passID) => {
-    return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true});
+exports.getState = (passID, substitute) => {
+    return utils.fetch("GET", "/api/passes/" + passID + "/state", {auth: true, query: {substitute: substitute}});
 };
 
 
@@ -50,19 +51,21 @@ exports.getState = (passID) => {
  * Sets a pass's state by a state type.
  * @param {String} passID
  * @param {String} stateType
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.setState = (passID, stateType) => {
+exports.setState = (passID, stateType, substitute) => {
     return utils.fetch("PATCH", "/api/passes/" + passID + "/state", {body: {
         type: stateType
-    }, auth: true});
+    }, query: {substitute: substitute}, auth: true});
 };
 
 /**
  * Sets a pass's state by a state type.
  * @param {String} passID
+ * @param {Boolean} [substitute] - For people with "teacher" permission.  Allows them to act on behalf of fromPersson
  * @returns {Object}
  */
-exports.undoState = (passID) => {
-    return utils.fetch("PATCH", "/api/passes/" + passID + "/state/undo", {auth: true});
+exports.undoState = (passID, substitute) => {
+    return utils.fetch("PATCH", "/api/passes/" + passID + "/state/undo", {auth: true, query: {substitute: substitute}});
 };

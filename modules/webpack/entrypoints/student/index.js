@@ -22,9 +22,11 @@ email: hi@josephhassell.com
 
 /**Work-around for lastpass issue on firefox**/
 document.createElement = Document.prototype.createElement;
+
 /** require webcomponents **/
+require("../../components/styles/default-theme.js");
 require("../../components/pass-list/pass-list.js");
-//require("../../components/search-accounts/search-accounts.js");
+
 
 /** require modules **/
 var utils = require("../../utils/index.js");
@@ -34,8 +36,8 @@ let myPassesList = document.getElementById("myPassesList");
 
 window.onload = function() {
     //check for errors TEST
-    $("passport-pass-state-buttons").on("error", (e) => {
-        utils.throwError(e.originalEvent.detail.error);
+    myPassesList.addEventListener("error", (e) => {
+        utils.throwError(e.detail.error);
     });
 
     //Generate today's date

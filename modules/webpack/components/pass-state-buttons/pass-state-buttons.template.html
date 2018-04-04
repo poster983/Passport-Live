@@ -1,9 +1,13 @@
-<style is="custom-style">
+<style>
     paper-fab {
         display: var(--pass-state-buttons-fab-display, inline-block);
         margin: 1px;
         --paper-fab-keyboard-focus-background: var(--dark-primary-color);
         transition: all 0.2s;
+    }
+    paper-tooltip {
+        --paper-tooltip-duration-in: 0.2s;
+        --paper-tooltip-delay-in: 0.3s;
     }
     .cancel {
         --paper-fab-background: var(--paper-red-500);
@@ -20,8 +24,11 @@
 
     /* Span Styles */
 </style>
-<paper-fab id="arrived" class="arrived" style="display: none;" mini disabled="[[disabled]]" on-click="_arrivedButtonClicked" icon="icons:create"></paper-fab>
+<paper-fab id="arrived" class="arrived" style="display: none;" mini disabled="[[disabled]]" on-click="_arrivedButtonClicked" icon="icons:accessibility"></paper-fab>
+<paper-tooltip for="arrived" id="arrivedTooltip">Arrived</paper-tooltip>
 <paper-fab id="check" class="accept" mini disabled="[[disabled]]" on-click="_leftButtonClicked" icon="icons:check"></paper-fab>
-<!--<paper-spinner active for="block">...</paper-spinner>-->
+<paper-tooltip for="check" id="checkTooltip">Accept</paper-tooltip>
 <paper-fab id="block" class="cancel" mini disabled="[[disabled]]" on-click="_rightButtonClicked" icon="icons:block"></paper-fab>
+<paper-tooltip for="block" id="blockTooltip">Cancel</paper-tooltip>
+
 

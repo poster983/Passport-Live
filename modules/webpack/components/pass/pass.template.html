@@ -1,4 +1,4 @@
-<style is="custom-style">
+<style>
     paper-item-body [secondary] {
         --paper-item-body-secondary-color: var(--paper-grey-500);
         color: var(--paper-grey-700);
@@ -65,7 +65,7 @@
     <paper-item-body three-line>
         <template is="dom-if" if="[[showStateButtons]]">
             <div class="right-elements">
-                <passport-pass-state-buttons pass-id="[[passId]]" state={{state}}></passport-pass-state-buttons>
+                <passport-pass-state-buttons pass-id="[[passId]]" state={{state}} substitute="[[substitute]]"></passport-pass-state-buttons>
             </div>
         </template>
         <div>[[header]]</div>

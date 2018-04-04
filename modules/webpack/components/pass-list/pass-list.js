@@ -27,7 +27,7 @@ let passJS = require("../../api/passes.js");
 let accountJS = require("../../api/account.js");
 
 /** COMPONENTS **/
-require("../styles/default-theme.js");
+//require("../styles/default-theme.js");
 require("@polymer/paper-listbox/paper-listbox.js");
 require("@polymer/iron-icons/social-icons.js");
 require("@polymer/iron-icon/iron-icon.js");
@@ -41,6 +41,7 @@ require("../pass/pass.js");
  * @property {Boolean} [noAutoFetch=false] - if true, the element will NOT fetch the passes from the server automatically
  * @property {String} [forUser] - Gets all passes that involve this user.  Use "me" for current user
  * @property {Object} [filter] - Please See {@link module:api/passes.getPasses} for filter keys. 
+ * @property {Boolean} [substitute] - Enables substitute mode on the state buttons.  Acts if you were the fromPerson.  Only if you have teacher permissions. forUser must be set
  * @example
  * <passport-pass-list noAutoFetch></passport-pass-list>
  */
@@ -81,6 +82,12 @@ class PassportPassList extends polymer.PolymerElement {
                 type: Boolean,
                 notify: true,
                 readOnly: true
+            },
+            _errored: {
+                type: Boolean
+            },
+            substitute: {
+                type: Boolean
             }
         };
     }
@@ -102,11 +109,11 @@ class PassportPassList extends polymer.PolymerElement {
      * Fetches pass array from server
      */
     refreshPasses() {
+        this._errored = false;
         this._setLoading(true);
         let fetchTrans = null;
         if(this.forUser) {
-            //WOULD CALL USER's PASS API 
-            fetchTrans = accountJS.getPasses(this.forUser, this.filter);
+            fetchTrans = accountJS.getPasses(this.forUser, Object.assign(this.filter, {substitute: this.substitute}));
         } else {
             fetchTrans = passJS.get(this.filter);
         }
@@ -172,7 +179,9 @@ class PassportPassList extends polymer.PolymerElement {
         return first + " " + last;
     }
 
+
     _error(err) {
+        this._errored = true;
         this.dispatchEvent(new CustomEvent("error", {detail: {error: err}}));
     }
 }
