@@ -93,9 +93,16 @@ subModeDialog.addEventListener("iron-overlay-closed", (e) => {
         }
         fromPersonList.refreshPasses();
     } else {
-        //canceled so clear the input
-        subModeAccount.query = "";
+        if(fromPersonList.substitute) {
+            //sub mode active, so restore 
+            subModeAccount.resetQuery();
+        } else {
+            //canceled without so clear the input
+            subModeAccount.query = "";
+        }
+        
     }
+    //reset closong reason
     subModeDialog.closingReason.confirmed = false;
 });
 
