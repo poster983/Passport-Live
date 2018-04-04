@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>PassportPassList - Documentation</title>
+    <title>PassportResponsiveDialog - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">PassportPassList</h1>
+    <h1 class="page-title">PassportResponsiveDialog</h1>
     
 
     <!--container.tmpl-->
@@ -50,25 +50,14 @@
 <header data-tmpl="container.tmpl">
     
         <h2>
-        PassportPassList
+        PassportResponsiveDialog
         </h2>
         
-            <div class="lead"><p>Polymer Element that displays and fetches a list of <passport-pass> elements.<br>Errors trigger the &quot;error&quot; event. Error found in the &quot;detail&quot; key</p></div>
+            <div class="lead"><p>A dialog that changes its size depending on screen size.  See Polymer.PaperDialogBehavior for props and styling</p></div>
         
     
 
     
-      <div class="bs-callout bs-callout-default">
-        <h5>Members</h5>
-        <br />
-        <dl class="dl-horizontal methods-members">
-        <dt>Methods</dt><dd><ul>
-            <li><a href="#_filtersChanged">_filtersChanged</a></li>
-            
-            <li><a href="#refreshPasses">refreshPasses</a></li>
-            
-            <li><a href="#sort">sort</a></li>
-            </ul></dd></dl></div>
 </header>
 
 <article>
@@ -92,14 +81,14 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_components_pass-list_pass-list.js.html">pass-list.js</a>:<a href="modules_webpack_components_pass-list_pass-list.js.html#line48">48</a>
+    <a href="modules_webpack_components_responsive-dialog_responsive-dialog.js.html">responsive-dialog.js</a>:<a href="modules_webpack_components_responsive-dialog_responsive-dialog.js.html#line35">35</a>
   </code>
 </div>
 
     
 
-    <h4 class="name" id="PassportPassList">
-      <a href="#params-PassportPassList"><span class="type-signature"></span>new PassportPassList</a><span class="signature">()</span><span class="type-signature"></span>
+    <h4 class="name" id="PassportResponsiveDialog">
+      <a href="#params-PassportResponsiveDialog"><span class="type-signature"></span>new PassportResponsiveDialog</a><span class="signature">()</span><span class="type-signature"></span>
 
     </h4>
 
@@ -120,16 +109,11 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;passport-pass-list noAutoFetch>&lt;/passport-pass-list></code></pre>
 
 
 
 
-
-
-<div class="collapse_" id="methodCollapse-PassportPassList">
+<div class="collapse_" id="methodCollapse-PassportResponsiveDialog">
 
   
 
@@ -138,216 +122,6 @@
 <!-- details.tmpl -->
 
 
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>passes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The list of raw pass objects</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>noAutoFetch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>if true, the element will NOT fetch the passes from the server automatically</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>forUser</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Gets all passes that involve this user.  Use &quot;me&quot; for current user</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Please See <code>module:api/passes.getPasses</code> for filter keys.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>substitute</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Enables substitute mode on the state buttons.  Acts if you were the fromPerson.  Only if you have teacher permissions. forUser must be set</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -410,7 +184,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n * Polymer Element that displays and fetches a list of <passport-pass> elements.  \n * Errors trigger the \"error\" event. Error found in the \"detail\" key \n * @class \n * @property {Object[]} [passes] - The list of raw pass objects  \n * @property {Boolean} [noAutoFetch=false] - if true, the element will NOT fetch the passes from the server automatically\n * @property {String} [forUser] - Gets all passes that involve this user.  Use \"me\" for current user\n * @property {Object} [filter] - Please See <code>module:api/passes.getPasses</code> for filter keys. \n * @property {Boolean} [substitute] - Enables substitute mode on the state buttons.  Acts if you were the fromPerson.  Only if you have teacher permissions. forUser must be set\n * @example\n * <passport-pass-list noAutoFetch></passport-pass-list>\n */","meta":{"range":[2165,6113],"filename":"pass-list.js","lineno":48,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/components/pass-list","code":{"id":"astnode100019717","name":"PassportPassList","type":"ClassDeclaration","paramnames":[]},"shortpath":"modules/webpack/components/pass-list/pass-list.js"},"classdesc":"<p>Polymer Element that displays and fetches a list of <passport-pass> elements.<br>Errors trigger the &quot;error&quot; event. Error found in the &quot;detail&quot; key</p>","kind":"class","properties":[{"type":{"names":["Array.<Object>"]},"optional":true,"description":"<p>The list of raw pass objects</p>","name":"passes"},{"type":{"names":["Boolean"]},"optional":true,"defaultvalue":false,"description":"<p>if true, the element will NOT fetch the passes from the server automatically</p>","name":"noAutoFetch"},{"type":{"names":["String"]},"optional":true,"description":"<p>Gets all passes that involve this user.  Use &quot;me&quot; for current user</p>","name":"forUser"},{"type":{"names":["Object"]},"optional":true,"description":"<p>Please See <code>module:api/passes.getPasses</code> for filter keys.</p>","name":"filter"},{"type":{"names":["Boolean"]},"optional":true,"description":"<p>Enables substitute mode on the state buttons.  Acts if you were the fromPerson.  Only if you have teacher permissions. forUser must be set</p>","name":"substitute"}],"examples":[{"caption":"","code":"<passport-pass-list noAutoFetch></passport-pass-list>"}],"name":"PassportPassList","longname":"PassportPassList","scope":"global","params":[],"___id":"T000003R000005","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"PassportPassList","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":[]}
+{"comment":"/** A dialog that changes its size depending on screen size.  See Polymer.PaperDialogBehavior for props and styling\n * @class\n*/","meta":{"range":[1443,1745],"filename":"responsive-dialog.js","lineno":35,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/components/responsive-dialog","code":{"id":"astnode100021397","name":"PassportResponsiveDialog","type":"ClassDeclaration","paramnames":[]},"shortpath":"modules/webpack/components/responsive-dialog/responsive-dialog.js"},"classdesc":"<p>A dialog that changes its size depending on screen size.  See Polymer.PaperDialogBehavior for props and styling</p>","kind":"class","name":"PassportResponsiveDialog","longname":"PassportResponsiveDialog","scope":"global","params":[],"___id":"T000003R000008","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"PassportResponsiveDialog","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":[]}
 </pre>
 -->
 </div>
@@ -430,398 +204,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_components_pass-list_pass-list.js.html">pass-list.js</a>:<a href="modules_webpack_components_pass-list_pass-list.js.html#line95">95</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="_filtersChanged">
-      <a href="#params-_filtersChanged"><span class="type-signature"></span>_filtersChanged</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>OBSERVERS</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-_filtersChanged">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/** OBSERVERS **/","meta":{"range":[3334,3705],"filename":"pass-list.js","lineno":95,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/components/pass-list","code":{"id":"astnode100019812","name":"PassportPassList#_filtersChanged","type":"MethodDefinition","paramnames":[]},"vars":{"":null},"shortpath":"modules/webpack/components/pass-list/pass-list.js"},"description":"<p>OBSERVERS</p>","name":"_filtersChanged","longname":"PassportPassList#_filtersChanged","kind":"function","memberof":"PassportPassList","scope":"instance","params":[],"___id":"T000002R001441","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"_filtersChanged","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"PassportPassList.html\">PassportPassList</a>#"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_components_pass-list_pass-list.js.html">pass-list.js</a>:<a href="modules_webpack_components_pass-list_pass-list.js.html#line111">111</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="refreshPasses">
-      <a href="#params-refreshPasses"><span class="type-signature"></span>refreshPasses</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>Fetches pass array from server</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-refreshPasses">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n     * Fetches pass array from server\n     */","meta":{"range":[3765,4430],"filename":"pass-list.js","lineno":111,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/components/pass-list","code":{"id":"astnode100019867","name":"PassportPassList#refreshPasses","type":"MethodDefinition","paramnames":[]},"vars":{"":null},"shortpath":"modules/webpack/components/pass-list/pass-list.js"},"description":"<p>Fetches pass array from server</p>","name":"refreshPasses","longname":"PassportPassList#refreshPasses","kind":"function","memberof":"PassportPassList","scope":"instance","params":[],"___id":"T000002R001444","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"refreshPasses","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"PassportPassList.html\">PassportPassList</a>#"]}
-</pre>
--->
-</div>
-
-        
-            <!--method.tmpl-->
-<div class="method-details">
-
-
-
-  <!--source-link.tmpl-->
-
-
-<div class="pull-right source-link-container">
-  <code class="source-link" data-tmpl="method-tmpl(1)">
-    <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_components_pass-list_pass-list.js.html">pass-list.js</a>:<a href="modules_webpack_components_pass-list_pass-list.js.html#line137">137</a>
-  </code>
-</div>
-
-
-
-
-    
-
-    
-
-    <h4 class="name" id="sort">
-      <a href="#params-sort"><span class="type-signature"></span>sort</a><span class="signature">()</span><span class="type-signature"></span>
-
-    </h4>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="description">
-    <p>An array.sort callback function for sorting the passes property
-Sorts by date ONLY right now</p>
-</div>
-
-
-
-
-
-
-
-
-<div class="collapse_" id="methodCollapse-sort">
-
-  
-
-  
-
-<!-- details.tmpl -->
-
-
-
-
-
-
-
-
-<dl class="dl-horizontal">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-<!--
-<pre>
-{"comment":"/**\n     * An array.sort callback function for sorting the passes property\n     * Sorts by date ONLY right now\n     */","meta":{"range":[4558,4807],"filename":"pass-list.js","lineno":137,"columnno":4,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/components/pass-list","code":{"id":"astnode100019963","name":"PassportPassList#sort","type":"MethodDefinition","paramnames":["a","b"]},"vars":{"":null},"shortpath":"modules/webpack/components/pass-list/pass-list.js"},"description":"<p>An array.sort callback function for sorting the passes property\nSorts by date ONLY right now</p>","name":"sort","longname":"PassportPassList#sort","kind":"function","memberof":"PassportPassList","scope":"instance","params":[],"___id":"T000002R001451","___s":true,"attribs":"<span class=\"type-signature\"></span>","id":"sort","signature":"<span class=\"signature\">()</span><span class=\"type-signature\"></span>","ancestors":["<a href=\"PassportPassList.html\">PassportPassList</a>#"]}
-</pre>
--->
-</div>
-
-        
     
 
     
