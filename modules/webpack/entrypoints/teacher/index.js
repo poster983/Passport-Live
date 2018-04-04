@@ -77,8 +77,8 @@ subModeButton.addEventListener("click", () => {
 
 //listen for the closing of the dialog 
 subModeDialog.addEventListener("iron-overlay-closed", (e) => {
-    console.log(subModeAccount.value)
-    console.log(e)
+    /*console.log(subModeAccount.value)
+    console.log(e)*/
     //if confirmed
     if(e.detail.confirmed) {
         //enable/disable sub mode
