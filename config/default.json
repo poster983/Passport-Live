@@ -94,7 +94,7 @@
 		}
 	},
 	"schedule": { 
-		"periods": ["a", "b", "c", "d", "combinedE", "e1", "combinedLunch", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed during school year
+		"periods": ["a", "b", "c", "d", "blockE", "e1", "blockLunch", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed during school year
 		"daysOfTheWeek": { //Choose what days have school
 			"monday": true,
 			"tuesday": true,
