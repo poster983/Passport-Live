@@ -99,6 +99,7 @@ exports.newPass = function (pass, options) {
             err.status = 400;
             return reject(err);
         }
+        console.log(pass.date);
         if (typeCheck("Date", pass.date)) {
             pass.date = moment(pass.date).toISOString();
         }
@@ -171,7 +172,7 @@ exports.newPass = function (pass, options) {
                     migrator: pass.migrator,
                     requester: pass.requester,
                     period: pass.period,
-                    date: r.ISO8601(pass.date)
+                    date: r.ISO8601(pass.date).date()
                 }).run(function (err, data) {
                     if (err) {
                         return dupeReject(err);
@@ -197,7 +198,7 @@ exports.newPass = function (pass, options) {
                 migrator: pass.migrator,
                 requester: pass.requester,
                 period: pass.period,
-                date: r.ISO8601(pass.date),
+                date: r.ISO8601(pass.date).date(),
                 dateTimeRequested: r.now(),
                 status: {
                     confirmation: {
