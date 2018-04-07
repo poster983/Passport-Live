@@ -20,7 +20,7 @@ email: hi@josephhassell.com
 var securityJS = require("../passport-api/security.js");
 var config = require("config");
 var typeCheck = require("type-check");
-var moment = require("moment")
+var moment = require("moment");
 
 module.exports = {
     customTypes: {

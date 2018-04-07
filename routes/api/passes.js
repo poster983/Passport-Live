@@ -104,7 +104,7 @@ router.post("/me", passport.authenticate("jwt", { session: false}), function new
     var toPerson = req.body.toPerson;
     var migrator = req.user.id;
     var period = req.body.period;
-    var date = req.body.date;
+    var date = moment(req.body.date).toISOString();
 
     api.newPass({toPerson: toPerson, fromPerson: fromPerson, requester: migrator, migrator: migrator, period: period, date: date}).then((trans) => {
         res.status(201).json(trans);

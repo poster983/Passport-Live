@@ -1000,7 +1000,7 @@ email: hi@josephhassell.com
 
     function submitPass() {
       if ((fromPerson || fromPerson == "") && toPerson && onPeriod && dayToCome) {
-        console.log(moment(dayToCome).toISOString())
+        //console.log(moment(dayToCome).toISOString())
         $.ajax({
           type: "post",
           url: "/api/passes/me/",
@@ -1008,7 +1008,7 @@ email: hi@josephhassell.com
             fromPerson: fromPerson,
             toPerson: toPerson.id,
             period: onPeriod,
-            date: moment(dayToCome).toISOString()
+            date: moment(dayToCome).format("YYYY-MM-DD")//toISOString()
           },
           dataType: "json",
           beforeSend: function (xhr) {
