@@ -167,16 +167,13 @@ exports.newPass = function (pass, options) {
         preChecks.push(new Promise(function (dupeResolve, dupeReject) {
             if (options.checkDupe !== false) {
                 r.table("passes")
-                    .filter((doc) => {
-                        return doc("date").date().during(r.ISO8601(pass.date).date(), r.ISO8601(moment(pass.date).add(1, "day").toISOString()).date());
-                    })
                     .filter({
                         toPerson: pass.toPerson,
                         fromPerson: pass.fromPerson,
                         migrator: pass.migrator,
                         requester: pass.requester,
                         period: pass.period,
-                    //date: r.ISO8601(pass.date).date()
+                        date: r.ISO8601(pass.date).inTimezone("Z").date()
                     }).run(function (err, data) {
                         if (err) {
                             return dupeReject(err);
@@ -202,7 +199,7 @@ exports.newPass = function (pass, options) {
                 migrator: pass.migrator,
                 requester: pass.requester,
                 period: pass.period,
-                date: r.ISO8601(pass.date).date(),
+                date: r.ISO8601(pass.date).inTimezone("Z").date(),
                 dateTimeRequested: r.now(),
                 status: {
                     confirmation: {
@@ -321,14 +318,14 @@ exports.get = function (filter, options) {
 
         //filter date
         if(filter.date && (filter.date.from || filter.date.to)) {
+            console.log(filter.date.from, "INSIDE")
             query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
-                    return date("date").date().during(r.ISO8601(filter.date.from).date(), r.ISO8601(filter.date.to).date(), {leftBound: "closed", rightBound: "closed"});
+                    return date("date").inTimezone("Z").date().during(r.ISO8601(filter.date.from).inTimezone("Z").date(), r.ISO8601(filter.date.to).inTimezone("Z").date(), {leftBound: "closed", rightBound: "closed"});
                 } else if(filter.date && filter.date.from) {
-                    return date("date").date().ge(r.ISO8601(filter.date.from).date())
-                        .or(date("date").date().during(r.ISO8601(filter.date.from).date(), r.ISO8601(moment(filter.date.from).add(1, "day").toISOString()).date()));
+                    return date("date").inTimezone("Z").date().ge(r.ISO8601(filter.date.from).inTimezone("Z").date());
                 } else if(filter.date && filter.date.to) {
-                    return date("date").date().le(r.ISO8601(filter.date.to).date());
+                    return date("date").inTimezone("Z").date().le(r.ISO8601(filter.date.to).inTimezone("Z").date());
                 } else {
                     return true;
                 }
@@ -506,7 +503,7 @@ exports.limitTally = (userID, period, date) => {
                 })
                 //filter date and time
                 .filter(function (doc) {
-                    return doc("date").date().eq(r.ISO8601(date).date())
+                    return doc("date").inTimezone("Z").date().eq(r.ISO8601(date).inTimezone("Z").date())
                         .and(doc("toPerson").eq(userID))
                         .and(doc("period").eq(period));
                 }).count()
