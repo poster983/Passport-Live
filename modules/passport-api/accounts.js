@@ -375,7 +375,7 @@ exports.get = (query) => {
             let nameStr = query.name;
             delete query.name;
             dbquery = dbquery.filter(function(doc){
-                return r_.or(doc("name")("first").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
+                return r_.or(doc("name")("first").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")), //  /[$-/:-?{-~!"^_`\[\]\s]/g
                     doc("name")("salutation").add(doc("name")("first"), doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,"")),
                     doc("name")("salutation").add(doc("name")("last")).match("(?i)"+nameStr.replace(/\s/g,""))
                 );
