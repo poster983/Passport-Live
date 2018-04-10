@@ -173,7 +173,7 @@ exports.newPass = function (pass, options) {
                         migrator: pass.migrator,
                         requester: pass.requester,
                         period: pass.period,
-                        date: r.ISO8601(pass.date).inTimezone("Z").date()
+                        //date: r.ISO8601(pass.date).inTimezone("Z").date()
                     }).run(function (err, data) {
                         if (err) {
                             return dupeReject(err);
@@ -199,7 +199,17 @@ exports.newPass = function (pass, options) {
                 migrator: pass.migrator,
                 requester: pass.requester,
                 period: pass.period,
-                date: r.ISO8601(pass.date).inTimezone("Z").date(),
+                //date: r.ISO8601(pass.date).inTimezone("Z").date(),
+                date: { //WHY? Because in the future we may support a datetime field aswell and want to keep supporting programs running the old api.
+                    start: {
+                        date: r.ISO8601(pass.date).date()
+                        //dateTime: //unused ATM.  Must be either date or dateTime.  Cant have both.  also end must match start
+                    },
+                    end: {
+                        date: r.ISO8601(moment(pass.date).add(1, 'day').toISOString()).date()
+                        //dateTime: //unused ATM
+                    }
+                },
                 dateTimeRequested: r.now(),
                 status: {
                     confirmation: {
@@ -213,10 +223,10 @@ exports.newPass = function (pass, options) {
                         arrivedTime: null
                     }
                 },
-                seen: {
+                /*seen: {
                     email: [],
                     web: []
-                }
+                }*/
             }).run(function (err, trans) {
                 if (err) {
                     return reject(err);
@@ -242,8 +252,8 @@ exports.newPass = function (pass, options) {
  * @param {String} [filter.requester] - User ID of the person that requested the pass
  * @param {(String|String[])} [filter.period] - An array r string of period constants.
  * @param {Object} [filter.date]
- * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
- * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
+ * @param {(Date|datetime)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
+ * @param {(Date|datetime)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
  * @param {String} [filter.forUser] - filters every pass that involves this person. 
  * 
  * @param {Object} [options] -- unused
@@ -318,6 +328,21 @@ exports.get = function (filter, options) {
 
         //filter date
         if(filter.date && (filter.date.from || filter.date.to)) {
+            query = query.filter((date) => {
+                return r.branch(
+                    date("date")("start")("date").typeOf().eq("TIME"), //if datetime is present
+                    r.ISO8601(filter.date.from).inTimezone("Z").date()
+                )
+            });
+            delete filter.date;
+        }
+        //test code
+        /*let from = "2018-04-10T00:00:00-05:00";
+let startDate = "2018-04-10T00:00:00-05:00";
+let endDate = "2018-04-11T00:00:00-05:00";
+r.ISO8601(from).inTimezone("Z").date().during(r.ISO8601(startDate).inTimezone("Z").date(), r.ISO8601(endDate).inTimezone("Z").date()).or(r.ISO8601(from).inTimezone("Z").date().ge(r.ISO8601(startDate).inTimezone("Z").date()))*/
+        
+/*if(filter.date && (filter.date.from || filter.date.to)) {
             console.log(filter.date.from, "INSIDE")
             query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
@@ -331,7 +356,7 @@ exports.get = function (filter, options) {
                 }
             });
             delete filter.date;
-        }
+        }*/
 
         //filter if periods is an array
         if(typeCheck("[period]", filter.period, utils.typeCheck)) {
