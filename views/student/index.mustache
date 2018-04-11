@@ -1008,7 +1008,7 @@ email: hi@josephhassell.com
             fromPerson: fromPerson,
             toPerson: toPerson.id,
             period: onPeriod,
-            date: moment(dayToCome).format("YYYY-MM-DD")//toISOString()
+            date: moment(dayToCome).toISOString()
           },
           dataType: "json",
           beforeSend: function (xhr) {

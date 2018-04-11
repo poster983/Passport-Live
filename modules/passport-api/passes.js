@@ -204,8 +204,8 @@ exports.newPass = function (pass, options) {
                 period: pass.period,
                 //date: r.ISO8601(pass.date).inTimezone("Z").date(),
                 date: { 
-                    start: r.ISO8601(pass.date).date(),
-                    end: r.ISO8601(moment(pass.date).add(1, "day").toISOString()).date()
+                    start: r.ISO8601(pass.date),
+                    end: r.ISO8601(moment(pass.date).add(1, "day").toISOString())
                 },
                 dateTimeRequested: r.now(),
                 status: {
@@ -355,7 +355,7 @@ exports.get = function (filter, options) {
                                 date("date")("end").inTimezone("Z"),
                                 {leftBound: "open", rightBound: "closed"}
                             )
-                    )
+                    );
                 }
 
                 return r.and(from, to);
