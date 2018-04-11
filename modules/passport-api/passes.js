@@ -337,11 +337,35 @@ exports.get = function (filter, options) {
             delete filter.date;
         }
         //test code
-        /*let from = "2018-04-10T00:00:00-05:00";
-let startDate = "2018-04-10T00:00:00-05:00";
-let endDate = "2018-04-11T00:00:00-05:00";
-r.ISO8601(from).inTimezone("Z").date().during(r.ISO8601(startDate).inTimezone("Z").date(), r.ISO8601(endDate).inTimezone("Z").date()).or(r.ISO8601(from).inTimezone("Z").date().ge(r.ISO8601(startDate).inTimezone("Z").date()))*/
-        
+        /*let from = "2018-04-10T12:00:00+12:00";
+        //let from = r.now().toISO8601();
+        let startDate = "2018-04-10T00:00:00-05:00";
+        let endDate = "2018-04-11T00:00:00-05:00";
+        r.object(
+          "from", r.ISO8601(from).inTimezone("Z"), 
+          "start", r.ISO8601(startDate).inTimezone("Z"),
+          "end", r.ISO8601(endDate).inTimezone("Z"),
+          "zQueryCombo", r.ISO8601(from).inTimezone("Z").date()
+              .during(
+                r.ISO8601(startDate).inTimezone("Z").date(), 
+                r.ISO8601(endDate).inTimezone("Z").date()
+              ).or(
+                r.ISO8601(from).inTimezone("Z").date()
+                .ge(
+                     r.ISO8601(startDate).inTimezone("Z").date()
+                )
+              ),
+          "zQueryOperator", r.ISO8601(from).inTimezone("Z").date()
+            .ge(
+                r.ISO8601(startDate).inTimezone("Z").date()
+            ),
+          "zQueryDuring", r.ISO8601(from).inTimezone("Z")
+              .during(
+                r.ISO8601(startDate).inTimezone("Z"), 
+                r.ISO8601(endDate).inTimezone("Z")
+              )
+          );
+*/        
 /*if(filter.date && (filter.date.from || filter.date.to)) {
             console.log(filter.date.from, "INSIDE")
             query = query.filter((date) => {
