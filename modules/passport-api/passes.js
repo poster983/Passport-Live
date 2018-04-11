@@ -84,7 +84,7 @@ exports.stateTypes = Object.freeze(exports.stateTypes);
  * @param {string} pass.migrator - Id of the account moving between people
  * @param {string} pass.requester - Id of the account who requested the pass
  * @param {string} pass.period - must be a valid period set in the configs
- * @param {String} pass.date
+ * @param {String} pass.date - an iso string with a valid timezone
  * @param {Object} [options]
  * @param {boolean} [options.checkLimit=true] - Checks if toPerson is full. If so, the pass will be set as "waitlisted"
  * @param {boolean} [options.checkDupe=true] - Sheck if there is an identical pass in the system already.
@@ -167,6 +167,9 @@ exports.newPass = function (pass, options) {
         preChecks.push(new Promise(function (dupeResolve, dupeReject) {
             if (options.checkDupe !== false) {
                 r.table("passes")
+                    .filter((doc) => {
+                        return r.ISO8601(pass.date).inTimezone("Z").during(doc("date")("start").inTimezone("Z"), doc("date")("end").inTimezone("Z"))
+                    })
                     .filter({
                         toPerson: pass.toPerson,
                         fromPerson: pass.fromPerson,
@@ -200,15 +203,9 @@ exports.newPass = function (pass, options) {
                 requester: pass.requester,
                 period: pass.period,
                 //date: r.ISO8601(pass.date).inTimezone("Z").date(),
-                date: { //WHY? Because in the future we may support a datetime field aswell and want to keep supporting programs running the old api.
-                    start: {
-                        date: r.ISO8601(pass.date).date()
-                        //dateTime: //unused ATM.  Must be either date or dateTime.  Cant have both.  also end must match start
-                    },
-                    end: {
-                        date: r.ISO8601(moment(pass.date).add(1, 'day').toISOString()).date()
-                        //dateTime: //unused ATM
-                    }
+                date: { 
+                    start: r.ISO8601(pass.date).date(),
+                    end: r.ISO8601(moment(pass.date).add(1, "day").toISOString()).date()
                 },
                 dateTimeRequested: r.now(),
                 status: {
@@ -266,7 +263,7 @@ exports.get = function (filter, options) {
         if(!filter) {
             filter = {};
         }
-        console.log(filter.date.from)
+        console.log(filter.date.from);
         console.log(moment(filter.date.from).toISOString());
         
         //check filter type
@@ -329,15 +326,45 @@ exports.get = function (filter, options) {
         //filter date
         if(filter.date && (filter.date.from || filter.date.to)) {
             query = query.filter((date) => {
-                return r.branch(
-                    date("date")("start")("date").typeOf().eq("TIME"), //if datetime is present
-                    r.ISO8601(filter.date.from).inTimezone("Z").date()
-                )
+                let from = true;
+                let to = true;
+                if(filter.date.from) {
+                    //filter low end
+                    from = r.or(
+                        date("date")("start").inTimezone("Z").date()
+                            .ge(
+                                r.ISO8601(filter.date.from).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.from).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "closed", rightBound: "open"}
+                            )
+                    );
+                }
+                if(filter.date.to) {
+                    to = r.or(
+                        date("date")("end").inTimezone("Z").date()
+                            .lt(
+                                r.ISO8601(filter.date.to).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.to).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "open", rightBound: "closed"}
+                            )
+                    )
+                }
+
+                return r.and(from, to);
             });
             delete filter.date;
         }
         //test code
-        /*let from = "2018-04-10T12:00:00+12:00";
+        /*let from = "2018-04-11T06:00:00Z";
+let to = "2018-04-11T05:00:00Z";
         //let from = r.now().toISO8601();
         let startDate = "2018-04-10T00:00:00-05:00";
         let endDate = "2018-04-11T00:00:00-05:00";
@@ -345,28 +372,48 @@ exports.get = function (filter, options) {
           "from", r.ISO8601(from).inTimezone("Z"), 
           "start", r.ISO8601(startDate).inTimezone("Z"),
           "end", r.ISO8601(endDate).inTimezone("Z"),
-          "zQueryCombo", r.ISO8601(from).inTimezone("Z").date()
-              .during(
-                r.ISO8601(startDate).inTimezone("Z").date(), 
-                r.ISO8601(endDate).inTimezone("Z").date()
-              ).or(
-                r.ISO8601(from).inTimezone("Z").date()
-                .ge(
-                     r.ISO8601(startDate).inTimezone("Z").date()
-                )
+      		"to", r.ISO8601(to).inTimezone("Z"), 
+          "zQueryOperatorGT", r.or(
+            	r.ISO8601(startDate).inTimezone("Z").date()
+            		.ge(
+          					r.ISO8601(from).inTimezone("Z").date()
               ),
-          "zQueryOperator", r.ISO8601(from).inTimezone("Z").date()
-            .ge(
-                r.ISO8601(startDate).inTimezone("Z").date()
+            	r.ISO8601(from).inTimezone("Z")
+              	.during(
+                	r.ISO8601(startDate).inTimezone("Z"), 
+                	r.ISO8601(endDate).inTimezone("Z"),
+                 	{leftBound: "closed", rightBound: "open"}
+             	)
             ),
+          "zQueryOperatorGTOLD", r.ISO8601(startDate).inTimezone("Z").date()
+            .ge(
+                r.ISO8601(from).inTimezone("Z").date()
+            ),
+          "zQueryOperatorLE", r.or(
+            	r.ISO8601(endDate).inTimezone("Z").date()
+            		.lt(
+          					r.ISO8601(to).inTimezone("Z").date()
+              ),
+            	r.ISO8601(to).inTimezone("Z")
+              	.during(
+                	r.ISO8601(startDate).inTimezone("Z"), 
+                	r.ISO8601(endDate).inTimezone("Z"),
+                  {leftBound: "open", rightBound: "closed"}
+             	)
+            ),
+          "zQueryOperatorLEOLD", r.ISO8601(endDate).inTimezone("Z").date()
+            .lt(
+                r.ISO8601(to).inTimezone("Z").date()
+            ),
+            
           "zQueryDuring", r.ISO8601(from).inTimezone("Z")
               .during(
                 r.ISO8601(startDate).inTimezone("Z"), 
                 r.ISO8601(endDate).inTimezone("Z")
               )
-          );
+        );
 */        
-/*if(filter.date && (filter.date.from || filter.date.to)) {
+        /*if(filter.date && (filter.date.from || filter.date.to)) {
             console.log(filter.date.from, "INSIDE")
             query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
@@ -552,7 +599,7 @@ exports.limitTally = (userID, period, date) => {
                 })
                 //filter date and time
                 .filter(function (doc) {
-                    return doc("date").inTimezone("Z").date().eq(r.ISO8601(date).inTimezone("Z").date())
+                    return r.ISO8601(date).inTimezone("Z").during(doc("date")("start").inTimezone("Z"), doc("date")("end").inTimezone("Z"))
                         .and(doc("toPerson").eq(userID))
                         .and(doc("period").eq(period));
                 }).count()
@@ -650,7 +697,7 @@ state.neutral = (passID, setByID) => {
                 }
 
                 //Get limit data for toPerson
-                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+                return exports.limitTally(passData.toPerson, passData.period, passData.date.start.toISOString());
             })
             .then((limit) => {
                 //check if limit is reached.  
