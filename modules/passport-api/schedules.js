@@ -19,8 +19,9 @@ email: hi@josephhassell.com
 */
 
 var indexAPI = require("./index.js");
-var r = require('rethinkdb');
-var db = require('../../modules/db/index.js');
+
+var db = require("../../modules/db/index.js");
+let r = db.dash();
 var config = require("config");
 var moment = require("moment");
 
@@ -28,7 +29,7 @@ var moment = require("moment");
 * @module js/schedules
 */
 
- /** 
+/** 
     * Gets the Currint period for the date based off the time 
     * If time is omitted, the passport will assume UTC Midnight 
     * @link module:js/schedules
@@ -59,12 +60,12 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
             //console.log(schedules)
             //return done(null, schedules);
             if(!schedules.id) {
-                var err = new Error("No Schedule Found")
+                var err = new Error("No Schedule Found");
                 err.status = 404;
                 return done(err);
             }
             if(!schedules.scheduleDefinition || !schedules.scheduleDefinition.scheduleData) {
-                var err = new Error("Schedule Data Invalid")
+                var err = new Error("Schedule Data Invalid");
                 err.status = 500;
                 return done(err);
             }
@@ -72,14 +73,14 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
             var scheduleConsts = Object.keys(scheduleData);
             var currentPeriods = [];
             if(scheduleConsts.length <= 0) {
-                var err = new Error("No Schedule Data Found")
+                var err = new Error("No Schedule Data Found");
                 err.status = 500;
                 return done(err);
             }
             //console.log(scheduleConsts)
             for(var x = 0; x < scheduleConsts.length; x++) {
                 if(utcQuaryTime.isBetween(moment(scheduleData[scheduleConsts[x]].start, "HH:mm"), moment(scheduleData[scheduleConsts[x]].end, "HH:mm"))) {
-                    currentPeriods.push({period: scheduleConsts[x], start: scheduleData[scheduleConsts[x]].start, end: scheduleData[scheduleConsts[x]].end})
+                    currentPeriods.push({period: scheduleConsts[x], start: scheduleData[scheduleConsts[x]].start, end: scheduleData[scheduleConsts[x]].end});
                     
                 }
                 if(x >= scheduleConsts.length-1) {
@@ -87,7 +88,7 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
                 }
             }
             
-        })
+        });
     } else {
         var err = new Error("Invalid Date/Time");
         err.status = 400;
@@ -95,5 +96,17 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
     }
     
     //indexAPI.getScheduleOfADate(db.conn(), )
-}
+};
 
+/**
+ * Get the schedule for a given datetime 
+ * @param {(Date|ISOString)} dateTime - 
+ * @param {Object} [options] 
+ * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object. 
+ * @param {Boolean} [options.include] 
+ * @returns {(Promise|Selection[])} - Returns a selection when options.returnSelection is true. Promise will return a Schedule object and a rrule ICAL RFC string
+ * @throws {(TypeError|ReQL|Error)}
+ */
+exports.on = (dateTime, options) => {
+
+};
