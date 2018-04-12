@@ -21,6 +21,7 @@ email: hi@josephhassell.com
 */
 let polymer = require("@polymer/polymer/polymer-element");
 let view = require("./pass.template.html");
+let {DateTime} = require("luxon");
 
 //components
 require("@polymer/paper-styles/color.js");
@@ -36,7 +37,8 @@ require("@polymer/paper-item/paper-icon-item.js");
  * @property {Boolean} [showStateButtons] - if true, the buttons to change the state will be shown.  
  * @property {String} [passId] - The ID of the pass.  If undefined, showStateButtons will be set to false
  * @property {String} [avatarId] - id of user to show avatar,
- * @property {String} [date] - ISO String 
+ * @property {String} [date.start] - ISO String 
+ * @property {String} [date.end] - ISO String 
  * @property {String} [dateRequested] - ISO String
  * @property {String} [header] - The primary title for the pass.
  * @property {String} [period] - Period the migrator is arriving 
@@ -78,8 +80,12 @@ class PassportPass extends polymer.PolymerElement {
             header: {
                 type: String,
             },
-            date: {
+            dateStart: {
                 type: String
+            },
+            dateEnd: {
+                type: String,
+                observer: "_showDateEnd"
             },
             dateRequested: {
                 type: String
@@ -149,7 +155,24 @@ class PassportPass extends polymer.PolymerElement {
             return requester + " requested this ";
         }
     }
-
+    //determines if to show the second datetime element
+    _showDateEnd() {
+        if(this.dateEnd) {
+            //if no period, show
+            if(!this.period) {
+                return true;
+            } else if(+DateTime.fromISO(this.dateStart).plus({days: 1}) === +DateTime.fromISO(this.dateEnd)) {
+                //all day with period, dont show
+                return false;
+            } else {
+                //show
+                return true;
+            }
+        } else {
+            //not set, dont show
+            return false;
+        }
+    }
 }
 
 

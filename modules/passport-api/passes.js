@@ -84,7 +84,7 @@ exports.stateTypes = Object.freeze(exports.stateTypes);
  * @param {string} pass.migrator - Id of the account moving between people
  * @param {string} pass.requester - Id of the account who requested the pass
  * @param {string} pass.period - must be a valid period set in the configs
- * @param {(Date|ISOString)} pass.date
+ * @param {String} pass.date - an iso string with a valid timezone
  * @param {Object} [options]
  * @param {boolean} [options.checkLimit=true] - Checks if toPerson is full. If so, the pass will be set as "waitlisted"
  * @param {boolean} [options.checkDupe=true] - Sheck if there is an identical pass in the system already.
@@ -99,6 +99,7 @@ exports.newPass = function (pass, options) {
             err.status = 400;
             return reject(err);
         }
+        //console.log(pass.date);
         if (typeCheck("Date", pass.date)) {
             pass.date = moment(pass.date).toISOString();
         }
@@ -165,25 +166,29 @@ exports.newPass = function (pass, options) {
         
         preChecks.push(new Promise(function (dupeResolve, dupeReject) {
             if (options.checkDupe !== false) {
-                r.table("passes").filter({
-                    toPerson: pass.toPerson,
-                    fromPerson: pass.fromPerson,
-                    migrator: pass.migrator,
-                    requester: pass.requester,
-                    period: pass.period,
-                    date: r.ISO8601(pass.date)
-                }).run(function (err, data) {
-                    if (err) {
-                        return dupeReject(err);
-                    }
-                    if (data.length > 0) {
-                        let err = new Error("Duplicate pass found");
-                        err.status = 409;
-                        dupeReject(err);
-                    } else {
-                        dupeResolve();
-                    }
-                });
+                r.table("passes")
+                    .filter((doc) => {
+                        return r.ISO8601(pass.date).inTimezone("Z").during(doc("date")("start").inTimezone("Z"), doc("date")("end").inTimezone("Z"))
+                    })
+                    .filter({
+                        toPerson: pass.toPerson,
+                        fromPerson: pass.fromPerson,
+                        migrator: pass.migrator,
+                        requester: pass.requester,
+                        period: pass.period,
+                        //date: r.ISO8601(pass.date).inTimezone("Z").date()
+                    }).run(function (err, data) {
+                        if (err) {
+                            return dupeReject(err);
+                        }
+                        if (data.length > 0) {
+                            let err = new Error("Duplicate pass found");
+                            err.status = 409;
+                            dupeReject(err);
+                        } else {
+                            dupeResolve();
+                        }
+                    });
             } else {
                 dupeResolve();
             }
@@ -197,7 +202,11 @@ exports.newPass = function (pass, options) {
                 migrator: pass.migrator,
                 requester: pass.requester,
                 period: pass.period,
-                date: r.ISO8601(pass.date),
+                //date: r.ISO8601(pass.date).inTimezone("Z").date(),
+                date: { 
+                    start: r.ISO8601(pass.date),
+                    end: r.ISO8601(moment(pass.date).add(1, "day").toISOString())
+                },
                 dateTimeRequested: r.now(),
                 status: {
                     confirmation: {
@@ -211,10 +220,10 @@ exports.newPass = function (pass, options) {
                         arrivedTime: null
                     }
                 },
-                seen: {
+                /*seen: {
                     email: [],
                     web: []
-                }
+                }*/
             }).run(function (err, trans) {
                 if (err) {
                     return reject(err);
@@ -227,17 +236,7 @@ exports.newPass = function (pass, options) {
     });
 };
 
-/*
- * Gets passes
- * @link module:js/passes
- * @param {string} id - Id of the account
- * @param {string} byColl - Where to search for the id.  Possible values: "fromPerson", "toPerson", "migrator", "requester"
- * @param {date} fromDate - low range date to search for.  
- * @param {date} toDate - High range date to search for.  set null for none
- * @param {array} periods - Only return passes with these periods.  set null for none
- * @param {function} done - callback
- * @returns {done} Error, or a transaction statement 
- */
+
 
 /**
  * Gets passes
@@ -250,8 +249,8 @@ exports.newPass = function (pass, options) {
  * @param {String} [filter.requester] - User ID of the person that requested the pass
  * @param {(String|String[])} [filter.period] - An array r string of period constants.
  * @param {Object} [filter.date]
- * @param {(Date|String)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored
- * @param {(Date|String)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string Time is ignored
+ * @param {(Date|datetime)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
+ * @param {(Date|datetime)} [filter.date.to] - Upper limit for the date. exclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
  * @param {String} [filter.forUser] - filters every pass that involves this person. 
  * 
  * @param {Object} [options] -- unused
@@ -264,6 +263,9 @@ exports.get = function (filter, options) {
         if(!filter) {
             filter = {};
         }
+        /*console.log(filter.date.from);
+        console.log(moment(filter.date.from).toISOString());*/
+        
         //check filter type
         let filterType = `
         {
@@ -324,18 +326,108 @@ exports.get = function (filter, options) {
         //filter date
         if(filter.date && (filter.date.from || filter.date.to)) {
             query = query.filter((date) => {
+                let from = true;
+                let to = true;
+                if(filter.date.from) {
+                    //filter low end
+                    from = r.or(
+                        date("date")("start").inTimezone("Z").date()
+                            .ge(
+                                r.ISO8601(filter.date.from).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.from).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "closed", rightBound: "open"}
+                            )
+                    );
+                }
+                if(filter.date.to) {
+                    to = r.or(
+                        date("date")("end").inTimezone("Z").date()
+                            .lt(
+                                r.ISO8601(filter.date.to).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.to).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "open", rightBound: "closed"}
+                            )
+                    );
+                }
+
+                return r.and(from, to);
+            });
+            delete filter.date;
+        }
+        //test code
+        /*let from = "2018-04-11T06:00:00Z";
+let to = "2018-04-11T05:00:00Z";
+        //let from = r.now().toISO8601();
+        let startDate = "2018-04-10T00:00:00-05:00";
+        let endDate = "2018-04-11T00:00:00-05:00";
+        r.object(
+          "from", r.ISO8601(from).inTimezone("Z"), 
+          "start", r.ISO8601(startDate).inTimezone("Z"),
+          "end", r.ISO8601(endDate).inTimezone("Z"),
+      		"to", r.ISO8601(to).inTimezone("Z"), 
+          "zQueryOperatorGT", r.or(
+            	r.ISO8601(startDate).inTimezone("Z").date()
+            		.ge(
+          					r.ISO8601(from).inTimezone("Z").date()
+              ),
+            	r.ISO8601(from).inTimezone("Z")
+              	.during(
+                	r.ISO8601(startDate).inTimezone("Z"), 
+                	r.ISO8601(endDate).inTimezone("Z"),
+                 	{leftBound: "closed", rightBound: "open"}
+             	)
+            ),
+          "zQueryOperatorGTOLD", r.ISO8601(startDate).inTimezone("Z").date()
+            .ge(
+                r.ISO8601(from).inTimezone("Z").date()
+            ),
+          "zQueryOperatorLE", r.or(
+            	r.ISO8601(endDate).inTimezone("Z").date()
+            		.lt(
+          					r.ISO8601(to).inTimezone("Z").date()
+              ),
+            	r.ISO8601(to).inTimezone("Z")
+              	.during(
+                	r.ISO8601(startDate).inTimezone("Z"), 
+                	r.ISO8601(endDate).inTimezone("Z"),
+                  {leftBound: "open", rightBound: "closed"}
+             	)
+            ),
+          "zQueryOperatorLEOLD", r.ISO8601(endDate).inTimezone("Z").date()
+            .lt(
+                r.ISO8601(to).inTimezone("Z").date()
+            ),
+            
+          "zQueryDuring", r.ISO8601(from).inTimezone("Z")
+              .during(
+                r.ISO8601(startDate).inTimezone("Z"), 
+                r.ISO8601(endDate).inTimezone("Z")
+              )
+        );
+*/        
+        /*if(filter.date && (filter.date.from || filter.date.to)) {
+            console.log(filter.date.from, "INSIDE")
+            query = query.filter((date) => {
                 if(filter.date && filter.date.from && filter.date.to) {
-                    return date("date").date().during(r.ISO8601(filter.date.from).date(), r.ISO8601(filter.date.to).date(), {leftBound: "closed", rightBound: "closed"});
+                    return date("date").inTimezone("Z").date().during(r.ISO8601(filter.date.from).inTimezone("Z").date(), r.ISO8601(filter.date.to).inTimezone("Z").date(), {leftBound: "closed", rightBound: "closed"});
                 } else if(filter.date && filter.date.from) {
-                    return date("date").date().ge(r.ISO8601(filter.date.from).date());
+                    return date("date").inTimezone("Z").date().ge(r.ISO8601(filter.date.from).inTimezone("Z").date());
                 } else if(filter.date && filter.date.to) {
-                    return date("date").date().le(r.ISO8601(filter.date.to).date());
+                    return date("date").inTimezone("Z").date().le(r.ISO8601(filter.date.to).inTimezone("Z").date());
                 } else {
                     return true;
                 }
             });
             delete filter.date;
-        }
+        }*/
 
         //filter if periods is an array
         if(typeCheck("[period]", filter.period, utils.typeCheck)) {
@@ -507,7 +599,7 @@ exports.limitTally = (userID, period, date) => {
                 })
                 //filter date and time
                 .filter(function (doc) {
-                    return doc("date").date().eq(r.ISO8601(date).date())
+                    return r.ISO8601(date).inTimezone("Z").during(doc("date")("start").inTimezone("Z"), doc("date")("end").inTimezone("Z"))
                         .and(doc("toPerson").eq(userID))
                         .and(doc("period").eq(period));
                 }).count()
@@ -605,7 +697,7 @@ state.neutral = (passID, setByID) => {
                 }
 
                 //Get limit data for toPerson
-                return exports.limitTally(passData.toPerson, passData.period, passData.date.toISOString());
+                return exports.limitTally(passData.toPerson, passData.period, passData.date.start.toISOString());
             })
             .then((limit) => {
                 //check if limit is reached.  

@@ -70,11 +70,23 @@
         </template>
         <div>[[header]]</div>
         <div secondary>
-            Arriving <strong><local-time datetime$="[[date]]"
-            weekday="long"
-            month="long"
-            day="numeric"
-            year="numeric"></local-time></strong><!--<relative-time datetime$="[[date]]"></relative-time>-->
+            Arriving <strong>
+            <local-time datetime$="[[dateStart]]"
+                weekday="long"
+                month="long"
+                day="numeric"
+                year="numeric">
+            </local-time>
+            <template is="dom-if" if="[[_showDateEnd()]]">
+                until 
+                <local-time datetime$="[[dateEnd]]"
+                    weekday="long"
+                    month="long"
+                    day="numeric"
+                    year="numeric">
+                </local-time>
+            </template>
+        </strong>
         </div>
         <div secondary id="formattedPeriod"></div>
         <div secondary id="migrator" style="display: none;">Migrator <strong>[[migrator]]</strong></div>

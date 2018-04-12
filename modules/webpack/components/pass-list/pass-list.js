@@ -118,8 +118,10 @@ class PassportPassList extends polymer.PolymerElement {
             fetchTrans = passJS.get(this.filter);
         }
         fetchTrans.then((passes) => {
+            //console.log(passes)
             this._setLoading(false);
             this.passes = passes;
+            
         }).catch((err) => {
             this._setLoading(false);
             this._error(err);
@@ -135,11 +137,12 @@ class PassportPassList extends polymer.PolymerElement {
      * Sorts by date ONLY right now
      */
     sort(a, b) {
-        a.date = new Date(a.date);
-        b.date = new Date(b.date);
-        if(a.date > b.date) {
+        //firefox will for some reason bind local var a and b to the actual elements.  We must create 2 new vars to work arround this.
+        let aDate = new Date(a.date.start);
+        let bDate = new Date(b.date.start);
+        if(aDate > bDate) {
             return 1;
-        } else if(a.date < b.date) {
+        } else if(aDate < bDate) {
             return -1;
         } else {
             return 0;
