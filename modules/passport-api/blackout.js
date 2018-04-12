@@ -27,6 +27,20 @@ var db = require('../../modules/db/index.js');
 var config = require("config");
 var moment = require("moment");
 
+/**
+ * Schedules a new blackout
+ * @param {Object} blackout
+ * @param {(Object|Date|ISOString)} blackout.dateTime - If a date or ISO String, the function will automaticly fill in .startand .end with .end being exactly one day ahead.
+ * @param {(Date|ISOString)} [blackout.dateTime.start] - The starting datetime for the blackout
+ * @param {(Date|ISOString)} [blackout.dateTime.end] - THe dateTime of the end of the blackout
+ * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range.
+ * @param {String} [blackout.accountID] - If given, the blackout will be for the person 
+ * 
+ */
+exports.new = (blackout, options) => {
+
+}
+
 exports.newBlackout = function(date, periods, userId, message, done) {
     //add the moment js checker
 
