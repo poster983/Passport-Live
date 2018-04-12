@@ -99,7 +99,7 @@ exports.newPass = function (pass, options) {
             err.status = 400;
             return reject(err);
         }
-        console.log(pass.date);
+        //console.log(pass.date);
         if (typeCheck("Date", pass.date)) {
             pass.date = moment(pass.date).toISOString();
         }
@@ -250,7 +250,7 @@ exports.newPass = function (pass, options) {
  * @param {(String|String[])} [filter.period] - An array r string of period constants.
  * @param {Object} [filter.date]
  * @param {(Date|datetime)} [filter.date.from] - Lower limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
- * @param {(Date|datetime)} [filter.date.to] - Upper limit for the date. inclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
+ * @param {(Date|datetime)} [filter.date.to] - Upper limit for the date. exclusive. USE ISOString for string. Time is ignored. Mandatory time zone offset
  * @param {String} [filter.forUser] - filters every pass that involves this person. 
  * 
  * @param {Object} [options] -- unused
@@ -263,8 +263,8 @@ exports.get = function (filter, options) {
         if(!filter) {
             filter = {};
         }
-        console.log(filter.date.from);
-        console.log(moment(filter.date.from).toISOString());
+        /*console.log(filter.date.from);
+        console.log(moment(filter.date.from).toISOString());*/
         
         //check filter type
         let filterType = `

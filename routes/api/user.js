@@ -92,7 +92,7 @@ router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator
             req.query.fromPerson = req.params.accountID;
             delete req.params.accountID;
             req.query.date_from = moment().millisecond(0).second(0).minute(0).hour(0).toISOString();
-            req.query.date_to = req.query.date_from;
+            req.query.date_to = moment(req.query.date_from).add(1, "day").toISOString();
         } else {
             //no permission to do this
             return res.sendStatus(403);
