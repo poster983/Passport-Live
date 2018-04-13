@@ -51,10 +51,10 @@ let utils = require("../passport-utils/index.js");
  * Schedules a new blackout
  * @param {Object} blackout
  * @param {(Object|Date|ISOString)} blackout.dateTime - If a date or ISO String, the function will automaticly fill in .startand .end with .end being exactly one day ahead.
- * @param {(Date|ISOString)} [blackout.dateTime.start] - The starting datetime for the blackout
- * @param {(Date|ISOString)} [blackout.dateTime.end] - THe dateTime of the end of the blackout
+ * @param {(Date|ISOString)} blackout.dateTime.start - The starting datetime for the blackout
+ * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout
  * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range.
- * @param {String} [blackout.accountID] - If given, the blackout will be for the person 
+ * @param {String} [blackout.accountID] - If given, the blackout will be for this person 
  * @param {RRule} [rrule] - A recurrence rule for the blackout.
  * @param {String} [message] - A message to show to any user that encounters this blackout 
  * @returns {Promise.<Blackout, Error>}
@@ -78,7 +78,18 @@ exports.new = (blackout, options) => {
             return reject(error);
         }
         //check blackout periods
-        
+        if(!typeCheck("Maybe [period]", blackout.periods, utils.typeCheck)) {
+            let error = TypeError("periods expected to be an array of periods");
+            error.status = 400;
+            return reject(error);
+        } 
+        //check account id 
+        if(!typeCheck("Maybe String", blackout.accountID)) {
+            let error = TypeError("accountID expected to be undefined or a String");
+            error.status = 400;
+            return reject(error);
+        }
+        //if
         //if(typeCheck)
     });
 };

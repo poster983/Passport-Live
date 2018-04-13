@@ -49,6 +49,7 @@ module.exports = {
             validate: function(x) {
                 return config.get("schedule.periods").includes(x);
             }
-        }
+        },
+        //rrule: {}
     }
 }
