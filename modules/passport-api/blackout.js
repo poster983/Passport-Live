@@ -19,14 +19,34 @@ email: hi@josephhassell.com
 */
 
 /**
-* @module blackoutAPI
+ * Blackouts prevent passes from being requested to a certain user on a given day and time or period
+*  @module js/blackout
 */
 
-var r = require('rethinkdb');
 var db = require('../../modules/db/index.js');
+let r = db.dash();
 var config = require("config");
 var moment = require("moment");
+let typeCheck = require("type-check").typeCheck;
+let utils = require("../passport-utils/index.js");
 
+//TYPES
+/**
+ * A Blackout object returned from the DB.
+ * @global
+ * @typedef {Object} Blackout
+ * 
+ */
+
+/**
+ * A recurrence rule in the iCalendar RFC standard.
+ * @see {@link https://www.npmjs.com/package/rrule|rrule} npm package for more insight.
+ * @global
+ * @typedef {String} RRule
+ * 
+ */
+
+ //CODE 
 /**
  * Schedules a new blackout
  * @param {Object} blackout
@@ -35,11 +55,33 @@ var moment = require("moment");
  * @param {(Date|ISOString)} [blackout.dateTime.end] - THe dateTime of the end of the blackout
  * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range.
  * @param {String} [blackout.accountID] - If given, the blackout will be for the person 
- * 
+ * @param {RRule} [rrule] - A recurrence rule for the blackout.
+ * @param {String} [message] - A message to show to any user that encounters this blackout 
+ * @returns {Promise.<Blackout, Error>}
+ * @throws {(TypeError|ReQL|Error)}
  */
 exports.new = (blackout, options) => {
-
-}
+    return new Promise((resolve, reject) => {
+        //check blackout object
+        //check blackout.date 
+        let dateType = `
+        {
+            dateTime: Date|ISODate|{
+                start: Date|ISODate,
+                end: Date|ISODate
+            }, ...
+        }
+        `;
+        if(!typeCheck(dateType, blackout, utils.typeCheck)) {
+            let error = TypeError("dateTime expected to be these types: " + dateType);
+            error.status = 400;
+            return reject(error);
+        }
+        //check blackout periods
+        
+        //if(typeCheck)
+    });
+};
 
 exports.newBlackout = function(date, periods, userId, message, done) {
     //add the moment js checker

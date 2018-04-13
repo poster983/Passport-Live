@@ -39,6 +39,7 @@ var accountScheduleJS = require("./accountSchedule.js");
 
 /**
  * User Account Model stored in RethinkDB
+ * @global
  * @typedef {Object} account
  * @property {String} id - Assigned by RethinkDB. A Primary Key / Primary Index
  * @property {String} email - Must be unique. (TODO: Secondary Index)
@@ -406,7 +407,7 @@ exports.get({
     * Searches by name and usergroup the account database 
     * @function getUserGroupAccountByName
     * @link module:passportApi
-    * @async
+    * @deprecated
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} name - user's name, can be in any format
@@ -443,7 +444,7 @@ exports.getUserGroupAccountByName = function(dbConn, name, userGroup, done) {
     * Searches by usergroup the account database 
     * @function getUserGroupAccountByUserGroup
     * @link module:passportApi
-    * @async
+    * @deprecated
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {constant} userGroup - A usergroup defined in the config
@@ -469,7 +470,7 @@ exports.getUserGroupAccountByUserGroup = function(dbConn, userGroup, done) {
     * Searches by email the account database 
     * @function getAccountByEmail
     * @link module:passportApi
-    * @async
+    * @deprecated
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {string} email - The user's Email
     * @param {function} done - Callback
@@ -494,7 +495,7 @@ exports.getAccountByEmail = function(email, done) {
     * Searches by id in the account database 
     * @function getUserByID
     * @link module:passportApi
-    * @async
+    * @deprecated
     * @returns {callback} Contains ALL account info stored in database.  Make sure to only sent nessessary info to user.
     * @param {constant} id - The ID of the user
     * @param {function} done - Callback
@@ -518,7 +519,7 @@ exports.getUserByID = function(id, done) {
     * Updates/sets any account field by its id 
     * @function updateAccountGroupFieldsByID
     * @link module:passportApi
-    * @async
+    * @deprecated
     * @returns {callback} Returns rethink db summery
     * @param {object} dbConn - RethinkDB Connection Object.
     * @param {string} id - id of the account 
