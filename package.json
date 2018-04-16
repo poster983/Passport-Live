@@ -24,8 +24,9 @@
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "generate-docs": "jsdoc --configure config/jsdoc.json --verbose",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect",
-    "build": "webpack --progress --colors"
+    "prepare": "npm run build:production && npm run snyk-protect",
+    "build:production": "webpack --config webpack.prod.js",
+    "build": "webpack --progress --colors --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -110,6 +111,7 @@
     "underscore": "^1.8.3",
     "validator": "^9.4.1",
     "webpack": "^3.8.1",
+    "webpack-merge": "^4.1.2",
     "xlsx": "^0.12.2"
   },
   "license": "AGPL-3.0",

@@ -1,4 +1,3 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
@@ -26,14 +25,6 @@ module.exports = {
         ]
     },
     plugins: [
-        /*new UglifyJsPlugin({
-            parallel: 4,
-            uglifyOptions: {
-                output: {
-                    comments: false
-                }
-            }
-        }),*/
         new webpack.IgnorePlugin(/vertx/),
         new CopyWebpackPlugin([
             {
