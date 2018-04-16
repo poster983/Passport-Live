@@ -27,14 +27,9 @@ var shortid = require("shortid");
 var config = require("config");
 var moment = require("moment");
 var uaParser = require("ua-parser-js");
-/*var typeCheck = require("./customTypeCheck.js");
-exports.typeCheck = {};
-exports.typeCheck = typeCheck*/
-//console.log(exports.typeCheck)
 
 exports.typeCheck = require("./customTypeCheck.js");
 exports.rateLimit = require("./rateLimit.js");
-//console.log(exports.typeCheck)
 
 /**
 * Takes an Object and returns a URL Query string
@@ -360,8 +355,17 @@ exports.getBrowserSupport = function(userAgent) {
     });  
 };
 
-
 /**
-* A user object found in the database
-* @typedef {json} user
-*/
+ * Validate RRule String or object
+ * @link module:js/utils
+ * 
+ */
+exports.validateRRule = (rrule) => {
+    if(typeof rrule === "string") {
+        //convert to rrule object
+    } else if (typeof rrule !== "object") {
+        throw new TypeError("rrule expected to be an object or string.  Got \"" + rrule + "\"";)
+    }
+    //do type checks
+    //if()
+}

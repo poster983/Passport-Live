@@ -89,7 +89,8 @@ exports.new = (blackout, options) => {
             error.status = 400;
             return reject(error);
         }
-        //if
+        
+        if(!typeCheck(""))
         //if(typeCheck)
     });
 };
