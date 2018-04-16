@@ -31,6 +31,7 @@ require("@polymer/paper-icon-button/paper-icon-button");
 require("@polymer/iron-icons/iron-icons.js");
 require("@polymer/app-layout/app-toolbar/app-toolbar.js");
 require("@polymer/paper-button/paper-button.js");
+require("@polymer/paper-tooltip/paper-tooltip.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");

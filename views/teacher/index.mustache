@@ -197,7 +197,8 @@ email: hi@josephhassell.com
           <div class="col s12">
             <div id="MyPassesCard" class="card grey darken-3 hoverable">
               <div class="card-content">
-                <paper-icon-button class="right" style="color: var(--primary-text-color);" icon="icons:work" id="subModeButton"></paper-icon-button>
+                <paper-icon-button class="right" style="color: var(--primary-text-color);" icon="icons:chrome-reader-mode" id="subModeButton"></paper-icon-button>
+                <paper-tooltip for="subModeButton" id="subModeButtonTooltip">Substitute mode</paper-tooltip>
                 <span class="card-title white-text">Students Leaving</span>
                 <passport-pass-list id="fromPersonList" no-auto-fetch for-user="me"></passport-pass-list>
               </div>
