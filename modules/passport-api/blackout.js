@@ -90,7 +90,7 @@ exports.new = (blackout, options) => {
             return reject(error);
         }
         
-        if(!typeCheck(""))
+        //if(!typeCheck(""))
         //if(typeCheck)
     });
 };

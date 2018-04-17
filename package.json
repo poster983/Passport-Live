@@ -97,6 +97,7 @@
     "rethinkdb": "latest",
     "rethinkdb-job-queue": "^3.1.4",
     "rethinkdbdash": "^2.3.31",
+    "rrule": "^2.2.9",
     "serve-favicon": "~2.4.3",
     "session-file-store": "^1.0.0",
     "shortid": "^2.2.8",
