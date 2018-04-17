@@ -358,14 +358,75 @@ exports.getBrowserSupport = function(userAgent) {
 /**
  * Validate RRule String or object
  * @link module:js/utils
- * 
+ * @param {(RRuleRFC|RRule)} rrule 
+ * @returns {Object} - {valid, errors[]}
  */
 exports.validateRRule = (rrule) => {
+    let res = {valid: true, errors: []}
     if(typeof rrule === "string") {
         //convert to rrule object
+        //rrule = 
     } else if (typeof rrule !== "object") {
         throw new TypeError("rrule expected to be an object or string.  Got \"" + rrule + "\"";)
     }
     //do type checks
-    //if()
+    //frequency (required)
+    const frequencyConst = [RRule.YEARLY, RRule.MONTHLY, RRule.WEEKLY, RRule.DAILY, RRule.HOURLY, RRule.MINUTELY, RRule.SECONDLY];
+    if(!rrule.freq || !frequencyConst.includes(rrule.freq)) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"freq\" must be one of the following constants: "+ frequencyConst.toString()))
+    }
+    //dtstart should be date
+    if(rrule.dtstart && typeof rrule.dtstar.getMonth !== "function") {
+        res.valid = false;
+        res.errors.push(new TypeError("\"dtstart\" must be a date"))
+    }
+
+    //interval should be number
+    if(rrule.interval && typeof rrule.interval !== "number") {
+        res.valid = false;
+        res.errors.push(new TypeError("\"interval\" must be a number"))
+    }
+
+    //wkst should be a RRule.MO, RRule.TU, RRule.WE constants, or an integer
+    const weekDay = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU]
+    if(rrule.wkst && (!(rrule.wkst >= 0 && rrule.wkst <= 6)) || !weekDay.includes(rrule.wkst)) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"wkst\" must be a WeekDay object or an integer from 0-6 "))
+    }
+    //count should be a number
+    if(rrule.count && typeof rrule.count !== "number") {
+        res.valid = false;
+        res.errors.push(new TypeError("\"count\" must be a number"))
+    }
+    //until should be a date
+    if(rrule.until && typeof rrule.until.getMonth !== "function") {
+        res.valid = false;
+        res.errors.push(new TypeError("\"until\" must be a date"))
+    }
+    //bysetpos must be an integer, or a sequence of integers
+    if(rrule.bysetpos && ((Array.isArray(rrule.bysetpos) && rrule.bysetpos.some(isNaN)) || typeof rrule.bysetpos !== "number")) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"bysetpos\" must be a number or an array of numbers"))
+    }
+    //bymonth must be an integer, or a sequence of integers
+    if(rrule.bymonth && ((Array.isArray(rrule.bymonth) && rrule.bymonth.some(isNaN)) || typeof rrule.bymonth !== "number")) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"bymonth\" must be a number or an array of numbers"))
+    }
+    //bymonthday must be an integer, or a sequence of integers
+    if(rrule.bymonthday && ((Array.isArray(rrule.bymonthday) && rrule.bymonthday.some(isNaN)) || typeof rrule.bymonthday !== "number")) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"bymonthday\" must be a number or an array of numbers"))
+    }
+    //byyearday must be an integer, or a sequence of integers
+    if(rrule.byyearday && ((Array.isArray(rrule.byyearday) && rrule.byyearday.some(isNaN)) || typeof rrule.byyearday !== "number")) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"byyearday\" must be a number or an array of numbers"))
+    }
+    //byweekno must be an integer, or a sequence of integers
+    if(rrule.byweekno && ((Array.isArray(rrule.byweekno) && rrule.byweekno.some(isNaN)) || typeof rrule.byweekno !== "number")) {
+        res.valid = false;
+        res.errors.push(new TypeError("\"byweekno\" must be a number or an array of numbers"))
+    }
 }

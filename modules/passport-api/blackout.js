@@ -42,7 +42,7 @@ let utils = require("../passport-utils/index.js");
  * A recurrence rule in the iCalendar RFC standard.
  * @see {@link https://www.npmjs.com/package/rrule|rrule} npm package for more insight.
  * @global
- * @typedef {String} RRule
+ * @typedef {String} RRuleRFC
  * 
  */
 
@@ -55,7 +55,7 @@ let utils = require("../passport-utils/index.js");
  * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout
  * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range.
  * @param {String} [blackout.accountID] - If given, the blackout will be for this person 
- * @param {RRule} [rrule] - A recurrence rule for the blackout.
+ * @param {RRuleRFC} [rrule] - A recurrence rule for the blackout.
  * @param {String} [message] - A message to show to any user that encounters this blackout 
  * @returns {Promise.<Blackout, Error>}
  * @throws {(TypeError|ReQL|Error)}
