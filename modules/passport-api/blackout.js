@@ -89,9 +89,20 @@ exports.new = (blackout, options) => {
             error.status = 400;
             return reject(error);
         }
+        let rruleValid = utils.validateRRule(blackout.rrule);
+        if(!rruleValid.valid) {
+            let error = {errors: rruleValid.errors, status: 400};
+            return reject(error);
+        }
+        if(!typeCheck("Maybe String", blackout.message)) {
+            let error = TypeError("message expected to be undefined or a String");
+            error.status = 400;
+            return reject(error);
+        }
         
-        //if(!typeCheck(""))
-        //if(typeCheck)
+        /*r.table("blackouts").insert({
+
+        })*/
     });
 };
 

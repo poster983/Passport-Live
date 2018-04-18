@@ -491,9 +491,9 @@ exports.validateRRule = (rrule) => {
     return res;
 };
 
-let rru = "FREQ=WEEKLY;DTSTART=20120201T093000Z;INTERVAL=5;BYDAY=MO,FR;BYHOUR=2,4";
+/*let rru = "FREQ=WEEKLY;DTSTART=20120201T093000Z;INTERVAL=5;BYDAY=MO,FR;BYHOUR=2,4";
 //
 console.log(exports.validateRRule(rru));
 if(exports.validateRRule(rru).valid) {
     console.log(RRule.fromString(rru).all());
-}
+}*/
