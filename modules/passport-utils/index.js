@@ -27,7 +27,7 @@ var shortid = require("shortid");
 var config = require("config");
 var moment = require("moment");
 var uaParser = require("ua-parser-js");
-let {RRule} = require("rrule");
+let {RRule, RRuleSet, rrulestr} = require("rrule");
 
 exports.typeCheck = require("./customTypeCheck.js");
 exports.rateLimit = require("./rateLimit.js");
@@ -363,97 +363,130 @@ exports.getBrowserSupport = function(userAgent) {
  * @returns {Object} - {valid, errors[]}
  */
 exports.validateRRule = (rrule) => {
+    let rruleOptions = [];
+    let rdateOptions = [];
     let res = {valid: true, errors: []};
     if(typeof rrule === "string") {
         //convert to rrule object
-        rrule = RRule.parseString(rrule);
+        rrule = rrulestr(rrule);
     } else if (typeof rrule !== "object") {
         throw new TypeError("rrule expected to be an object or string.  Got \"" + rrule + "\"");
     }
-    console.log(rrule)
-    //do type checks
-    //frequency (required)
-    const frequencyConst = [RRule.YEARLY, RRule.MONTHLY, RRule.WEEKLY, RRule.DAILY, RRule.HOURLY, RRule.MINUTELY, RRule.SECONDLY];
-    if(!rrule.freq || !frequencyConst.includes(rrule.freq)) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"freq\" must be one of the following constants: RRule.YEARLY, RRule.MONTHLY, RRule.WEEKLY, RRule.DAILY, RRule.HOURLY, RRule.MINUTELY, RRule.SECONDLY or if using an RRUle string, omit the \"RRule.\""));
+    //ready options array 
+    if(rrule instanceof RRule) {
+        rruleOptions.push({"type": "RRULE", "rule": rrule});
+    } else if(rrule instanceof RRuleSet) {
+        rrule._exdate.forEach((e) => {
+            rdateOptions = rdateOptions.concat({"type": "EXDATE", "date": e});
+        });
+        rrule._rdate.forEach((e) => {
+            rdateOptions = rdateOptions.concat({"type": "RDATE", "date": e});
+        });
+        rrule._rrule.forEach((e) => {
+            rruleOptions = rruleOptions.concat({"type": "RRULE", "rule": e});
+        });
+        rrule._exrule.forEach((e) => {
+            rruleOptions = rruleOptions.concat({"type": "EXRULE", "rule": e});
+        });
     }
-    //dtstart should be date
-    if(rrule.dtstart && isNaN(Date.parse(rrule.dtstart))) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"dtstart\" must be a valid date"));
+    //console.log(rruleOptions,rdateOptions)
+    //do checks on dates 
+    for(let x = 0; x < rdateOptions.length; x++) {
+        let date = rdateOptions[x].date;
+        let type = rdateOptions[x].type;
+        //should be a date
+        if(isNaN(Date.parse(date))) {
+            res.valid = false;
+            res.errors.push(new TypeError("\""+type+"\" must be a valid date"));
+        }
     }
+    //do type checks on RRules
+    for(let x = 0; x < rruleOptions.length; x++) {
+        let rule = rruleOptions[x].rule.origOptions;
+        let type = rruleOptions[x].type;
+        //frequency (required)
+        const frequencyConst = [RRule.YEARLY, RRule.MONTHLY, RRule.WEEKLY, RRule.DAILY, RRule.HOURLY, RRule.MINUTELY, RRule.SECONDLY];
+        if(!rule.freq || !frequencyConst.includes(rule.freq)) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"freq\" must be one of the following constants: RRule.YEARLY, RRule.MONTHLY, RRule.WEEKLY, RRule.DAILY, RRule.HOURLY, RRule.MINUTELY, RRule.SECONDLY or if using an RRUle string, omit the \"RRule.\""));
+        }
+        //dtstart should be date
+        if(rule.dtstart && isNaN(Date.parse(rule.dtstart))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"dtstart\" must be a valid date"));
+        }
 
-    //interval should be number
-    if(rrule.interval && typeof rrule.interval !== "number") {
-        res.valid = false;
-        res.errors.push(new TypeError("\"interval\" must be a number"));
-    }
+        //interval should be number
+        if(rule.interval && typeof rule.interval !== "number") {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"interval\" must be a number"));
+        }
 
-    //wkst should be a RRule.MO, RRule.TU, RRule.WE constants, or an integer
-    if(rrule.wkst && (!(rrule.wkst >= 0 && rrule.wkst <= 6)) && !(rrule.wkst instanceof RRule.MO.constructor)) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"wkst\" must be a WeekDay object or an integer from 0-6 "));
-    }
-    //count should be a number
-    if(rrule.count && typeof rrule.count !== "number") {
-        res.valid = false;
-        res.errors.push(new TypeError("\"count\" must be a number"));
-    }
-    //until should be a date
-    if(rrule.until && isNaN(Date.parse(rrule.until))) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"until\" must be a valid date"));
-    }
-    //bysetpos must be an integer, or a sequence of integers
-    if(rrule.bysetpos && ((Array.isArray(rrule.bysetpos) && rrule.bysetpos.some(isNaN)) && typeof rrule.bysetpos !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"bysetpos\" must be a number or an array of numbers"));
-    }
-    //bymonth must be an integer, or a sequence of integers
-    if(rrule.bymonth && ((Array.isArray(rrule.bymonth) && rrule.bymonth.some(isNaN)) && typeof rrule.bymonth !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"bymonth\" must be a number or an array of numbers"));
-    }
-    //bymonthday must be an integer, or a sequence of integers
-    if(rrule.bymonthday && ((Array.isArray(rrule.bymonthday) && rrule.bymonthday.some(isNaN)) && typeof rrule.bymonthday !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"bymonthday\" must be a number or an array of numbers"));
-    }
-    //byyearday must be an integer, or a sequence of integers
-    if(rrule.byyearday && ((Array.isArray(rrule.byyearday) && rrule.byyearday.some(isNaN)) && typeof rrule.byyearday !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"byyearday\" must be a number or an array of numbers"));
-    }
-    //byweekno must be an integer, or a sequence of integers
-    if(rrule.byweekno && ((Array.isArray(rrule.byweekno) && rrule.byweekno.some(isNaN)) && typeof rrule.byweekno !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"byweekno\" must be a number or an array of numbers"));
-    }
-    //byweekday must be an integer, a sequence of integers, one of the weekday constants (RRule.MO, RRule.TU, etc), or a sequence of these constants
-    if(rrule.byweekday && ((Array.isArray(rrule.byweekday) && (rrule.byweekday.some(isNaN) && rrule.byweekday.some(n=> !(n instanceof RRule.MO.constructor)))) && (typeof rrule.byweekday !== "number" && !(rrule.byweekday instanceof RRule.MO.constructor)))) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"wkst\" must be a WeekDay object or an integer or a sequence of "));
-    }
-    //byhour must be an integer, or a sequence of integers
-    if(rrule.byhour && ((Array.isArray(rrule.byhour) && rrule.byhour.some(isNaN)) || typeof rrule.byhour !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"byhour\" must be a number or an array of numbers"));
-    }
-    //byminute must be an integer, or a sequence of integers
-    if(rrule.byminute && ((Array.isArray(rrule.byminute) && rrule.byminute.some(isNaN)) && typeof rrule.byminute !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"byminute\" must be a number or an array of numbers"));
-    }
-    //bysecond must be an integer, or a sequence of integers
-    if(rrule.bysecond && ((Array.isArray(rrule.bysecond) && rrule.bysecond.some(isNaN)) && typeof rrule.bysecond !== "number")) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"bysecond\" must be a number or an array of numbers"));
-    }
-    //block byeaster as it is not implemented
-    if(rrule.byeaster) {
-        res.valid = false;
-        res.errors.push(new TypeError("\"byeaster\" is not implemented"));
+        //wkst should be a RRule.MO, RRule.TU, RRule.WE constants, or an integer
+        if(rule.wkst && (!(rule.wkst >= 0 && rule.wkst <= 6)) && !(rule.wkst instanceof RRule.MO.constructor)) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"wkst\" must be a WeekDay object or an integer from 0-6 "));
+        }
+        //count should be a number
+        if(rule.count && typeof rule.count !== "number") {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"count\" must be a number"));
+        }
+        //until should be a date
+        if(rule.until && isNaN(Date.parse(rule.until))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"until\" must be a valid date"));
+        }
+        //bysetpos must be an integer, or a sequence of integers
+        if(rule.bysetpos && ((Array.isArray(rule.bysetpos) && rule.bysetpos.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"bysetpos\" must be a number or an array of numbers"));
+        }
+        //bymonth must be an integer, or a sequence of integers
+        if(rule.bymonth && ((Array.isArray(rule.bymonth) && rule.bymonth.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"bymonth\" must be a number or an array of numbers"));
+        }
+        //bymonthday must be an integer, or a sequence of integers
+        if(rule.bymonthday && ((Array.isArray(rule.bymonthday) && rule.bymonthday.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"bymonthday\" must be a number or an array of numbers"));
+        }
+        //byyearday must be an integer, or a sequence of integers
+        if(rule.byyearday && ((Array.isArray(rule.byyearday) && rule.byyearday.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"byyearday\" must be a number or an array of numbers"));
+        }
+        //byweekno must be an integer, or a sequence of integers
+        if(rule.byweekno && ((Array.isArray(rule.byweekno) && rule.byweekno.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"byweekno\" must be a number or an array of numbers"));
+        }
+        //byweekday must be an integer, a sequence of integers, one of the weekday constants (RRule.MO, RRule.TU, etc), or a sequence of these constants
+        if(rule.byweekday && ((Array.isArray(rule.byweekday) && (rule.byweekday.some(isNaN) && rule.byweekday.some(n=> !(n instanceof RRule.MO.constructor)))) && (typeof rule.byweekday !== "number" && !(rule.byweekday instanceof RRule.MO.constructor)))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"wkst\" must be a WeekDay object or an integer or a sequence of "));
+        }
+        //byhour must be an integer, or a sequence of integers
+        if(rule.byhour && ((Array.isArray(rule.byhour) && rule.byhour.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"byhour\" must be a number or an array of numbers"));
+        }
+        //byminute must be an integer, or a sequence of integers
+        if(rule.byminute && ((Array.isArray(rule.byminute) && rule.byminute.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"byminute\" must be a number or an array of numbers"));
+        }
+        //bysecond must be an integer, or a sequence of integers
+        if(rule.bysecond && ((Array.isArray(rule.bysecond) && rule.bysecond.some(isNaN)) && (!Array.isArray(rule.bysecond) && typeof rule.bysecond !== "number"))) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"bysecond\" must be a number or an array of numbers"));
+        }
+        //block byeaster as it is not implemented
+        if(rule.byeaster) {
+            res.valid = false;
+            res.errors.push(new TypeError(type+": \"byeaster\" is not implemented"));
+        }
     }
     return res;
 };
@@ -462,5 +495,5 @@ let rru = "FREQ=WEEKLY;DTSTART=20120201T093000Z;INTERVAL=5;BYDAY=MO,FR;BYHOUR=2,
 //
 console.log(exports.validateRRule(rru));
 if(exports.validateRRule(rru).valid) {
-    console.log(RRule.fromString(rru).all())
+    console.log(RRule.fromString(rru).all());
 }
