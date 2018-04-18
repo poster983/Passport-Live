@@ -368,10 +368,14 @@ exports.validateRRule = (rrule) => {
     let res = {valid: true, errors: []};
     if(typeof rrule === "string") {
         //convert to rrule object
-        rrule = rrulestr(rrule);
-    } else if (typeof rrule !== "object") {
-        throw new TypeError("rrule expected to be an object or string.  Got \"" + rrule + "\"");
-    }
+        try {
+            rrule = rrulestr(rrule);
+        } catch (e) {
+            res.valid = false;
+            res.errors.push(e);
+            return res;
+        }
+    } 
     //ready options array 
     if(rrule instanceof RRule) {
         rruleOptions.push({"type": "RRULE", "rule": rrule});
@@ -388,6 +392,10 @@ exports.validateRRule = (rrule) => {
         rrule._exrule.forEach((e) => {
             rruleOptions = rruleOptions.concat({"type": "EXRULE", "rule": e});
         });
+    } else {
+        res.valid = false;
+        res.errors.push(new TypeError("rrule expected to be an object or string.  Got \"" + typeof rrule + "\""));
+        return res;
     }
     //console.log(rruleOptions,rdateOptions)
     //do checks on dates 

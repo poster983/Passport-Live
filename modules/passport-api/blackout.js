@@ -23,12 +23,13 @@ email: hi@josephhassell.com
 *  @module js/blackout
 */
 
-var db = require('../../modules/db/index.js');
+var db = require("../../modules/db/index.js");
 let r = db.dash();
 var config = require("config");
 var moment = require("moment");
 let typeCheck = require("type-check").typeCheck;
 let utils = require("../passport-utils/index.js");
+let {RRule, RRuleSet, rrulestr} = require("rrule");
 
 //TYPES
 /**
@@ -46,7 +47,7 @@ let utils = require("../passport-utils/index.js");
  * 
  */
 
- //CODE 
+//CODE 
 /**
  * Schedules a new blackout
  * @param {Object} blackout
@@ -76,6 +77,12 @@ exports.new = (blackout, options) => {
             let error = TypeError("dateTime expected to be these types: " + dateType);
             error.status = 400;
             return reject(error);
+        } else if (typeCheck("Date|ISODate", blackout.dateTime, utils.typeCheck)) {
+            //set start and end options
+            blackout.dateTime = {
+                start: moment(blackout.dateTime),
+                end: moment(blackout.dateTime)
+            }
         }
         //check blackout periods
         if(!typeCheck("Maybe [period]", blackout.periods, utils.typeCheck)) {
@@ -93,6 +100,17 @@ exports.new = (blackout, options) => {
         if(!rruleValid.valid) {
             let error = {errors: rruleValid.errors, status: 400};
             return reject(error);
+        } else {
+            if(blackout.rrule instanceof RRule) {
+                //convert object to string
+                blackout.rrule = "RRULE:"+blackout.rrule.toString();
+            } else if(blackout.rrule instanceof RRuleSet) {
+                blackout.rrule = blackout.rrule.valueOf().join(" ");
+            } else {
+                let error = TypeError("This error should never happen. Invalid RRule passed");
+                error.status = 500;
+                return reject(error);
+            }
         }
         if(!typeCheck("Maybe String", blackout.message)) {
             let error = TypeError("message expected to be undefined or a String");
@@ -100,9 +118,9 @@ exports.new = (blackout, options) => {
             return reject(error);
         }
         
-        /*r.table("blackouts").insert({
+        r.table("blackouts").insert({
 
-        })*/
+        });
     });
 };
 
@@ -111,13 +129,13 @@ exports.newBlackout = function(date, periods, userId, message, done) {
 
     //check array
     if(!Array.isArray(periods) || periods.length <= 0) {
-        var err = new Error("periods Not A Valid Array")
+        var err = new Error("periods Not A Valid Array");
         err.status = 400; //bad request
         return done(err);  //callback error 
     }
     //check userId
     if(!userId) {
-        var err = new Error("userId not present")
+        var err = new Error("userId not present");
         err.status = 400; //bad request
         return done(err);  //callback error 
     }
@@ -132,11 +150,11 @@ exports.newBlackout = function(date, periods, userId, message, done) {
             return done(err);
         }
         return done(null, data);
-    })
-}
+    });
+};
 
 exports.getBlackoutByUserId = function(userId, done) {
-    r.table('blackouts').filter({
+    r.table("blackouts").filter({
         userId: userId
     }).run(db.conn(), function(err, curDoc) {
         if(err) {
@@ -149,19 +167,19 @@ exports.getBlackoutByUserId = function(userId, done) {
             return done(null, doc);
         });
         
-    })
-}
+    });
+};
 
 exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
     //error check if date is not valid 
     if(!moment(date).isValid()) {
-        var err = new Error("Date not valid")
+        var err = new Error("Date not valid");
         err.status = 400; //bad request
         return done(err);  //callback error 
     }
     var date = moment(date).format("Y-MM-DD"); //get date in format {string}
-    console.log(userId)
-    r.table('blackouts').filter({
+    console.log(userId);
+    r.table("blackouts").filter({
         userId: userId,
         date: date
     }).run(db.conn(), function(err, curDoc) {
@@ -173,24 +191,24 @@ exports.getBlackoutByUserIdAndDate = function(userId, date, done) {
                 return done(err);
             }
             return done(null, doc);
-        })
+        });
     });
 
 
     //do your thing...
-}
+};
 
 exports.getBlackoutByDate = function(date, done) {
     if (!moment(date).isValid()) {
-        var err = new Error("Date is not valid")
+        var err = new Error("Date is not valid");
         err.status = 400; //bad request
         return done(err); //callback error
     }
     var date = moment(date).format("Y-MM-DD"); //get date in format {string}
-    r.table('blackouts').filter({
+    r.table("blackouts").filter({
         date: date // CHANGE TO RETHINKDB DATE
     }).run(db.conn(), function(err, curDoc) {
-          if (err) {
+        if (err) {
             return done(err);
         }
         curDoc.toArray(function(err, doc) {
@@ -198,7 +216,7 @@ exports.getBlackoutByDate = function(date, done) {
                 return done(err);
             }
             return done(null, doc);
-        })
+        });
     });
-}
+};
 
