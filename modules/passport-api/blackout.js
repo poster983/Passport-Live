@@ -50,20 +50,39 @@ let {RRule, RRuleSet, rrulestr} = require("rrule");
 //CODE 
 /**
  * Schedules a new blackout
+ * @link module:js/blackout
  * @param {Object} blackout
- * @param {(Object|Date|ISOString)} blackout.dateTime - If a date or ISO String, the function will automaticly fill in .startand .end with .end being exactly one day ahead.
- * @param {(Date|ISOString)} blackout.dateTime.start - The starting datetime for the blackout
- * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout
- * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range.
+ * @param {(Object|Date|ISOString)} blackout.dateTime - If a date or ISO String, the function will automaticly fill in .start and .end with .end being exactly one day ahead.
+ * @param {(Date|ISOString)} blackout.dateTime.start - The starting datetime for the blackout. cannot be used with blackout.periods
+ * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout. cannot be used with blackout.periods
+ * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range. 
  * @param {String} [blackout.accountID] - If given, the blackout will be for this person 
- * @param {RRuleRFC} [rrule] - A recurrence rule for the blackout.
- * @param {String} [message] - A message to show to any user that encounters this blackout 
+ * @param {RRuleRFC} [blackout.rrule] - A recurrence rule for the blackout.
+ * @param {String} [blackout.message] - A message to show to any user that encounters this blackout 
  * @returns {Promise.<Blackout, Error>}
  * @throws {(TypeError|ReQL|Error)}
  */
-exports.new = (blackout, options) => {
+exports.insert = (blackout, options) => {
     return new Promise((resolve, reject) => {
+        let insert = {};
         //check blackout object
+
+        //check blackout periods
+        if(!typeCheck("Maybe [period]", blackout.periods, utils.typeCheck)) {
+            let error = TypeError("periods expected to be an array of periods");
+            error.status = 400;
+            return reject(error);
+        } else if (Array.isArray(blackout.periods) && blackout.periods.length > 0) {
+            //check if periods array and if dateTime.start or dateTime.end is set
+            if(typeof blackout.dateTime === "object" && (blackout.dateTime.start || blackout.dateTime.end)) {
+                let error = Error("periods array cannot be used with \"dateTime.start\" and \"dateTime.end\"");
+                error.status = 400;
+                return reject(error);
+            } else {
+                insert.periods = blackout.periods;
+            }
+        }
+
         //check blackout.date 
         let dateType = `
         {
@@ -79,51 +98,79 @@ exports.new = (blackout, options) => {
             return reject(error);
         } else if (typeCheck("Date|ISODate", blackout.dateTime, utils.typeCheck)) {
             //set start and end options
-            blackout.dateTime = {
-                start: moment(blackout.dateTime),
-                end: moment(blackout.dateTime)
-            }
+            blackout.dateTime = moment(blackout.dateTime);//.hour(0).minute(0).second(0).millisecond(0);
+            insert.dateTime = {
+                start: blackout.dateTime.toISOString(),
+                end: blackout.dateTime.add(1, "day").toISOString()
+            };
+        } else if(typeCheck("{start: Date, end: Date}", blackout.dateTime, utils.typeCheck)) {
+            //convert to iso strings
+            insert.dateTime = {
+                start: moment(blackout.dateTime.start).toISOString(),
+                end: moment(blackout.dateTime.end).toISOString()
+            };
+        } else {
+            insert.dateTime = blackout.dateTime; 
         }
-        //check blackout periods
-        if(!typeCheck("Maybe [period]", blackout.periods, utils.typeCheck)) {
-            let error = TypeError("periods expected to be an array of periods");
+        //check if end is after start
+        if(!moment(insert.dateTime.start).isBefore(insert.dateTime.end)) {
+            let error = Error("dateTime.start must be before dateTime.end");
             error.status = 400;
             return reject(error);
-        } 
+        }
+
         //check account id 
         if(!typeCheck("Maybe String", blackout.accountID)) {
             let error = TypeError("accountID expected to be undefined or a String");
             error.status = 400;
             return reject(error);
         }
-        let rruleValid = utils.validateRRule(blackout.rrule);
-        if(!rruleValid.valid) {
-            let error = {errors: rruleValid.errors, status: 400};
-            return reject(error);
-        } else {
-            if(blackout.rrule instanceof RRule) {
-                //convert object to string
-                blackout.rrule = "RRULE:"+blackout.rrule.toString();
-            } else if(blackout.rrule instanceof RRuleSet) {
-                blackout.rrule = blackout.rrule.valueOf().join(" ");
-            } else {
-                let error = TypeError("This error should never happen. Invalid RRule passed");
-                error.status = 500;
+        if(blackout.accountID) {
+            insert.accountID = blackout.accountID;
+        }
+        if(blackout.rrule) {
+            let rruleValid = utils.validateRRule(blackout.rrule);
+            if(!rruleValid.valid) {
+                let error = {errors: rruleValid.errors, status: 400};
                 return reject(error);
+            } else {
+                if(blackout.rrule instanceof RRule) {
+                    //convert object to string
+                    insert.rrule = "RRULE:"+blackout.rrule.toString();
+                } else if(blackout.rrule instanceof RRuleSet) {
+                    insert.rrule = blackout.rrule.valueOf().join(" ");
+                } else if(typeof blackout.rrule === "string") {
+                    insert.rrule = blackout.rrule;
+                } else {
+                    let error = TypeError("This error should never happen. Invalid RRule passed");
+                    error.status = 500;
+                    return reject(error);
+                }
             }
         }
         if(!typeCheck("Maybe String", blackout.message)) {
             let error = TypeError("message expected to be undefined or a String");
             error.status = 400;
             return reject(error);
+        } 
+        if(blackout.message) {
+            insert.message = blackout.message;
         }
-        
-        r.table("blackouts").insert({
-
-        });
+        //return resolve(insert);
+        return r.table("blackouts").insert(insert).run().then(resolve).catch(reject);
     });
 };
-
+/*exports.insert({
+    dateTime: {
+        start: "2018-04-19T11:16:23-05:00",
+        end: "2018-04-19T11:17:23-05:00"
+    },
+    //periods: ["a"]
+}).then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.error(err)
+});*/
 exports.newBlackout = function(date, periods, userId, message, done) {
     //add the moment js checker
 
