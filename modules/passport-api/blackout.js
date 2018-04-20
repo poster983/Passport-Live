@@ -171,6 +171,41 @@ exports.insert = (blackout, options) => {
 }).catch((err) => {
     console.error(err)
 });*/
+/**
+ * Get a blackout object
+ * @link module:js/blackout
+ * @param {String} blackoutID 
+ * @returns {Promise.<Blackout, Error>}
+ * @throws {(TypeError|ReQL|Error)}
+ */
+exports.get = (blackoutID) => {
+    return new Promise((resolve, reject) => {
+        //check blackout ID
+        if(typeof blackoutID !== "string") {
+            let error = TypeError("blackoutID expected to be a String");
+            error.status = 400;
+            return reject(error);
+        }
+        return r.table("blackouts").get(blackoutID).run().then(resolve).catch(reject);
+    });
+};
+
+
+/**
+ * @param {Object} [filter] 
+ * @param {(Date|ISOString)} [filter.dateTime] 
+ * @param {String[]} [filter.periods] 
+ * @param {String} [filter.accountID] 
+ * @param {Object} [options]
+ * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object. 
+ */
+exports.list = (filter, options) => {
+    return new Promise((resolve, reject) => {
+
+    });
+};
+
+
 exports.newBlackout = function(date, periods, userId, message, done) {
     //add the moment js checker
 
