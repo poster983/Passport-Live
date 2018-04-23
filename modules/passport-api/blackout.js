@@ -193,15 +193,43 @@ exports.get = (blackoutID) => {
 
 /**
  * @param {Object} [filter] 
- * @param {(Date|ISOString)} [filter.dateTime] 
+ * @param {Object} [filter.dateTime] 
+ * @param {(Date|ISOString)} [filter.dateTime.from] 
+ * @param {(Date|ISOString)} [filter.dateTime.to] 
  * @param {String[]} [filter.periods] 
  * @param {String} [filter.accountID] 
  * @param {Object} [options]
- * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object. 
+ * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object.
+ * @returns {Promise.<Blackout[], TypeError|ReQL|Error>}
  */
 exports.list = (filter, options) => {
     return new Promise((resolve, reject) => {
 
+        let rQuery = r.table("blackouts");
+        
+        //filter accountID
+        if(filter.accountID) {
+            rQuery = rQuery.filter({
+                accountID: filter.accountID
+            });
+            delete filter.accountID;
+        }
+
+        //filter date
+
+        if(typeCheck("[period]", filter.period, utils.typeCheck)) {
+            rQuery = rQuery.filter(function(period) {
+                return r.expr(filter.period).contains(period("period")); 
+            });
+            delete filter.period;
+        }
+
+        if(options.returnSelection) {
+            return resolve(rQuery);
+        } else {
+            //run 
+            return rQuery.run().then(resolve).catch(reject);
+        }
     });
 };
 
