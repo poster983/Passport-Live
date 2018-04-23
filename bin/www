@@ -50,12 +50,11 @@ app.set("httpsPort", httpsPort);
 //Green Lock 
 var lexServer = "staging";
 if(process.env.NODE_ENV == "production") {
-    lexServer = "https://acme-v01.api.letsencrypt.org/directory";
-} else {
-    lexServer = "staging";
+    lexServer = "https://acme-staging-v02.api.letsencrypt.org/directory";
 }
 var lex = require("greenlock-express").create({
     server: lexServer,
+    version: "draft-11",
     approveDomains: approveDomains
 });
 function approveDomains(opts, certs, done) {
