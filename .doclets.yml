@@ -1,4 +1,0 @@
-dir: modules
-packageJson: package.json
-articles:
-  - Overview: README.md

@@ -11,7 +11,7 @@ function docGen {
 NODE_VERSION=`node --version`
 NODE_VERSION=${NODE_VERSION:1:1}
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" -o "$NODE_VERSION" != "6" ]; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" -o "$NODE_VERSION" != "8" ]; then
     echo "Skipping deploy; just doing a build."
     exit 0
 fi

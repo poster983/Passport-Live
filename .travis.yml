@@ -23,4 +23,4 @@ addons:
     - g++-5
 node_js:
 - node
-- '6'
+- '8'
