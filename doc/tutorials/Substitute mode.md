@@ -1,18 +1,19 @@
 # Substitute mode
 or __sub mode__  
 
-- Sub mode is used by a teacher who is Substitute for another and need to see the people who are leaving.  
+- Sub mode is used by a teacher who is substituting for another teacher and needs to see the people who are leaving.  
 
 ## Usage
 ### Turn on  
 1. Login to Passport using your own Passport account.
-2. Navigate to the teacher dashboard `/teacher`.
+2. Navigate to the Teacher Dashboard (/teacher).
 3. Click on the `Students leaving` tab.
 4. Click on the Substitute mode button. <svg style="height: 1.8em;width: 1.8em;"><g id="chrome-reader-mode"><path d="M13 12h7v1.5h-7zm0-2.5h7V11h-7zm0 5h7V16h-7zM21 4H3c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 15h-9V6h9v13z"></path></g></svg>  
-5. Type in the name of the person you are subbing and __choose one of the options__.
-6. Click `Done`
+5. Type in the name of the person for whom you are subbing for and __click on the name of the person__.
+6. Click `Done`  
+> At this point, the "Substitute mode" button will turn blue and Passport will load all passes for the substitute teacher.  
+7. Follow the same [procedure](./tutorial-The%20Teacher%20Dashboard.html) for releasing students as you normally would.
 
-At this point, the the Substitute mode button will turn blue and Passport will load all passes for that user. 
 
 ### Turn off
 1. Open the Substitute mode dialog again 
