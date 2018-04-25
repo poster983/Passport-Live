@@ -74,8 +74,8 @@ let allowMeAndUserGroup = (userGroups) => {
  * @function getUserPasses
  * @api GET /api/account/:accountID/passes
  * @apiparam {String} accountID
- * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes.getPasses} for filters 
- * @apiquery {Boolean} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params)
+ * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes~getPasses} for filters 
+ * @apiquery {(Boolean|String)} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params).  Value must be a valid UTC Offset string, or a boolean. Timezone defaults to UTC +0 
  * @apiresponse {Object[]} Pass objects in an array
  */
 //
@@ -91,7 +91,11 @@ router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator
         if(utils.checkDashboards(req.user.userGroup, ["teacher"])) {
             req.query.fromPerson = req.params.accountID;
             delete req.params.accountID;
-            req.query.date_from = moment().millisecond(0).second(0).minute(0).hour(0).toISOString();
+            let offset = "Z";
+            if(typeof req.query.substitute === "string" && (req.query.substitute !== "true" && req.query.substitute !== "false")) {
+                offset = req.query.substitute;
+            }
+            req.query.date_from = moment().utcOffset(offset).toISOString();
             req.query.date_to = moment(req.query.date_from).add(1, "day").toISOString();
         } else {
             //no permission to do this
