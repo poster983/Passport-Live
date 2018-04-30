@@ -216,6 +216,44 @@ exports.list = (filter, options) => {
         }
 
         //filter date
+        if(filter.date && (filter.date.from || filter.date.to)) {
+            rQuery = rQuery.filter((date) => {
+                let from = true;
+                let to = true;
+                if(filter.date.from) {
+                    //filter low end
+                    from = r.or(
+                        date("date")("start").inTimezone("Z").date()
+                            .ge(
+                                r.ISO8601(filter.date.from).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.from).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "closed", rightBound: "open"}
+                            )
+                    );
+                }
+                if(filter.date.to) {
+                    to = r.or(
+                        date("date")("end").inTimezone("Z").date()
+                            .lt(
+                                r.ISO8601(filter.date.to).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.date.to).inTimezone("Z")
+                            .during(
+                                date("date")("start").inTimezone("Z"), 
+                                date("date")("end").inTimezone("Z"),
+                                {leftBound: "open", rightBound: "closed"}
+                            )
+                    );
+                }
+
+                return r.and(from, to);
+            });
+            delete filter.date;
+        }
 
         if(typeCheck("[period]", filter.period, utils.typeCheck)) {
             rQuery = rQuery.filter(function(period) {
