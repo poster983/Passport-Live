@@ -25,8 +25,8 @@ var urlsToCache = [
     "/stylesheets/animate.css",
     "/js/materialize.js",
     "/js/init.js",
-    "/js/passport.js"
-    //'/images/',
+    "/js/passport.js",
+    "/images/",
     //'/fonts/'
 ];
 self.addEventListener("install", function(event) {
@@ -41,19 +41,22 @@ self.addEventListener("install", function(event) {
 });
 
 self.addEventListener("fetch", function(event) {
-    event.respondWith(
-        fetch(event.request).catch(function() {
-            return caches.match(event.request);
-        }),
-        caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(event.request).then(function (response) {
-                return response || fetch(event.request).then(function(response) {
-                    cache.put(event.request, response.clone());
-                    return response;
+    //only allow get requests
+    if (event.request.method === "GET") {
+        event.respondWith(
+            fetch(event.request).catch(function() {
+                return caches.match(event.request);
+            }),
+            caches.open(CACHE_NAME).then(function(cache) {
+                return cache.match(event.request).then(function (response) {
+                    return response || fetch(event.request).then(function(response) {
+                        cache.put(event.request, response.clone());
+                        return response;
+                    });
                 });
-            });
-        })
-    );
+            })
+        );
+    }
 });
 
 
