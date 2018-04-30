@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var CACHE_NAME = "passport-cache-v4";
+var CACHE_NAME = "passport-cache-v5";
 var urlsToCache = [
     "/",
     "/stylesheets/passport.css",
@@ -42,28 +42,28 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
     //only allow get requests
-    if (event.request.method === "GET") {
-        event.respondWith(
-            fetch(event.request).catch(function() {
-                return caches.match(event.request);
-            }),
-            caches.open(CACHE_NAME).then(function(cache) {
-                return cache.match(event.request).then(function (response) {
-                    return response || fetch(event.request).then(function(response) {
-                        cache.put(event.request, response.clone());
-                        return response;
-                    });
+    //if (event.request.method === "GET") {
+    event.respondWith(
+        fetch(event.request).catch(function() {
+            return caches.match(event.request);
+        }),
+        caches.open(CACHE_NAME).then(function(cache) {
+            return cache.match(event.request).then(function (response) {
+                return response || fetch(event.request).then(function(response) {
+                    cache.put(event.request, response.clone());
+                    return response;
                 });
-            })
-        );
-    }
+            });
+        })
+    );
+    //}
 });
 
 
-
+//Clean up old caches 
 self.addEventListener("activate", function(event) {
 
-    var cacheWhitelist = ["pages-cache-v1", "blog-posts-cache-v1"];
+    var cacheWhitelist = ["passport-cache-v5"];
 
     event.waitUntil(
         caches.keys().then(function(cacheNames) {

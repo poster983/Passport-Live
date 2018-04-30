@@ -273,7 +273,7 @@ accounts.json = (accounts, importName) => {
                 for(let x = 0; x < accounts.length; x++) {
                     loopPromice.push(new Promise((lRes, lRej) => {
                         //set default values
-                        var account = Object.assign(defaults, accounts[x]);
+                        let account = Object.assign(defaults, accounts[x]);
                         let rand = Math.random() + " " + x;
                         //Import each account
                         accountAPI.createAccount({
