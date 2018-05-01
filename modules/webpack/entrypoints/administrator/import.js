@@ -69,10 +69,21 @@ window.onload = function() {
             return done([{
                 column: "Actions", 
                 strictColumn: true,
-                dom: $("<div/>").attr("onclick", "console.log(\"" + row.getRowID() + "\");").html("CLICK ME")
+                dom: $("<a/>").addClass("waves-effect waves-light btn-floating").attr("title", "Send Activation Emails").attr("name", "bulkTable-activate-button").attr("data-bulkID", row.getRowID()).append("<i class='material-icons'>mail</i>")
             //dom: {hello: "there", howAre: "you"}
             }]);
-        } 
+        },
+        afterGenerate: function() {
+            $("[name='bulkTable-activate-button']").off().on("click", (e) => {
+                let bulkid = $(e.currentTarget).attr("data-bulkID");
+                console.log(bulkid);
+                importAPI.bulkSendActivateAccounts(bulkid)
+                    .then((res) => {
+                        console.log(res)
+                        Materialize.toast("Sending emails.  This can take up to an hour if there are network issues.", 6000);
+                    }).catch(err=>utils.throwError(err));
+            });
+        }
     });
 
     importAPI.searchBulkLogs({}).then((data) => {

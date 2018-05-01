@@ -91,7 +91,7 @@ router.post("/accounts", passport.authenticate("jwt", {
 });
 
 /** 
- * Sends activation emails to all unverified accounts
+ * Sends activation emails to all unverified accounts.  Ratelimits: 1 request per bulk id per 10 mins 
  * @link module:api/import
  * @function activate
  * @api POST /api/import/accounts/:bulkID/activate
@@ -101,7 +101,12 @@ router.post("/accounts", passport.authenticate("jwt", {
 
 router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
     session: false
-}), utils.dashboardPermission(["administrator"]), function activate(req, res, next) {
+}), utils.dashboardPermission(["administrator"]), 
+utils.rateLimit.sendEmail.getMiddleware({
+    key: function(req, res, next) {
+        next(req.params.bulkID);
+    }
+}), function activate(req, res, next) {
     if (typeof req.params.bulkID !== "string") {
         let err = new Error("Not Found");
         err.status = 404;
@@ -111,6 +116,7 @@ router.post("/accounts/:bulkID/activate", passport.authenticate("jwt", {
         delete trans.cursor;
         return res.status(202).json(trans);
     }).catch((err) => {
+        req.brute.reset()
         return next(err);
     });
 });

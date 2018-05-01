@@ -67,4 +67,12 @@ exports.accounts = (importName, accounts) => {
     }});
 };
 
-
+/** 
+* Sends activation emails to all unverified accounts.
+* @link module:webpack/api/import
+* @param {accountImport[]} bulkID - The bulk import ID 
+* @returns {Promise}
+*/
+exports.bulkSendActivateAccounts = (bulkID) => {
+    return utils.fetch("POST", "/api/import/accounts/"+bulkID+"/activate", {auth: true});
+};

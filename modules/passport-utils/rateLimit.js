@@ -23,7 +23,7 @@ email: hi@josephhassell.com
 */
 const ExpressBrute = require('express-brute');
 const db = require("../db/index.js");
-const moment = require("moment")
+const moment = require("moment");
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
     var err = new Error("You've made too many requests in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());
@@ -139,7 +139,27 @@ exports.globalBruteforce = new ExpressBrute(db.brute(), {
     handleStoreError: handleStoreError
 });
 
-
+/**
+    * Middleware to prevent email spam  
+    * Retries: 0
+    * Remembers for 10 mins 
+    * @link module:js/utils/rateLimit
+    * @function emailPasswordResetBruteforce
+    */
+exports.sendEmail = new ExpressBrute(db.brute(), {
+    freeRetries: 0,
+    attachResetToRequest: true,
+    refreshTimeoutOnRequest: false,
+    minWait: 11*60*1000, // 11mins (should never reach this wait time) 
+    maxWait: 11*60*1000, // 11 mins (should never reach this wait time) 
+    lifetime: 10*60, // 10 mins 
+    failCallback: function (req, res, next, nextValidRequestDate) {
+        var err = new Error("You've made too many requests, please try again "+moment(nextValidRequestDate).fromNow());
+        err.status = 429;
+        return next(err);
+    },
+    handleStoreError: handleStoreError
+});
 
 exports.testBruteForse = new ExpressBrute(db.brute(), {
     freeRetries: 3,

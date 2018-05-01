@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var CACHE_NAME = "passport-cache-v5";
+var CACHE_NAME = "passport-cache-v5.3";
 var urlsToCache = [
     "/",
     "/stylesheets/passport.css",
@@ -26,7 +26,7 @@ var urlsToCache = [
     "/js/materialize.js",
     "/js/init.js",
     "/js/passport.js",
-    "/images/",
+    "/js/webpack"
     //'/fonts/'
 ];
 self.addEventListener("install", function(event) {
@@ -42,28 +42,35 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
     //only allow get requests
-    //if (event.request.method === "GET") {
-    event.respondWith(
-        fetch(event.request).catch(function() {
-            return caches.match(event.request);
-        }),
-        caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(event.request).then(function (response) {
-                return response || fetch(event.request).then(function(response) {
+    if (event.request.method === "GET") {
+        event.respondWith(
+            caches.open(CACHE_NAME).then(function(cache) {
+                return fetch(event.request).then(function(response) {
                     cache.put(event.request, response.clone());
                     return response;
                 });
-            });
-        })
-    );
-    //}
+            })
+          
+            /*fetch(event.request).catch(function() {
+                return caches.match(event.request);
+            })
+            caches.open(CACHE_NAME).then(function(cache) {
+                return cache.match(event.request).then(function (response) {
+                    return response || fetch(event.request).then(function(response) {
+                        cache.put(event.request, response.clone());
+                        return response;
+                    });
+                });
+            })*/
+        );
+    }
 });
 
 
 //Clean up old caches 
 self.addEventListener("activate", function(event) {
-
-    var cacheWhitelist = ["passport-cache-v5"];
+    console.log("Activated Service Worker!");
+    var cacheWhitelist = ["pages-cache-v1", "blog-posts-cache-v1"];
 
     event.waitUntil(
         caches.keys().then(function(cacheNames) {
