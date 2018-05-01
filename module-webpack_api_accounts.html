@@ -732,7 +732,7 @@
 <div class="pull-right source-link-container">
   <code class="source-link" data-tmpl="method-tmpl(1)">
     <i class="fa fa-file-o"></i>
-    <a href="modules_webpack_api_account.js.html">account.js</a>:<a href="modules_webpack_api_account.js.html#line83">83</a>
+    <a href="modules_webpack_api_account.js.html">account.js</a>:<a href="modules_webpack_api_account.js.html#line85">85</a>
   </code>
 </div>
 
@@ -744,7 +744,7 @@
     
 
     <h4 class="name" id=".getPasses">
-      <a href="#params-getPasses"><span class="type-signature">(static) </span>getPasses</a><span class="signature">(filter)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
+      <a href="#params-getPasses"><span class="type-signature">(static) </span>getPasses</a><span class="signature">(accountID, filter, subMode)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span>
 
     </h4>
 
@@ -849,6 +849,29 @@
 
         <tr>
             
+                <td class="name"><code>accountID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>filter</code></td>
             
 
@@ -865,7 +888,30 @@
 
             
 
-            <td class="description last"><p>SEE: <code>module:api/passes.getPasses</code> For filter params</p></td>
+            <td class="description last"><p>SEE: <a href="module-api_passes.html#~getPasses"><code>module:api/passes~getPasses</code></a> For filter params</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subMode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Enables sub mode for the request.</p></td>
         </tr>
 
     
@@ -917,7 +963,7 @@
 
 <!--
 <pre>
-{"comment":"/**\n * Gets passes and filters them.\n * @link module:webpack/api/accounts\n * @param {Object} filter - SEE: <code>module:api/passes.getPasses</code> For filter params\n * @returns {Object[]}\n */","meta":{"range":[2954,3098],"filename":"account.js","lineno":83,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100016124","name":"exports.getPasses","type":"ArrowFunctionExpression","paramnames":["accountID","filter"]},"shortpath":"modules/webpack/api/account.js"},"description":"<p>Gets passes and filters them.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/accounts","value":"module:webpack/api/accounts"}],"params":[{"type":{"names":["Object"]},"description":"<p>SEE: <code>module:api/passes.getPasses</code> For filter params</p>","name":"filter"}],"returns":[{"type":{"names":["Array.<Object>"]}}],"name":"getPasses","longname":"module:webpack/api/accounts.getPasses","kind":"function","memberof":"module:webpack/api/accounts","scope":"static","___id":"T000002R001148","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".getPasses","signature":"<span class=\"signature\">(filter)</span><span class=\"type-signature\"> &rarr; {Array.&lt;Object>}</span>","ancestors":["<a href=\"module-webpack_api_accounts.html\">webpack/api/accounts</a>."]}
+{"comment":"/**\n * Gets passes and filters them.\n * @link module:webpack/api/accounts\n * @param {String} accountID\n * @param {Object} filter - SEE: <a href="module-api_passes.html#~getPasses"><code>module:api/passes~getPasses</code></a> For filter params\n * @param {Boolean} subMode - Enables sub mode for the request. \n * @returns {Object[]}\n */","meta":{"range":[3048,3311],"filename":"account.js","lineno":85,"columnno":0,"path":"/home/travis/build/poster983/Passport-Live/modules/webpack/api","code":{"id":"astnode100016124","name":"exports.getPasses","type":"ArrowFunctionExpression","paramnames":["accountID","filter","subMode"]},"vars":{"filter":"module:webpack/api/accounts~filter"},"shortpath":"modules/webpack/api/account.js"},"description":"<p>Gets passes and filters them.</p>","tags":[{"originalTitle":"link","title":"link","text":"module:webpack/api/accounts","value":"module:webpack/api/accounts"}],"params":[{"type":{"names":["String"]},"name":"accountID"},{"type":{"names":["Object"]},"description":"<p>SEE: <a href="module-api_passes.html#~getPasses"><code>module:api/passes~getPasses</code></a> For filter params</p>","name":"filter"},{"type":{"names":["Boolean"]},"description":"<p>Enables sub mode for the request.</p>","name":"subMode"}],"returns":[{"type":{"names":["Array.<Object>"]}}],"name":"getPasses","longname":"module:webpack/api/accounts.getPasses","kind":"function","memberof":"module:webpack/api/accounts","scope":"static","___id":"T000002R001148","___s":true,"attribs":"<span class=\"type-signature\">(static) </span>","id":".getPasses","signature":"<span class=\"signature\">(accountID, filter, subMode)</span><span class=\"type-signature\"> &rarr; {Array.&lt;Object>}</span>","ancestors":["<a href=\"module-webpack_api_accounts.html\">webpack/api/accounts</a>."]}
 </pre>
 -->
 </div>
@@ -1090,7 +1136,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 30 2018 21:31:18 GMT+0000 (UTC) using the LOKE theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 01 2018 01:38:00 GMT+0000 (UTC) using the LOKE theme.
 </footer>
 
 <script>prettyPrint();</script>
