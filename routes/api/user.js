@@ -96,6 +96,7 @@ router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator
                 offset = req.query.substitute;
             }
             req.query.date_from = moment().utcOffset(offset).toISOString();
+            console.log(req.query.date_from);
             req.query.date_to = moment(req.query.date_from).add(1, "day").toISOString();
         } else {
             //no permission to do this

@@ -113,7 +113,7 @@ class PassportPassList extends polymer.PolymerElement {
         this._setLoading(true);
         let fetchTrans = null;
         if(this.forUser) {
-            fetchTrans = accountJS.getPasses(this.forUser, Object.assign(this.filter, {substitute: this.substitute}));
+            fetchTrans = accountJS.getPasses(this.forUser, this.filter, this.substitute);
         } else {
             fetchTrans = passJS.get(this.filter);
         }

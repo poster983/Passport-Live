@@ -88,7 +88,7 @@ subModeDialog.addEventListener("iron-overlay-closed", (e) => {
             fromPersonList.substitute = true;
             subModeButton.style.color="var(--accent-color)";
         } else {
-            fromPersonList.substitute = undefined;
+            fromPersonList.substitute = false;
             fromPersonList.forUser = "me";
             subModeButton.style.color="var(--primary-text-color)";
         }

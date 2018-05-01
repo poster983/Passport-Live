@@ -77,9 +77,14 @@ exports.get = (query) => {
 /**
  * Gets passes and filters them.
  * @link module:webpack/api/accounts
- * @param {Object} filter - SEE: {@link module:api/passes.getPasses} For filter params
+ * @param {String} accountID
+ * @param {Object} filter - SEE: {@link module:api/passes~getPasses} For filter params
+ * @param {Boolean} subMode - Enables sub mode for the request. 
  * @returns {Object[]}
  */
-exports.getPasses = (accountID, filter) => {
+exports.getPasses = (accountID, filter, subMode) => {
+    if(subMode) {
+        filter = Object.assign(filter, {substitute: new Date().getTimezoneOffset()});
+    }
     return utils.fetch("GET", "/api/account/"+accountID+"/passes/", {query: filter, auth: true});
-}
+};
