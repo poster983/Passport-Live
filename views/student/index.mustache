@@ -669,7 +669,7 @@ email: hi@josephhassell.com
 
       var advance = 7;
       if (toPerson && toPerson.groupFields && toPerson.groupFields.teacher && toPerson.groupFields.teacher.settings &&
-        toPerson.groupFields.teacher.settings.daysInAdvanceForPasses) {
+        typeof toPerson.groupFields.teacher.settings.daysInAdvanceForPasses === "number") {
         var advance = toPerson.groupFields.teacher.settings.daysInAdvanceForPasses;
       }
 
