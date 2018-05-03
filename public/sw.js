@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var CACHE_NAME = "passport-cache-v5.3";
+var CACHE_NAME = "passport-cache-v5.2.0";
 var urlsToCache = [
     "/",
     "/stylesheets/passport.css",
@@ -26,7 +26,8 @@ var urlsToCache = [
     "/js/materialize.js",
     "/js/init.js",
     "/js/passport.js",
-    "/js/webpack"
+    "/js/webpack/loader-message.min.js",
+    "/js/polyfill/webcomponents-lite.js"
     //'/fonts/'
 ];
 self.addEventListener("install", function(event) {
@@ -44,16 +45,13 @@ self.addEventListener("fetch", function(event) {
     //only allow get requests
     if (event.request.method === "GET") {
         event.respondWith(
-            caches.open(CACHE_NAME).then(function(cache) {
+            /*caches.open(CACHE_NAME).then(function(cache) {
                 return fetch(event.request).then(function(response) {
                     cache.put(event.request, response.clone());
                     return response;
                 });
-            })
-          
-            /*fetch(event.request).catch(function() {
-                return caches.match(event.request);
-            })
+            })*/
+            //get from cashe, then update from server
             caches.open(CACHE_NAME).then(function(cache) {
                 return cache.match(event.request).then(function (response) {
                     return response || fetch(event.request).then(function(response) {
@@ -61,7 +59,11 @@ self.addEventListener("fetch", function(event) {
                         return response;
                     });
                 });
-            })*/
+            })
+            /*fetch(event.request).catch(function() {
+                return caches.match(event.request);
+            })
+            */
         );
     }
 });

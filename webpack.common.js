@@ -30,6 +30,10 @@ module.exports = {
             {
                 from: "./node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js",
                 to: path.resolve(__dirname, "public", "js", "polyfill") //"polyfill/webcomponents-lite.js"
+            },
+            {
+                from: "./node_modules/loader-message/loader-message.min.js",
+                to: "loader-message.min.js" //"polyfill/webcomponents-lite.js"
             }
         ])
     ]

@@ -52,9 +52,8 @@
    </div>
   </div>
 </div>
-<script src="/loader-message/loader-message.js"></script>
+<script src="./js/webpack/loader-message.min.js"></script>
 <script type="text/javascript">
-  var ltxt = document.getElementById('FSloadingMsg');
-  var loaderMessage = require("loader-message");
+  let ltxt = document.getElementById('FSloadingMsg');
   ltxt.innerHTML = loaderMessage.phrase({includePleaseWait: false});
 </script>
