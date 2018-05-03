@@ -57,7 +57,7 @@ let {RRule, RRuleSet, rrulestr} = require("rrule");
  * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout. cannot be used with blackout.periods
  * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range. 
  * @param {String} [blackout.accountID] - If given, the blackout will be for this person 
- * @param {RRuleRFC} [blackout.rrule] - A recurrence rule for the blackout.
+ * @param {(RRuleRFC|RRuleRFC[])} [blackout.rrule] - A recurrence rule for the blackout.
  * @param {String} [blackout.message] - A message to show to any user that encounters this blackout 
  * @returns {Promise.<Blackout, Error>}
  * @throws {(TypeError|ReQL|Error)}
@@ -136,11 +136,13 @@ exports.insert = (blackout, options) => {
             } else {
                 if(blackout.rrule instanceof RRule) {
                     //convert object to string
-                    insert.rrule = "RRULE:"+blackout.rrule.toString();
+                    insert.rrule = ["RRULE:"+blackout.rrule.toString()];
                 } else if(blackout.rrule instanceof RRuleSet) {
-                    insert.rrule = blackout.rrule.valueOf().join(" ");
-                } else if(typeof blackout.rrule === "string") {
+                    insert.rrule = blackout.rrule.valueOf();
+                } else if(Array.isArray(blackout.rrule)) {
                     insert.rrule = blackout.rrule;
+                } else if(typeof blackout.rrule === "string") {
+                    blackout.rrule = rrulestr(blackout.rrule);
                 } else {
                     let error = TypeError("This error should never happen. Invalid RRule passed");
                     error.status = 500;
@@ -156,6 +158,7 @@ exports.insert = (blackout, options) => {
         if(blackout.message) {
             insert.message = blackout.message;
         }
+        insert.created = r.date();
         //return resolve(insert);
         return r.table("blackouts").insert(insert).run().then(resolve).catch(reject);
     });
@@ -199,12 +202,34 @@ exports.get = (blackoutID) => {
  * @param {String[]} [filter.periods] 
  * @param {String} [filter.accountID] 
  * @param {Object} [options]
- * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object.
+ * @param {Boolean} [options.singleEvents=false] - Expand recurring blackouts to single events
  * @returns {Promise.<Blackout[], TypeError|ReQL|Error>}
  */
 exports.list = (filter, options) => {
     return new Promise((resolve, reject) => {
-
+        if(!filter) {filter = {};}
+        let filterType = `
+        {
+            dateTime: Maybe {
+                from: Maybe Date|ISODate,
+                to: Maybe Date|ISODate
+            },
+            periods: Maybe [period],
+            accountID: Maybe String
+        }
+        `;
+        if(!typeCheck(filterType, filter, utils.typeCheck)) {
+            let err = new TypeError("Invalid filter object, expected structure like: " + filterType);
+            err.status = 400;
+            return reject(err);
+        }
+        //convert dates to ISO 
+        if(filter.dateTime && typeCheck("Date", filter.dateTime.from)) {
+            filter.dateTime.from = moment(filter.dateTime.from).toISOString();
+        }
+        if(filter.dateTime && typeCheck("Date", filter.dateTime.to)) {
+            filter.dateTime.to = moment(filter.dateTime.to).toISOString();
+        }
         let rQuery = r.table("blackouts");
         
         //filter accountID
@@ -215,7 +240,7 @@ exports.list = (filter, options) => {
             delete filter.accountID;
         }
 
-        //filter date
+        //filter date and 
         if(filter.date && (filter.date.from || filter.date.to)) {
             rQuery = rQuery.filter((date) => {
                 let from = true;
@@ -255,6 +280,7 @@ exports.list = (filter, options) => {
             delete filter.date;
         }
 
+        //filter periods
         if(typeCheck("[period]", filter.period, utils.typeCheck)) {
             rQuery = rQuery.filter(function(period) {
                 return r.expr(filter.period).contains(period("period")); 
@@ -262,12 +288,8 @@ exports.list = (filter, options) => {
             delete filter.period;
         }
 
-        if(options.returnSelection) {
-            return resolve(rQuery);
-        } else {
-            //run 
-            return rQuery.run().then(resolve).catch(reject);
-        }
+        //run 
+        return rQuery.run().then(resolve).catch(reject);
     });
 };
 
