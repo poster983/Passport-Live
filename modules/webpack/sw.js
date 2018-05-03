@@ -17,6 +17,19 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
+console.log(workbox)
+//set precache
+workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
+
+/* Routing */
+/*workbox.registerRoute(
+    new RegExp("\(api/media/background\)\|\(api/media/avatar\)"),
+    workbox.strategies.cacheFirst({cacheName: "media"}),
+    "GET"
+);*/
+  
+
+/*
 var CACHE_NAME = "passport-cache-v5.2.0";
 var urlsToCache = [
     "/",
@@ -51,19 +64,19 @@ self.addEventListener("fetch", function(event) {
                     return response;
                 });
             })*/
-            //get from cashe, then update from server
-            caches.open(CACHE_NAME).then(function(cache) {
+//get from cashe, then update from server
+/*caches.open(CACHE_NAME).then(function(cache) {
                 return cache.match(event.request).then(function (response) {
                     return response || fetch(event.request).then(function(response) {
                         cache.put(event.request, response.clone());
                         return response;
                     });
                 });
-            })
-            /*fetch(event.request).catch(function() {
+            })*/
+/*fetch(event.request).catch(function() {
                 return caches.match(event.request);
             })
-            */
+            *//*
         );
     }
 });
@@ -86,3 +99,4 @@ self.addEventListener("activate", function(event) {
         })
     );
 });
+*/
