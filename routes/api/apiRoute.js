@@ -31,7 +31,6 @@ var config = require("config");
 var utils = require("../../modules/passport-utils/index.js");
 var api = require("../../modules/passport-api/index.js"); //("jdsfak"); 
 var cors = require("cors");
-var ssarv = require("ssarv");
 
 var accountApi = require("../../modules/passport-api/accounts.js");
 
@@ -150,7 +149,7 @@ SECURITY
 schedule
 **/
 //new Schedule Definition 
-router.post("/schedule/definition", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post("/schedule/definition", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function(req, res, next) {
     var name=req.body.name;
     var scheduleData=req.body.scheduleData;
 
@@ -186,7 +185,7 @@ router.get("/schedule/definition/:id", passport.authenticate("jwt", { session: f
 });
 //schedule Single Schedule Definition
 
-router.post("/schedule/date", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}),function(req, res, next) {
+router.post("/schedule/date", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var date=req.body.date;
 
@@ -202,7 +201,7 @@ router.get("/schedule/date/:id", function(req, res, next) {
     res.sendStatus(501);
 });
 
-router.post("/schedule/repeat", passport.authenticate("jwt", { session: false}), ssarv(["administrator", "dev", "admin"], {locationOfRoles: "user.userGroup"}), function(req, res, next) {
+router.post("/schedule/repeat", passport.authenticate("jwt", { session: false}), utils.dashboardPermission(["administrator"]), function(req, res, next) {
     var SCid=req.body.ScheduleDefinitionID;
     var repeatingRule=req.body.repeatingRule;
 
