@@ -24,13 +24,12 @@ var express = require('express');
 var securityJS = require('../../modules/passport-api/security.js');
 var emailApi = require("../../modules/passport-api/email.js");
 var utils = require('../../modules/passport-utils/index.js');
-var emailTracker = require('pixel-tracker');
 var router = express.Router();
 
 
 
 
-
+/*
 emailTracker.use(function (error, result) {
   console.log(result)
 });
@@ -38,7 +37,7 @@ emailTracker.use(function (error, result) {
 router.get("/pixel.gif", function(req, res, next) {
     console.log(req)
     return next();
-}, emailTracker.middleware);
+}, emailTracker.middleware);*/
 
 
 router.post("/sendMail", function(req, res, next) {
