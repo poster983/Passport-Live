@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 const {InjectManifest} = require("workbox-webpack-plugin");
 
 
@@ -46,7 +47,13 @@ module.exports = {
             include: [/\.html$/, /\.js$/, /\.css$/, /\.woff2$/],
             globDirectory: "./public",
             globPatterns: ["**/*.{js,css,woff2,html}"],
-            globIgnores: ["./js/webpack/**/*"]
+            globIgnores: ["**/sw.js", "**/js/webpack/**/*"],
+            
+        }),
+        new CleanWebpackPlugin([
+            "./public/js/webpack/precache-manifest.*.js" //workbox precash clean
+        ], {
+            dry: false //Testing
         })      
     ]
 
