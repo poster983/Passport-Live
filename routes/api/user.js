@@ -29,7 +29,7 @@ var router = express.Router();
 var cors = require("cors");
 var passport = require("passport");
 var utils = require("../../modules/passport-utils/index.js");
-let moment = require("moment");
+let {DateTime} = require("luxon");
 
 let passesJS = require("../../modules/passport-api/passes");
 let accountJS = require("../../modules/passport-api/accounts");
@@ -75,7 +75,7 @@ let allowMeAndUserGroup = (userGroups) => {
  * @api GET /api/account/:accountID/passes
  * @apiparam {String} accountID
  * @apiquery {String} filter - PLEASE SEE: {@link module:api/passes~getPasses} for filters 
- * @apiquery {(Boolean|String)} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params).  Value must be a valid UTC Offset string, or a boolean. Timezone defaults to UTC +0 
+ * @apiquery {(Boolean|String)} substitute - allows an account with teacher permissions to view another account's passes as a substitute teacher.  (overrides fromPerson, date_from, and date_to query params).  Value must be a valid UTC ZONE NAME (Europe/Paris) string, or a boolean. ZONE NAME defaults to "UTC" 
  * @apiresponse {Object[]} Pass objects in an array
  */
 //
@@ -91,13 +91,19 @@ router.get("/:accountID/passes/", allowMeAndUserGroup(["teacher", "administrator
         if(utils.checkDashboards(req.user.userGroup, ["teacher"])) {
             req.query.fromPerson = req.params.accountID;
             delete req.params.accountID;
-            let offset = "Z";
+            let zone = "UTC";
             if(typeof req.query.substitute === "string" && (req.query.substitute !== "true" && req.query.substitute !== "false")) {
-                offset = req.query.substitute;
+                zone = req.query.substitute;
             }
-            req.query.date_from = moment().utcOffset(offset).hour(0).minute(0).second(0).millisecond(0).toISOString();
+            let subStart = DateTime.utc().setZone(zone).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+            if(subStart.invalidReason) {
+                let err = new Error("Invalid DateTime: " + subStart.invalidReason);
+                err.status = 400;
+                return next(err);
+            }
+            req.query.date_from = subStart.toISO();//moment().utcOffset(offset).hour(0).minute(0).second(0).millisecond(0).toISOString();
             //console.log(req.query.date_from);
-            req.query.date_to = moment(req.query.date_from).add(1, "day").toISOString();
+            req.query.date_to = subStart.plus({days: 1}).toISO();
         } else {
             //no permission to do this
             return res.sendStatus(403);

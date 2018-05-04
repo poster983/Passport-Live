@@ -25,7 +25,7 @@ email: hi@josephhassell.com
 */
 
 var utils = require("../utils/index.js");
-
+let {DateTime} = require("luxon");
 
 /** 
 * Gets all accounts with classes from the server.
@@ -84,7 +84,7 @@ exports.get = (query) => {
  */
 exports.getPasses = (accountID, filter, subMode) => {
     if(subMode) {
-        filter = Object.assign(filter, {substitute: new Date().getTimezoneOffset()});
+        filter = Object.assign(filter, {substitute: DateTime.local().zoneName});
     }
     return utils.fetch("GET", "/api/account/"+accountID+"/passes/", {query: filter, auth: true});
 };
