@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var CACHE_NAME = "passport-cache-v5.2.1";
+var CACHE_NAME = "passport-cache-v5.2.2";
 var urlsToCache = [
     "/",
     "/stylesheets/passport.css",
