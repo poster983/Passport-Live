@@ -197,6 +197,7 @@ class PassportSearchAccounts extends polymer.PolymerElement {
         }
     }
 
+
     _error(error) {
         this.dispatchEvent(new CustomEvent("error", {detail: {error: error}}));
     }

@@ -35,6 +35,7 @@ require("@polymer/paper-tooltip/paper-tooltip.js");
 
 /** require modules **/
 var utils = require("../../utils/index.js");
+let {DateTime} = require("luxon");
 
 //Main Elements
 let toPersonList = document.getElementById("toPersonList");
@@ -56,13 +57,12 @@ window.onload = function() {
     });
 
     //Generate today's date
-    let date = new Date();
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+    let today = DateTime.local().set({hour:0, minute:0, second:0, millisecond:0});
     //Set the filter for the pass lists 
-    toPersonList.filter = {date_from: date, toPerson: utils.thisUser()};
+    toPersonList.filter = {date_from: today.toISO(), toPerson: utils.thisUser()};
     toPersonList.refreshPasses();
 
-    fromPersonList.filter = {date_from: date, date_to: date, fromPerson: utils.thisUser()};
+    fromPersonList.filter = {date_from: today.toISO(), date_to: today.plus({days: 1}).toISO(), fromPerson: utils.thisUser()};
     fromPersonList.refreshPasses();
 };
 
