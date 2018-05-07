@@ -17,7 +17,7 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-console.log(workbox)
+console.log(workbox);
 //set precache
 workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
@@ -27,15 +27,17 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 workbox.routing.registerRoute(
     /\.(?:png|gif|jpg|jpeg|svg)$/,
     workbox.strategies.cacheFirst({
-      cacheName: 'images',
-      plugins: [
-        new workbox.expiration.Plugin({
-          maxEntries: 60,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-        }),
-      ],
-    }),
-  ); 
+        cacheName: "images",
+        plugins: [
+            new workbox.expiration.Plugin({
+                maxEntries: 60,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+            }),
+        ],
+    })
+); 
+
+
 /*workbox.registerRoute(
     new RegExp("\(api/media/background\)\|\(api/media/avatar\)"),
     workbox.strategies.cacheFirst({cacheName: "media"}),
