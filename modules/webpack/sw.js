@@ -22,6 +22,20 @@ console.log(workbox)
 workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
 /* Routing */
+
+//images
+workbox.routing.registerRoute(
+    /\.(?:png|gif|jpg|jpeg|svg)$/,
+    workbox.strategies.cacheFirst({
+      cacheName: 'images',
+      plugins: [
+        new workbox.expiration.Plugin({
+          maxEntries: 60,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+        }),
+      ],
+    }),
+  ); 
 /*workbox.registerRoute(
     new RegExp("\(api/media/background\)\|\(api/media/avatar\)"),
     workbox.strategies.cacheFirst({cacheName: "media"}),

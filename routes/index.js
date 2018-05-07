@@ -19,7 +19,7 @@ email: hi@josephhassell.com
 */
 var express = require("express");
 var config = require("config");
-var utils = require("../modules/passport-utils/index.js")
+var utils = require("../modules/passport-utils/index.js");
 var accountJS = require("../modules/passport-api/accounts.js");
 var securityJS = require("../modules/passport-api/security.js");
 var url = require("url");
@@ -66,10 +66,11 @@ router.get("/", function(req, res, next) {
 });
 
 
-/*
-router.post('/callback/multiDashRoute/', function(req, res, next) {
 
-});*/
+//Serves the page to be caced and shown when offline
+router.get("/offline/", function(req, res, next) {
+    res.render("offline", {doc_Title: "Offline -- Passport"});
+});
 
 
 

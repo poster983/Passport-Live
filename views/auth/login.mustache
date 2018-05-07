@@ -34,7 +34,7 @@ email: hi@josephhassell.com
                 <a href="#" class="waves-effect waves-circle waves-light"><i class="material-icons white-text ">arrow_back</i></a>
               </div>
                <div class="input-field col s5" id="email-div">
-                <input id="email" type="email" class="validate">
+                <input id="email" type="email" class="validate" autofocus>
                 <label for="email">Email</label>
               </div>
               <div class="input-field col s5" style="display: none;" id="password-div">
@@ -125,6 +125,7 @@ email: hi@josephhassell.com
             Materialize.toast($("<span>" + decodeURIComponent("{{notification}}") + "</span>"), 10000);
           {{/notification}}
           checkWindowHash();
+          checkFormFill();
         });
 
 
