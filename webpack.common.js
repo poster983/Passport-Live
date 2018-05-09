@@ -58,8 +58,10 @@ module.exports = {
         ], {
             dry: false //Testing
         }),
+        //bundle common deps todether into one file
         new webpack.optimize.CommonsChunkPlugin({
-            name: "common" // Name of the file that holds common code.
+            name: "common", // Name of the file that holds common code.
+            minChunks: 3
         })
     ]
 

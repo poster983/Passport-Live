@@ -19,6 +19,14 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 email: hi@josephhassell.com
 
 */
+/**Work-around for lastpass issue on firefox**/
+document.createElement = Document.prototype.createElement;
+
+
+/** require webcomponents **/
+require("../../components/styles/default-theme.js");
+
+
 var Caret = require("../../common/Caret.js");
 var StudentScheduleEditor = require("../../sections/StudentScheduleEditor.js");
 var TeacherScheduleEditor = require("../../sections/TeacherScheduleEditor.js");
