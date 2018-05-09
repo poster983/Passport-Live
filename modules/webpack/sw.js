@@ -17,10 +17,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-console.log(workbox);
-//set precache
-workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
+/*set precache*/
+workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
+ 
+  
 /* Routing */
 
 //images
@@ -37,82 +38,16 @@ workbox.routing.registerRoute(
     })
 ); 
 
-
-/*workbox.registerRoute(
-    new RegExp("\(api/media/background\)\|\(api/media/avatar\)"),
-    workbox.strategies.cacheFirst({cacheName: "media"}),
-    "GET"
-);*/
   
 
-/*
-var CACHE_NAME = "passport-cache-v5.2.0";
-var urlsToCache = [
-    "/",
-    "/stylesheets/passport.css",
-    "/stylesheets/materialize.css",
-    "/stylesheets/animate.css",
-    "/js/materialize.js",
-    "/js/init.js",
-    "/js/passport.js",
-    "/js/webpack/loader-message.min.js",
-    "/js/polyfill/webcomponents-lite.js"
-    //'/fonts/'
-];
-self.addEventListener("install", function(event) {
-    // Perform install steps
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log("Opened cache");
-                return cache.addAll(urlsToCache);
-            })
-    );
+//(?:\/student|\/teacher|\/account|\/administrator)(\/(.+)?)?|(\/([/])$)
+
+//serve offline page 
+workbox.routing.registerRoute(
+    ({event}) => event.request.mode === "navigate",
+    (args) => workbox.strategies.networkOnly().handle(args).catch(() => caches.match("/offline"))
+);
+
+self.addEventListener('activate', (event) => {
+    console.log("Activated Service Worker!")
 });
-
-self.addEventListener("fetch", function(event) {
-    //only allow get requests
-    if (event.request.method === "GET") {
-        event.respondWith(
-            /*caches.open(CACHE_NAME).then(function(cache) {
-                return fetch(event.request).then(function(response) {
-                    cache.put(event.request, response.clone());
-                    return response;
-                });
-            })*/
-//get from cashe, then update from server
-/*caches.open(CACHE_NAME).then(function(cache) {
-                return cache.match(event.request).then(function (response) {
-                    return response || fetch(event.request).then(function(response) {
-                        cache.put(event.request, response.clone());
-                        return response;
-                    });
-                });
-            })*/
-/*fetch(event.request).catch(function() {
-                return caches.match(event.request);
-            })
-            *//*
-        );
-    }
-});
-
-
-//Clean up old caches 
-self.addEventListener("activate", function(event) {
-    console.log("Activated Service Worker!");
-    var cacheWhitelist = ["pages-cache-v1", "blog-posts-cache-v1"];
-
-    event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-});
-*/

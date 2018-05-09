@@ -14,6 +14,7 @@ $_documentContainer.innerHTML = `<custom-style>
        */
       --primary-text-color: var(--dark-theme-text-color) !important;
       --primary-background-color: var(--dark-theme-background-color) !important;
+      --secondary-background-color: var(--dark-theme-secondary-background-color) !important;
       --secondary-text-color: var(--dark-theme-secondary-color) !important;
       --disabled-text-color: var(--dark-theme-disabled-color) !important;
       --divider-color: var(--dark-theme-divider-color) !important;
@@ -31,6 +32,7 @@ $_documentContainer.innerHTML = `<custom-style>
        * Material Design Light background theme
        */
       --light-theme-background-color: #ffffff !important;
+      --light-theme-secondary-background-color: var(--paper-gray-300) !important;
       --light-theme-base-color: #000000 !important;
       --light-theme-text-color: var(--paper-grey-900) !important;
       --light-theme-secondary-color: #737373 !important;  /* for secondary text and icons */
@@ -40,6 +42,7 @@ $_documentContainer.innerHTML = `<custom-style>
        * Material Design Dark background theme
        */
       --dark-theme-background-color: var(--paper-grey-900) !important;
+      --dark-theme-secondary-background-color: var(--paper-gray-700) !important;
       --dark-theme-base-color: #ffffff !important;
       --dark-theme-text-color: #ffffff !important;
       --dark-theme-secondary-color: #bcbcbc !important;  /* for secondary text and icons */
