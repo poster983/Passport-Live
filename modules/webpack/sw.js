@@ -48,6 +48,22 @@ workbox.routing.registerRoute(
     (args) => workbox.strategies.networkOnly().handle(args).catch(() => caches.match("/offline"))
 );
 
-self.addEventListener('activate', (event) => {
-    console.log("Activated Service Worker!")
+/*self.addEventListener("activate", (event) => {
+    console.log("Activated Service Worker!");
+});*/
+
+
+self.addEventListener("message", (event) => {
+    if (!event.data){
+        return;
+    }
+  
+    switch (event.data) {
+    case "skipWaiting": //new version ui will call this
+        self.skipWaiting();
+        break;
+    default:
+        // NOOP
+        break;
+    }
 });

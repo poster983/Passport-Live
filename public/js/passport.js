@@ -24,7 +24,7 @@ email: hi@josephhassell.com
 //PROGRESSIVE WEB APP STUFFS
 //SERVICE WORKER
 
-if ("serviceWorker" in navigator) {
+/*if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
         navigator.serviceWorker.register("/sw.js").then(function(registration) {
             // Registration was successful
@@ -34,33 +34,23 @@ if ("serviceWorker" in navigator) {
             console.log("ServiceWorker registration failed: ", err);
         });
     });
-}
-/*
+}*/
+
 //Ask user to refresh page if there is a new version avalable
 function showRefreshUI(registration) {
-    // TODO: Display a toast or refresh UI.
-
-    // This demo creates and injects a button.
-
-    var button = document.createElement("button");
-    button.style.position = "absolute";
-    button.style.bottom = "24px";
-    button.style.left = "24px";
-    button.textContent = "This site has updated. Please click to see changes.";
-
-    button.addEventListener("click", function() {
+    var $toastContent = $("<div/>").append($("<span>There is an update avalable</span>").add($("<button/>").html("Update!").addClass("btn pulse grey darken-4 yellow-text waves-effect waves-light").on("click", (e) => {
+        //console.log(e)
         if (!registration.waiting) {
             // Just to ensure registration.waiting is available before
             // calling postMessage()
             return;
         }
-
-        button.disabled = true;
+        e.target.disabled = true;
+        $(e.target).removeClass("pulse");
 
         registration.waiting.postMessage("skipWaiting");
-    });
-
-    document.body.appendChild(button);
+    })));
+    Materialize.toast($toastContent, Infinity); //I cant believe Infinity actually works
 }
 
 function onNewServiceWorker(registration, callback) {
@@ -71,6 +61,7 @@ function onNewServiceWorker(registration, callback) {
     }
 
     function listenInstalledStateChange() {
+        //console.log("Update Found!");
         registration.installing.addEventListener("statechange", function(event) {
             if (event.target.state === "installed") {
                 // A new service worker is available, inform the user
@@ -97,10 +88,12 @@ window.addEventListener("load", function() {
                 // worker that will activate immediately
                 return;
             }
+            console.log("ServiceWorker registration successful with scope: ", registration.scope);
 
             // When the user asks to refresh the UI, we'll need to reload the window
             var preventDevToolsReloadLoop;
             navigator.serviceWorker.addEventListener("controllerchange", function(event) {
+                //console.log("Service worker changed ")
                 // Ensure refresh is only called once.
                 // This works around a bug in "force update on reload".
                 if (preventDevToolsReloadLoop) return;
@@ -112,8 +105,11 @@ window.addEventListener("load", function() {
             onNewServiceWorker(registration, function() {
                 showRefreshUI(registration);
             });
+        }).catch(function(err) {
+            // registration failed :(
+            console.log("ServiceWorker registration failed: ", err);
         });
-});*/
+});
 
 
 
