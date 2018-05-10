@@ -24,10 +24,29 @@ var db = require("../../modules/db/index.js");
 let r = db.dash();
 var config = require("config");
 var moment = require("moment");
+let {DateTime} = require("luxon");
 
 /** 
 * @module js/schedules
 */
+
+//TYPES 
+/**
+ * A Schedule Definition object
+ * @global
+ * @typedef {Object} ScheduleDefinition
+ * @property {String} id - RethinkDB doc id (DB Set)
+ * @property {String} name - A friendly name for the schedule
+ * @property {datetime} created - The date this definition was created
+ * @property {datetime} [updated] - the date this definition was changed
+ * @property {Array<Object>} schedule - An object with keys 
+ * @property {Object} schedule.x - The object found within the schedule array
+ * @property {String} schedule.x.period - A valid period constant
+ * @property {Object} schedule.x.time
+ * @property {Object} schedule.x.time.start - The start time in GMT+0 24Hour time
+ * @property {Object} schedule.x.time.end - The end time in GMT+0 24Hour time
+ * @property {RRuleRFC[]} rrule - array of valid rrules Supports RRUleSet
+ */
 
 /** 
     * Gets the Currint period for the date based off the time 
@@ -99,14 +118,29 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
 };
 
 /**
+ * Creates a new Schedule Definition
+ * @link module:js/schedules
+ */
+exports.new = (schedule) => {
+
+};
+
+/**
  * Get the schedule for a given datetime 
+ * @link module:js/schedules
  * @param {(Date|ISOString)} dateTime - 
  * @param {Object} [options] 
  * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object. 
- * @param {Boolean} [options.include] 
  * @returns {(Promise|Selection[])} - Returns a selection when options.returnSelection is true. Promise will return a Schedule object and a rrule ICAL RFC string
  * @throws {(TypeError|ReQL|Error)}
  */
 exports.on = (dateTime, options) => {
+    if(!options) {options = {};}
+    
+    if(!options.returnSelection) {
+       // dateTime
+    }
 
+    //r.table 
 };
+

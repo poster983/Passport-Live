@@ -119,6 +119,12 @@ exports.insert = (blackout, options) => {
             return reject(error);
         }
 
+        //convert times to rethinkdb times 
+        insert.dateTime = {
+            start: r.ISO8601(insert.dateTime.start).inTimezone("Z"),
+            end: r.ISO8601(insert.dateTime.end).inTimezone("Z")
+        };
+
         //check account id 
         if(!typeCheck("Maybe String", blackout.accountID)) {
             let error = TypeError("accountID expected to be undefined or a String");

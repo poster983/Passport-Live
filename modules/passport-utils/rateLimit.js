@@ -23,7 +23,7 @@ email: hi@josephhassell.com
 */
 const ExpressBrute = require('express-brute');
 const db = require("../db/index.js");
-const moment = require("moment")
+const moment = require("moment");
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
     var err = new Error("You've made too many requests in a short period of time, please try again "+moment(nextValidRequestDate).fromNow());
