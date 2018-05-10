@@ -35,3 +35,5 @@ public/js/polyfill/
 public/js/webpack/
 
 yarn-error\.log
+
+public/sw\.js

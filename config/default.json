@@ -90,7 +90,7 @@
 		"httpPort": 3000, //set in production config file, 80 or 8080 with a redirect firewall rule
 		"https": {
 			"port": 3443, //set in production config file, 443
-			"email": "testEmail@example.com"
+			"email": "testEmail@example.com" //admin email for lets encrypt
 		}
 	},
 	"schedule": { 

@@ -1,6 +1,6 @@
 {
   "name": "passport-live",
-  "version": "0.12.4",
+  "version": "0.13.0",
   "description": "Passport-Live is a modern web app for schools that helps them manage passes.",
   "author": "Joseph Hassell <hi@josephhassell.com> (http://josephhassell.com/)",
   "keywords": [
@@ -55,6 +55,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "brute-rethinkdb": "^2.0.1",
+    "clean-webpack-plugin": "^0.1.19",
     "compression": "^1.7.0",
     "config": "latest",
     "connect-ensure-login": "latest",
@@ -110,6 +111,7 @@
     "validator": "^9.4.1",
     "webpack": "^3.8.1",
     "webpack-merge": "^4.1.2",
+    "workbox-webpack-plugin": "^3.2.0",
     "xlsx": "^0.12.2"
   },
   "license": "AGPL-3.0",
