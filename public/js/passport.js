@@ -24,18 +24,6 @@ email: hi@josephhassell.com
 //PROGRESSIVE WEB APP STUFFS
 //SERVICE WORKER
 
-/*if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("/sw.js").then(function(registration) {
-            // Registration was successful
-            console.log("ServiceWorker registration successful with scope: ", registration.scope);
-        }).catch(function(err) {
-            // registration failed :(
-            console.log("ServiceWorker registration failed: ", err);
-        });
-    });
-}*/
-
 //Ask user to refresh page if there is a new version avalable
 function showRefreshUI(registration) {
     var $toastContent = $("<div/>").append($("<span>There is an update avalable</span>").add($("<button/>").html("Update!").addClass("btn pulse grey darken-4 yellow-text waves-effect waves-light").on("click", (e) => {
