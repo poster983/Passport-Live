@@ -48,8 +48,10 @@ app.set("httpsPort", httpsPort);
  * Create HTTP server.
  */
 //Green Lock 
-var lexServer = "staging";
+//staging
+var lexServer = "https://acme-staging-v02.api.letsencrypt.org/directory";
 if(process.env.NODE_ENV == "production") {
+    //real cert
     lexServer = "https://acme-v02.api.letsencrypt.org/directory";
 }
 var lex = require("greenlock-express").create({
@@ -68,10 +70,11 @@ function approveDomains(opts, certs, done) {
 }
 
 //var httpServer = http.createServer(app);
+let httpServer;
 if(process.env.NODE_ENV == "production") {
-    var httpServer = http.createServer(lex.middleware(require("redirect-https")()));
+    httpServer = http.createServer(lex.middleware(require("redirect-https")()));
 } else {
-    var httpServer = http.createServer(app);
+    httpServer = http.createServer(app);
 }
 var httpsServer = require("https").createServer(lex.httpsOptions, lex.middleware(app));
 /**

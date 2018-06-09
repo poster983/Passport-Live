@@ -4,5 +4,10 @@
 		"host": "localhost",
 		"port": 28015,
 		"database": "tests" //IMPORTANT THAT THIS VARIABLE IS NOT THE SAME AS THE PRODUCTION DB AD IT WILL BE DELETED AFTER EACH TEST 
+	},
+	"userGroups": { 
+		"student": {
+			"verifyAccountCreation": false, //When creating an account, the user will be required to input a random key assigned by an admin.
+		}
 	}
 }
