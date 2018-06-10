@@ -20,11 +20,11 @@ email: hi@josephhassell.com
 
 //THIS FILE WILL STOP WORKING WHEN IN PRODUCTION
 
-var express = require('express');
-var securityJS = require('../../modules/passport-api/security.js');
+var express = require("express");
+var securityJS = require("../../modules/passport-api/security.js");
 var emailApi = require("../../modules/passport-api/email.js");
-var utils = require('../../modules/passport-utils/index.js');
-var emailTracker = require('pixel-tracker');
+var utils = require("../../modules/passport-utils/index.js");
+var emailTracker = require("pixel-tracker");
 var router = express.Router();
 
 
@@ -32,57 +32,93 @@ var router = express.Router();
 
 
 emailTracker.use(function (error, result) {
-  console.log(result)
+    console.log(result);
 });
 
 router.get("/pixel.gif", function(req, res, next) {
-    console.log(req)
+    console.log(req);
     return next();
 }, emailTracker.middleware);
 
 
 router.post("/sendMail", function(req, res, next) {
     emailApi.sendMail({
-        to: 'to@example.com',
-        subject: 'Message title',
-        text: 'Plaintext version of the message',
-        html: '<p>HTML version of the message</p>'
+        to: "to@example.com",
+        subject: "Message title",
+        text: "Plaintext version of the message",
+        html: "<p>HTML version of the message</p>"
     }, null).then(function(resp) {
         res.send(resp);
     }).catch(function(err) {
-        next(err)
-    })
-})
+        next(err);
+    });
+});
 
 
 router.get("/delay/:delay", (req, res, next) => {
     setTimeout(function() {
-        res.send("Hello World")
-    }, parseInt(req.params.delay))
-})
+        res.send("Hello World");
+    }, parseInt(req.params.delay));
+});
 
 
 
 router.get("/newActivateKey", (req, res, next) => {
     securityJS.newKey.activateAccount(req.query.id).then((key) => {
         res.send(key);
-    }).catch((err) => {return next(err);})
-})
+    }).catch((err) => {return next(err);});
+});
 
 router.get("/checkPermKeyValidity", (req, res, next) => {
     securityJS.checkPermissionKeyValidity(req.query.type, req.query.key).then((key) => {
         res.send(key);
-    }).catch((err) => {return next(err);})
-})
+    }).catch((err) => {return next(err);});
+});
 
 
 /*Brute Forse */
 router.get("/brute/test", utils.rateLimit.testBruteForse.prevent, function(req, res, next) {
     res.json({num: Math.random(), brute: req.brute});
-})
+});
 router.get("/brute", utils.rateLimit.testBruteForse.prevent, function(req, res, next) {
     res.json({num: Math.random(), brute: req.brute});
-})
+});
+
+
+
+/* RRule rethinkdb filter optimizer */
+let {RRule, RRuleSet, rrulestr} = require("rrule");
+
+router.post("/rrule/", function(req, res, next) {
+    let rrule = rrulestr(req.body.rrule);
+    let parsed;
+    let rruleValid = utils.validateRRule(rrule);
+    if(!rruleValid.valid) {
+        let error = {errors: rruleValid.errors, status: 400};
+        return next(error);
+    } else {
+        if(typeof rrule === "string") {
+            rrule = rrulestr(rrule);
+        }
+        if(rrule instanceof RRule) {
+            //convert object to string
+            parsed = ["RRULE:"+rrule.toString()];
+        } else if(rrule instanceof RRuleSet) {
+            parsed = rrule.valueOf();
+        } else if(Array.isArray(rrule)) {
+            parsed = rrule;
+        } else {
+            let error = TypeError("This error should never happen. Invalid RRule passed");
+            error.status = 500;
+            return next(error);
+        }
+    }
+
+    res.json({
+        parsed: parsed,
+        rrule: rrule
+    })
+});
 
 
 module.exports = router;
