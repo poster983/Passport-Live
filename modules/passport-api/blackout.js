@@ -27,6 +27,7 @@ var db = require("../../modules/db/index.js");
 let r = db.dash();
 var config = require("config");
 var moment = require("moment");
+let {DateTime} = require("luxon");
 let typeCheck = require("type-check").typeCheck;
 let utils = require("../passport-utils/index.js");
 let {RRule, RRuleSet, rrulestr} = require("rrule");
@@ -52,12 +53,14 @@ let {RRule, RRuleSet, rrulestr} = require("rrule");
  * Schedules a new blackout
  * @link module:js/blackout
  * @param {Object} blackout
- * @param {(Object|Date|ISOString)} blackout.dateTime - If a date or ISO String, the function will automaticly fill in .start and .end with .end being exactly one day ahead.
- * @param {(Date|ISOString)} blackout.dateTime.start - The starting datetime for the blackout. cannot be used with blackout.periods
- * @param {(Date|ISOString)} blackout.dateTime.end - THe dateTime of the end of the blackout. cannot be used with blackout.periods
- * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range. 
+ * @param {Object} blackout.dateTime
+ * @param {String} blackout.dateTime.timeZone - an IANA timezone string 
+ * @param {(Date|ISOString)} [blackout.dateTime.date] - Used for all-day blackouts, and by-period blackouts
+ * @param {(Date|ISOString)} [blackout.dateTime.start] - The starting datetime for the blackout. cannot be used with blackout.periods
+ * @param {(Date|ISOString)} [blackout.dateTime.end] - THe dateTime of the end of the blackout. cannot be used with blackout.periods
+ * @param {String[]} [blackout.periods] - Periods must equal one of the set periods in the configs.  Defaults to using the time range. Cannot be used with dateTime.start and dateTime.end.
  * @param {String} [blackout.accountID] - If given, the blackout will be for this person 
- * @param {(RRuleRFC|RRuleRFC[])} [blackout.rrule] - A recurrence rule for the blackout.
+ * @param {(RRuleRFC|RRuleRFC[])} [blackout.rrule] - A recurrence rule for the blackout. Cannot have DTSTART, Timezones are ignored and dateTime.timeZone is used instead
  * @param {String} [blackout.message] - A message to show to any user that encounters this blackout 
  * @returns {Promise.<Blackout, Error>}
  * @throws {(TypeError|ReQL|Error)}
@@ -75,7 +78,7 @@ exports.insert = (blackout, options) => {
         } else if (Array.isArray(blackout.periods) && blackout.periods.length > 0) {
             //check if periods array and if dateTime.start or dateTime.end is set
             if(typeof blackout.dateTime === "object" && (blackout.dateTime.start || blackout.dateTime.end)) {
-                let error = Error("periods array cannot be used with \"dateTime.start\" and \"dateTime.end\"");
+                let error = Error("periods array cannot be used with \"dateTime.start\" and \"dateTime.end.\" Use \"dateTime.date\"");
                 error.status = 400;
                 return reject(error);
             } else {
@@ -83,16 +86,91 @@ exports.insert = (blackout, options) => {
             }
         }
 
-        //check blackout.date 
+        //check blackout.dateTime 
         let dateType = `
         {
-            dateTime: Date|ISODate|{
+            dateTime: {
+                timeZone: String
                 start: Date|ISODate,
                 end: Date|ISODate
             }, ...
+        }`;
+        if(typeof blackout.dateTime === "object") {
+            //check for dateTime.date
+            if((blackout.dateTime.start || blackout.dateTime.end) && blackout.dateTime.date) {
+                let error = Error("Invalid dateTime: \"dateTime.start\" and \"dateTime.end\" are incompatible with \"dateTime.date\"");
+                error.status = 400;
+                return reject(error);
+            }
+            if(blackout.dateTime.date) {
+                //if string
+                if(typeof blackout.dateTime.date === "string") {
+                    blackout.dateTime.date = DateTime.fromISO(blackout.dateTime.date, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.date instanceof Date) {
+                    blackout.dateTime.date = DateTime.fromJSDate(blackout.dateTime.date, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.date instanceof DateTime) {
+                    blackout.dateTime.date = blackout.dateTime.date.setZone(blackout.dateTime.timeZone);
+                } else {
+                    let error = Error("Invalid dateTime.date: Invalid Format");
+                    error.status = 400;
+                    return reject(error);
+                }
+                //check valid
+                if(!blackout.dateTime.date.isValid) {
+                    //invalid time
+                    let error = Error("Invalid dateTime.date: " + blackout.dateTime.date.invalidReason);
+                    error.status = 400;
+                    return reject(error);
+                }
+                //set start end values 
+                blackout.dateTime.start = blackout.dateTime.date;
+                blackout.dateTime.end = blackout.dateTime.date.plus({days: 1});
+            } else if(blackout.dateTime.start || blackout.dateTime.end) {
+                //check if both are present
+                if((blackout.dateTime.start && !blackout.dateTime.end) || (!blackout.dateTime.start && blackout.dateTime.end)) {
+                    let error = Error("Invalid dateTime: \"dateTime.start\" and \"dateTime.end\" must both be set.");
+                    error.status = 400;
+                    return reject(error);
+                }
+                //parse datetime.start
+                if(typeof blackout.dateTime.start === "string") {
+                    blackout.dateTime.start = DateTime.fromISO(blackout.dateTime.start, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.start instanceof Date) {
+                    blackout.dateTime.start = DateTime.fromJSDate(blackout.dateTime.start, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.start instanceof DateTime) {
+                    blackout.dateTime.start = blackout.dateTime.start.setZone(blackout.dateTime.timeZone);
+                } else {
+                    let error = Error("Invalid dateTime.start: Invalid Format");
+                    error.status = 400;
+                    return reject(error);
+                }
+                //parse dateTime.end
+                if(typeof blackout.dateTime.end === "string") {
+                    blackout.dateTime.end = DateTime.fromISO(blackout.dateTime.end, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.end instanceof Date) {
+                    blackout.dateTime.end = DateTime.fromJSDate(blackout.dateTime.end, {zone: blackout.dateTime.timeZone});
+                } else if (blackout.dateTime.end instanceof DateTime) {
+                    blackout.dateTime.end = blackout.dateTime.end.setZone(blackout.dateTime.timeZone);
+                } else {
+                    let error = Error("Invalid dateTime.end: Invalid Format");
+                    error.status = 400;
+                    return reject(error);
+                }
+                console.log(blackout.dateTime.start)
+            } else {
+                let error = TypeError("\"blackout.dateTime\" must be an object with either \"dateTime.start\" and \"dateTime.end\" or \"dateTime.date\"");
+                error.status = 400;
+                return reject(error);
+            }
+        } else {
+            let error = TypeError("\"blackout.dateTime\" must be an object");
+            error.status = 400;
+            return reject(error);
         }
-        `;
-        if(!typeCheck(dateType, blackout, utils.typeCheck)) {
+
+
+        
+        /*if(!typeCheck(dateType, blackout, utils.typeCheck)) {
             let error = TypeError("dateTime expected to be these types: " + dateType);
             error.status = 400;
             return reject(error);
@@ -117,12 +195,12 @@ exports.insert = (blackout, options) => {
             let error = Error("dateTime.start must be before dateTime.end");
             error.status = 400;
             return reject(error);
-        }
+        }*/
 
         //convert times to rethinkdb times 
         insert.dateTime = {
-            start: r.ISO8601(insert.dateTime.start).inTimezone("Z"),
-            end: r.ISO8601(insert.dateTime.end).inTimezone("Z")
+            start: r.ISO8601(blackout.dateTime.start.toISO()).inTimezone("Z"),
+            end: r.ISO8601(blackout.dateTime.end.toISO()).inTimezone("Z")
         };
 
         //check account id 
@@ -135,7 +213,7 @@ exports.insert = (blackout, options) => {
             insert.accountID = blackout.accountID;
         }
         if(blackout.rrule) {
-            let rruleValid = utils.validateRRule(blackout.rrule);
+            /*let rruleValid = utils.validateRRule(blackout.rrule);
             if(!rruleValid.valid) {
                 let error = {errors: rruleValid.errors, status: 400};
                 return reject(error);
@@ -154,7 +232,9 @@ exports.insert = (blackout, options) => {
                     error.status = 500;
                     return reject(error);
                 }
-            }
+            }*/
+            insert.recurrence = utils.rruleToDatabase(blackout.dateTime.start, blackout.rrule);
+            insert.recurrence.lastOccurrence = r.ISO8601(insert.recurrence.lastOccurrence).inTimezone("Z");
         }
         if(!typeCheck("Maybe String", blackout.message)) {
             let error = TypeError("message expected to be undefined or a String");
@@ -164,16 +244,18 @@ exports.insert = (blackout, options) => {
         if(blackout.message) {
             insert.message = blackout.message;
         }
-        insert.created = r.date();
+        insert.created = r.now();
         //return resolve(insert);
         return r.table("blackouts").insert(insert).run().then(resolve).catch(reject);
     });
 };
 /*exports.insert({
     dateTime: {
-        start: "2018-04-19T11:16:23-05:00",
-        end: "2018-04-19T11:17:23-05:00"
+        timeZone: "America/Chicago",
+        start: "2018-06-18T17:00:00",
+        end: "2018-06-19T17:00:00"
     },
+    rrule: "RRULE:FREQ=MONTHLY;COUNT=12 RDATE:20180619T050000 RDATE:20190619T050000",
     //periods: ["a"]
 }).then((res) => {
     console.log(res)

@@ -25,7 +25,7 @@ email: hi@josephhassell.com
 var jwt = require("jsonwebtoken");
 var shortid = require("shortid");
 var config = require("config");
-var moment = require("moment");
+let {DateTime} = require("luxon");
 var uaParser = require("ua-parser-js");
 let {RRule, RRuleSet, rrulestr} = require("rrule");
 
@@ -499,6 +499,92 @@ exports.validateRRule = (rrule) => {
     return res;
 };
 
+/**
+ * Generates database optimized rrule object.
+ * @link module:js/utils
+ * @param {DateTime} start - A Luxon DateTime instance with a (time)zone set. used as DTSTART
+ * @param {RRuleRFC} rrule - Cannot have DTSTART
+ * @returns {Object} - rrule: String, lastOccurrence: ISO String
+ */
+exports.rruleToDatabase = (start, rrule) => {
+    let parsed;
+    let lastOccurrence;
+    if(!(start instanceof DateTime)) {
+        //error
+        let error = new TypeError("start must be a Luxon DateTime instance");
+        error.status = 400;
+        throw error;
+    }
+    let timeZone = start.zoneName;
+    let rruleValid = exports.validateRRule(rrule);
+    
+    if(!rruleValid.valid) {
+        let error = new Error(rruleValid.errors);
+        error.status = 400;
+        throw error;
+    } else {
+        if(typeof rrule === "string") {
+            rrule = rrulestr(rrule, {forceset: true});
+        }
+        if(rrule instanceof RRule) {
+            //convert object to string
+            parsed = ["RRULE:"+rrule.toString()];
+        } else if(rrule instanceof RRuleSet) {
+            parsed = rrule.valueOf();
+        } else if(Array.isArray(rrule)) {
+            parsed = rrule;
+        } else {
+            let error = TypeError("This error should never happen. Invalid RRule passed");
+            error.status = 500;
+            throw error;
+        }
+
+        //check if dtstart is there, if it is, error
+        for(let x = 0; x < parsed.length; x++) {
+            if(parsed[x].includes("DTSTART")) {
+                //should error 
+                let error = Error("\"DTSTART\" is not allowed in the RRULE.  Use datetime.start");
+                error.status = 400;
+                throw error;
+            }
+        }
+        //extract until date, also generate 
+        let rruleWithDate = rrulestr(parsed.join(" "), {forceset: true, dtstart: start.toJSDate()});
+        //check if all rrules have an end
+        if(rruleWithDate._rrule.length > 0) {
+            for(let x = 0; x < rruleWithDate._rrule.length; x++) {
+                if(typeof rruleWithDate._rrule[x].options.count !== "number" && !rruleWithDate._rrule[x].options.until) {
+                    break;
+                }
+                //checked all fields 
+                if(x <= rruleWithDate._rrule.length -1) {
+                    //generate last Occurrence
+                    let allOcc = rruleWithDate.all(); 
+                    lastOccurrence = DateTime.fromJSDate(allOcc[allOcc.length-1], { zone: timeZone });
+                }
+            }
+        } else if (rruleWithDate._rdate.length > 0) {
+            //check last occurence for rdate if rrule is not present
+            lastOccurrence = DateTime.fromJSDate(rruleWithDate._rdate[0], { zone: timeZone });
+            for(let x = 0; x < rruleWithDate._rdate.length; x++) {
+                let testTime = DateTime.fromJSDate(rruleWithDate._rdate[x], { zone: timeZone });
+                if(testTime > lastOccurrence) {
+                    lastOccurrence = testTime;
+                }
+            }
+        } else {
+            //no date rules
+            let error = TypeError("Invalid RRULE");
+            error.status = 400;
+            throw error;
+        }
+        return {
+            rrule: parsed,
+            lastOccurrence: lastOccurrence.toISO(),
+
+        };
+    }
+};
 /*let rru = "FREQ=WEEKLY;DTSTART=20120201T093000Z;INTERVAL=5;BYDAY=MO,FR;BYHOUR=2,4";
 //
 console.log(exports.validateRRule(rru));

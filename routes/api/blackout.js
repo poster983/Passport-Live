@@ -21,25 +21,23 @@ email: hi@josephhassell.com
 /**
 * @module blackoutRESTAPI
 */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var passport = require('passport');
-var cors = require('cors');
-var config = require('config');
-var api = require('../../modules/passport-api/blackout.js');
+var passport = require("passport");
+var cors = require("cors");
+var config = require("config");
+var blackoutJS = require("../../modules/passport-api/blackout.js");
 
 router.use(cors());
-router.options('*', cors())
+router.options("*", cors());
 
-function serializeUser(req, res, done) {
-    console.log(req.user[0]);
-    //REMOVE SECRET INFO LIKE PASSWORDS
-    //delete req.user[0].password;
-    //req.user = req.user[0];
-    req.user = utils.cleanUser(req.user);
-    done();
-};
-/**
+
+
+router.post("/", passport.authenticate("jwt", { session: false}), function newBlackout(req, res, next) {
+    
+});
+
+/*
     * Returns all blackouts by the user ID
     * @function newBlackout
     * @api POST /api/blackout/
@@ -54,7 +52,7 @@ function serializeUser(req, res, done) {
     *    "message": "I am sick."
     * }
     */
-router.post('/', passport.authenticate('jwt', { session: false}), function newBlackout(req, res, next) {
+/*router.post("/", passport.authenticate("jwt", { session: false}), function newBlackout(req, res, next) {
     var date = req.body.date;
     var periods = req.body.periods;
     var userId = req.user.id;
@@ -65,42 +63,42 @@ router.post('/', passport.authenticate('jwt', { session: false}), function newBl
             return next(err);
         }
         res.status(201).json(trans);
-    }) 
-})
+    }); 
+});*/
 
-/**
+/*
     * Returns all blackouts by the user ID
     * @function getBlackoutByUserId
     * @api POST /api/blackout/user/:userId
     * @apiparam {string} userId - The ID corresponding to an account 
     * @returns {json} - blackout row
     */
-router.get('/user/:userId', passport.authenticate('jwt', { session: false}), function getBlackoutByUserId(req, res, next) {
+/*router.get("/user/:userId", passport.authenticate("jwt", { session: false}), function getBlackoutByUserId(req, res, next) {
     api.getBlackoutByUserId(req.params.userId, function(err, doc) {
         if(err) {
             return next(err);
         }
         res.json(doc);
-    })
-})
+    });
+});*/
 
-/**
+/*
     * Returns all blackouts by the date
     * @function getBlackoutByDate
     * @api POST /api/blackout/date/:date
     * @apiparam {string} date - The date of the blackout
     * @returns {json} - blackout row
     */
-router.get('/date/:date', passport.authenticate('jwt', { session: false}), function getBlackoutByDate(req, res, next) {
+/*router.get("/date/:date", passport.authenticate("jwt", { session: false}), function getBlackoutByDate(req, res, next) {
     api.getBlackoutByDate(req.params.date, function(err, doc) {
         if (err) {
             return next(err);
         }
         res.json(doc);
-    })
-}) 
+    });
+}); */
 
-/**
+/*
     * Returns all blackouts by the user ID and date
     * @function getBlackoutByUserIdAndDate
     * @api POST /api/blackout/user/:userId/date/:date
@@ -108,13 +106,13 @@ router.get('/date/:date', passport.authenticate('jwt', { session: false}), funct
     * @apiparam {string} date - the date of the blackout
     * @returns {json} - blackout row
     */
-router.get('/user/:userId/date/:date', passport.authenticate('jwt', { session: false}), function getBlackoutByUserIdAndDate(req, res, next) {
+/*router.get("/user/:userId/date/:date", passport.authenticate("jwt", { session: false}), function getBlackoutByUserIdAndDate(req, res, next) {
     api.getBlackoutByUserIdAndDate(req.params.userId, req.params.date, function(err, doc) {
         if (err) {
             return next(err);
         }
         res.json(doc);
-    })
-})
+    });
+});*/
 
 module.exports = router;

@@ -25,6 +25,7 @@ var securityJS = require("../../modules/passport-api/security.js");
 var emailApi = require("../../modules/passport-api/email.js");
 var utils = require("../../modules/passport-utils/index.js");
 var emailTracker = require("pixel-tracker");
+let {DateTime} = require("luxon");
 var router = express.Router();
 
 
@@ -87,18 +88,27 @@ router.get("/brute", utils.rateLimit.testBruteForse.prevent, function(req, res, 
 
 
 /* RRule rethinkdb filter optimizer */
+//timezone fix maybe https://runkit.com/nizmox/576896ef64545613002b49b1
 let {RRule, RRuleSet, rrulestr} = require("rrule");
 
 router.post("/rrule/", function(req, res, next) {
-    let rrule = rrulestr(req.body.rrule);
+    let rrule = req.body.rrule;
+    let timeZone = req.body.timeZone;
+    let startDate = DateTime.fromISO(req.body.start, { zone: timeZone });
+    res.json(utils.rruleToDatabase(startDate, rrule))
+    /*let lastOccurrence;
+    let rruleWithDate;
     let parsed;
     let rruleValid = utils.validateRRule(rrule);
+    
     if(!rruleValid.valid) {
-        let error = {errors: rruleValid.errors, status: 400};
+        let error = new Error(rruleValid.errors);
+        error.status = 400;
+        console.log(error)
         return next(error);
     } else {
         if(typeof rrule === "string") {
-            rrule = rrulestr(rrule);
+            rrule = rrulestr(rrule, {forceset: true});
         }
         if(rrule instanceof RRule) {
             //convert object to string
@@ -112,13 +122,67 @@ router.post("/rrule/", function(req, res, next) {
             error.status = 500;
             return next(error);
         }
-    }
 
+        //check if dtstart is there, if it is, error
+        for(let x = 0; x < parsed.length; x++) {
+            if(parsed[x].includes("DTSTART")) {
+                //should error 
+                let error = Error("\"DTSTART\" is not allowed in the RRULE.  Use datetime.start");
+                error.status = 400;
+                return next(error);
+            }
+        }
+        //extract until date, also generate 
+        rruleWithDate = rrulestr(parsed.join(" "), {forceset: true, dtstart: startDate.toJSDate()});
+        //check if all rrules have an end
+        if(rruleWithDate._rrule.length > 0) {
+            for(let x = 0; x < rruleWithDate._rrule.length; x++) {
+                if(typeof rruleWithDate._rrule[x].options.count !== "number" && !rruleWithDate._rrule[x].options.until) {
+                    break;
+                }
+                console.log(x, rruleWithDate._rrule.length -1)
+                //checked all fields 
+                if(x <= rruleWithDate._rrule.length -1) {
+                    //generate last Occurrence
+                    let allOcc = rruleWithDate.all(); 
+                    lastOccurrence = DateTime.fromJSDate(allOcc[allOcc.length-1], { zone: timeZone });
+                }
+            }
+        } else if (rruleWithDate._rdate.length > 0) {
+            //check last occurence for rdate if rrule is not present
+            lastOccurrence = DateTime.fromJSDate(rruleWithDate._rdate[0], { zone: timeZone });
+            for(let x = 0; x < rruleWithDate._rdate.length; x++) {
+                let testTime = DateTime.fromJSDate(rruleWithDate._rdate[x], { zone: timeZone });
+                if(testTime > lastOccurrence) {
+                    lastOccurrence = testTime;
+                }
+            }
+        } else {
+            //no date rules
+            let error = TypeError("Invalid RRULE");
+            error.status = 400;
+            return next(error);
+        }
+    }
+    
     res.json({
         parsed: parsed,
-        rrule: rrule
-    })
+        rrule: rrule,
+        ittRule: rruleWithDate.all(),
+        ittRuleTZ: (function() {
+            let dt = rruleWithDate.all();
+            let returner = [];
+            for(let x = 0; x < dt.length; x++) {
+                returner.push(DateTime.fromJSDate(dt[x], {zone: timeZone}))
+            }
+            return returner;
+        })(),
+        rruleWithDate: rruleWithDate,
+        lastOccurrence: lastOccurrence
+    });*/
 });
+
+
 
 
 module.exports = router;
