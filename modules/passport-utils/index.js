@@ -580,7 +580,7 @@ exports.rruleToDatabase = (start, rrule) => {
         }
         return {
             rrule: parsed,
-            lastOccurrence: lastOccurrence.toISO(),
+            lastOccurrence: lastOccurrence?lastOccurrence.toISO():undefined,
 
         };
     }

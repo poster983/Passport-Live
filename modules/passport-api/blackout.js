@@ -31,6 +31,7 @@ let {DateTime} = require("luxon");
 let typeCheck = require("type-check").typeCheck;
 let utils = require("../passport-utils/index.js");
 let {RRule, RRuleSet, rrulestr} = require("rrule");
+let util = require("util");
 
 //TYPES
 /**
@@ -87,14 +88,6 @@ exports.insert = (blackout, options) => {
         }
 
         //check blackout.dateTime 
-        let dateType = `
-        {
-            dateTime: {
-                timeZone: String
-                start: Date|ISODate,
-                end: Date|ISODate
-            }, ...
-        }`;
         if(typeof blackout.dateTime === "object") {
             //check for dateTime.date
             if((blackout.dateTime.start || blackout.dateTime.end) && blackout.dateTime.date) {
@@ -156,7 +149,7 @@ exports.insert = (blackout, options) => {
                     error.status = 400;
                     return reject(error);
                 }
-                console.log(blackout.dateTime.start)
+                //console.log(blackout.dateTime.start)
             } else {
                 let error = TypeError("\"blackout.dateTime\" must be an object with either \"dateTime.start\" and \"dateTime.end\" or \"dateTime.date\"");
                 error.status = 400;
@@ -168,39 +161,18 @@ exports.insert = (blackout, options) => {
             return reject(error);
         }
 
-
-        
-        /*if(!typeCheck(dateType, blackout, utils.typeCheck)) {
-            let error = TypeError("dateTime expected to be these types: " + dateType);
-            error.status = 400;
-            return reject(error);
-        } else if (typeCheck("Date|ISODate", blackout.dateTime, utils.typeCheck)) {
-            //set start and end options
-            blackout.dateTime = moment(blackout.dateTime);//.hour(0).minute(0).second(0).millisecond(0);
-            insert.dateTime = {
-                start: blackout.dateTime.toISOString(),
-                end: blackout.dateTime.add(1, "day").toISOString()
-            };
-        } else if(typeCheck("{start: Date, end: Date}", blackout.dateTime, utils.typeCheck)) {
-            //convert to iso strings
-            insert.dateTime = {
-                start: moment(blackout.dateTime.start).toISOString(),
-                end: moment(blackout.dateTime.end).toISOString()
-            };
-        } else {
-            insert.dateTime = blackout.dateTime; 
-        }
-        //check if end is after start
-        if(!moment(insert.dateTime.start).isBefore(insert.dateTime.end)) {
+        //console.log(blackout.dateTime.start, blackout.dateTime.end)
+        //check if start is before end 
+        if(blackout.dateTime.start >= blackout.dateTime.end) {
             let error = Error("dateTime.start must be before dateTime.end");
             error.status = 400;
             return reject(error);
-        }*/
-
+        }
         //convert times to rethinkdb times 
         insert.dateTime = {
             start: r.ISO8601(blackout.dateTime.start.toISO()).inTimezone("Z"),
-            end: r.ISO8601(blackout.dateTime.end.toISO()).inTimezone("Z")
+            end: r.ISO8601(blackout.dateTime.end.toISO()).inTimezone("Z"),
+            timeZone: blackout.dateTime.timeZone
         };
 
         //check account id 
@@ -213,28 +185,10 @@ exports.insert = (blackout, options) => {
             insert.accountID = blackout.accountID;
         }
         if(blackout.rrule) {
-            /*let rruleValid = utils.validateRRule(blackout.rrule);
-            if(!rruleValid.valid) {
-                let error = {errors: rruleValid.errors, status: 400};
-                return reject(error);
-            } else {
-                if(blackout.rrule instanceof RRule) {
-                    //convert object to string
-                    insert.rrule = ["RRULE:"+blackout.rrule.toString()];
-                } else if(blackout.rrule instanceof RRuleSet) {
-                    insert.rrule = blackout.rrule.valueOf();
-                } else if(Array.isArray(blackout.rrule)) {
-                    insert.rrule = blackout.rrule;
-                } else if(typeof blackout.rrule === "string") {
-                    blackout.rrule = rrulestr(blackout.rrule);
-                } else {
-                    let error = TypeError("This error should never happen. Invalid RRule passed");
-                    error.status = 500;
-                    return reject(error);
-                }
-            }*/
             insert.recurrence = utils.rruleToDatabase(blackout.dateTime.start, blackout.rrule);
-            insert.recurrence.lastOccurrence = r.ISO8601(insert.recurrence.lastOccurrence).inTimezone("Z");
+            if(insert.recurrence.lastOccurrence) {
+                insert.recurrence.lastOccurrence = r.ISO8601(insert.recurrence.lastOccurrence).inTimezone("Z");
+            }
         }
         if(!typeCheck("Maybe String", blackout.message)) {
             let error = TypeError("message expected to be undefined or a String");
@@ -252,16 +206,18 @@ exports.insert = (blackout, options) => {
 /*exports.insert({
     dateTime: {
         timeZone: "America/Chicago",
-        start: "2018-06-18T17:00:00",
-        end: "2018-06-19T17:00:00"
+        date: "2018-06-25"
+        //start: "2018-06-19T10:00:00",
+        //end: "2018-06-19T11:00:00"
     },
-    rrule: "RRULE:FREQ=MONTHLY;COUNT=12 RDATE:20180619T050000 RDATE:20190619T050000",
-    //periods: ["a"]
+    rrule: "RRULE:FREQ=WEEKLY",
+    periods: ["h", "g"]
 }).then((res) => {
     console.log(res)
 }).catch((err) => {
     console.error(err)
 });*/
+
 /**
  * Get a blackout object
  * @link module:js/blackout
@@ -282,6 +238,8 @@ exports.get = (blackoutID) => {
 };
 
 
+
+
 /**
  * @param {Object} [filter] 
  * @param {Object} [filter.dateTime] 
@@ -291,11 +249,16 @@ exports.get = (blackoutID) => {
  * @param {String} [filter.accountID] 
  * @param {Object} [options]
  * @param {Boolean} [options.singleEvents=false] - Expand recurring blackouts to single events
+ * @param {Number} [options.singleEventLimit=100] - The limit to how many recurring events will be returned if singleEvents is true
  * @returns {Promise.<Blackout[], TypeError|ReQL|Error>}
  */
 exports.list = (filter, options) => {
     return new Promise((resolve, reject) => {
         if(!filter) {filter = {};}
+        options = Object.assign({
+            singleEvents: false,
+            singleEventLimit: 100
+        }, options);
         let filterType = `
         {
             dateTime: Maybe {
@@ -328,58 +291,200 @@ exports.list = (filter, options) => {
             delete filter.accountID;
         }
 
+        
+
         //filter date and 
-        if(filter.date && (filter.date.from || filter.date.to)) {
+        if(filter.dateTime && (filter.dateTime.from || filter.dateTime.to)) {
             rQuery = rQuery.filter((date) => {
+
+                //check dates for non recurring blackouts
                 let from = true;
                 let to = true;
-                if(filter.date.from) {
+                if(filter.dateTime.from) {
                     //filter low end
                     from = r.or(
-                        date("date")("start").inTimezone("Z").date()
+                        date("dateTime")("start").inTimezone("Z").date()
                             .ge(
-                                r.ISO8601(filter.date.from).inTimezone("Z").date()
+                                r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
                             ),
-                        r.ISO8601(filter.date.from).inTimezone("Z")
+                        r.ISO8601(filter.dateTime.from).inTimezone("Z")
                             .during(
-                                date("date")("start").inTimezone("Z"), 
-                                date("date")("end").inTimezone("Z"),
+                                date("dateTime")("start").inTimezone("Z"), 
+                                date("dateTime")("end").inTimezone("Z"),
                                 {leftBound: "closed", rightBound: "open"}
                             )
                     );
                 }
-                if(filter.date.to) {
+                if(filter.dateTime.to) {
                     to = r.or(
-                        date("date")("end").inTimezone("Z").date()
+                        date("dateTime")("end").inTimezone("Z").date()
                             .lt(
-                                r.ISO8601(filter.date.to).inTimezone("Z").date()
+                                r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
                             ),
-                        r.ISO8601(filter.date.to).inTimezone("Z")
+                        r.ISO8601(filter.dateTime.to).inTimezone("Z")
                             .during(
-                                date("date")("start").inTimezone("Z"), 
-                                date("date")("end").inTimezone("Z"),
+                                date("dateTime")("start").inTimezone("Z"), 
+                                date("dateTime")("end").inTimezone("Z"),
                                 {leftBound: "open", rightBound: "closed"}
                             )
                     );
                 }
 
-                return r.and(from, to);
+                //check dates for recurring blackouts
+                let frFrom = true;
+                let frTo = true;
+                if(filter.dateTime.from) {
+                    //filter low end
+                    frFrom = r.or(
+                        date("dateTime")("start").inTimezone("Z").date()
+                            .ge(
+                                r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.dateTime.from).inTimezone("Z")
+                            .during(
+                                date("dateTime")("start").inTimezone("Z"), 
+                                date("recurrence")("lastOccurrence").inTimezone("Z"),
+                                {leftBound: "closed", rightBound: "open"}
+                            )
+                    );
+                }
+                if(filter.dateTime.to) {
+                    frTo = r.or(
+                        date("recurrence")("lastOccurrence").inTimezone("Z").date()
+                            .lt(
+                                r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
+                            ),
+                        r.ISO8601(filter.dateTime.to).inTimezone("Z")
+                            .during(
+                                date("dateTime")("start").inTimezone("Z"), 
+                                date("recurrence")("lastOccurrence").inTimezone("Z"),
+                                {leftBound: "open", rightBound: "closed"}
+                            )
+                    );
+                }
+
+                return r.branch(
+                    date.hasFields({recurrence: "lastOccurrence"}),// if is a recurring event with a finite ammount of Occurrences
+                    r.and(frFrom, frTo),//then filter as a finite recurring event
+                    r.and(from, to)//else filter as a single event
+                );
             });
             delete filter.date;
         }
 
         //filter periods
-        if(typeCheck("[period]", filter.period, utils.typeCheck)) {
-            rQuery = rQuery.filter(function(period) {
-                return r.expr(filter.period).contains(period("period")); 
+        if(typeCheck("[period]", filter.periods, utils.typeCheck)) {
+            rQuery = rQuery.filter(function(doc) {
+                return r.branch(
+                    doc.hasFields("periods").and(doc("periods").typeOf().eq("ARRAY")),//if  periods exists and is an array
+                    r.expr(filter.periods).default([]).setIntersection(doc("periods")).count().ge(1), // then filter by periods.  filter.periods contains at least one value in doc("periods")
+                    true
+                );
             });
             delete filter.period;
         }
 
         //run 
-        return rQuery.run().then(resolve).catch(reject);
+        return rQuery.run().then((docs) => {
+            //convert from and to to js dates
+            let dtFrom;
+            if(filter.dateTime.from) {
+                dtFrom = DateTime.fromISO(filter.dateTime.from);
+            }
+            let dtTo;
+            if(filter.dateTime.to) {
+                dtTo = DateTime.fromISO(filter.dateTime.to);
+            }
+            
+            //let dtFromPeriod
+            //first find every recurrence for recurring rules and check to see if it matches the filter
+            let docsr = docs.map((doc) => {
+                if(typeof doc.recurrence === "object") {
+                    let dtstart = DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone});
+                    let dtend = DateTime.fromJSDate(doc.dateTime.end, {zone: doc.dateTime.timeZone});
+                    //get duration
+                    let duration = dtend.diff(dtstart, "millisecond");
+
+                    let docRRule = rrulestr(doc.recurrence.rrule.join(" "), {dtstart: dtstart.toJSDate()});
+                    //validate for safety
+                    let validate = utils.validateRRule(docRRule);
+                    //error if not valid
+                    if(!validate.valid) {
+                        let err = new Error(validate.errors);
+                        err.status = 500;
+                        return reject(err);
+                    }
+
+                    let occurrences;
+                    //check if doc gets time from periods
+                    /*if(Array.isArray(doc.periods)) {
+                        occurrences = docRRule.after()
+                    }*/
+                    
+                    /*if(dtTo.diff(dtFrom, "days") < 1) {
+                        occurrences = docRRule.between(dtFrom.set({hour: 0, minute: 0, second: 0, millisecond: 0}).toJSDate(), dtTo.set({hour: 0, minute: 0, second: 0, millisecond: 0}).toJSDate(), true);
+                    }*/
+                    //get recurring dates between filter dates
+                    //occurrences = docRRule.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
+                    //occurrences = docRRuleEnd.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
+                    occurrences = docRRule.all((date, i) => {
+                        //check limit
+                        if(i >= options.singleEventLimit) {
+                            return false;
+                        }
+                        //convert date to luxon 
+                        let dt = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
+                        let dtEnd = dt.plus({milliseconds: duration.milliseconds});
+                        
+                        let oFrom = true;
+                        let oTo = true;
+                        //if low limit 
+                        if(dtFrom) {
+                            oFrom = ((dt.set({hour: 0, minute: 0, second: 0, millisecond: 0}) >= dtFrom.set({hour: 0, minute: 0, second: 0, millisecond: 0})) || (dtFrom >= dt && dtFrom < dtEnd));
+                        }
+
+                        if(dtTo) {
+                            oTo = ((dtEnd.set({hour: 0, minute: 0, second: 0, millisecond: 0}) < dtTo.set({hour: 0, minute: 0, second: 0, millisecond: 0})) || (dtTo >= dt && dtTo < dtEnd));
+                        }
+                        return (oFrom && oTo);
+                    });
+
+                    return occurrences;
+
+                } else {
+                    return doc;
+                }
+                
+            });
+
+
+            return resolve({docs: docs, docsr: docsr});
+
+        }).catch(reject);
     });
 };
+
+exports.list({
+    dateTime: {
+        from: "2018-06-24T00:00:00-05:00",
+        to: "2018-06-26T00:00:00-05:00"
+    }
+    //periods: ["d"]
+}).then((res) => {
+    res.docs = res.docs.map((doc) => {
+        return Object.assign(doc, {
+            dateTime: {
+                start: DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone}).toISO(),
+                end: DateTime.fromJSDate(doc.dateTime.end, {zone: doc.dateTime.timeZone}).toISO()
+            }
+        });
+        
+    });
+    console.log(util.inspect(res, { depth: 5 }));
+}).catch((err) => {
+    console.error(err);
+})
+
 
 
 exports.newBlackout = function(date, periods, userId, message, done) {
