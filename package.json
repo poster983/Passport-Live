@@ -101,7 +101,7 @@
     "serve-favicon": "~2.4.3",
     "session-file-store": "^1.0.0",
     "shortid": "^2.2.8",
-    "snyk": "^1.42.3",
+    "snyk": "^1.83.0",
     "ssarv": "latest",
     "time-elements": "^1.0.0",
     "type-check": "^0.3.2",
