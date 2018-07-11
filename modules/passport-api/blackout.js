@@ -206,17 +206,19 @@ exports.insert = (blackout, options) => {
 /*exports.insert({
     dateTime: {
         timeZone: "America/Chicago",
-        date: "2018-06-10"
-        //start: "2018-06-19T10:00:00",
-        //end: "2018-06-19T11:00:00"
+        //date: "2018-06-05"
+        start: "2018-05-01T08:00:00",
+        end: "2018-05-01T09:30:00"
     },
-    //rrule: "RRULE:FREQ=WEEKLY",
-    periods: ["a", "d"]
+    //rrule: "RRULE:FREQ=DAILY;COUNT=4",
+    //periods: ["h", "g", "f"]
 }).then((res) => {
     console.log(res)
 }).catch((err) => {
     console.error(err)
 });*/
+
+
 
 /**
  * Get a blackout object
@@ -237,7 +239,40 @@ exports.get = (blackoutID) => {
     });
 };
 
-
+/**
+ * Filter Range of dates
+ * @private
+ * @param {Object} options
+ * @param {DateTime} [options.filterFrom] 
+ * @param {DateTime} [options.filterTo] 
+ * @param {DateTime} options.start 
+ * @param {DateTime} options.end 
+ * @param {Boolean} [options.ignoreTime=false] - Will filter ignore the time of day when doing comparisons
+ */
+function filterDateRange({filterFrom, filterTo, start, end, ignoreTime}) {
+    let oFrom = true;
+    let oTo = true;
+    //if low limit 
+    if(filterFrom) {
+        let compareTo;
+        if(ignoreTime) {
+            compareTo = (start.setZone("UTC").startOf("day") >= filterFrom.setZone("UTC").startOf("day"));
+        } else {
+            compareTo = (start.setZone("UTC") < filterFrom.setZone("UTC"));
+        }
+        oFrom = (compareTo|| (filterFrom >= start && filterFrom < end));
+    }
+    if(filterTo) {
+        let compareTo;
+        if(ignoreTime) {
+            compareTo = (end.setZone("UTC").startOf("day") <= filterTo.setZone("UTC").startOf("day"));
+        } else {
+            compareTo = (end.setZone("UTC") < filterTo.setZone("UTC"));
+        }
+        oTo = (compareTo || (filterTo >= start && filterTo < end));
+    }
+    return (oFrom && oTo);
+}
 
 
 /**
@@ -302,30 +337,53 @@ exports.list = (filter, options) => {
                 let to = true;
                 if(filter.dateTime.from) {
                     //filter low end
-                    from = r.or(
-                        date("dateTime")("start").inTimezone("Z").date()
+                    from = r.branch(
+                        r.and(//if the periods array exists...
+                            date.hasFields("periods"),
+                            date("periods").typeOf().eq("ARRAY"),
+                            date("periods").count().gt(0)
+                        ), 
+                        r.or( //then ignore the times
+                            date("dateTime")("start").inTimezone("Z").date()
+                                .ge(
+                                    r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                                ),
+                            r.ISO8601(filter.dateTime.from).inTimezone("Z")
+                                .during(
+                                    date("dateTime")("start").inTimezone("Z"), 
+                                    date("dateTime")("end").inTimezone("Z"),
+                                    {leftBound: "closed", rightBound: "open"}
+                                )
+                        ), 
+                        date("dateTime")("start").inTimezone("Z") //else filter with times 
                             .ge(
-                                r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
-                            ),
-                        r.ISO8601(filter.dateTime.from).inTimezone("Z")
-                            .during(
-                                date("dateTime")("start").inTimezone("Z"), 
-                                date("dateTime")("end").inTimezone("Z"),
-                                {leftBound: "closed", rightBound: "open"}
+                                r.ISO8601(filter.dateTime.from).inTimezone("Z")
                             )
                     );
+
                 }
                 if(filter.dateTime.to) {
-                    to = r.or(
-                        date("dateTime")("end").inTimezone("Z").date()
+                    to = r.branch(
+                        r.and(//if the periods array exists...
+                            date.hasFields("periods"),
+                            date("periods").typeOf().eq("ARRAY"),
+                            date("periods").count().gt(0)
+                        ), 
+                        r.or(//then ignore the times
+                            date("dateTime")("end").inTimezone("Z").date()
+                                .le(
+                                    r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
+                                ),
+                            r.ISO8601(filter.dateTime.to).inTimezone("Z")
+                                .during(
+                                    date("dateTime")("start").inTimezone("Z"), 
+                                    date("dateTime")("end").inTimezone("Z"),
+                                    {leftBound: "open", rightBound: "closed"}
+                                )
+                        ),
+                        date("dateTime")("end").inTimezone("Z") //else filter with times 
                             .le(
-                                r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
-                            ),
-                        r.ISO8601(filter.dateTime.to).inTimezone("Z")
-                            .during(
-                                date("dateTime")("start").inTimezone("Z"), 
-                                date("dateTime")("end").inTimezone("Z"),
-                                {leftBound: "open", rightBound: "closed"}
+                                r.ISO8601(filter.dateTime.to).inTimezone("Z")
                             )
                     );
                 }
@@ -364,30 +422,56 @@ exports.list = (filter, options) => {
                 }
 
                 //check dates for infinite recurring blackouts (no end date)
-
-                let irFrom = false; 
                 let irBetween = false;
-                if(filter.dateTime.from) {
-                    irFrom = date("dateTime")("start").inTimezone("Z").date()
-                        .le(
-                            r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                let irFrom = true; 
+                let irTo = true;
+                /*if(filter.dateTime.from && filter.dateTime.to) {
+                    irBetween = date("dateTime")("start").inTimezone("Z").date()
+                        .during(
+                            r.ISO8601(filter.dateTime.from).inTimezone("Z").date(), 
+                            r.ISO8601(filter.dateTime.to).inTimezone("Z").date(),
+                            {leftBound: "closed", rightBound: "open"}
                         );
+                }*/
+                if(filter.dateTime.from) {
+                    irFrom = r.branch(
+                        r.and(//if the periods array exists...
+                            date.hasFields("periods"),
+                            date("periods").typeOf().eq("ARRAY"),
+                            date("periods").count().gt(0)
+                        ), 
+                        date("dateTime")("start").inTimezone("Z").date() //then filter without time
+                            .ge(
+                                r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                            ),
+                        date("dateTime")("start").inTimezone("Z") //else filter tith time
+                            .ge(
+                                r.ISO8601(filter.dateTime.from).inTimezone("Z")
+                            )
+                    );
                 }
                 if(filter.dateTime.to) {
+                    irTo = date("dateTime")("start").inTimezone("Z").date()
+                        .lt(
+                            r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
+                        );
+                }
+                
+                /*if(filter.dateTime.from && filter.dateTime.to) {
                     irBetween = r.ISO8601(filter.dateTime.to).inTimezone("Z")
                         .during(
                             date("dateTime")("start").inTimezone("Z"), 
                             date("dateTime")("end").inTimezone("Z"),
                             {leftBound: "closed", rightBound: "open"}
                         );
-                }
+                }*/
                 
 
                 return r.branch(
                     date.hasFields({recurrence: "lastOccurrence"}),// if is a recurring event with a finite ammount of Occurrences
                     r.and(frFrom, frTo),//then filter as a finite recurring event,
                     date.hasFields({recurrence: "lastOccurrence"}).not().and(date.hasFields({recurrence: "rrule"})),  //else if the event is an infinite rule
-                    r.or(irFrom, irBetween),
+                    r.or(irBetween, r.and(irFrom, irTo)),
                     r.and(from, to)//else filter as a single event
                 );
             });
@@ -410,17 +494,19 @@ exports.list = (filter, options) => {
         return rQuery.run().then((docs) => {
             //convert from and to to js dates
             let dtFrom;
-            if(filter.dateTime.from) {
+            if(filter.dateTime && filter.dateTime.from) {
                 dtFrom = DateTime.fromISO(filter.dateTime.from);
             }
             let dtTo;
-            if(filter.dateTime.to) {
+            if(filter.dateTime && filter.dateTime.to) {
                 dtTo = DateTime.fromISO(filter.dateTime.to);
             }
             
-            //let dtFromPeriod
+            let allBlackouts = [];
             //first find every recurrence for recurring rules and check to see if it matches the filter
-            let docsr = docs.map((doc) => {
+            for(let x = 0; x < docs.length; x++) {
+                //console.log(x)
+                let doc = Object.assign({}, docs[x]);
                 //console.log(doc);
                 if(typeof doc.recurrence === "object") {
                     let dtstart = DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone});
@@ -437,93 +523,95 @@ exports.list = (filter, options) => {
                         err.status = 500;
                         return reject(err);
                     }
-                    let occurrences;
-                    //check if doc gets time from periods
-                    /*if(Array.isArray(doc.periods)) {
-                        occurrences = docRRule.after()
-                    }*/
                     
-                    /*if(dtTo.diff(dtFrom, "days") < 1) {
-                        occurrences = docRRule.between(dtFrom.set({hour: 0, minute: 0, second: 0, millisecond: 0}).toJSDate(), dtTo.set({hour: 0, minute: 0, second: 0, millisecond: 0}).toJSDate(), true);
-                    }*/
-                    //get recurring dates between filter dates
-                    //occurrences = docRRule.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
-                    //occurrences = docRRuleEnd.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
-
                     
-                    occurrences = docRRule.all((date, i) => { //generate occurrences
+                    
+                    
+                    let occurrences = docRRule.all((date, i) => { //generate occurrences
                         //console.log(date, i)
+
                         //check limit
                         if(i >= options.singleEventLimit) {
                             return false;
                         }
                         return true;
                         
-                    }).map((date) => { //filter the occurrences and map them
-                        //convert date to luxon 
-                        let dtStartCalc = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
-                        let dtEndCalc = dtStartCalc.plus({milliseconds: duration.milliseconds});
-                        //console.log(dtStartCalc, dtEndCalc, "estDates")
-                        let oFrom = true;
-                        let oTo = true;
-                        //if low limit 
-                        if(dtFrom) {
-                            oFrom = ((dtStartCalc.setZone("UTC").startOf("day") >= dtFrom.setZone("UTC").startOf("day")) || (dtFrom >= dtStartCalc && dtFrom < dtEndCalc));
+                    });
+
+                    if(options.singleEvents) { //return one document with original dates even if there are multiple occurences in the rule
+                        occurrences = occurrences.find((date) => {
+                            let dtStartCalc = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
+                            let dtEndCalc = dtStartCalc.plus({milliseconds: duration.milliseconds});
+
+                            if(filterDateRange({filterFrom: dtFrom, filterTo: dtTo, start: dtStartCalc, end: dtEndCalc, ignoreTime: true})) {//check if date is included in filter range
+                                return true;
+                            } else { //not included in filter range
+                                return false;
+                            }
+                        });
+                        if(occurrences) {
+                            allBlackouts.push(doc);
                         }
 
-                        if(dtTo) {
-                            //console.log(dtEndCalc, dtTo, "dtToDates")
-                            //console.log(dtEndCalc.setZone("UTC").set({hour: 0, minute: 0, second: 0, millisecond: 0}).toObject(), dtTo.setZone("UTC").set({hour: 0, minute: 0, second: 0, millisecond: 0}).toObject())
+                    } else { //filter and merge dates
+                        occurrences = occurrences.map((date) => { //filter the occurrences and map them
+                            //convert date to luxon 
+                            let dtStartCalc = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
+                            let dtEndCalc = dtStartCalc.plus({milliseconds: duration.milliseconds});
                             
-                            let oToLessThan = (dtEndCalc.setZone("UTC").startOf("day") <= dtTo.setZone("UTC").startOf("day"));
-                            let oToBetween = (dtTo >= dtStartCalc && dtTo < dtEndCalc);
-                            //console.log(oToLessThan, oToBetween, "dtTo")
-                            oTo = (oToLessThan || oToBetween);
-                        }
-                        //console.log(oFrom, oTo);
+                            
 
-                        //either merge the date and the document, or replace with null
-                        if(oFrom && oTo) {
-                            // merge
-                            console.log(dtStartCalc)
-                            return Object.assign(doc, {
-                                dateTime: {
-                                    start: dtStartCalc.toJSDate(),
-                                    end: dtEndCalc.toJSDate()
-                                }
-                            })
-                        } else {
-                            //skip
-                            return null;
-                        }
-                    }).filter((date) => { 
-                        if(date === null) {
-                            return false;
-                        }
-                        return true;
-                    })
+                            //either merge the date and the document, or replace with null
+                            if(filterDateRange({filterFrom: dtFrom, filterTo: dtTo, start: dtStartCalc, end: dtEndCalc, ignoreTime: true})) {
+                                // merge
+                                return Object.assign({}, doc, {
+                                    dateTime: {
+                                        start: dtStartCalc.toJSDate(),
+                                        end: dtEndCalc.toJSDate()
+                                    }
+                                });
+                            } else {
+                                //skip
+                                return null;
+                            }
+                        }).filter((date) => { //remove invalid dates from array
+                            
+                            if(date === null) {
+                                return false;
+                            }
+                            return true;
+                        });
 
-
-                    return occurrences;
-
+                        //merge occurrences into allBlackouts
+                        Array.prototype.push.apply(allBlackouts, occurrences);
+                    }
                 } else {
-                    return doc;
+                    //push non recurring events to allBlackouts
+                    allBlackouts.push(doc);
                 }
                 
-            });
+                
+            }
+
+            //if the document does not have periods do an exact date filter 
+            
 
 
-            return resolve({docs: docs, recurring: docsr});
+
+            return resolve({docs: docs, allBlackouts: allBlackouts});
 
         }).catch(reject);
     });
 };
+
 exports.list({
     dateTime: {
-        from: "2018-04-17T00:00:00-05:00",
-        to: "2018-09-18T20:00:00-05:00"
+        from: "2018-06-01T01:00:00-05:00",
+        to: "2018-06-01T11:00:00-05:00"
     }
     //periods: ["d"]
+}, {
+    singleEvents: false
 }).then((res) => {
     
     /*res.recurring = res.recurring.map((doc) => {
@@ -543,6 +631,14 @@ exports.list({
     console.error(err);
 });
 
+/*let tarr = [{a: 1},{a: 2},{a: 3}];
+let neww = [];
+for(let j = 0; j < tarr.length; j++) {
+    let tar = {...tarr[j]};
+    Object.assign(tar, {b: j})
+    neww.push(tar)
+}
+console.log(tarr, neww)*/
 
 
 exports.newBlackout = function(date, periods, userId, message, done) {
