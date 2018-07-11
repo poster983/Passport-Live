@@ -206,12 +206,12 @@ exports.insert = (blackout, options) => {
 /*exports.insert({
     dateTime: {
         timeZone: "America/Chicago",
-        date: "2018-06-25"
+        date: "2018-06-10"
         //start: "2018-06-19T10:00:00",
         //end: "2018-06-19T11:00:00"
     },
-    rrule: "RRULE:FREQ=WEEKLY",
-    periods: ["h", "g"]
+    //rrule: "RRULE:FREQ=WEEKLY",
+    periods: ["a", "d"]
 }).then((res) => {
     console.log(res)
 }).catch((err) => {
@@ -318,7 +318,7 @@ exports.list = (filter, options) => {
                 if(filter.dateTime.to) {
                     to = r.or(
                         date("dateTime")("end").inTimezone("Z").date()
-                            .lt(
+                            .le(
                                 r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
                             ),
                         r.ISO8601(filter.dateTime.to).inTimezone("Z")
@@ -330,7 +330,7 @@ exports.list = (filter, options) => {
                     );
                 }
 
-                //check dates for recurring blackouts
+                //check dates for finite recurring blackouts
                 let frFrom = true;
                 let frTo = true;
                 if(filter.dateTime.from) {
@@ -351,7 +351,7 @@ exports.list = (filter, options) => {
                 if(filter.dateTime.to) {
                     frTo = r.or(
                         date("recurrence")("lastOccurrence").inTimezone("Z").date()
-                            .lt(
+                            .le(
                                 r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
                             ),
                         r.ISO8601(filter.dateTime.to).inTimezone("Z")
@@ -363,9 +363,31 @@ exports.list = (filter, options) => {
                     );
                 }
 
+                //check dates for infinite recurring blackouts (no end date)
+
+                let irFrom = false; 
+                let irBetween = false;
+                if(filter.dateTime.from) {
+                    irFrom = date("dateTime")("start").inTimezone("Z").date()
+                        .le(
+                            r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                        );
+                }
+                if(filter.dateTime.to) {
+                    irBetween = r.ISO8601(filter.dateTime.to).inTimezone("Z")
+                        .during(
+                            date("dateTime")("start").inTimezone("Z"), 
+                            date("dateTime")("end").inTimezone("Z"),
+                            {leftBound: "closed", rightBound: "open"}
+                        );
+                }
+                
+
                 return r.branch(
                     date.hasFields({recurrence: "lastOccurrence"}),// if is a recurring event with a finite ammount of Occurrences
-                    r.and(frFrom, frTo),//then filter as a finite recurring event
+                    r.and(frFrom, frTo),//then filter as a finite recurring event,
+                    date.hasFields({recurrence: "lastOccurrence"}).not().and(date.hasFields({recurrence: "rrule"})),  //else if the event is an infinite rule
+                    r.or(irFrom, irBetween),
                     r.and(from, to)//else filter as a single event
                 );
             });
@@ -399,6 +421,7 @@ exports.list = (filter, options) => {
             //let dtFromPeriod
             //first find every recurrence for recurring rules and check to see if it matches the filter
             let docsr = docs.map((doc) => {
+                //console.log(doc);
                 if(typeof doc.recurrence === "object") {
                     let dtstart = DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone});
                     let dtend = DateTime.fromJSDate(doc.dateTime.end, {zone: doc.dateTime.timeZone});
@@ -414,7 +437,6 @@ exports.list = (filter, options) => {
                         err.status = 500;
                         return reject(err);
                     }
-
                     let occurrences;
                     //check if doc gets time from periods
                     /*if(Array.isArray(doc.periods)) {
@@ -427,27 +449,60 @@ exports.list = (filter, options) => {
                     //get recurring dates between filter dates
                     //occurrences = docRRule.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
                     //occurrences = docRRuleEnd.between(dtFrom.toJSDate(), dtTo.toJSDate(), true);
-                    occurrences = docRRule.all((date, i) => {
+
+                    
+                    occurrences = docRRule.all((date, i) => { //generate occurrences
+                        //console.log(date, i)
                         //check limit
                         if(i >= options.singleEventLimit) {
                             return false;
                         }
-                        //convert date to luxon 
-                        let dt = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
-                        let dtEnd = dt.plus({milliseconds: duration.milliseconds});
+                        return true;
                         
+                    }).map((date) => { //filter the occurrences and map them
+                        //convert date to luxon 
+                        let dtStartCalc = DateTime.fromJSDate(date, {zone: doc.dateTime.timeZone});
+                        let dtEndCalc = dtStartCalc.plus({milliseconds: duration.milliseconds});
+                        //console.log(dtStartCalc, dtEndCalc, "estDates")
                         let oFrom = true;
                         let oTo = true;
                         //if low limit 
                         if(dtFrom) {
-                            oFrom = ((dt.set({hour: 0, minute: 0, second: 0, millisecond: 0}) >= dtFrom.set({hour: 0, minute: 0, second: 0, millisecond: 0})) || (dtFrom >= dt && dtFrom < dtEnd));
+                            oFrom = ((dtStartCalc.setZone("UTC").startOf("day") >= dtFrom.setZone("UTC").startOf("day")) || (dtFrom >= dtStartCalc && dtFrom < dtEndCalc));
                         }
 
                         if(dtTo) {
-                            oTo = ((dtEnd.set({hour: 0, minute: 0, second: 0, millisecond: 0}) < dtTo.set({hour: 0, minute: 0, second: 0, millisecond: 0})) || (dtTo >= dt && dtTo < dtEnd));
+                            //console.log(dtEndCalc, dtTo, "dtToDates")
+                            //console.log(dtEndCalc.setZone("UTC").set({hour: 0, minute: 0, second: 0, millisecond: 0}).toObject(), dtTo.setZone("UTC").set({hour: 0, minute: 0, second: 0, millisecond: 0}).toObject())
+                            
+                            let oToLessThan = (dtEndCalc.setZone("UTC").startOf("day") <= dtTo.setZone("UTC").startOf("day"));
+                            let oToBetween = (dtTo >= dtStartCalc && dtTo < dtEndCalc);
+                            //console.log(oToLessThan, oToBetween, "dtTo")
+                            oTo = (oToLessThan || oToBetween);
                         }
-                        return (oFrom && oTo);
-                    });
+                        //console.log(oFrom, oTo);
+
+                        //either merge the date and the document, or replace with null
+                        if(oFrom && oTo) {
+                            // merge
+                            console.log(dtStartCalc)
+                            return Object.assign(doc, {
+                                dateTime: {
+                                    start: dtStartCalc.toJSDate(),
+                                    end: dtEndCalc.toJSDate()
+                                }
+                            })
+                        } else {
+                            //skip
+                            return null;
+                        }
+                    }).filter((date) => { 
+                        if(date === null) {
+                            return false;
+                        }
+                        return true;
+                    })
+
 
                     return occurrences;
 
@@ -458,32 +513,35 @@ exports.list = (filter, options) => {
             });
 
 
-            return resolve({docs: docs, docsr: docsr});
+            return resolve({docs: docs, recurring: docsr});
 
         }).catch(reject);
     });
 };
-
 exports.list({
     dateTime: {
-        from: "2018-06-24T00:00:00-05:00",
-        to: "2018-06-26T00:00:00-05:00"
+        from: "2018-04-17T00:00:00-05:00",
+        to: "2018-09-18T20:00:00-05:00"
     }
     //periods: ["d"]
 }).then((res) => {
-    res.docs = res.docs.map((doc) => {
-        return Object.assign(doc, {
-            dateTime: {
-                start: DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone}).toISO(),
-                end: DateTime.fromJSDate(doc.dateTime.end, {zone: doc.dateTime.timeZone}).toISO()
-            }
-        });
-        
-    });
+    
+    /*res.recurring = res.recurring.map((doc) => {
+        console.log(doc)
+        if(Object.keys(res.recurring).length > 0) {
+            return Object.assign(doc, {
+                dateTime: {
+                    start: DateTime.fromJSDate(doc.dateTime.start, {zone: doc.dateTime.timeZone}).toISO(),
+                    end: DateTime.fromJSDate(doc.dateTime.end, {zone: doc.dateTime.timeZone}).toISO()
+                }
+            });
+        } else {return doc;}
+            
+    });*/
     console.log(util.inspect(res, { depth: 5 }));
 }).catch((err) => {
     console.error(err);
-})
+});
 
 
 

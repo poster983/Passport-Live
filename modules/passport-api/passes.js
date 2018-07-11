@@ -299,7 +299,7 @@ exports.get = function (filter, options) {
         if(filter.date && typeCheck("Date", filter.date.to)) {
             filter.date.to = moment(filter.date.to).toISOString();
         }
-
+        console.log(moment(filter.date.to).toISOString())
         //Start query
         let query = r.table("passes");
 
@@ -346,7 +346,7 @@ exports.get = function (filter, options) {
                 if(filter.date.to) {
                     to = r.or(
                         date("date")("end").inTimezone("Z").date()
-                            .lt(
+                            .le(
                                 r.ISO8601(filter.date.to).inTimezone("Z").date()
                             ),
                         r.ISO8601(filter.date.to).inTimezone("Z")
