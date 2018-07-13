@@ -39,11 +39,14 @@ let {DateTime} = require("luxon");
  * @property {String} name - A friendly name for the schedule
  * @property {Date} created - The date this Schedule was created
  * @property {Date} [updated] - the date this Schedule was changed
+ * @property {String} timeZone - an IANA timezone string.
  * @property {Object[]} schedule - An object with keys 
  * @property {String} schedule[].period - A valid period constant
- * @property {Object} schedule[].time
- * @property {Object} schedule[].time.start - The start time in GMT+0 24Hour time
- * @property {Object} schedule[].time.end - The end time in GMT+0 24Hour time
+ * @property {Object[]} schedule[].variation - a list of diffrent variations of this period.
+ * @property {String} [schedule[].variation[].suffix] - The suffex applied to the period constant in order to identify it. If blank, the variation will be the default for the period
+ * @property {Object} schedule[].variation[].time
+ * @property {Date} schedule[].variation[].time.start - The start time in GMT+0 24Hour time
+ * @property {Date} schedule[].variation[].time.end - The end time in GMT+0 24Hour time
  * @property {(RRuleRFC|RRuleRFC[])} rrule - array of valid rrules Supports RRUleSet
  */
 
