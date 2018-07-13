@@ -32,20 +32,19 @@ let {DateTime} = require("luxon");
 
 //TYPES 
 /**
- * A Schedule Definition object
+ * A School wide Schedule object
  * @global
- * @typedef {Object} ScheduleDefinition
+ * @typedef {Object} SchoolSchedule
  * @property {String} id - RethinkDB doc id (DB Set)
  * @property {String} name - A friendly name for the schedule
- * @property {datetime} created - The date this definition was created
- * @property {datetime} [updated] - the date this definition was changed
- * @property {Array<Object>} schedule - An object with keys 
- * @property {Object} schedule.x - The object found within the schedule array
- * @property {String} schedule.x.period - A valid period constant
- * @property {Object} schedule.x.time
- * @property {Object} schedule.x.time.start - The start time in GMT+0 24Hour time
- * @property {Object} schedule.x.time.end - The end time in GMT+0 24Hour time
- * @property {RRuleRFC[]} rrule - array of valid rrules Supports RRUleSet
+ * @property {Date} created - The date this Schedule was created
+ * @property {Date} [updated] - the date this Schedule was changed
+ * @property {Object[]} schedule - An object with keys 
+ * @property {String} schedule[].period - A valid period constant
+ * @property {Object} schedule[].time
+ * @property {Object} schedule[].time.start - The start time in GMT+0 24Hour time
+ * @property {Object} schedule[].time.end - The end time in GMT+0 24Hour time
+ * @property {(RRuleRFC|RRuleRFC[])} rrule - array of valid rrules Supports RRUleSet
  */
 
 /** 

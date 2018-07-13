@@ -61,17 +61,11 @@ module.exports = () => {
                         if(!tables.includes("permissionKeys")) {
                             tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("permissionKeys").run(conn));
                         }
-                        if(!tables.includes("scheduleDefinitions")) {
-                            tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("scheduleDefinitions").run(conn));
-                        }
-                        if(!tables.includes("scheduleCalendar")) {
-                            tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("scheduleCalendar").run(conn));
-                        }
                         if(!tables.includes("userSchedules")) {
                             tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("userSchedules").run(conn));
                         }
-                        if(!tables.includes("scheduleRepeating")) {
-                            tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("scheduleRepeating").run(conn));
+                        if(!tables.includes("schedules")) {
+                            tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("schedules").run(conn));
                         }
                         if(!tables.includes("apiKeys")) {
                             tableArr.push(r.db(config.get("rethinkdb.database")).tableCreate("apiKeys").run(conn));

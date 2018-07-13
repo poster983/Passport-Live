@@ -595,7 +595,7 @@ exports.list = (filter, options) => {
     });
 };
 
-exports.list({
+/*exports.list({
     dateTime: {
         from: "2018-06-07T20:00:00-05:00",
         to: "2018-06-09T11:00:00-05:00"
@@ -616,11 +616,11 @@ exports.list({
             });
         } else {return doc;}
             
-    });*/
+    });*
     console.log(util.inspect(res, { depth: 5 }));
 }).catch((err) => {
     console.error(err);
-});
+});*/
 
 /*let tarr = [{a: 1},{a: 2},{a: 3}];
 let neww = [];
