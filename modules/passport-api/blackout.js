@@ -278,8 +278,8 @@ function filterDateRange({filterFrom, filterTo, start, end, ignoreTime}) {
 /**
  * @param {Object} [filter] 
  * @param {Object} [filter.dateTime] 
- * @param {(Date|ISOString)} [filter.dateTime.from] 
- * @param {(Date|ISOString)} [filter.dateTime.to] 
+ * @param {(Date|ISOString)} [filter.dateTime.from] - Must be before to
+ * @param {(Date|ISOString)} [filter.dateTime.to] - Must be after from
  * @param {String[]} [filter.periods] 
  * @param {String} [filter.accountID] 
  * @param {Object} [options]
@@ -316,6 +316,16 @@ exports.list = (filter, options) => {
         if(filter.dateTime && typeCheck("Date", filter.dateTime.to)) {
             filter.dateTime.to = moment(filter.dateTime.to).toISOString();
         }
+
+        //check if filter times are in the right order
+        if(filter.dateTime && filter.dateTime.from && filter.dateTime.to) {
+            if(DateTime.fromISO(filter.dateTime.from) >= DateTime.fromISO(filter.dateTime.to)) {
+                let err = new Error("Invalid DateTime range: dateTime.from must be before dateTime.to");
+                err.status = 400;
+                return reject(err);
+            }
+        }
+
         let rQuery = r.table("blackouts");
         
         //filter accountID
@@ -382,7 +392,7 @@ exports.list = (filter, options) => {
                                 )
                         ),
                         date("dateTime")("end").inTimezone("Z") //else filter with times 
-                            .le(
+                            .lt(
                                 r.ISO8601(filter.dateTime.to).inTimezone("Z")
                             )
                     );
@@ -422,56 +432,31 @@ exports.list = (filter, options) => {
                 }
 
                 //check dates for infinite recurring blackouts (no end date)
-                let irBetween = false;
-                let irFrom = true; 
                 let irTo = true;
-                /*if(filter.dateTime.from && filter.dateTime.to) {
-                    irBetween = date("dateTime")("start").inTimezone("Z").date()
-                        .during(
-                            r.ISO8601(filter.dateTime.from).inTimezone("Z").date(), 
-                            r.ISO8601(filter.dateTime.to).inTimezone("Z").date(),
-                            {leftBound: "closed", rightBound: "open"}
-                        );
-                }*/
-                if(filter.dateTime.from) {
-                    irFrom = r.branch(
+                if(filter.dateTime.to) {
+                    irTo = r.branch(
                         r.and(//if the periods array exists...
                             date.hasFields("periods"),
                             date("periods").typeOf().eq("ARRAY"),
                             date("periods").count().gt(0)
                         ), 
                         date("dateTime")("start").inTimezone("Z").date() //then filter without time
-                            .ge(
-                                r.ISO8601(filter.dateTime.from).inTimezone("Z").date()
+                            .le(
+                                r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
                             ),
                         date("dateTime")("start").inTimezone("Z") //else filter tith time
-                            .ge(
-                                r.ISO8601(filter.dateTime.from).inTimezone("Z")
+                            .lt(
+                                r.ISO8601(filter.dateTime.to).inTimezone("Z")
                             )
                     );
                 }
-                if(filter.dateTime.to) {
-                    irTo = date("dateTime")("start").inTimezone("Z").date()
-                        .lt(
-                            r.ISO8601(filter.dateTime.to).inTimezone("Z").date()
-                        );
-                }
-                
-                /*if(filter.dateTime.from && filter.dateTime.to) {
-                    irBetween = r.ISO8601(filter.dateTime.to).inTimezone("Z")
-                        .during(
-                            date("dateTime")("start").inTimezone("Z"), 
-                            date("dateTime")("end").inTimezone("Z"),
-                            {leftBound: "closed", rightBound: "open"}
-                        );
-                }*/
                 
 
                 return r.branch(
                     date.hasFields({recurrence: "lastOccurrence"}),// if is a recurring event with a finite ammount of Occurrences
                     r.and(frFrom, frTo),//then filter as a finite recurring event,
                     date.hasFields({recurrence: "lastOccurrence"}).not().and(date.hasFields({recurrence: "rrule"})),  //else if the event is an infinite rule
-                    r.or(irBetween, r.and(irFrom, irTo)),
+                    irTo,//r.or(irBetween, r.and(irFrom, irTo)),
                     r.and(from, to)//else filter as a single event
                 );
             });
@@ -484,7 +469,7 @@ exports.list = (filter, options) => {
                 return r.branch(
                     doc.hasFields("periods").and(doc("periods").typeOf().eq("ARRAY")),//if  periods exists and is an array
                     r.expr(filter.periods).default([]).setIntersection(doc("periods")).count().ge(1), // then filter by periods.  filter.periods contains at least one value in doc("periods")
-                    true
+                    true //if no periods array, pass it down
                 );
             });
             delete filter.period;
@@ -593,8 +578,14 @@ exports.list = (filter, options) => {
                 
             }
 
-            //if the document does not have periods do an exact date filter 
             
+            //if the document has periods, find the correct date and time for the start and end times. if it dos not have periods, find the active periods for the time range.
+            /*for(let x = 0; x < allBlackouts.length; x++) {
+                let doc = allBlackouts[x];
+                if(Array.isArray(doc.periods) && doc.periods.length > 0) { //if the document has periods, find the correct date and time for the start and end times
+
+                }
+            }*/
 
 
 
@@ -606,8 +597,8 @@ exports.list = (filter, options) => {
 
 exports.list({
     dateTime: {
-        from: "2018-06-01T01:00:00-05:00",
-        to: "2018-06-01T11:00:00-05:00"
+        from: "2018-06-07T20:00:00-05:00",
+        to: "2018-06-09T11:00:00-05:00"
     }
     //periods: ["d"]
 }, {
