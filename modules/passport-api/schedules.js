@@ -37,8 +37,8 @@ let {DateTime} = require("luxon");
  * @typedef {Object} SchoolSchedule
  * @property {String} id - RethinkDB doc id (DB Set)
  * @property {String} name - A friendly name for the schedule
- * @property {Date} created - The date this Schedule was created
- * @property {Date} [updated] - the date this Schedule was changed
+ * @property {Date} created - The date this Schedule was created (DB Set)
+ * @property {Date} [updated] - the date this Schedule was changed (DB Set)
  * @property {String} timeZone - an IANA timezone string.
  * @property {Object[]} schedule - An object with keys 
  * @property {String} schedule[].period - A valid period constant
@@ -122,9 +122,20 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
 /**
  * Creates a new Schedule Definition
  * @link module:js/schedules
+ * @param {Object} schedule
+ * @param {String} schedule.name - A friendly name for the schedule
+ * @param {String} schedule.timeZone - an IANA timezone string.
+ * @param {Object[]} schedule.schedule - An object with keys 
+ * @param {String} schedule.schedule[].period - A valid period constant
+ * @param {Object[]} schedule.schedule[].variation - a list of diffrent variations of this period.
+ * @param {String} [schedule.schedule[].variation[].suffix] - The suffex applied to the period constant in order to identify it. If blank or null, the variation will be the default for the period
+ * @param {Object} schedule.schedule[].variation[].time
+ * @param {Date} schedule.schedule[].variation[].time.start - The start time in GMT+0 24Hour time
+ * @param {Date} schedule.schedule[].variation[].time.end - The end time in GMT+0 24Hour time
+ * @param {(RRuleRFC|RRuleRFC[])} schedule.rrule - array of valid rrules Supports RRUleSet
  */
 exports.new = (schedule) => {
-
+    
 };
 
 /**
@@ -133,7 +144,7 @@ exports.new = (schedule) => {
  * @param {(Date|ISOString)} dateTime - 
  * @param {Object} [options] 
  * @param {Boolean} [options.returnSelection=false] - will return an un run RethinkDBDash query object. 
- * @returns {(Promise|Selection[])} - Returns a selection when options.returnSelection is true. Promise will return a Schedule object and a rrule ICAL RFC string
+ * @returns {(Promise.<SchoolSchedule>|Selection[])} - Returns a selection when options.returnSelection is true. Promise will return a Schedule object and a rrule ICAL RFC string
  * @throws {(TypeError|ReQL|Error)}
  */
 exports.on = (dateTime, options) => {

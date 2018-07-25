@@ -28,6 +28,7 @@ let DeepKey = require("deep-key");
 
 /**
   * Lists all possible period IDs 
+  * @link module:js/periods
   * @returns {String[]}
   */
 exports.listPeriodIDs = () => {
@@ -67,7 +68,7 @@ exports.listPeriodIDs = () => {
 
 /**
  * Gets the period object from the configs 
- * @link module:js/utils
+ * @link module:js/periods
  * @param {String} id - period id (EX. "a", "lunch.1")
  * @returns {Object}
  * @throws {ReferenceError}

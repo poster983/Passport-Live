@@ -102,12 +102,12 @@
 			"d": {"name": "D"},
 			"e": {"variation": {
 				"1": {"name": "E1"},
-				"2": {"name": "E2"}
+				"2": {"name": "E2"},
 			}},
 			"lunch": {"variation": {
 				"1": {"name": "1st Lunch"},
 				"2": {"name": "2nd Lunch", "variation": {
-					"z": {"name": "Zst Lunch"}
+					"t": {"name": "Test period"}
 				}}
 			}},
 			"f": {"name": "F"},
