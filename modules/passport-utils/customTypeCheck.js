@@ -17,10 +17,11 @@ Passport-Live is a modern web app for schools that helps them manage passes.
 
 email: hi@josephhassell.com
 */
-var securityJS = require("../passport-api/security.js");
-var config = require("config");
-var typeCheck = require("type-check");
-var moment = require("moment");
+let securityJS = require("../passport-api/security.js");
+let config = require("config");
+let typeCheck = require("type-check");
+let moment = require("moment");
+let periods = require("./periods.js");
 
 module.exports = {
     customTypes: {
@@ -47,9 +48,13 @@ module.exports = {
         period: {
             typeOf: "String",
             validate: function(x) {
-                return config.get("schedule.periods").includes(x);
+                try {
+                    return typeof periods.getPeriod(x) === "object"
+                } catch(e) {
+                    return false;
+                }
             }
         },
         //rrule: {}
     }
-}
+};

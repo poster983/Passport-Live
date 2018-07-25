@@ -25,12 +25,16 @@ email: hi@josephhassell.com
 var jwt = require("jsonwebtoken");
 var shortid = require("shortid");
 var config = require("config");
+let configs = require("./config.js"); //new config wrapper
 let {DateTime} = require("luxon");
 var uaParser = require("ua-parser-js");
 let {RRule, RRuleSet, rrulestr} = require("rrule");
 
+
 exports.typeCheck = require("./customTypeCheck.js");
 exports.rateLimit = require("./rateLimit.js");
+
+
 
 /**
 * Takes an Object and returns a URL Query string
@@ -585,9 +589,6 @@ exports.rruleToDatabase = (start, rrule) => {
         };
     }
 };
-/*let rru = "FREQ=WEEKLY;DTSTART=20120201T093000Z;INTERVAL=5;BYDAY=MO,FR;BYHOUR=2,4";
-//
-console.log(exports.validateRRule(rru));
-if(exports.validateRRule(rru).valid) {
-    console.log(RRule.fromString(rru).all());
-}*/
+
+
+

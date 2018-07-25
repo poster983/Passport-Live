@@ -94,7 +94,28 @@
 		}
 	},
 	"schedule": { 
-		"periods": ["a", "b", "c", "d", "blockE", "e1", "blockLunch", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed during school year
+		//"periods": ["a", "b", "c", "d", "blockE", "e1", "blockLunch", "lunch2", "lunch1", "e2", "f", "g", "h", "flex", "m", "home"],//Constant Period names for the schedule feature.   Weird things my happen if changed during school year
+		"periods": { //"." not allowed
+			"a": {"name": "A"}, 
+			"b": {"name": "B"},
+			"c": {"name": "C"},
+			"d": {"name": "D"},
+			"e": {"variation": {
+				"1": {"name": "E1"},
+				"2": {"name": "E2"}
+			}},
+			"lunch": {"variation": {
+				"1": {"name": "1st Lunch"},
+				"2": {"name": "2nd Lunch", "variation": {
+					"z": {"name": "Zst Lunch"}
+				}}
+			}},
+			"f": {"name": "F"},
+			"g": {"name": "G"},
+			"h": {"name": "H"},
+			"flex": {"name": "Flex"},
+			"home": {"name": "Homeroom"}
+		},
 		"daysOfTheWeek": { //Choose what days have school
 			"monday": true,
 			"tuesday": true,
