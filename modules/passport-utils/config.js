@@ -74,12 +74,14 @@ exports.has = (key, domain) => {
         throw e;
     }
     console.log(returner, "test")
-    let hi =  returner.periods
+    let hi = returner.periods;
+    hi.test = true;
     return hi;
 };
 
-function test2() {
+async function test2() {
     console.log(test());
+    console.log(await test())
 }
 
 test2();*/

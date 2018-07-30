@@ -80,4 +80,6 @@ exports.getPeriod = (id) => {
         throw new ReferenceError(`${id} is not a defined period.`);
     }
 };
-//console.log(exports.getPeriod("e.1"));
+//console.log(exports.getPeriod("a"));
+
+

@@ -40,13 +40,13 @@ let {DateTime} = require("luxon");
  * @property {Date} created - The date this Schedule was created (DB Set)
  * @property {Date} [updated] - the date this Schedule was changed (DB Set)
  * @property {String} timeZone - an IANA timezone string.
- * @property {Object[]} schedule - An object with keys 
- * @property {String} schedule[].period - A valid period constant
- * @property {Object[]} schedule[].variation - a list of diffrent variations of this period.
- * @property {String} [schedule[].variation[].suffix] - The suffex applied to the period constant in order to identify it. If blank or null, the variation will be the default for the period
- * @property {Object} schedule[].variation[].time
- * @property {Date} schedule[].variation[].time.start - The start time in GMT+0 24Hour time
- * @property {Date} schedule[].variation[].time.end - The end time in GMT+0 24Hour time
+ * @property {Object[]} periods
+ * @property {String} periods[].id - A valid period id
+ * @property {Object[]} periods[].variation - a list of diffrent variations of this period.
+ * @property {String} [periods[].variation[].id] - If blank or null, the variation will be the default for the period
+ * @property {Object} periods[].variation[].time
+ * @property {Date} periods[].variation[].time.start - The start time in GMT+0 24Hour time
+ * @property {Date} periods[].variation[].time.end - The end time in GMT+0 24Hour time
  * @property {(RRuleRFC|RRuleRFC[])} rrule - array of valid rrules Supports RRUleSet
  */
 
@@ -125,18 +125,48 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
  * @param {Object} schedule
  * @param {String} schedule.name - A friendly name for the schedule
  * @param {String} schedule.timeZone - an IANA timezone string.
- * @param {Object[]} schedule.schedule - An object with keys 
- * @param {String} schedule.schedule[].period - A valid period constant
- * @param {Object[]} schedule.schedule[].variation - a list of diffrent variations of this period.
- * @param {String} [schedule.schedule[].variation[].suffix] - The suffex applied to the period constant in order to identify it. If blank or null, the variation will be the default for the period
- * @param {Object} schedule.schedule[].variation[].time
- * @param {Date} schedule.schedule[].variation[].time.start - The start time in GMT+0 24Hour time
- * @param {Date} schedule.schedule[].variation[].time.end - The end time in GMT+0 24Hour time
- * @param {(RRuleRFC|RRuleRFC[])} schedule.rrule - array of valid rrules Supports RRUleSet
+ * @property {Object[]} schedule.periods
+ * @property {String} schedule.periods[].id - A valid period id
+ * @property {Object[]} schedule.periods[].variation - a list of diffrent variations of this period.
+ * @property {String} [schedule.periods[].variation[].id] - If blank or null, the variation will be the default for the period
+ * @property {Object} schedule.periods[].variation[].time
+ * @property {(DateTime|String)} schedule.periods[].variation[].time.start - The start time in GMT+0 24Hour time
+ * @property {(DateTime|String)} schedule.periods[].variation[].time.end - The end time in GMT+0 24Hour time
+ * @returns {Promise.<Object, Error>} - Rethinkdb Transaction 
+ * @throws {(TypeError|ReQL|Error)}
  */
 exports.new = (schedule) => {
     
 };
+
+
+/**
+     * Functions for manupulating the occurences of SchoolSchedules 
+     * @name occurrence
+     * @inner
+     * @private
+     * @memberof module:js/schedules
+     * @property {Object} occurrence
+     */
+var occurrence = {};
+
+/**
+ * Creates a new occurence for a SchoolSchedule
+ * @function
+ * @param {String} scheduleId - SchoolSchedule ID
+ * @param {Object} data
+ * @param {(RRuleRFC|RRuleRFC[])} data.rrule - array of valid rrules Supports RRUleSet
+ * @param {(Date|ISOString)} data.startDate - the first occurence.  Ignores time. Uses timezone from SchoolSchedule
+ * @param {Number} [data.importance=0] - If there is more than one schedule occuring on the same day, the one with the higher importance ranking will take priority. (falls back to the date the occurence rule was created)
+ * @memberof module:js/schedules
+ * @returns {Promise.<Object, Error>} - Rethinkdb Transaction 
+ * @throws {(TypeError|ReQL|Error)}
+ */
+occurrence.new = (scheduleId, data) => {
+    
+};
+
+exports.occurrence = occurrence;
 
 /**
  * Get the schedule for a given datetime 
@@ -157,3 +187,44 @@ exports.on = (dateTime, options) => {
     //r.table 
 };
 
+
+/*let periodID = "e.1";
+
+//periodID.replace(".", ".variation.").split(".");
+
+//let pluckValue = 
+
+let tree = {
+  a: {
+    teacherID: "hkdjfsh"
+  }, 
+  e: {
+    variation: {
+      "1": {
+        teacherID: "sssss"
+      },
+      "2": {
+        teacherID: "dsfa"
+      }
+    }
+  }
+};
+
+let expandedIDArray = r(periodID).split('.').reduce(
+  function(l, r){
+    return r.add('.variation.').add(l)
+  }
+).split('.');
+
+
+
+
+
+let pluckObject = expandedIDArray.fold(true, function(acc, element) {
+  return r.object(element, acc)
+});
+
+
+
+r.expr(tree).pluck(pluckObject)
+*/

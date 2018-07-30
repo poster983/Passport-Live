@@ -168,6 +168,7 @@ exports.insert = (blackout, options) => {
             error.status = 400;
             return reject(error);
         }
+        //console.log(blackout.dateTime.start)
         //convert times to rethinkdb times 
         insert.dateTime = {
             start: r.ISO8601(blackout.dateTime.start.toISO()).inTimezone("Z"),
