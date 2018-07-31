@@ -86,12 +86,18 @@ exports.insert = (blackout, options) => {
                 insert.periods = blackout.periods;
             }
         }
-
+        
         //check blackout.dateTime 
         if(typeof blackout.dateTime === "object") {
             //check for dateTime.date
             if((blackout.dateTime.start || blackout.dateTime.end) && blackout.dateTime.date) {
                 let error = Error("Invalid dateTime: \"dateTime.start\" and \"dateTime.end\" are incompatible with \"dateTime.date\"");
+                error.status = 400;
+                return reject(error);
+            }
+            //check for timezone 
+            if(typeof blackout.dateTime.timeZone !== "string" || blackout.dateTime.timeZone.length > 0) {
+                let error = TypeError("\"blackout.dateTime.timeZone\" must be a valid IANA timezone string");
                 error.status = 400;
                 return reject(error);
             }
@@ -206,7 +212,7 @@ exports.insert = (blackout, options) => {
 };
 /*exports.insert({
     dateTime: {
-        timeZone: "America/Chicago",
+        //timeZone: "America/Chicago",
         //date: "2018-06-05"
         start: "2018-05-01T08:00:00",
         end: "2018-05-01T09:30:00"

@@ -49,7 +49,7 @@ module.exports = {
             typeOf: "String",
             validate: function(x) {
                 try {
-                    return typeof periods.getPeriod(x) === "object"
+                    return typeof periods.getPeriod(x) === "object";
                 } catch(e) {
                     return false;
                 }

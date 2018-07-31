@@ -25,6 +25,8 @@ let r = db.dash();
 var config = require("config");
 var moment = require("moment");
 let {DateTime} = require("luxon");
+let typeCheck = require("type-check").typeCheck;
+let utils = require("../passport-utils/index.js");
 
 /** 
 * @module js/schedules
@@ -41,12 +43,10 @@ let {DateTime} = require("luxon");
  * @property {Date} [updated] - the date this Schedule was changed (DB Set)
  * @property {String} timeZone - an IANA timezone string.
  * @property {Object[]} periods
- * @property {String} periods[].id - A valid period id
- * @property {Object[]} periods[].variation - a list of diffrent variations of this period.
- * @property {String} [periods[].variation[].id] - If blank or null, the variation will be the default for the period
- * @property {Object} periods[].variation[].time
- * @property {Date} periods[].variation[].time.start - The start time in GMT+0 24Hour time
- * @property {Date} periods[].variation[].time.end - The end time in GMT+0 24Hour time
+ * @property {String} periods[].id - A valid period id (EX: "e.1" or "a")
+ * @property {Object} periods[].time
+ * @property {Date} periods[].time.start - The start time in GMT+0 24Hour time
+ * @property {Date} periods[].time.end - The end time in GMT+0 24Hour time
  * @property {(RRuleRFC|RRuleRFC[])} rrule - array of valid rrules Supports RRUleSet
  */
 
@@ -126,19 +126,47 @@ exports.getActivePeriodsAtDateTime = function(dateTime, done) {
  * @param {String} schedule.name - A friendly name for the schedule
  * @param {String} schedule.timeZone - an IANA timezone string.
  * @property {Object[]} schedule.periods
- * @property {String} schedule.periods[].id - A valid period id
- * @property {Object[]} schedule.periods[].variation - a list of diffrent variations of this period.
- * @property {String} [schedule.periods[].variation[].id] - If blank or null, the variation will be the default for the period
- * @property {Object} schedule.periods[].variation[].time
- * @property {(DateTime|String)} schedule.periods[].variation[].time.start - The start time in GMT+0 24Hour time
- * @property {(DateTime|String)} schedule.periods[].variation[].time.end - The end time in GMT+0 24Hour time
+ * @property {String} schedule.periods[].id - A valid period id (EX: "e.1" or "a")
+ * @property {Object} schedule.periods[].time
+ * @property {String} schedule.periods[].time.start - The start time in GMT+0 24Hour time
+ * @property {String} schedule.periods[].time.end - The end time in GMT+0 24Hour time
  * @returns {Promise.<Object, Error>} - Rethinkdb Transaction 
  * @throws {(TypeError|ReQL|Error)}
  */
 exports.new = (schedule) => {
-    
+    return new Promise((resolve, reject) => {
+        if(typeof schedule !== "object") {
+            let err = new TypeError("First argument expected to be an Object");
+            err.status = 400;
+            return reject(err);
+        }
+        if(typeof schedule.name !== "string") {
+            let err = new TypeError("\"schedule.name\" expected to be an String");
+            err.status = 400;
+            return reject(err);
+        }
+
+        //check periods array 
+
+        if(!typeCheck("[{id: period, ...}]"), schedule.periods, utils.typeCheck) {
+            let err = new TypeError("\"schedule.periods[].id\" expected to be an String and a valid period ID");
+            err.status = 400;
+            return reject(err);
+        }
+    });
 };
 
+exports.new({
+    name: "Hi",
+    periods: [
+        {id: "a"}
+    ]
+}).then((res) => {
+    console.log(res)
+}).catch((err) => {
+    console.error(err);
+})
+//console.log(typeCheck("period", "as", utils.typeCheck))
 
 /**
      * Functions for manupulating the occurences of SchoolSchedules 
