@@ -19,9 +19,9 @@ email: hi@josephhassell.com
 */
 let securityJS = require("../passport-api/security.js");
 let config = require("config");
-let typeCheck = require("type-check");
+//let typeCheck = require("type-check");
 let moment = require("moment");
-let periods = require("./periods.js");
+//let periods = require("./periods.js");
 
 module.exports = {
     customTypes: {
@@ -48,11 +48,7 @@ module.exports = {
         period: {
             typeOf: "String",
             validate: function(x) {
-                try {
-                    return typeof periods.getPeriod(x) === "object";
-                } catch(e) {
-                    return false;
-                }
+                return config.has("schedule.periods."+x);
             }
         },
         //rrule: {}

@@ -43,7 +43,7 @@ let utils = require("../passport-utils/index.js");
  * @property {Date} [updated] - the date this Schedule was changed (DB Set)
  * @property {String} timeZone - an IANA timezone string.
  * @property {Object[]} periods
- * @property {String} periods[].id - A valid period id (EX: "e.1" or "a")
+ * @property {String} periods[].id - A valid period id (EX: "e1" or "a")
  * @property {Object} periods[].time
  * @property {Date} periods[].time.start - The start time in GMT+0 24Hour time
  * @property {Date} periods[].time.end - The end time in GMT+0 24Hour time

@@ -100,16 +100,10 @@
 			"b": {"name": "B"},
 			"c": {"name": "C"},
 			"d": {"name": "D"},
-			"e": {"variation": {
-				"1": {"name": "E1"},
-				"2": {"name": "E2"},
-			}},
-			"lunch": {"variation": {
-				"1": {"name": "1st Lunch"},
-				"2": {"name": "2nd Lunch", "variation": {
-					"t": {"name": "Test period"}
-				}}
-			}},
+			"e1": {"name": "E1"},
+			"e2": {"name": "E2"},
+			"lunch1": {"name": "1st Lunch"},
+			"lunch2": {"name": "2nd Lunch"},
 			"f": {"name": "F"},
 			"g": {"name": "G"},
 			"h": {"name": "H"},
