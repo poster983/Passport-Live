@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.13.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -35,3 +35,52 @@ patch:
         patched: '2017-10-02T23:19:10.111Z'
     - loader-message > mocha > debug:
         patched: '2017-10-02T23:19:10.111Z'
+  'npm:hoek:20180212':
+    - forever > forever-monitor > chokidar > fsevents > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - mjml > mjml-cli > chokidar > fsevents > node-pre-gyp > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > request > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - forever > forever-monitor > chokidar > fsevents > node-pre-gyp > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > request > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - mjml > mjml-cli > chokidar > fsevents > node-pre-gyp > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > hawk > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - mjml > mjml-cli > chokidar > fsevents > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - forever > forever-monitor > chokidar > fsevents > node-pre-gyp > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > request > hawk > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - nodemon > chokidar > fsevents > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - forever > forever-monitor > chokidar > fsevents > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - mjml > mjml-cli > chokidar > fsevents > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - excel-as-json > excel > libxmljs > node-pre-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
+    - webpack > watchpack > chokidar > fsevents > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2018-12-10T08:52:34.243Z'
