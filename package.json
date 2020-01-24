@@ -83,7 +83,7 @@
     "luxon": "^1.0.0",
     "mjml": "^3.3.5",
     "moment": "^2.18.1",
-    "morgan": "~1.9.0",
+    "morgan": "~1.9.1",
     "ms": "^2.0.0",
     "mustache-express": "1.2.4",
     "node-sass-middleware": "0.9.8",
