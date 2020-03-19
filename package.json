@@ -71,7 +71,7 @@
     "express-brute": "^1.0.1",
     "express-session": "latest",
     "flat": "^4.0.0",
-    "forever": "^0.15.3",
+    "forever": "^2.0.0",
     "geopattern": "^1.2.3",
     "greenlock-express": "^2.1.4",
     "html-loader": "^0.5.5",
