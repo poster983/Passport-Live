@@ -62,7 +62,7 @@
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "cookie-session": "^2.0.0-beta.2",
-    "copy-webpack-plugin": "^4.4.1",
+    "copy-webpack-plugin": "^5.0.5",
     "cors": "^2.8.3",
     "debug": "~2.6.0",
     "deep-key": "^0.9.9",
