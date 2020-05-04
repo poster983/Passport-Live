@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.14.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -35,3 +35,236 @@ patch:
         patched: '2017-10-02T23:19:10.111Z'
     - loader-message > mocha > debug:
         patched: '2017-10-02T23:19:10.111Z'
+  SNYK-JS-LODASH-567746:
+    - mjml > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - webpack-merge > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - webpack > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-accordion > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-button > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-carousel > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-cli > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-column > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-divider > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-group > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-head-attributes > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-head-font > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-hero > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-html > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-image > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-list > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-text > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-section > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-social > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - snyk > inquirer > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - snyk > snyk-resolve-deps > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-accordion > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-button > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-carousel > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-cli > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-column > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-container > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-divider > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-group > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-hero > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-html > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-image > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-table > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-list > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-text > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-section > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-raw > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-social > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-spacer > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-image > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-text > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-section > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-section > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - node-sass-middleware > node-sass > sass-graph > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-accordion > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-button > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-carousel > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-cli > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-column > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-container > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-divider > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-group > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-hero > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-html > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-image > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-table > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-list > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-text > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-section > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-raw > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-social > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-spacer > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-image > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-table > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-text > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-section > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - node-sass-middleware > node-sass > gaze > globule > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-image > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-table > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-text > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-section > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-accordion > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-button > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-carousel > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-cli > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-column > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-container > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-divider > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-group > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-hero > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-html > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-image > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-table > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-list > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-text > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-section > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-raw > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-social > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-spacer > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-image > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-invoice > mjml-table > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-location > mjml-text > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-navbar > mjml-section > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > juice > web-resource-inliner > async > lodash:
+        patched: '2020-05-04T23:15:13.313Z'
