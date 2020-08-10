@@ -70,7 +70,7 @@
     "express": "~4.16.0",
     "express-brute": "^1.0.1",
     "express-session": "latest",
-    "flat": "^4.0.0",
+    "flat": "^5.0.2",
     "forever": "^0.15.3",
     "geopattern": "^1.2.3",
     "greenlock-express": "^2.1.4",
