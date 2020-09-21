@@ -105,7 +105,7 @@
     "ssarv": "latest",
     "time-elements": "^1.0.0",
     "type-check": "^0.3.2",
-    "ua-parser-js": "^0.7.14",
+    "ua-parser-js": "^0.7.22",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "underscore": "^1.8.3",
     "validator": "^9.4.1",
