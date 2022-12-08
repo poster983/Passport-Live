@@ -67,7 +67,7 @@
     "debug": "~2.6.0",
     "deep-key": "^0.9.9",
     "excel-as-json": "^2.0.1",
-    "express": "~4.16.0",
+    "express": "~4.17.3",
     "express-brute": "^1.0.1",
     "express-session": "latest",
     "flat": "^4.0.0",
