@@ -78,7 +78,7 @@
     "jdenticon": "^1.6.0",
     "jquery": "^3.2.1",
     "jquery.stellar": "^0.6.2",
-    "jsonwebtoken": "^8.0.0",
+    "jsonwebtoken": "^9.0.0",
     "loader-message": "^2.0.0",
     "luxon": "^1.0.0",
     "mjml": "^3.3.5",
