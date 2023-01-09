@@ -4178,9 +4178,9 @@ lru-cache@~2.5.0:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.5.2.tgz#1fddad938aae1263ce138680be1b3f591c0ab41c"
 
-luxon@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.0.0.tgz#ec1cba8cf53be14d2375c2f17e3468eb195c20bb"
+luxon@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.5.2.tgz#17ed497f0277e72d58a4756d6a9abee4681457b6"
 
 make-dir@^1.0.0:
   version "1.2.0"
