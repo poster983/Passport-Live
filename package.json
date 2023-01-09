@@ -80,7 +80,7 @@
     "jquery.stellar": "^0.6.2",
     "jsonwebtoken": "^8.0.0",
     "loader-message": "^2.0.0",
-    "luxon": "^1.0.0",
+    "luxon": "^1.28.1",
     "mjml": "^3.3.5",
     "moment": "^2.18.1",
     "morgan": "~1.9.0",
